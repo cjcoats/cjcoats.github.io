@@ -1,0 +1,2973 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<TITLE>
+    Environmental Model Optimization
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15"
+      MARGINHEIGHT="15"
+      LEFTMARGIN="15"
+      MARGINWIDTH="15">
+
+<CENTER>
+<H1>
+    Optimizing Environmental Models<BR>
+    for <BR>
+    Microprocessor Based Systems
+</H1>
+<H2>
+The Easy Stuff &nbsp; :-)
+</H2>
+</CENTER>
+
+<H3><EM><A HREF="https://www.cmascenter.org/online_training/optimization/efficient_models.html">
+https://www.cmascenter.org/online_training/optimization/efficient_models.html</A>
+</EM></H3>
+
+<H2><A NAME = "top">
+    Contents
+</A></H2>
+
+    <UL>
+        <LI>  <A HREF = "#intro">Introduction</A>
+        <LI>  <A HREF = "#eval">Easy Performance Evaluation</A>
+        <LI>  <A HREF = "#arch">System Characteristics</A>
+        <LI>  <A HREF = "#perf">Performance Inhibitors</A>
+        <LI>  <A HREF = "#opt">Optimization Strategies and Tactics</A>
+        <LI>  <A HREF = "#cache">Simple Case Study&nbsp;1:
+                         Typical cache behavior</A>
+        <LI>  <A HREF = "#deps2">Simple Case Study&nbsp;2:
+                         Data Dependencies in polynomial evaluation</A>
+        <LI>  <A HREF = "#deps3">Simple Case Study&nbsp;3:
+                         Control Dependencies in MM5 physics options</A>
+        <LI>  <A HREF = "#mrfpbl">Complex Case Study&nbsp;1:
+                         MM5's <VAR>MRFPBL</VAR></A>
+        <LI>  <A HREF = "#exmois">Complex Case Study&nbsp;2:
+                         MM5's <VAR>EXMOIS*</VAR> Routines</A>
+   </UL>
+   <P>
+
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "intro">
+    Introduction
+</A></H2>
+
+<H3>
+    Is It Worthwhile?<BR>
+    EXAMPLE:  MAQSIP Optimization Results
+</H3>
+
+    Here are the benchmark results for successive versions of the
+    <VAR>MAQSIP</VAR> air quality model on various year-2000 vintage
+    hardware platforms, courtesy of Bob&nbsp;Imhoff while he was at
+    MCNC.   These versions do essentially the same
+    arithmetic, and differ beause of incremental applications of the
+    optimization techniques discussed in this paper.  Further
+    re-structuring with the creation of a unified 3-D dynamics,
+    replacing the original separate horizontal and vertical advection
+    routines by a single unified routine, gave an additional 30% speedup
+    beyond what is presented below.
+    <P>
+    <STRONG>Note that there was an average net speedup factor of
+    slightly greater than ten!</STRONG>
+    <P>
+
+     <CENTER>
+     <IMG SRC="benchmarks.jpg" HEIGHT="623" WIDTH="911"
+     ALT="MAQSIP benchmark results">
+     <P>
+     <IMG SRC="speedup.jpg" HEIGHT="623" WIDTH="911"
+     ALT="MAQSIP Speedup from Code Optimization">
+     </CENTER>
+     <P>
+
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+<HR> <!----------------------------------------------------------------->
+
+<H3>
+    Abstract
+</H3>
+
+    Due to various characteristics (or &quot;features&quot;) of the
+    hardware of modern microprocessor systems, code organization can
+    have massive effects upon delivered model performance.  Making
+    the matter more complicated is the issue of how effectively the
+    compilers can translate model source code into machine code.  The
+    combination of these two effects can be striking:   assuming that
+    two different models are equivalent in content but organized
+    differently (performing exactly the same set of arithmetic
+    operations but in different orders, with different data structure
+    layouts) <STRONG>in bad cases, code structure can make a factor
+    of 20-40 difference in a model's delivered computational
+    performance</STRONG>.  Smaller effects (factors of 2-5) are quite
+    common unless care has been taken in the model design and coding.
+    Sometimes compilers are able to &quot;optimize around&quot; bad
+    code organization, but in many cases they can not.  Generally,
+    achieving 30% of peak processor performance with one's models is
+    quite good; achieving  5% or less is quite common.
+    <P>
+
+    In this paper we will first examine the hardware characteristics
+    that promote or inhibit computational performance.  In the
+    remainder of the paper, we will first summarize the principles to
+    use in writing high-performance code, then we will examine each of
+    these principles and give examples.  Throughout, there are three
+    things we wish to watch for:
+    <UL>
+        <LI>  memory-system behavior;
+        <LI>  computational-unit behavior; and
+        <LI>  optimizer behavior.
+    </UL>
+    You may find the following surprising, in the degree to which they
+    affect model performance:
+    <UL>
+        <LI>  Main memory is about <STRONG>100 times slower</STRONG>
+              than the processor itself (and disk is 10,000 times
+              slower than main memory ;-( ).
+        <LI>  Internally, the processor &quot;wants&quot; to execute
+              <STRONG>50-100 instructions at the same time.</STRONG><BR>
+              This is limited by <EM>dependencies</EM>:  waiting for
+              either data from memory or from a previous instruction.
+        <LI>  Some operations (<CODE>CHARACTER</CODE> string operations,
+              mathematical functions) are <STRONG>very expensive.</STRONG>
+        <LI>  Newer processors introduce new instructions (<EM>SSE4.2</EM>
+              for Nehalem/Westmere, <EM>AVX</EM> for SandyBridge/IvyBridge,
+              <EM>AVX2</EM> for Haswell/Broadwell, <EM>AVX-512</EM> for
+              Skylake-E/Knights Landing) which speed up arithmetic far
+              more than the new processors can speed up memory
+              operations.
+              <P>
+              To get thes enhanced instructions, you have to tell the
+              compiler to use them (which means your executable won't
+              run on earlier-generation processors).
+    </UL>
+    We will give a number of &quot;hands-on&quot; examples, for the most
+    part taken from MM5. The lessons they teach are still relevant for
+    CMAQ and other air quality models, but that way the implied
+    criticisms are for a third-party code... :-)  This paper discusses
+    the &quot;easy stuff&quot; which give most of the benefit, rather
+    than looking at heroic measures.
+    <P>
+    NOTE: Over the last few years, people have started using the
+    enormously powerful arithmetic capabilities developed for graphics
+    cards to do modeling (so-called <STRONG>GPU Computing</STRONG>).  We
+    will not discuss GPU computing here; however, it is worth noting
+    that its performance is hurt by many of the same issues as
+    &quot;normal&quot; microprocessors&mdash;but hundreds of times worse!
+    <P>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "Eval">
+    Easy Performance Evaluation
+</A></H2>
+
+    It is a commonplace observation (not always true, but suggestive)
+    that typically 10-20% of the code takes up 80-90% of the execution
+    time:  but <EM>which</EM> 10-20%.  Here are a couple of tools that
+    can help to answer that question.
+    <P>
+
+    <H3><VAR>perf</VAR></H3>
+    
+    The easiest way to get a subroutine-by-subroutine performance
+    evaluation of a model is by using the <VAR>perf</VAR> tool, which 
+    is not much harder than using <VAR>time</VAR> for simple reports
+    (there are much more elaborate options, as well): <VAR>perf&nbsp;record</VAR> 
+    generates file <CODE>perf.data</CODE>; then <VAR>perf&nbsp;report</VAR>
+    generates the performance evaluation.
+    <BLOCKQUOTE><CODE>
+    perf record  $&lt;program&gt;<BR>
+    perf report  &gt;&amp; &lt;performance-report&gt;<BR>
+    rm perf.data
+    </CODE></BLOCKQUOTE>
+    Here is what the &quot;guts&quot; of a <VAR>perf</VAR> report (from
+    last year's CMAQ-5.0.2 evaluation) looks like:
+<PRE>
+...
+# Samples: 41M of event 'cycles'
+# Event count (approx.): 35265040908321
+#
+# Overhead          Command           Shared Object                                                              Symbol
+# ........  ...............  ......................  ..................................................................
+#
+    18.85%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] for_cpstr                                                     
+    15.19%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] matrix_                                                       
+    10.12%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] _intel_fast_memcmp                                            
+     6.31%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] phot_mod_mp_getcsqy_                                          
+     5.68%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] hrsolver_                                                     
+     2.73%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] hrrates_                                                      
+     2.73%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] getpar_                                                       
+     2.23%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] hrprodloss_                                                   
+     2.20%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] vdiff_                                                        
+     1.68%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] hrg2_                                                         
+     1.59%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] hrg1_                                                         
+     1.59%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] zadv_                                                         
+     1.54%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] convcld_acm_                                                  
+     1.34%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] hppm_                                                         
+     1.11%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] calcact4_                                                     
+     1.06%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] for_trim                                                      
+     1.02%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] hrcalcks_                                                     
+     0.95%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] pow.L                                                         
+     0.91%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] expf.L  
+     ...                                                      
+</PRE>
+    The <VAR>perf</VAR> tool generates a report very easily, and with
+    very little overhead (using operating-system level support built 
+    into the Linux kernel).  It will give you information about calls to
+    system libraries (here, <CODE>for_cpstr, _intel_fast_memcmp,
+    for_trim. pow.L,</CODE> and <CODE>expf.L</CODE>).  It also does not
+    require that you build a special executable to use it. However, it
+    does require a decently up-to-date Linux system (Kernel-version at
+    least 3:  I haven't run a system myself with an older-version kernel
+    for  a long time; however, <VAR>killdevel</VAR> and <VAR>kure</VAR>
+    are still running 2.6.x kernels and so cannot run
+    <VAR>perf</VAR>. ;-( ).
+    <P>
+
+    <H3><VAR>prof</VAR> and other tools</H3>
+
+    The <VAR>prof</VAR> tool is the older technology.  It requires that
+    you build a special executable (compiling everything with a flag
+    (usually <CODE>-pg</CODE> to add in the profiling code to what you
+    have compiled (note that this of necessity ignores system
+    libraries). Since its activity happens in &quot;user&quot; mode, it
+    does have a sometimes-significant effect upon your results. 
+    However, it is  what you're stuck with (by and large) on UNC's
+    <VAR>killdevel</VAR> and <VAR>kure</VAR>, unless you use the
+    commercial (more detailed and harder-to-use) tool 
+    <VAR>valgrind</VAR>, which is available there. 
+    <P>
+
+    Using <VAR>prof</VAR> or <VAR>valgrind</VAR> is beyond the scope of
+    today's talk.
+    <P>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "arch">
+    System Characteristics of Microprocessor/Parallel Systems
+</A></H2>
+
+    <H3>Block Diagram</H3>
+    Below is a simplified and generalized block diagram of a typical
+    microprocessor based computer system.  Details vary considerably,
+    but the essential characteristics are displayed. In particular,
+    there are often separate sets of registers and separate sets of
+    arithmetic units for integer/address values and for floating point
+    values; there are sometimes separate caches for instructions and
+    for data, the virtual-address/cache management unit may be placed
+    in the cache instead of within the processor chip itself.
+    <P>
+    <IMG SRC="processor.gif" HEIGHT="691" WIDTH="383" ALT="CPU-Cache-Memory">
+
+    <H3>System Structure</H3>
+
+    <EM><U>2015 NOTE:</U>  Over the last decade, this organization has been
+    made more complex:  typically, one has multiple processors (now
+    called &quot;cores&quot;) on each single silicon chip, with a more
+    complex cache structure described below.  One frequently sees 4-core
+    desk-top chips, and 6-to-18-core server chips (the extreme example
+    being the Intel Knights Landing, with 72 cores on one chip!).
+    Needless to say, this has made terminology more confusing :-).
+    <BR>
+    Note that these multi-core chips naturally have the structure of a
+    shared-memory-parallel system.
+    <BR>
+    </EM>
+    <P>
+
+    The system has the following parts (again, simplified for the
+    purpose of our optimization/parallelization concerns):
+    <P>
+    <BLOCKQUOTE>
+    <DL>
+        <DT> <STRONG>Arithmetic/Logic Units (ALU)</STRONG>
+        <DD> These are the place that the actual computation is done.
+        On current chips there are from 3 to 10 ALUs per chip.  These
+        units do <STRONG>one arithmetic, logic, or subscript operation per
+        &quot;cycle&quot;</STRONG>.
+        <P>
+        There may be several units, which can be executing different
+        instructions at the same time (the processor is
+        <STRONG>superscalar</STRONG>).  Each of these ALUs is usually
+        <STRONG>pipelined</STRONG>, i.e., instruction execution  is
+        split over several stages, and ideally the ALU tries to execute
+        several instructions at the same time, one at each successive
+        stage..  Typical current pipeline lengths range from 12 to 20,
+        and typical superscalar &quot;width&quot; is from 4 to 8 units: 
+        note that this means that we may have dozens of instructions
+        executing at the same time. This effect promises to get even
+        larger with coming generations of processors.
+        <P>
+        When the dependencies between instructions prevent one
+        instruction being started before a prior instruction is
+        completed, the ALU must &quot;stall&quot; and insert a
+        (no-operation) <EM>bubble</EM> into the pipeline.
+        <P>
+        <CENTER>
+            <IMG SRC="pipe1.gif" HEIGHT="479" WIDTH="635"
+            ALT="Minimal Pipeline Stages">
+            <P>
+            <IMG SRC="pipe2.gif" HEIGHT="347" WIDTH="553"
+            ALT="Pipeline Stages and Scheduling">
+            <P>
+            <IMG SRC="superscalar.gif" HEIGHT="1027" WIDTH="513"
+            ALT="Pipelined Superscalar Instruction Scheduling">
+        </CENTER>
+        <P>
+        <EM>
+        <U>Intel Processor Note:</U>  Successive generations of Intel
+        processors introduce ever-more-powerful sets of available
+        arithmetic operations (SSE, AVX, AVX2, ...).  To take advantage
+        of these, you need to include the right command-line options in
+        your compile-commands.  The easiest case for this is the
+        &quot;use the arithmetic operations for the processor I'm
+        compiling this on&quot;.  For Intel compilers, that is
+        <CODE>-xHost</CODE>; for GNU compilers, it is
+        <CODE>-march=native&nbsp;-mtune=native</CODE>; for PGI
+        compilers, it is the default behavior.  If you're compiling on
+        one machine but intending to run on a different one (or running
+        on a mixed-processor cluster), it can get quite complicated :-)
+        <P>
+        </EM>
+        <P>
+        
+        <DT> <STRONG>Load/Store Unit</STRONG>
+        <DD> This unit &quot;stages&quot; the transfer of values between
+             the registers and the cache and main memory subsystem. Note
+             that load/store units frequently pipelined, just as ALU's
+             are  (but with their own pipelines, independent of the
+             ALUs):  typically, the load/store unit can start one load
+             and one store per processor cycle; the length of its
+             pipeline depends upon the details of cache performance,
+             described below.  (An exception to the &quot;one load and
+             one store&quot; is the IBM POWER architecture, that can
+             start 2 loads, 2 stores, and 4 floating point arithmetic
+             operations per processor cycle).
+        <P>
+             Note that store-operations normally go &quot;through the
+             cache&quot;, using a pattern given below (so that
+             <STRONG>store-operations are more expensive than loads</STRONG>):
+             <BLOCKQUOTE>
+             Read the appropriate cache-line from main memory, if necessary<BR>
+             Modify the value in that cache-line<BR>
+             Write the cache line back to main memory<BR>
+             </BLOCKQUOTE>
+        <P>
+        
+        <DT> <STRONG>Scheduler</STRONG>
+        <DD> This unit is responsible for decoding the sequence of machine
+             instructions, evaluating the dependencies among them
+             (whether one instruction needs to complete before certain
+             others can start), and scheduling their execution on the
+             various ALUs and load/store units, on the basis of dependencies
+             and data availability (both from previous instructions and
+             from memory).  In most cases, this is an
+             <STRONG>out-of-order</STRONG> unit which even calculates
+             dependencies between instructions and takes instructions
+             out of order according to those dependencies. The
+             scheduler may well &quot;cache&quot; the <CODE>branch
+             taken/branch not taken</CODE> decision at each program
+             branch and use that information to decide how to proceed
+             with <STRONG>speculative execution</STRONG>, where the
+             scheduler attempts to start the most-likely upcoming
+             <CODE>IF</CODE>-block body even before the associated
+             decision is made. For code in which the scheduler is able
+             to predict correctly, speculative out-of-order execution
+             can remove the bulk of the run-time overhead associated
+             with branches (e.g., loop-body start-up/take-down)
+             although the instruction pipeline-setup, instruction
+             dependency, and compiler scheduling problems are still
+             made much more complicated in &quot;branchy&quot; code.
+             <P>
+             For current processors, the scheduler manages up to 50-100
+             &quot;active&quot;instructions selected from a pool of
+             100-200 &quot;available&quot; instructions, on the basis of
+             the data dependencies among them.
+        <P>
+
+        <DT> <STRONG>Registers</STRONG>
+        <DD>  these are very fast memory locations that hold a single
+              number each; on modern microprocessors, ALUs get their
+              input values from registers and store their results back
+              to registers.  Frequently, there are distinct sets of
+              registers for integer/address data and for floating-point
+              data.  Typically, there are 16-32 registers of each
+              type.  Intel x86's are &quot;register-starved&quot;,
+              having only 4 integer registers and 8 floating point
+              registers; x86_64 increased those numbers to 16.  Computations 
+              that &quot;live in registers&quot; tend to be much faster
+              than those that don't.
+        <P>
+        <DT> <STRONG>Cache</STRONG>
+        <DD> Cache is one or more small banks of fast memory that
+             mirrors the contents of portions of main memory but that is
+             much faster. Caches try to take advantage of
+             <STRONG>spatial  locality</STRONG>, where nearby array
+             elements are expected to be accessed within programs at
+             about the same time, and <STRONG>temporal
+             locality</STRONG>, where program accesses to a particular
+             variable are expected to occur near each other in a
+             program's execution.
+             <P>
+             Caches are organized in terms of <STRONG>cache
+             lines</STRONG> of several consecutive memory locations
+             that are managed together (it being more efficient to do a
+             &quot;read several consecutive numbers&quot; memory
+             operation than to do the same number of singleton
+             memory-reads; &quot;in the same cache line&quot; is then
+             the relevant notion of spatial locality above). Cache lines
+             typically hold from 4 to 16 numbers each.   Note that
+             since main memory is much larger than cache size, there
+             will be many memory addresses (generally multiples of a
+             large power of 2 apart) that map to the same cache
+             location, leading to potentially performance-inhibiting
+             <STRONG>cache conflicts</STRONG> when programs are
+             accessing multiple arrays that map to the same cache line.
+             <P>
+             The typical organization is hierarchical, with a
+             <STRONG>level-1 cache</STRONG> holding 8-32 KB of the
+             <STRONG>most-recently-used variables</STRONG>, and
+             requiring 2-5 processor cycles to access, a
+             <STRONG>level-2</STRONG> cache of 256 KB to 1&nbsp;MB
+             holding the next-most-recently used variables, and
+             requiring 8-12 processor cycles to access, and a larger
+             <STRONG>level-3</STRONG> cache holding more variables, and
+             requiring 18-25 processor cycles.<BR>
+             <EM>See <A HREF="#cache">Case Study&nbsp;1:  Typical
+             Cache Behavior</A>.</EM>
+             <P>
+             <EM><U>2015 NOTE:</U>  For most current Intel x86 processors,
+             there are actually 4-18 processors (&quot;cores&quot;) per
+             circuit-board socket; each of these has its own 16-32KB L1
+             cache and 256KB L2 cache; all the processors on a socket
+             share an additional L3 cache with 1-2MB per
+             processor&mdash;a typical 4-core desktop processor having
+             4-8MB of shared L3 cache, and a 16-core server processor
+             having 24-32MB of shared L3 cache, for example.
+             </EM>
+        <P>
+        <DT> <STRONG>Cache/Address/Memory Management Unit (CAMMU)</STRONG>
+              a.k.a. <STRONG>Translation Lookaside Buffer (TLB)</STRONG>
+        <DD>  This unit is responsible for translation between <EM>virtual
+              addresses</EM> that give the program's view of memory and
+              the <EM>physical addresses</EM> that give the actual (RAM)
+              hardware layout of main memory.  It is also responsible
+              for determining which parts of memory are duplicated in
+              the caches, and in multi-processor systems for ensuring
+              that all processors see the same view of memory.  There
+              are tables (<STRONG>page tables</STRONG>) that translate
+              between the two kinds of addresses, and usually an
+              on-chip subset (the <STRONG>translation lookaside
+              buffer</STRONG> or <STRONG>TLB</STRONG>) of the
+              currently-active parts of the page tables.  For current
+              processors, typical TLB coverage on-chip is 4&nbsp;MB.
+              <P>
+              If your program jumps randomly through much larger regions
+              of memory (&quot;TLB thrashing&quot;) , it will have to
+              make frequent and very-expensive operating-system calls to
+              re-load the TLB.
+             <P>
+        <P>
+        <DT> <STRONG>Main memory</STRONG>
+        <DD> Main memory is currently <STRONG>much slower</STRONG> than
+             the CPU, requiring typically 50-200 processor cycles to
+             access (depending upon the processor).  One of the reasons
+             Cray vector machines have been so fast is that they used
+             exclusively very-fast SRAM instead of DRAM -- 20 times as
+             fast, 50 times as power-hungry, and 100 times as
+             expensive...
+             <P>
+
+        <P>
+        <DT> <STRONG>Other Processors</STRONG>
+        <DD> There are various ways in which multiple processors connect
+             to memory.  Sometimes each circuit board holds a processor
+             and some of the memory; in which case on-this-board memory
+             may be faster than memory on some other processor's board
+             (though both are &quot;visible&quot;); such a system is
+             called a Non-Uniform Memory Access (NUMA) system.  SGI
+             ALTIX machines and IBM'x X-series are prime examples of
+             NUMA systems (with the additional property of <EM>cache
+             coherence</EM>).  One of the things that it is necessary
+             to ensure is that all the processors see the &quot;same&quot;
+             view of memory-- that when one processor updates a
+             variable, the rest of the processors see that updated
+             value.)
+             <P>
+             Note that <STRONG>GPU Programming</STRONG> is an example of
+             this, using the processors on a system's graphics card to do
+             very fast calculations that have a linear algebra style (note
+             that the graphics-card processors are <EM>terrible</EM> at
+             logic-operations).
+        <P>
+    </DL>
+   </BLOCKQUOTE>
+
+
+    <HR> <!----------------------------------------------------------------->
+    <P>
+    <H3>SUMMARY:  Architectural Characteristics and Considerations</H3>
+
+    We can see from the above that there are a number of computer
+    system characteristics and considerations about programming that
+    can greatly affect model performance on current computer systems.
+    We can summarize the situation as follows; we will give details and
+    examples in succeeding sections:
+    <UL>
+        <LI>  <STRONG>Algorithms are important.</STRONG>  Particularly
+              for large problem sizes, a computationally efficient
+              algorithm (even when implemented sloppily) beats an
+              inefficient algorithm.  That's why <VAR>bubble sort</VAR>
+              is never used for large problems, and why SMOKE is
+              hundreds of times faster than its predecessor EPS.
+              <P>
+        <LI>  Memory is <STRONG>much slower than the processors, is
+              organized hierarchically, and always accessed an entire
+              cache line at a time.</STRONG>  It is advantageous to keep
+              scratch arrays small so that they fit in cache, and to
+              ensure that array access is &quot;stride-1&quot;, i.e.,
+              that consecutive array elements <CODE>A(I,J,K),
+              A(I+1,J,K), ...</CODE> are processed consecutively. 
+              Because of cache conflicts, it is sometimes worthwhile to
+              ensure that array sizes are not divisible by large powers
+              of two.
+              <P>
+        <LI>  <STRONG>Some operations are very expensive.</STRONG>
+              Divides, square roots,and <CODE>CHARACTER</CODE> string
+              operations typically cost 30 to 100 times as long to
+              execute as to adds and multiplies (even more for
+              <CODE>CHARACTER</CODE> operations on longer strings). 
+              Exponentials, logarithms, real-exponent powers, and trig
+              functions likewise are very expensive&mdash;1000 times as
+              much (or more!) as simpler operations.  In particular,
+              real-exponent powers are much more expensive than square
+              roots.
+              <P>
+        <LI>  <STRONG>Compilers are important.</STRONG>  Given the trend
+              to highly pipelined superscalar processors that execute
+              many times faster than system memory, their primary task
+              is finding enough independent work to keep the processor
+              as busy as possible.  Doing so successfully can easily
+              make a factor of 10 difference in performance.
+              It is worthwhile organizing codes so that the compiler can
+              &quot;see&quot; optimization opportunities.  This can be
+              very vendor-dependent in terms of what the compiler can
+              see;-(, although there are a number of generally
+              applicable principles.
+              <P>
+        <LI>  <STRONG>Parallel execution adds yet more issues.</STRONG>
+              MM5V2, for example, scales much better to high processor
+              counts than does MM5V3.  In retrospect, this is not
+              surprising, considering that a typical set of options
+              invokes about 17 parallel sections per model time step in
+              MM5V2, while it invokes over 180 in MM5V3.  For large
+              domains, MM5V2 runs well on 256-processor systems; when
+              run in shared memory (OpenMP) mode, M5V3 starts to croak
+              at about 32.
+              <P>
+        <LI>  <STRONG>Vendor Specifics.</STRONG><P>
+              Currently, Intel Xeon server processors tend to have
+              the following range of characteristics.  See
+              <A HREF="https://en.wikipedia.org/wiki/Xeon">https://en.wikipedia.org/wiki/Xeon</A>
+              for details.
+              <P>
+              <TABLE BORDER CELLPADDING="4" ALIGN=CENTER>
+                  <TR>
+                    <TD ALIGN=LEFT> Cores per socket
+                    <TD ALIGN=RIGHT> 4-18
+                  </TR>
+                  <TR>
+                    <TD ALIGN=LEFT>L1 Cache
+                    <TD ALIGN=RIGHT> per core:  16-32KB
+                    instruction/16-32KB data,<BR>
+                     8-way associative
+                  </TR>
+                  <TR>
+                    <TD ALIGN=LEFT>L2 Cache
+                    <TD ALIGN=RIGHT> per core:  256KB,<BR> 8-way associative
+                  </TR>
+                  <TR>
+                    <TD ALIGN=LEFT>L3 Cache
+                    <TD ALIGN=RIGHT> shared by all cores on this socket:<BR>
+                                &lt;number of cores&gt; times 1-2.5 MB,<BR>
+                                8-20-way associative
+                  </TR>
+                  <TR>
+                    <TD ALIGN=LEFT>TLB Coverage
+                    <TD ALIGN=RIGHT> per core:  4 MB
+                  </TR>
+                  <TR>
+                    <TD ALIGN=LEFT>Pipeline length
+                    <TD ALIGN=RIGHT> 14-19 stages
+                    (instruction-dependent)
+                  </TR>
+               </TABLE>
+              <P>
+    </UL>
+
+    <BLOCKQUOTE>
+    <STRONG>Summary</STRONG>:  The two most important factors in getting
+    (even a fraction of) the potential performance out of modern
+    processors are:
+    <OL>
+        <LI> <STRONG>Memory system behavior:</STRONG>  taking as much advantage of cache
+             as possible; and
+        <LI> <STRONG>Pipeline behavior:</STRONG>  keeping the pipelines as full as
+             possible:  put the computational work in large &quot;chunks&quot;
+    </OL>
+    ...as described in the next section...
+    </BLOCKQUOTE>
+
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "perf">
+    Performance Inhibitors
+</A></H2>
+
+    <OL TYPE = "A">
+        <LI>  <STRONG>Instruction Dependencies:</STRONG>
+              <P>
+              When the input of one instruction is the output of a
+              previous instruction, we say that we have an instruction
+              (or data) dependency.  Data dependencies limit how many
+              instructions can be executing at any one time, and may
+              severely inhibit performance.  The following are examples
+              of programming patterns that cause instruction
+              dependencies:
+              <UL>
+                  <LI> compound arithmetic expressions that must be
+                       executed in sequence, as illustrated in detail
+                       in the <A HREF = "#deps2">POLY6  Case Study</A>,
+                       below.
+                       <P>
+                  <LI> Indirect addressing (index arrays).  Consider
+                       the code:
+                       <BLOCKQUOTE><CODE>
+                       X = Y(INDX(I))
+                       </CODE></BLOCKQUOTE>
+                       In this instruction, the subscript
+                       <CODE>INDX(I)</CODE> must be loaded
+                       from memory (a process that costs from
+                       2 to hundreds of processor cycles depending
+                       upon whether the index is currently in cache
+                       or not) in order for the processor to know
+                       just <EM>which</EM> <CODE>Y</CODE>-value to
+                       load&mdash;and only then loading that
+                       <CODE>Y</CODE>-value.
+                       <BR>
+                       Note also that indirect addressing can
+                       also lead to bad memory access patterns (below).
+              </UL>
+              <P>
+
+        <LI>  <STRONG>Memory Access Patterns:</STRONG>
+              <P>
+              When the processor loads a value from main memory, it
+              always <STRONG>loads an entire cache line at a
+              time</STRONG> into the cache&mdash;typically, 4-8 numbers.
+              Ideally, the program should be structured to use all of
+              these numbers before needing to load more.
+              <P>
+              <STRONG>Arrays:</STRONG><BR>
+              Memory is best accessed consecutively
+              (<EM>&quot;stride-1&quot;</EM>). For Fortran arrays,
+              consecutive locations have left-most consecutive
+              subscripts; for C, it is instead right-most consecutive
+              subscripts that give adjacent memory locations.  Since
+              &quot;store&quot; operations actually work by reading an
+              entire cache line, modifying the entry that is the target
+              of the store, and then writing back the entire cache
+              line, <EM>nonconsecutive stores create more memory traffic than
+              nonconsecutive loads.</EM> Note that indirect addressing
+              (as indicated above) frequently leads to nonconsecutive
+              memory accesses.
+              <P>
+              The table below indicates how loop nest order and array
+              subscripts should interact for Fortran and for&nbsp;C:
+              <P>
+              <TABLE BORDER CELLPADDING="4" ALIGN=CENTER>
+                  <TR>
+                      <TD ALIGN=LEFT><A NAME="order">
+                      <STRONG><EM>Language</EM></STRONG></A>
+                      </TD>
+                      <TD ALIGN=CENTER>
+                      <STRONG>Fortran</STRONG>
+                      </TD>
+                      <TD ALIGN=CENTER>
+                      <STRONG>C</STRONG>
+                      </TD>
+                  </TR>
+                  <TR>
+                      <TD ALIGN=LEFT>
+                      <EM>Array Declaration</EM>
+                      </TD>
+                      <TD ALIGN=CENTER>
+                      <CODE>REAL A(M,N,P)</CODE>
+                      </TD>
+                      <TD ALIGN=CENTER>
+                      <CODE>float a[p][n][m]</CODE>
+                      </TD>
+                  </TR>
+                  <TR>
+                      <TD ALIGN=LEFT>
+                      <EM>Fastest subscript</EM>
+                      </TD>
+                      <TD ALIGN=CENTER>
+                      <CODE>M</CODE>
+                      </TD>
+                      <TD ALIGN=CENTER>
+                      <CODE>m</CODE>
+                      </TD>
+                  </TR>
+                  <TR>
+                      <TD ALIGN=LEFT><EM>Good loop order</EM></TD>
+                      <TD>
+                      <CODE>
+                      &nbsp;DO K = 1, P<BR>
+                      &nbsp;DO J = 1, N<BR>
+                      &nbsp;DO I = 1, M<BR>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(I,J,K)=...<BR>
+                      &nbsp;END DO<BR>
+                      &nbsp;END DO<BR>
+                      &nbsp;END DO<BR>
+                      <CODE>
+                      </TD>
+                      <TD ALIGN=LEFT>
+                      <CODE>
+                      &nbsp;for ( k=0; k&lt;p; k++ )<BR>
+                      &nbsp;&nbsp;&nbsp;for ( j=0; j&lt;n; j++ )<BR>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for ( i=0; i&lt;n; i++ )<BR>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a[k][j][i]=...<BR>
+                      </CODE>
+                      </TD>
+                  </TR>
+              </TABLE>
+              <P>
+              In the very simple cases like the above (with its perfect
+              loop-nests), some compilers will at high optimization
+              levels invert the ordering of badly-ordered loops into
+              correct form (turning, for example,
+              <CODE>DO&nbsp;I...DO&nbsp;J...DO&nbsp;K</CODE> loop
+              ordering into the
+              <CODE>DO&nbsp;K...DO&nbsp;J...DO&nbsp;I</CODE> given
+              above.  In the real world, however, we are apt to
+              encounter complex nest systems like the following, which
+              the compilers can <EM>not</EM> deal with as effectively,
+              if the loops are not coded in the correct order:
+              <CODE><BLOCKQUOTE>
+              &nbsp;DO K = 1, P<BR>
+              &nbsp;&nbsp;&nbsp;DO I = 1, M<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C(I)=...<BR>
+              &nbsp;&nbsp;&nbsp;END DO<BR>
+              &nbsp;&nbsp;&nbsp;DO J = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;DO I = 1, M<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B(I,J,K)=...<BR>
+              &nbsp;&nbsp;&nbsp;END DO<BR>
+              &nbsp;&nbsp;&nbsp;END DO<BR>
+              &nbsp;&nbsp;&nbsp;DO J = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;DO I = 1, M<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(I,J,K)=...<BR>
+              &nbsp;&nbsp;&nbsp;END DO<BR>
+              &nbsp;&nbsp;&nbsp;END DO<BR>
+              &nbsp;END DO<BR>
+              </BLOCKQUOTE></CODE>
+              <P>
+              Sometimes (as with matrix transposes) it is necessary to
+              have both &quot;good&quot; and &quot;bad&quot; subscript
+              and loop nest orders at the same time.  In that case, it
+              is the store operation (left hand side of the equals sign)
+              that is most important, since a store operation involves
+              reading an entire cache line, fixing the indicated single
+              array element, and subsequently writing the cache like
+              back out to main memory:
+              <P>
+              <TABLE BORDER ALIGN=CENTER>
+                  <THEAD>
+                      <TH>Good</TH>
+                      <TH>Bad</TH>
+                  </THEAD>
+                  <TR ALIGN=LEFT>
+                      <TD>
+                      <CODE>
+                      &nbsp;REAL A(M,N), B(N,M)&nbsp;&nbsp;<BR>
+                      &nbsp;...<BR>
+                      &nbsp;DO J = 1, N<BR>
+                      &nbsp;DO I = 1, M<BR>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(I,J)=B(J,I)<BR>
+                      &nbsp;END DO<BR>
+                      &nbsp;END DO<BR>
+                      <CODE>
+                      </TD>
+                      <TD>
+                      <CODE>
+                      &nbsp;REAL A(M,N), B(N,M)<BR>
+                      &nbsp;...<BR>
+                      &nbsp;DO I = 1, M<BR>
+                      &nbsp;DO J = 1, N<BR>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(I,J)=B(J,I)<BR>
+                      &nbsp;END DO<BR>
+                      &nbsp;END DO<BR>
+                      <CODE>
+                      </TD>
+                  </TR>
+              </TABLE>
+              <P>
+              <P><STRONG><CODE>struct</CODE>s (C) and <CODE>TYPE</CODE>s
+              (Fortran):</STRONG><BR>
+              Adjacent <CODE>struct</CODE>-fields will be adjacent in
+              memory.  There are two potential problems here:
+              <UL>
+                  <LI>  Especially in an array of <CODE>struct</CODE>s, algorithms
+                        that access non-adjacent fields do a lot of extra
+                        memory traffic (because of the cache-line effect,
+                        above).
+                  <LI>  If fields are not a multiple of their sizes
+                        away from the start, that may cause additional
+                        memory-access slowness.
+                        <BR>
+                        <EM>This is also an issue for Fortran-77
+                        <CODE>COMMON</CODE>s...</EM>
+              </UL>
+              <P>
+              Consider the following example taken from a C-language
+              hydrology model:
+<PRE>
+    struct patch_object
+        {
+        int     zone_ID;
+        int     default_flag;
+        int     ID;
+        int     num_base_stations;
+        int     num_innundation_depths;
+        int     num_canopy_strata;
+        int     num_layers;
+        int     num_soil_intervals;
+        double  x;
+        double  y;
+        double  z;
+        double  dx;
+        double  dy;
+        double  area;
+        double  area_inv;
+        double  acc_year_trans;
+        double  base_flow;
+        double  cap_rise;
+        double  tempC;
+        <EM>... [more than 300 fields, occupying about 3.2KBytes]</EM>
+        }   my_patch ;
+
+    struct basin_object
+        {
+        int     patch_count;
+        ...
+        struct patch_object *patches ; /* allocated as patches[patch_count]  */
+        ...
+        } my_basin ;
+</PRE>
+              Note that in this case, <CODE>my_patch.x</CODE> is
+              adjacent in memory to
+              <CODE>my_patch.num_soil_intervals</CODE> and
+              <CODE>my_patch.y</CODE>, and is 8 <CODE>int</CODE>s,
+              i.e., 32 bytes from the start of <CODE>my_patch</CODE>.
+              If there had only been 7 <CODE>int</CODE>-fields,
+              its offset would have been 28 bytes, which is not
+              a multiple of <CODE>sizeof(my_patch.x)==8</CODE>
+              and would have been more expensive to use.
+              <BR>
+              If there had been a length-7 character-string field
+              as the very first field, it would have screwed
+              <EM>everything</EM> else up!
+              <P>
+
+              Suppose that  <CODE>my_basin</CODE> has
+              <CODE>patch_count=10,000</CODE> (for a 100&times;100-patch
+              basin), and you want to compute the average temperature
+              <CODE>tempC</CODE>:  The relevant patches are scattered
+              over about 32&nbsp;MB of main memory (far larger than any
+              processor's cache, and also far larger than the virtual
+              memory system's TLB tables).  You will have to get 10,000
+              isolated temperature-values scattered throughout that
+              32&nbsp;MB&mdash;and do so not only at slow main-memory
+              speeds, but also with substantial extra memory-management
+              overhead.
+              <P>
+
+              <EM>NOTE:  From Day 1, Paragraph 1 of the notes for
+              nVidia's GPU-programming course:
+              <BLOCKQUOTE>
+              Many programs can be organized either in
+              array-of-<CODE>struct</CODE>s form or in
+              <CODE>struct</CODE>-of-arrays form.  Use the latter; the
+              former will absolutely <STRONG>kill GPU-programming
+              performance, by a factor of 10,000 or more</STRONG>.
+              </BLOCKQUOTE>
+              The same effect is true for large model-problems on
+              &quot;normal&quot; microprocessors, though to a lesser
+              degree (factor of &quot;only&quot; 10-100).
+              See <A HREF="#note1">Note&nbsp;1</A>.
+              </EM>
+              <P>
+
+              If you <EM>must</EM> have an array-of-structs model
+              architecture,  then try to ensure that fields that are
+              used together are located together in the list of fields
+              (as <CODE>X,Y,Z</CODE> are above).  If you want to go to
+              heroic efforts, ensure that each struct-size is a multiple
+              of 256 bytes, that the array-of-structs is allocated to
+              start on a 256-byte boundary, and that related  variables
+              lie within either the same or consecutive 256-byte chuncks
+              relative to the start-of-struct (256 being the usual cache
+              block size).
+              <P>
+              
+              In one of the most extreme examples of
+              (&quot;bench-marketing&quot;) compiler-optimization
+              activity:  in 2007, Sun introduced a new compiler which
+              &quot;broke&quot; one of the SPEC benchmarks: with the
+              right compile flags, and if you compiled the entire
+              program as one single operation, the compiler would spend
+              three days turning this particular
+              array-of-<CODE>struct</CODE>s program into a
+              machine-language <CODE>struct</CODE>-of-arrays executable
+              program, which was more than ten times faster than anyone
+              else's executable program for that benchmark.  Sadly,
+              their compiler couldn't do this for most such programs.
+              <P>
+
+        <LI>  <STRONG>Memory Bandwidth:</STRONG>
+              <P>
+              Generally, modern processor can only perform one or two
+              loads and one store per processor cycle, while (if the
+              code is stride-1) it can do as many as four floating point
+              and four integer arithmetic operations per cycle.  Codes
+              that do more than one array operation per arithmetic
+              operation are limited by the problem of loading data into
+              the processor; the processor itself cannot operate at full
+              efficiency.  For example, in the pair of loops:
+              <BLOCKQUOTE><CODE>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I,K,J)=B(I,K,J)+C(I,K,J)<BR>
+              END DO<BR>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I,K,J)=A(I,K,J)*PSA(I,J)<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              there are two loads and one add or one multiply per loop
+              iteration, for a total of <CODE>4&nbsp;N</CODE> loads,
+              <CODE>N</CODE> adds, <CODE>N</CODE> multiplies, and
+              <CODE>2&nbsp;N</CODE> stores.  The performance is limited
+              by the number of loads and stores, and half of the time
+              only a load can be performed on a given processor cycle
+              (the other half of the time, the processor does a
+              subscript-to-address calculation, a load, and an
+              arithmetic operation.  If this code were restructured
+              <BLOCKQUOTE><CODE>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I,K)=(B(I,K)+C(I,K))*PSA(I)<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              then there are only <CODE>3&nbsp;N</CODE> loads, but
+              <CODE>N</CODE> adds, <CODE>N</CODE> multiplies, and
+              <CODE>N</CODE> stores.  The code is still memory-limited
+              (all the arithmetic can be performed simultaneously with
+              just a fraction of the load operations), but the
+              re-structured code should run in two-thirds of the
+              time (or if we're dealing with 3-D nests of loops and
+              large arrays as in WRF advection, less than half the time;
+              see &quot;Cache Pollution&quot; below).<BR>
+              <EM>NOTE:  this example is sufficiently simple that
+              good optimizing compilers (not always available!)
+              will transform the first set of loops into the second loop.
+              More complex codes, however, may not be transformed by the
+              compiler that way.&mdash;CJC</EM>
+              <P>
+
+        <LI>  <STRONG>Expensive Operations:</STRONG>
+              <P>
+              Modern processors can typically sustain one floating point
+              add and/or multiply per ALU per processor cycle (if not
+              hindered by memory-accesses or instruction dependencies).
+              <STRONG>Divides and square roots</STRONG> are more
+              expensive, typically ranging from 20 to 60 cycles per
+              operation.  <STRONG>Character-string operations</STRONG>
+              are also orders of magnitude expensive (and depend on
+              string length).  <STRONG>Log, exponential, trig</STRONG>
+              functions, and <STRONG>real-exponent powers</STRONG> and
+              more expensive yet&mdash;as much as 1000 times as
+              expensive.  For processors that have double-precision-only
+              floating point hardware (Intel x86 and IBM POWER  series),
+              the expensive floating point operations are <EM>much</EM>
+              more expensive.
+              <BR>
+              <EM>NOTE:  Real-exponent powers <CODE>X**Y</CODE> are usually
+              handled behind the scenes in terms of logs and
+              exponentials, e.g., <CODE>exp(Y*log(X))</CODE>.</EM>
+              <P>
+              Further note that repeated function calls with the same
+              arguments must all be evaluated individually:  you might
+              very well have replaced the system-version with your own,
+              which might have side-effects (like counting the number
+              of calls...).  For example, the following code from WRF's
+              <CODE>dyn_em/module_diffusion_em.F</CODE> (at lines
+              1444:1445 for WRF-3.4.1) is
+              <STRONG>stupid</STRONG> because it mandates four expensive
+              calls to exactly the same <CODE>cos(degrad90*tmp)</CODE>:
+              the compiler cannot know whether <CODE>cos()</CODE> is the
+              usual system-library trig-function, or whether you've
+              replaced it with something of your own, that <U>needs</U>
+              to be called all four times.
+              <PRE>
+     ...
+     dampk(i,k,j) =cos(degrad90*tmp)*cos(degrad90*tmp)*kmmax*dampcoef
+     dampkv(i,k,j)=cos(degrad90*tmp)*cos(degrad90*tmp)*kmmvmax*dampcoef
+              </PRE>
+              Better would be the following, which makes only one call
+              to this expensive routine, and is therefore almost four
+              times faster:
+              <PRE>
+     ...
+     SCR1 = cos(degrad90*tmp)**2 * dampcoef
+     dampk(i,k,j) =SCR1*kmmax
+     dampkv(i,k,j)=SCR1*kmmvmax
+              </PRE>
+              Better yet in this case would have been to notice that
+              this <CODE>COS()</CODE> calculation happens inside a
+              <CODE>K-I</CODE> loop nest but depends only upon I, hence
+              should be calculated in a preliminary <CODE>I</CODE>-only
+              loop and stored in an <CODE>I</CODE>-subscripted scratch
+              array (an example of the &quot;loop-invariant
+              lifting&quot; described later).
+              <P>
+              In Fortran, good compilers should optimize products of
+              real-exponent powers (which are &quot;built-in&quot; to
+              the Fortran language as arithmetic operations): good
+              compilers will turn <CODE>X**A&nbsp;*&nbsp;Y**B</CODE>
+              into <CODE>exp(A*log(X)&nbsp;+&nbsp;B*log(Y)</CODE>.
+              In case a real exponent is a compile-time-constant
+              (explicit constant or <CODE>PARAMETER</CODE>)
+              machine-exact one-half or one-third, some compilers can
+              detect this special case and replace normal real-exponent
+              processing by optimized special cases (e.g., using
+              <A HREF="https://en.wikipedia.org/wiki/Halley%27s_method">Halley's
+              fast cube-root algorithm</A>).
+              In C or C++, the compiler cannot do these optimizations,
+              since in those languages the operation uses
+              library-functions (which may be overriden by the user)
+              instead of operations built into the language.
+              <P>
+
+        <LI>  <STRONG>Short basic blocks (IFs and GOTOs):</STRONG>
+              <P>
+              A <EM>basic block</EM> is the set of straight-line
+              machine-language instructions between machine-language
+              <CODE>GOTO</CODE>'s&mdash;which happen &quot;behind the
+              scenes&quot; for <CODE>IF</CODE>-blocks,
+              <CODE>DO</CODE>-loops, and subroutine/function calls.
+              Basic blocks are the units  over which compilers do
+              instruction scheduling.  If basic blocks are short, they
+              will not have enough independent work to keep a pipelined
+              superscalar processor working efficiently.
+              <P>
+
+        <LI>  <STRONG>Cache pollution:</STRONG>
+              <P>
+              Consider a typical air quality modeling grid: if it is
+              <CODE>100&times;100&times;25</CODE>, then each 3-D
+              variable (wind component, temperature, pressure, or one
+              chemical species) on the grid occupies one megabyte. One
+              3-D loop nest that uses two variables completely fills up
+              a typical cache, wiping out whatever had been there
+              previously.  For multiple-variable calculations, bad
+              program organization can cause the cache to be entirely
+              filled with one or two variables, filled again by other
+              variables, and then again filled by uses of the first
+              variables.  For this code-organization, cache values are
+              never re-used, forcing the program to work at much slower
+              main-memory speeds.
+              <P>
+              An example of this is given in the MM5 Version&nbsp;3
+              treatment of a number of processes, of which horizontal
+              advection is but one example. Suppose your met model grid
+              is <CODE>100&times;100&times;25</CODE>, so that (assuming
+              4-byte <CODE>REAL</CODE>s), each 3-D variable occupies
+              1&nbsp;megabyte.  For a typical set of physics options
+              (<CODE>IMPHYS=5</CODE>:  ice but no graupel), the vanilla
+              MM5v3 has the following set of horizontal advection calls
+              (where I've simplified things to emphasize the nature of
+              the calls):
+              <CODE><BLOCKQUOTE>
+              CALL HADV(..., U3DTEN, UA,VA, U3D,...)<BR>
+              CALL HADV(..., V3DTEN, UA,VA, V3D,...)<BR>
+              CALL HADV(..., PP3DTEN,UA,VA,PP3D,...)<BR>
+              CALL HADV(..., W3DTEN, UA,VA, W3D,...)<BR>
+              CALL HADV(..., T3DTEN, UA,VA, T3D,...)<BR>
+              CALL HADV(..., QV3DTEN,UA,VA,QV3D,...)<BR>
+              CALL HADV(..., QC3DTEN,UA,VA,QC3D,...)<BR>
+              CALL HADV(..., QR3DTEN,UA,VA,QC3D,...)<BR>
+              CALL HADV(..., QI3DTEN,UA,VA,QI3D,...)<BR>
+              CALL HADV(...,QNI3DTEN,UA,VA,QNI3D,...)<BR>
+             </BLOCKQUOTE></CODE>
+             where each <CODE>HADV</CODE> call calculates a 3-D
+             <CODE>*TEN</CODE> tendency array in terms of 3D winds
+             <CODE>UA,VA</CODE> and the original 3D variable
+             <CODE>*3D</CODE> being advected.  <CODE>HADV</CODE> does
+             over 4&nbsp;MB of memory traffic per call.  Assuming a
+             processor with a (large) 2&nbsp;MB L3 cache,
+             each <CODE>HADV</CODE> call wipes out the cache twice
+             over. This means that the winds <CODE>UA,VA</CODE> never
+             get a chance to be re-used in the cache.   With 10 calls,
+             there is a total of 40&nbsp;MB of memory traffic.  Even on
+             a similar 32-processor system (with 64&nbsp;MB total of
+             caches), this code overwhelms the caches. Suppose we
+             jammed these subroutine calls by coding a new advection
+             routine that advects all these variables as a single
+             operation:
+             <CODE><BLOCKQUOTE>
+             &nbsp;&nbsp;HADVALL( UA, VA, <BR>
+             &amp;&nbsp;&nbsp;&nbsp;&nbsp; U3DTEN, U3D, V3DTEN, V3D,<BR>
+             &amp;&nbsp;&nbsp;&nbsp;&nbsp; PP3DTEN,PP3D,W3DTEN, W3D,<BR>
+             &amp;&nbsp;&nbsp;&nbsp;&nbsp; T3DTEN, T3D, QV3DTEN,QV3D,<BR>
+             &amp;&nbsp;&nbsp;&nbsp;&nbsp; QC3DTEN,QC3D,QR3DTEN,QR3D,<BR>
+             &amp;&nbsp;&nbsp;&nbsp;&nbsp; QI3DTEN,QI3D,QNI3DTEN,QNI3D)<BR>
+             </BLOCKQUOTE></CODE>
+             The new code not only can reduce memory bandwidth to
+             22&nbsp;MB, for this case,it can get better cache
+             reuse&mdash;reusing <CODE>UA(I,J,K),VA(I,J,K)</CODE>  to
+             calculate the tendencies <CODE>*TEN</CODE> simultaneously
+             for all ten of the <CODE>*3D</CODE> variables, at each
+             <CODE>(I,J,K)</CODE>. (It also has one parallel section
+             instead of 20, reducing MM5v3 parallel overhead by about
+             10%, thereby improving model performance on many-processor
+             systems.)  On our hypothetical 32-processor system, we've
+             only used one-third of the caches, leaving 40&nbsp;MB of
+             total cache untouched, perhaps holding data useful for the
+             surrounding routines.
+             <P>
+             <EM>NOTE:  because this re-structuring reduces the memory
+             bottleneck of the original code, it is even more effective
+             at improving performance on newer processors with more
+             powerful arithmetic instructions.</EM>
+             <P>
+
+        <LI>  <STRONG>TLB Thrashing:</STRONG>
+              <P>
+              Recall that the TLB is the part of the processor that has
+              the currently active part of the page tables that
+              translate between the <EM>logical addresses</EM> that
+              programs use, and the <EM>physical addresses</EM> of the
+              actual RAM.  Since the TLB is much smaller than the entire
+              page table, when the TLB doesn't have the needed
+              translation, the entire processor must be suspended while
+              the operating system causes the TLB goes out to main
+              memory to fetch the relevant part of the page table for
+              that translation.  Programs that traverse large regions of
+              memory over and over again may suffer frequent stalls from
+              this process.  The MM5v3 example above (with a dozen or so
+              processes that go over and over large regions of memory)
+              is also prone to TLB thrashing.  For most Intel Xeons, the
+              size of the TLB coverage is 4 MB per processor; bad loop
+              and array organization can cause extra flushing and
+              reloading of the TLB from (slow) main memory.
+              <P>
+              In the above MM5 example, each <CODE>HADV(()</CODE> call
+              would exhaust the TLB capacity; subsequent calls would 
+              have to flush the TLB and start over (ten times).  The
+              <CODE>HADVALL()</CODE> code would only need four TLB flushes.
+              <P>
+              The MM5 practice of over-dimensioning the model in order
+              to accomodate the largest nest that might occur also 
+              contributes to this effect. Consider a 45KM/15KM nest
+              system with 45KM grid dimensions 96&times;132&times;31,
+              and 15KM grid dimensions 190&times;184&times;31.  
+              Benchmarking shows that a 45KM-only run built with this
+              190&times;184&times;31 dimensioning is 15-25% slower
+              (depending upon vendor/platform) than a run with
+              &quot;exact&quot; 96&times;132&times;31 dimensioning. 1-3%
+              of this difference is due to decreases in cache
+              efficiency; the remainder is due to extra TLB thrashing
+              activity.
+              <P>
+
+         <LI>  <STRONG>Array/Struct Analysis Problems:</STRONG>
+              <P>
+              Compilers analyze the data flow within programs to
+              decide which code optimizations and transformations are
+              applicable. One such transformation is not to store a
+              result from register to memory when the compiler can
+              prove the value will not be used subsequently
+              (<EM>dead-store elimination</EM>).  Such analysis is much
+              easier for scalars than it is for arrays (for which the
+              compiler  often can only prove whether <EM>any</EM>
+              element of the array will be used later).  (Many older
+              codes unnecessarily use arrays for storing intermediate
+              results; this comes from the fact that the very earliest
+              Cray vector compilers could not otherwise recognize
+              vectorizable loops, a deficiency that Cray fixed over
+              twenty-five years ago.)
+              <P>
+              An example shows up with the original QSSA solver used
+              in the Models-3 and EDSS AQMs:  there was a routine
+              <VAR>RATED</VAR> that calculated an array
+              <CODE>D(NRXNS)</CODE> entry by entry, like the following:
+              <CODE><BLOCKQUOTE>
+              ...<BR>
+              D(51) =  RK(51) * C(10) * C(36)<BR>
+              ...<BR>
+              </BLOCKQUOTE></CODE>
+              and routine <VAR>PQ1</VAR> that used the D-values to calculate
+              production and loss values, also entry by entry, like:
+              <CODE><BLOCKQUOTE>
+              ...<BR>
+              P1(15) = (D(37) + D(38) + D(39) + D(40) + D(41))/C(15)<BR>
+              ...<BR>
+              Q1(20) =  0.760 *D(52)   + 0.020 *D(53)
+              ...<BR>
+              </BLOCKQUOTE></CODE>
+              (I've picked simple examples; most are rather more
+              complicated&nbsp;:-).)  Because compilers generally are
+              not able to do complete data-flow analysis on array
+              elements, the <CODE>D(N)</CODE> are always written to
+              memory and read from memory.
+              <P>
+              For MAQSIP-RT, we combined these two routines and replaced
+              the array <CODE>D(NRXNS)</CODE> by the set of scalars
+              <CODE>D01,&nbsp;...,&nbsp;D91</CODE> (for Carbon-Bond
+              IV).  The compiler was then able to deduce exactly how
+              and when each of the <CODE>D</CODE>s was used, and
+              rearrange all the arithmetic so that on an SGI R10000
+              with 32 floating point registers, about 70 of the
+              <CODE>D</CODE>s live entirely in registers (never being
+              stored to nor retrieved from memory).  Moreover, the code
+              of the combined <VAR>RATEDPQ1</VAR> is <EM>one huge basic
+              block</EM>, enhancing the compiler's ability to determine
+              which computations were independent, and to schedule the
+              machine instructions for the routine.  The result of this
+              modification was to speed up the air quality model <EM>as a
+              whole</EM> by better than 50% (SGI R10000 result).
+              <P>
+
+        <LI>  <STRONG>Parallel overhead:</STRONG>
+              <P>
+              There are three sub-categories of these overheads:
+              <UL>
+                  <LI> <STRONG>load imbalance: </STRONG>  This happens if the
+                       task given to one processor, say, is much smaller
+                       than that given to another, but they both must
+                       complete before the program can proceed--the
+                       first of these  processor will be idle while
+                       waiting for the second. Consider the following
+                       parallel loop:
+                       <CODE><BLOCKQUOTE>
+                       !$OMP PARALLEL DO<BR>
+                       !$OMP&amp;&nbsp;&nbsp;&nbsp;&nbsp;DEFAULT(NONE)<BR>
+                       !$OMP&amp;&nbsp;&nbsp;&nbsp;&nbsp;PRIVATE(I)<BR>
+                       !$OMP&amp;&nbsp;&nbsp;&nbsp;&nbsp;SHARED(A,B,C)<BR>
+                       DO I=1,38<BR>
+                       &nbsp;&nbsp;&nbsp;A(I)=B(I)/C(I)**2<BR>
+                       END DO<BR>
+                       </BLOCKQUOTE></CODE>
+                       With 4 processors, we get the following work
+                       assignments:
+                       <BLOCKQUOTE><DL>
+                          <DT><VAR>P1</VAR> gets <CODE>I=&nbsp;1,10</CODE>: 10 iterations
+                          <DT><VAR>P2</VAR> gets <CODE>I=11,20</CODE>: 10 iterations
+                          <DT><VAR>P3</VAR> gets <CODE>I=21,30</CODE>:&nbsp; 9 iterations
+                          <DT><VAR>P4</VAR> gets <CODE>I=31,48</CODE>:&nbsp; 9 iterations
+                          <DT>All the processors synchronize at the end
+                          of the loop.
+                       </DL></BLOCKQUOTE>
+                       10% of the time spent on this loop, <VAR>P3</VAR>
+                       and <VAR>P4</VAR> have finished while
+                       <VAR>P1</VAR> and <VAR>P2</VAR> are still busy.
+                       We are effectively wasting 5% of the machine, on
+                       the average.  There are obvious examples that are
+                       much worse, where the amount of work per
+                       iteration varies substantially.  For example,
+                       parallel loop:
+                       <CODE><BLOCKQUOTE>
+                       !$OMP PARALLEL DO<BR>
+                       !$OMP&amp;&nbsp;&nbsp;&nbsp;&nbsp;DEFAULT(NONE)<BR>
+                       !$OMP&amp;&nbsp;&nbsp;&nbsp;&nbsp;PRIVATE(I)<BR>
+                       !$OMP&amp;&nbsp;&nbsp;&nbsp;&nbsp;SHARED(A,B,C)<BR>
+                       DO I=1,38<BR>
+                       &nbsp;&nbsp;&nbsp;DO J = 1, I**2<BR>
+                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;something&gt;<BR>
+                       &nbsp;&nbsp;&nbsp;END DO<BR>
+                       END DO<BR>
+                       </BLOCKQUOTE></CODE>
+                       Using OpenMP <CODE>GUIDED</CODE>,
+                       <CODE>DYNAMIC</CODE>, or <CODE>CHUNKSIZE=1</CODE>
+                       scheduling options can help somewhat to alleviate
+                       the problem for this last
+                       case.
+                       <P>
+                  <LI> <STRONG>distributed-memory parallel
+                       <EM>DMP</EM> latency and bandwidth:</STRONG>
+                       Generally, some kinds of data must be exchanged
+                       between processors, generally in the form of
+                       processor-to-processor messages.  The times
+                       spent setting up, transmitting, and receiving
+                       these messages are all overheads, typically on
+                       the order of several hundred to tens of
+                       thousands of arithmetic operations.  Too many
+                       small messages will result in large overheads
+                       from the message set-up on the message-sender
+                       processor(s), and message reception on the
+                       message-receiver processor(s).
+                       <P>
+                  <LI> <STRONG>shared-memory parallel
+                       <EM>SMP</EM> coordination and distributed-memory
+                       barriers:</STRONG>
+                       Startup and takedown of parallel sections take
+                       the equivalent of several thousand arithmetic
+                       operations.  Too many small parallel sections
+                       (small in the sense of how many arithmetic
+                       calculations they contain) significantly affect
+                       performance.  &quot;Barriers&quot; are the
+                       distributed-memory equivalent...
+                       <P>
+                       Note that there is some overhead from compiling a
+                       program for parallel and then running on one
+                       processor, as compared with compiling serially
+                       (uniprocessor) to begin with.  There are two
+                       reasons for this:  first, the parallel sections
+                       are usually implemented as subroutine calls, and
+                       there is some extra subroutine-call overhead for
+                       the parallel-compiled code; secondly, compilers
+                       usually cannot optimize across subroutine calls,
+                       and the extra subroutine calls created by the
+                       parallel compile may prevent some optimizations.
+                       Usually, these effects are small -- in the 1-2%
+                       range.
+                       <P>
+              </UL>
+              Note that for most kinds of parallel programs, as you
+              increase the number of processors used, you increase the
+              parallel overhead while at the same time decreasing the
+              size of the individual (per-processor) work tasks to be
+              performed.  The cost of parallel loop startup tends to
+              be proportional to the number of parallel threads used,
+              as does the parallel load imbalance overhead, while the
+              amount of work per thread tends to go down proportional
+              to the number of threads. Eventually the two curves
+              cross; you can get past the &quot;point of diminishing
+              returns&quot; to a point where <EM>adding processors
+              actually slows down the program.</EM>  Testing here at
+              MCNC has shown that for the MM5v3 configuration used
+              in our summer-2000 forecasts, running MM5 on 64 IBM SP
+              processors took about one and a half times as long as
+              running it on 32.
+              <P>
+
+        <LI>  <STRONG>Parallel &quot;gotchas&quot;:</STRONG>
+              <P>
+              There are a number of unusual (even counter-intuitive)
+              effects that can happen with both distributed and
+              shared-memory parallel execution, especially in the
+              presence of non-stride-1 array accesses and small parallel
+              sections.  A full study of these is beyond the scope of
+              this paper.
+              <P>
+
+   </OL>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "opt">
+    Optimization Tactics and Strategies
+</A></H2>
+
+    <DL>
+
+        <DT>  <STRONG>Meta-Principle: <EM>You can never do just one
+              thing.</EM></STRONG>
+        <DD>  They all interact.  Sometimes they reinforce and help or
+              hurt each other; sometimes they have conflicting effects,
+              and you have to try to find the best compromise.  In any
+              case, <STRONG>document</STRONG> in the code <EM>just
+              <STRONG>what</STRONG> you are doing <STRONG>and
+              why</STRONG></EM>
+              <P>
+
+        <DT>  <STRONG>Algorithms!</STRONG>
+        <DD>  Hundred-fold and thousand-fold speedups are usually the
+              result of changing to much more efficient algorithms. In
+              classical numerical analysis, elliptic multigrid solvers
+              and the Fast Fourier Transform offer such greater
+              algorithmic efficiency that in spite of the lower
+              processor efficiency they offer, the overall turnaround
+              is hundreds of times shorter, and more than compensates.
+              In environmental modeling, much of emissions processing
+              can be formulated in terms of sparse matrix transforms,
+              in terms of full-matrix transforms, or in terms of data
+              processing style searches.  The data processing approach
+              offers miserable performance.  When one compares the full
+              matrix and sparse matrix approaches, one sees that the
+              full matrix computations (on a typical current machine)
+              would operate at several hundreds of megaflops, whereas
+              the sparse matrix computations would be at a few tens of
+              megaflops.  This is more than compensated by the fact
+              that the transform matrices tend to be on the order of
+              99.9% zeros; SMOKE does 1000 times less arithmetic even
+              if what arithmetic it does is 10 times slower:  the vast,
+              vast majority of the megaflops consumed in a full matrix
+              emissions model would be wasted!
+              <P>
+              Note that a good example of algorithm-improvement is the
+              replacement of repeated linear search of unsorted data by
+              binary search of sorted data.  The Models-3 I/O&nbsp;API
+              contains extensive sets of efficient routines for
+              <A HREF="/products/ioapi/SORTI.html">sorting</A>
+              and <A HREF="/products/ioapi/FINDS.html">searching</A>
+              It also contains extensive facilities for using sparse or
+              band matrices for bilinear interpolation, grid-to-grid
+              transforms and the like (usually a massive win over the
+              compute-coefficients-on-the-fly philosophy).
+              <P>
+              For linear algebra operations (solving systems of
+              equations, matrix inversion, and the like), libraries
+              like <VAR>LAPACK</VAR> are often far more optimized by
+              their specialist authors than anything the average modeler
+              can possibly code (e.g., by such tricks as cache
+              blocking, described below), and typically outperform
+              simpler alternatives by a factor of 2-4.
+              <P>
+
+        <DT>  <STRONG>Choose appropriate subscript orders:</STRONG>
+        <DD>  Choose a subscript order such that the most frequently
+              occurring array accesses are by the &quot;fastest&quot;
+              subscript (see the <A HREF="#order">table above</A> for
+              Fortran and C array ordering).  For very large memory
+              bound programs, array order can easily make a factor of
+              ten or more difference in performance, although half of
+              that is more common.  If different parts of a program are
+              doing lots of repeated computation with an array but in
+              different natural loop orders, it can sometimes be
+              worthwhile to &quot;gather-scatter&quot; or
+              &quot;transpose&quot; the data, i.e., to keep two copies
+              of the data, one in each subscript order, and copy back
+              and forth between them when going between the different
+              parts of the program.
+              <P>
+              Likewise, avoid &quot;array-of-<CODE>struct/TYPE</CODE>&quot;
+              program organizations, because they will frequently have
+              you processing isolated numbers spaced apart by the size of
+              the <CODE>struct</CODE>.  <EM>See
+              <A HREF="#note1">Note&nbsp;1</A>.</EM>
+              <P>
+              At a higher level, this is the reason for the original
+              Models-3 distinction between &quot;computational
+              <CODE>SPECIES,LEVEL,COL,ROW</CODE> subscript order and
+              postprocessing or I/O (file/visualization)
+              <CODE>COL,ROW,LEVEL,SPECIES</CODE> subscript order:
+              <EM>all</EM> the processes in an air quality model act
+              upon the species at a cell, so that subscript is
+              naturally innermost.  The second most used dimension is
+              the vertical, for the computationally more intense
+              processes of vertical diffusion, clouds and aqueous
+              processes, and (for photolysis calculations)
+              chemistry.  The <EM>only</EM> processes for which
+              <CODE>LEVEL</CODE> is not naturally the
+              second-innermost subscript is horizontal advection (and
+              horizontal diffusion, if used:  at AQM grid scales, the
+              existing numerical diffusion is generally an order of
+              magnitude larger than the &quot;real&quot; physical horizontal
+              diffusion anyway).  On the other hand, post-processing
+              analysis and visualization most frequently are one
+              species (or a few species) at a time, and frequently for
+              one layer at a time, so that for post-processing purposes
+              these are naturally the <EM>outermost</EM> subscripts.
+              That is why in the original design, the air quality model
+              used one computational subscript order, but had an
+              <VAR>OUTCOUPLE</VAR> module that transposed the data to
+              analysis order for output, but was called infrequently
+              (as compared with the computational routines). <P>
+
+        <DT>  <STRONG>Minimize the use of index arrays:</STRONG>
+        <DD>  The use of index arrays (i.e., expressions such as
+              <CODE>A(&nbsp;IX(&nbsp;I&nbsp;)&nbsp;)</CODE> by its
+              nature introduces data dependencies that slow down
+              pipelined microprocessors.  The processor must first  go
+              to memory to fetch <CODE>IX(&nbsp;I&nbsp;)</CODE> before
+              it can even know what element of <CODE>A</CODE> to
+              fetch.  There are times, for example in SMOKE, for which
+              the use of index arrays and sparse matrix algorithms
+              allows one to avoid computations that are 99.99%
+              arithmetic with zeros, and even a factor of 10 slowdown
+              of the processor due to the index arrays leaves one a
+              factor of 1000 ahead in overall performance.  On the other
+              hand, the use of indexing arrays repeatedly to go back and
+              forth between &quot;physics species&quot; and
+              &quot;model species&quot; costs a substantial fraction of
+              the time required by the horizontal and vertical
+              advection routines.  The post-July2001 MAQSIP-RT's
+              3-D advection routine that performs more computational
+              work but does only one gather-scatter step, based on the
+              fact that most of the time, Z-advection is what limits
+              the model time-step.
+              <BLOCKQUOTE><CODE>
+              <VAR>ADV3D</VAR>:<BR>
+              &nbsp;&nbsp;Extract advected species from CGRID<BR>
+              &nbsp;&nbsp;Half-step of Z advection<BR>
+              &nbsp;&nbsp;Full-step of X-Y advection<BR>
+              &nbsp;&nbsp;Half-step of Z advection<BR>
+              &nbsp;&nbsp;Copy-back advected species to CGRID, with
+              density-related mass-adjustment.<BR>
+              </CODE></BLOCKQUOTE>
+              is actually about three times faster than the separate
+              <VAR>HADV</VAR> and <VAR>VADV</VAR> calls that do, in
+              effect, the following, with two sets of gather-scatter
+              steps:
+              <BLOCKQUOTE><CODE>
+              <VAR>HADV</VAR>:<BR>
+              &nbsp;&nbsp;Extract advected species from CGRID<BR>
+              &nbsp;&nbsp;Full-step of X-Y advection<BR>
+              &nbsp;&nbsp;Copy-back advected species to CGRID<BR>
+              <VAR>VADV</VAR>:<BR>
+              &nbsp;&nbsp;Extract advected species from CGRID<BR>
+              &nbsp;&nbsp;Full-step of Z advection<BR>
+              &nbsp;&nbsp;Copy-back advected species to CGRID<BR>
+              <VAR>ADJ_CON</VAR>:<BR>
+              &nbsp;&nbsp;Extract advected species from CGRID<BR>
+              &nbsp;&nbsp;Perform density-related mass adjustments<BR>
+              &nbsp;&nbsp;Copy-back advected species to CGRID<BR>
+              </CODE></BLOCKQUOTE>
+              Note that the &quot;extract&quot;s at the start of
+              <VAR>VADV</VAR> and <VAR>ADJ_CON</VAR> exactly cancel out
+              the &quot;copy-back&quot;s at the end of <VAR>HADV</VAR>
+              and <VAR>VADV</VAR>, respectively.  This optimization has
+              only a moderate direct effect on model performance by
+              itself, but it also allows us to stretch the model time step,
+              with an indirect effect of substantially increasing the
+              computational efficiency of <VAR>GASCHEM</VAR> and
+              <VAR>VDIFF</VAR>, and speeding up the model as whole
+              by 30-40%.
+              <P>
+              It is worthwhile, I think, to consider structuring AQMs
+              so that the physics modules only see the physics species
+              and physics subscripts, possibly by making the
+              <VAR>COUPLE/DECOUPLE</VAR> operations not only go back
+              and forth between chemistry and physics units but also
+              between chemistry and physics species variable-sets and
+              subscripts.<BR>
+              <EM><STRONG>Question: </STRONG> Should the very-short-lived
+              species have any existence at all outside  the chemistry
+              module?</EM>
+              <P>
+
+        <DT>  <STRONG>Use <CODE>PARAMETER</CODE>s where possible;
+              avoid constructs that require run-time disambiguation:</STRONG>
+        <DD>  The more of the code and run-time structure that can be
+              calculated at compile time, the better job of optimization
+              the compiler can do.  <CODE>PARAMETER</CODE> dimensions
+              and loop bounds typically cause speedups on the order of
+              5% (not a lot, but every little bit helps:-)  Array
+              sections and <CODE>ALLOCATE</CODE>able
+              arrays cause performance penalties typically running from
+              10% to 100%, depending upon the vendor; Fortran
+              <CODE>POINTER</CODE>s typically cause 50%-200% penalties
+              (basically reducing the optimizability of Fortran down to
+              that of C/C++).
+              <P>
+
+        <DT>  <STRONG>Avoid/Minimize expensive operations:</STRONG>
+        <DD>  This frequently can be done with just a bit of ordinary
+              algebra, by rationalizing fractions or using the laws of
+              exponents.  <CODE>SQRT(X)</CODE> is faster than
+              <CODE>X**0.5</CODE> on all platforms I know; usually,
+              <CODE>SQRT(SQRT(X))</CODE> is faster than
+              <CODE>X**0.25</CODE>. Here are just a few egregious
+              examples of avoidable expensive operations, taken mostly
+              from MM5:<P>
+              <UL>
+                  <LI> In <VAR>JPROC</VAR> there is a routine that
+                       calculates the zenith angle by first doing a
+                       solid-trigonometry calculation to give the
+                       cosine of the zenith angle, takes the inverse
+                       cosine of it, and then returns the result.
+                       <VAR>JPROC</VAR> actually uses the cosine of the
+                       zenith angle:  it immediately takes the cosine
+                       of that zenith angle result and uses that (but
+                       <EM>not</EM> the zenith angle itself) for the
+                       photolysis-rate calculation.  Not only is this
+                       cosine-of-the-inverse-cosine structure
+                       expensive, it also has degraded accuracy as
+                       compared to using the originally-calculated
+                       zenith-cosine, due to round-off errors at each
+                       stage.
+                       <P>
+                  <LI> In MM5's <VAR>HIRPBL</VAR>,
+                       <BLOCKQUOTE><CODE>
+                       CHI=XLV*XLV*QMEAN/CP/RV/TMEAN/TMEAN
+                       </CODE></BLOCKQUOTE>
+                       instead of the almost-four times more efficient
+                       <BLOCKQUOTE><CODE>
+                       CHI=XLV*XLV*QMEAN/(CP*RV*TMEAN*TMEAN)
+                       </CODE></BLOCKQUOTE>
+                       Making this example worse is the fact that
+                       <CODE>CHI</CODE> is only a scratch variable,
+                       used as a factor in the 4-divide computation
+                       of <CODE>RI</CODE> at the next line.  The whole
+                       <CODE>CHI-RI</CODE> computation could have been
+                       rationalized to use only 1 divide, instead of 8!
+                       <P>
+                  <LI> In MM5's <VAR>MRFPBL</VAR>,
+                       <BLOCKQUOTE><CODE>
+                       PHIH(I)=(1.-APHI16*HOL1)**(-1./2.)
+                       </CODE></BLOCKQUOTE>
+                       instead of the several-times less expensive
+                       <BLOCKQUOTE><CODE>
+                       PHIH(I)=1.0/SQRT(1.-APHI16*HOL1))
+                       </CODE></BLOCKQUOTE>
+                       <P>
+                  <LI> In a miter-loop inside a <CODE>K</CODE>-loop
+                       inside an <CODE>I</CODE>-loop in MM5's
+                       <VAR>EXMOISR</VAR>,
+                       <BLOCKQUOTE><CODE>
+                       DO N=1, NSTEPS<BR>
+                       DO K=1, NL<BR>
+                       &nbsp;&nbsp;...<BR>
+                       &nbsp;&nbsp;FR(K)=AMAX1(FR(K)/DSIGMA(K),FR(K-1)/DSIGMA(K-1))*DSIGMA(K)<BR>
+                       &nbsp;&nbsp;FS(K)=AMAX1(FS(K)/DSIGMA(K),FS(K-1)/DSIGMA(K-1))*DSIGMA(K)<BR>
+                       &nbsp;&nbsp;FI(K)=AMAX1(FI(K)/DSIGMA(K),FI(K-1)/DSIGMA(K-1))*DSIGMA(K)<BR>
+                       &nbsp;&nbsp;...<BR>
+                       END DO<BR>
+                       END DO
+                       </CODE></BLOCKQUOTE>
+                       instead of first doing a <CODE>K</CODE>-only
+                       computation before the <CODE>I</CODE>-loop,
+                       followed by the <CODE>I-K</CODE>-miter loop nest
+                       containing
+                       <BLOCKQUOTE><CODE>                       
+                       DO K=1, NL<BR>
+                       &nbsp;&nbsp;SIGFRC(K)=DSIGMA(K)/DSIGMA(K-1)<BR>
+                       END DO<BR>
+                       DO N=1, NSTEPS<BR>
+                       DO K=1, NL<BR>
+                       &nbsp;&nbsp;...<BR>
+                       &nbsp;&nbsp;FR(K)=AMAX1(FR(K),FR(K-1)*SIGFRC(K))<BR>
+                       &nbsp;&nbsp;FS(K)=AMAX1(FS(K),FS(K-1)*SIGFSC(K))<BR>
+                       &nbsp;&nbsp;FI(K)=AMAX1(FI(K),FI(K-1)*SIGFIC(K))<BR>
+                       &nbsp;&nbsp;...<BR>
+                       END DO<BR>
+                       END DO
+                       </CODE></BLOCKQUOTE>
+                       In this example, computing <CODE>SIGFRC(K)</CODE>
+                       in a preliminary <CODE>K</CODE>-loop is an
+                       example of indirect <STRONG>loop-invariant lifting</STRONG>,
+                       described below.
+                       <EM>Note that the alternative coding also causes less
+                       round-off error!</EM>
+                       <P>
+                  <LI> In  MM5's <VAR>EXMOISR</VAR>,
+                       <BLOCKQUOTE><CODE>&nbsp;PMLTEV(I,K)=SONV(I,K)*cache*(QAOUT(I,K)/QVS(I,K)-1.)*<BR>
+                       &amp;&nbsp;&nbsp;&nbsp;(0.65*SLOS(I,K)*SLOS(I,K)<BR>
+                       &amp;&nbsp;&nbsp;&nbsp;+DEPS2**0.5*DEPS3*DUM11(I,K)*SLOS(I,K)**DEPS4)<BR>
+                       &amp;&nbsp;&nbsp;&nbsp;/AB(I,K)</CODE></BLOCKQUOTE>
+                       which can be rationalized as a fraction to use
+                       one divide instead of two, and which can use
+                       <CODE>SQRT()</CODE> instead of real-exponent
+                       power operation <CODE>()**.5</CODE>:
+                       <BLOCKQUOTE><CODE>
+                       &nbsp;PMLTEV(I,K)=SONV(I,K)*cache*(QAOUT(I,K)-QVS(I,K))*<BR>
+                       &amp;&nbsp;&nbsp;&nbsp;(0.65*SLOS(I,K)*SLOS(I,K)<BR>
+                       &amp;&nbsp;&nbsp;&nbsp;+SQRT(DEPS2)*DEPS3*DUM11(I,K)*SLOS(I,K)**DEPS4)<BR>
+                       &amp;&nbsp;&nbsp;&nbsp;/(QVS(I,K)*AB(I,K))
+                       </CODE></BLOCKQUOTE>
+                       <P>
+              </UL>
+
+        <DT>  <STRONG>Loop jamming and restructuring:</STRONG>
+        <DD>  Loop jamming is the operation of combining loops that have
+              the same range (or similar ranges) of iteration counts.
+              This can have three advantageous effects:  (1)&nbsp;it
+              increases the amount of work in the loop body, hopefully
+              giving the compiler's instruction scheduler more
+              independent work to be performed simultaneously; and
+              (2)&nbsp;if the same array elements are used in both
+              loops, they can be loaded or stored once instead of
+              twice, reducing memory traffic and perhaps increasing
+              cache efficiency; furthermore (3)&nbsp;it sometimes
+              creates opportunities for other optimizations, like
+              common subexpression elimination.
+              <P>
+
+              <BLOCKQUOTE><EM>
+              NOTE:  Some compilers (notably SGI and IBM) try to deal
+              with this automatically at high optimization levels.
+              Sometimes they do a good job, sometimes not.  And
+              sometimes the result is not predictable in advance&nbsp;;-(
+              <P>
+              WARNING:  SGI Rxxxx and IBM POWER&lt;n&gt; processors
+              have additional &quot;streaming load/store units&quot;
+              that are substantially faster for array accesses than the
+              normal load/store units--but for only one (SGI) or two
+              (IBM) arrays per loop.  For these processors, it
+              sometimes improves performance to take the opposite tack,
+              and split the code into simple loops instead.
+              Unfortunately, machine-specific experimentation is usually
+              necessary to decide whether or not to do this&nbsp;;-(
+              </EM></BLOCKQUOTE>
+              <P>
+
+              Sometimes loop jamming is very simple, as in the
+              following example adapted from MM5's <VAR>BDYVAL</VAR>
+              routine:
+              <BLOCKQUOTE><CODE>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;QCX(I)=QC(I,2,K)*RPSA(I,2)<BR>
+              &nbsp;&nbsp;&nbsp;QRX(I)=QR(I,2,K)*RPSA(I,2)<BR>
+              END DO<BR>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;QC(I,1,K)=QCX(I)*PSA(I,1)<BR>
+              &nbsp;&nbsp;&nbsp;QR(I,1,K)=QRX(I)*PSA(I,1)<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              which has <CODE>8&times;N</CODE> loads and
+              <CODE>4&times;N</CODE> multiplies and stores.  Speed is
+              limited by the fact that the processor can only do one
+              load per processor cycle; the arithmetic unit is operating
+              at only half-speed.
+              Simple loop
+              jamming then gives
+              <BLOCKQUOTE><CODE>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;QCX(I)=QC(I,2,K)*RPSA(I,2)<BR>
+              &nbsp;&nbsp;&nbsp;QRX(I)=QR(I,2,K)*RPSA(I,2)<BR>
+              &nbsp;&nbsp;&nbsp;QC(I,1,K)=QCX(I)*PSA(I,1)<BR>
+              &nbsp;&nbsp;&nbsp;QR(I,1,K)=QRX(I)*PSA(I,1)<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              which has <CODE>6&times;N</CODE> loads and
+              <CODE>4&times;N</CODE> multiplies and stores, for
+              a speedup factor of 33%.  This code can be further
+              reorganized (since in this case <CODE>QCX</CODE> and
+              <CODE>QRX</CODE> are purely scratch variables, never
+              used afterwards) to:
+              <BLOCKQUOTE><CODE>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;QC(I,1,K)=QC(I,2,K)*RPSA(I,2)*PSA(I,1)<BR>
+              &nbsp;&nbsp;&nbsp;QR(I,1,K)=QR(I,2,K)*RPSA(I,2)*PSA(I,1)<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              which has <CODE>4&times;N</CODE> loads,
+              <CODE>3&times;N</CODE> multiplies (since the compiler
+              should recognize the common subexpression
+              <CODE>RPSA(I,2)*PSA(I,1)</CODE>), and
+              <CODE>2&times;N</CODE> stores.  It should be at least
+              twice as fast as the original (maybe more, since
+              eliminating the scratch-arrays reduces <EM>cache
+              pollution</EM>).
+              <P>
+              At other times, we may jam nests of loops, and/or the
+              loop bounds may not match exactly, so that we have to
+              introduce extra &quot;set-up&quot; or
+              &quot;clean-up&quot; loops (an operation called
+              <EM>peeling</EM> to make the merger work, as in
+              this example adapted from MM5's <VAR>MRFPBL</VAR> routine
+              (using <CODE>DO-END DO</CODE> and Fortran-90 style
+              continuations, for easier web layout).  Recall that in
+              MM5, <CODE>K=1</CODE> is the top of the model.
+              <BLOCKQUOTE><CODE>
+              DO I = IST, IEN&nbsp;&nbsp;! original loop 90<BR>
+              &nbsp;&nbsp;ZQ(I,KL+1)=0.<BR>
+              END DO<BR>
+              DO K = KL, 1, -1&nbsp;&nbsp;! original loop 110 <BR>
+              &nbsp;&nbsp;DO I = IST, IEN&nbsp;&nbsp;! original loop 100<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;DUM1(I)=ZQ(I,K+1)<BR>
+              &nbsp;&nbsp;END DO<BR>
+              &nbsp;&nbsp;DO I = IST, IEN&nbsp;&nbsp;! original loop 110<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;CELL=PTOP*RPSB(I,J)<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;ZQ(I,K)=ROVG*T0(I,J,K)*&amp;<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALOG((SIGMA(K+1)+CELL)/(SIGMA(K)+CELL))&amp;<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+DUM1(I)<BR>
+              &nbsp;&nbsp;END DO<BR>
+              END DO<BR>
+              DO K = 1, KL&nbsp;&nbsp;! original loop 120<BR>
+              &nbsp;&nbsp;DO I = IST, IEN<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;ZA(I,K)=0.5*(ZQ(I,K)+ZQ(I,K+1))<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;DZQ(I,K)=ZQ(I,K)-ZQ(I,K+1)<BR>
+              &nbsp;&nbsp;END DO<BR>
+              END DO<BR>
+              DO K = 1, KL-1&nbsp;&nbsp;! original loop 130<BR>
+              &nbsp;&nbsp;DO I = IST, IEN<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;DZA(I,K)=ZA(I,K)-ZA(I,K+1)<BR>
+              &nbsp;&nbsp;END DO<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              This already has a &quot;start-up&quot; <CODE>I</CODE>-loop
+              for <CODE>K</CODE>-value <CODE>KL+1</CODE>.
+              All the <CODE>I</CODE>-loops have range <CODE>I=IST,IEN</CODE>
+              but we must re-arrange a bit of code to get a common range
+              of <CODE>KL-1,1,-1</CODE> for the <CODE>K</CODE>-loops--we
+              need to put computations for <CODE>K</CODE>-value
+              <CODE>KL</CODE> into the &quot;start-up&quot;<CODE>I</CODE>-loop
+              to make this work. It is also best to promote <CODE>CELL</CODE>
+              to being an array, and eliminate scratch variable
+              <CODE>DUM1</CODE>. We also need to make sure we
+              &quot;count down&quot; in <CODE>K</CODE>, because of the
+              dependencies of, for example, <CODE>DZA(I,K)</CODE> upon
+              <CODE>ZA(I,K+1)</CODE>.  The result is:
+              <BLOCKQUOTE><CODE>
+              DO I = IST, IEN<BR>
+              &nbsp;&nbsp;ZQ(I,KL+1)=0.<BR>
+              &nbsp;&nbsp;CELL(I)=PTOP*RPSB(I,J)<BR>
+              &nbsp;&nbsp;ZQ(I,KL)=ROVG*T0(I,J,KL)*&nbsp;&nbsp;&amp;<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALOG((SIGMA(2)+CELL(I))/(SIGMA(1)+CELL(I)))<BR>
+              &nbsp;&nbsp;ZA(I,KL)=0.5*(ZQ(I,KL)+ZQ(I,KL+1))<BR>
+              &nbsp;&nbsp;DZQ(I,KL)=ZQ(I,KL)<BR>
+              END DO<BR>
+              DO K = KL-1, 1, -1 <BR>
+              DO I = IST, IEN<BR>
+              &nbsp;&nbsp;ZQ(I,K)=ROVG*T0(I,J,K)*&nbsp;&nbsp;&amp;<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALOG((SIGMA(K+1)+CELL(I))/(SIGMA( K )&nbsp;&nbsp;&amp;<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+CELL(I)))<BR>
+              &nbsp;&nbsp;ZA(I,K)=0.5*(ZQ(I,K)+ZQ(I,K+1))<BR>
+              &nbsp;&nbsp;DZQ(I,K)=ZQ(I,K)-ZQ(I,K+1)<BR>
+              &nbsp;&nbsp;DZA(I,K)=ZA(I,K)-ZA(I,K+1)<BR>
+              END DO<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              To analyze the performance, let <CODE>SIZE=KL*(IEN-IST+1)</CODE>
+              In the original, there are about <CODE>8*SIZE</CODE> loads,
+              <CODE>5*SIZE</CODE> stores, <CODE>9*SIZE</CODE> adds or
+              multiplies, and one set each of <CODE>SIZE</CODE> very
+              expensive log and divide operations.  (Loop 120 manages to
+              re-use the values for <CODE>ZQ(I,K)</CODE> and
+              <CODE>ZQ(I,K+1)</CODE>, reducing the number of loads from
+              <CODE>10*SIZE</CODE> to <CODE>8*SIZE</CODE>.) In the
+              jammed final form, the re-use is even better:
+              <CODE>ZQ(I,K)</CODE> is calculated then simultaneously
+              stored and re-used in two additional calculations, for
+              example. There are about <CODE>3*SIZE</CODE> loads,
+              <CODE>4*SIZE</CODE> stores, <CODE>9*SIZE</CODE> adds or
+              multiplies, and one set each of the expensive log and
+              divide operations.  The final overall speedup depends upon
+              just how expensive the log and divides are; the rest of
+              the code should speed up by a factor slightly more than 2.
+              <P>
+
+        <DT>  <STRONG>Loop and Logic refactoring:</STRONG>
+        <DD>  When run at high optimization levels, some compilers
+              will do loop jamming, loop unrolling and loop reordering
+              of simple loops (with no internal
+              <CODE>IF-THEN-ELSE</CODE> logic) in order to get larger
+              basic blocks with more independent work to be scheduled.
+              It is beyond the present state of the compiler writer's
+              art, however, (and there seem to be little interest in
+              researching) to perform optimizations that inverts loop
+              invariant <CODE>IF-THEN-ELSE</CODE> logic with
+              <CODE>DO</CODE>-loops; you have to do the following sorts
+              of code-rewriting yourself, to turn
+              <BLOCKQUOTE><CODE>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;IF (OPTION .EQ. 6 ) THEN<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!!  work for case 6:<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;ELSE IF (OPTION .EQ. 5 ) THEN<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;END IF  !  if option=6,5,4,3,2,1<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              into
+              <BLOCKQUOTE><CODE>
+              IF (OPTION .EQ. 6 ) THEN<BR>
+              &nbsp;&nbsp;&nbsp;DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!!  work for case 6:<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;END DO<BR>
+              ELSE IF (OPTION .EQ. 5 ) THEN<BR>
+              &nbsp;&nbsp;&nbsp;DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;END DO<BR>
+              ELSE&nbsp;&nbsp;&nbsp;...<BR>
+              END IF  !  if option=6,5,4,3,2,1<BR>
+              </CODE></BLOCKQUOTE>
+              This topic is pursued in greater detail in the following
+              sections on <A HREF = "#deps2">control dependencies</A>
+              and on <A HREF = "#mrfpbl">MM5 MRFPBL</A>.
+              <P>
+
+        <DT>  <STRONG>Loop-Invariant Lifting:</STRONG>
+        <DD>  When the values resulting from computations do not depend
+              upon the loop counter (and are thus the same for all
+              iterations of the loop, it can frequently improve
+              performance to do the computations and save the result
+              before the execution of the loop, and then to use the
+              result within the loop.  Generally, compilers can perform
+              the simpler cases of loop-invariant lifting; they cannot,
+              however, deal with the cases of invariants that are
+              arrays, loop-invariant logic nor with cases where the
+              construction of the loop invariant involves function calls
+              (even calls of standard library functions:  at compile
+              time, the compiler has no way to know that you don't have
+              your own functions by the same name, that do different and
+              non-invariant things.) There are a number of particularly
+              egregious examples within all of the MM5
+              <VAR>EXMOIS*</VAR> modules:
+              <BLOCKQUOTE><CODE>
+              &nbsp;DO I = IST,IEN<BR>
+              &nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;NSTEP=...<BR>
+              &nbsp;&nbsp;&nbsp;DO N=1,NSTEP&nbsp;&nbsp;&nbsp;!  miter loop<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF(N.GT.1000)THEN<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STOP 'IN EXMOISR, NSTEP TOO LARGE'<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;END IF<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAINNC(I,J)=RAINNC(I,J)+<BR>
+              &amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(FALOUTR(KL)+FALOUTS(KL)+FALOUTI(KL))*<BR>
+              &amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DTMIN*6000./G/NSTEP<BR>
+              &nbsp;&nbsp;&nbsp;END DO  &nbsp;&nbsp;&nbsp;!  end miter loop<BR>
+              &nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;END DO&nbsp;&nbsp;&nbsp;.!! end I loop<BR>
+              </CODE></BLOCKQUOTE>
+              Note that the <CODE>IF(N.GT.1000)...</CODE> is really a
+              condition on <CODE>NSTEP</CODE> and should be done before
+              the miter <CODE>N</CODE>-loop. (This is one of the cases
+              for which <EM>we</EM> can see a loop invariant although
+              the compiler can not.)   Note also the expensive
+              and poorly-formulated <CODE>DTMIN*6000./G/NSTEP</CODE>
+              factor for rain-accumulation.  (Furthermore, note the
+              fact that rain-accumulation is done directly into the
+              global accumulator array <CODE>RAINNC(I,J)</CODE>, both
+              affecting the round-off error adversely and causing
+              repeated unnecessary stores of the result to memory.)  A
+              better coding would be:
+              <BLOCKQUOTE><CODE>
+              &nbsp;DO I = IST,IEN<BR>
+              &nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;NSTEP=...<BR>
+              &nbsp;&nbsp;&nbsp;IF(NSTEP.GT.1000)THEN<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STOP 'IN EXMOISR, NSTEP TOO LARGE'<BR>
+              &nbsp;&nbsp;&nbsp;END IF<BR>
+              &nbsp;&nbsp;&nbsp;RNSUM=0.0<BR>
+              &nbsp;&nbsp;&nbsp;DO N=1,NSTEP&nbsp;&nbsp;&nbsp;!  miter loop<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RNSUM=RNSUM+FALOUTR(KL)+FALOUTS(KL)+FALOUTI(KL)<BR>
+              &nbsp;&nbsp;&nbsp;END DO&nbsp;&nbsp;&nbsp;!  end miter loop<BR>
+              &nbsp;&nbsp;&nbsp;...<BR>
+              &nbsp;&nbsp;&nbsp;RAINNC(I,J)=RAINNC(I,J)+RNSUM*DTMIN*6000./(G*NSTEP)<BR>
+              &nbsp;END DO&nbsp;&nbsp;&nbsp;.!! end I loop<BR>
+              </CODE></BLOCKQUOTE>
+              <BLOCKQUOTE><EM>Given the original rainfall computation (which may
+              easily add one second's instantaneous rainfall to a
+              360000-second global total),I do not trust unmodified MM5's
+              precipitation totals to be reasonably accurate for runs
+              exceeding 24-48 hours' duration.</EM></BLOCKQUOTE>
+              <P>
+              There is also an example of the compiler-can't-do-it kind
+              of difficulty with loop-invariant lifting in the JPROC
+              program's <VAR>SRBAN</VAR> subroutine:
+              <BLOCKQUOTE><CODE>
+              E10 = ALOG( 10.0 )<BR>
+              DO ILAY = N20, NLAYS<BR>
+              &nbsp;&nbsp;DO IWLO2 = 1, NWLO2<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;X1=ALOG(4.696E-23*CVO2(ILAY)/0.2095)/E10<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;...(code involving a real exponent)<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;Y1 = ALOG(CVO2(ILAY))/E10<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;...(code involving a real exponent)<BR>
+              &nbsp;&nbsp;END DO<BR>
+              &nbsp;&nbsp;...<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              <STRONG><EM>We</EM></STRONG> know that
+              <CODE>ALOG(4.696E-23*CVO2(ILAY)/0.2095) =
+              ALOG(CVO2(ILAY)) + ALOG(4.696E-23/0.2095)</CODE>, that
+              the first of these terms on the RHS depends only on
+              <CODE>ILAY</CODE>, and that the second is a pure
+              constant. But because of the many opportunities for
+              mischief in a potential user-defined <CODE>ALOG</CODE>,
+              the compiler can not even know that two successive calls
+              of <CODE>ALOG(CVO2(ILAY))</CODE> give the same answer
+              (much less take advantage of the laws of logarithms that
+              relate the expressions in the code).  The code will
+              reduce to the <EM>much, much faster</EM>:
+              <BLOCKQUOTE><CODE>
+              D10 = 1.0 / ALOG( 10.0 )<BR>
+              ATRM = ALOG(4.696E-23/0.2095)*D10<BR>
+              DO ILAY = N20, NLAYS<BR>
+              &nbsp;&nbsp;LCV02 = ALOG(CVO2(ILAY))*D10<BR>
+              &nbsp;&nbsp;DO IWLO2 = 1, NWLO2<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;X1 = LCV02 - ATRM<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;...(code involving a real exponent)<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;Y1 = LCV02<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;...(code involving a real exponent)<BR>
+              &nbsp;&nbsp;END DO<BR>
+              &nbsp;&nbsp;...<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              which has no <CODE>ALOG</CODE> function call in the
+              innermost loop at all, and only one such call in the
+              outer loop, as well as a substantially reduced number of
+              divisions.  The new code should be about twice as fast as
+              the old code (it still has two of the the expensive
+              real-exponent operations in the inner loop, but no log
+              operations).
+              <P>
+
+        <DT>  <STRONG>Loop unrolling:</STRONG>
+        <DD>  <EM>This is a technique more used by the compilers than by
+              actual modelers</EM> (except in very performance critical
+              situations or when programming C or C++, for which the
+              compiler often cannot determine whether it is
+              &quot;safe&quot;, due to C/C++ promiscuity with
+              pointers); however, it is useful to understand how
+              it works.  Frequently, the compiler will only do unrolling
+              if you put in specific command-line options to tell it to
+              do so.
+              <P>
+              In some ways, loop unrolling is quite similar to the
+              <EM>vectorization</EM> performed by Cray supercomputers,
+              for example (and in fact some vendors call it (not
+              entirely correctly) vectorization).  The idea is to get
+              lots of independent work, and large basic blocks over
+              which the compiler can schedule machine instructions by
+              executing several iterations of a loop at once.  For
+              example, the compiler might replace the loop
+              <BLOCKQUOTE><CODE>
+              DO I = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I,K)=B(I,K)+C(I,K)<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              by
+              <BLOCKQUOTE><CODE>
+              N1 = MOD( N, 4 )<BR>
+              DO I = 1, N1<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I,K)=B(I,K)+C(I,K)<BR>
+              END DO<BR>
+              DO I = N1+1, N,4<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I&nbsp;&nbsp;,K)=B(I&nbsp;&nbsp;,K)+C(I&nbsp;&nbsp;,K)<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I+1,K)=B(I+1,K)+C(I+1,K)<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I+2,K)=B(I+2,K)+C(I+2,K)<BR>
+              &nbsp;&nbsp;&nbsp;&nbsp;A(I+3,K)=B(I+3,K)+C(I+3,K)<BR>
+              END DO<BR>
+              </CODE></BLOCKQUOTE>
+              The instruction scheduling for the original loop would
+              look like the following, which is dominated by waiting
+              for instructions to complete (and, for non-speculative
+              processors, waiting for the decision whether this is the
+              last loop iteration):
+              <OL TYPE="1">
+                  <LI> Load <CODE>B(I,K)</CODE>
+                  <LI> Load <CODE>C(I,K)</CODE>
+                  <LI> Wait until the loads complete
+                  <LI> Add  <CODE>B(I,K)</CODE> and <CODE>C(I,K)</CODE>
+                  <LI> Wait until the ADD completes
+                  <LI> Store the result in <CODE>A(I,K)</CODE>
+                  <LI> Increment <CODE>I</CODE>
+                  <LI> Compare <CODE>I</CODE> with <CODE>N</CODE>
+                  <LI> <EM>Speculative processors only:</EM> start
+                       processing the loads for the next iteration
+                  <LI> <EM>Non-Speculative processors:</EM> Wait for
+                       the result of the <CODE>I-N</CODE> comparison
+                  <LI> If <CODE>I&lt;N</CODE> go back to the top of
+                       the loop body
+              </OL>
+              <P>
+              Scheduling for the unrolled loop has no such waits,
+              and has considerable opportunity to overlap different
+              instructions (details depend upon pipeline length
+              and cache latency):
+              <OL TYPE="1">
+                  <LI> Load <CODE>B(I,K)</CODE>
+                  <LI> Load <CODE>C(I,K)</CODE>
+                  <LI> Load <CODE>B(I+1,K)</CODE>
+                  <LI> Load <CODE>C(I+1,K)</CODE>
+                  <LI> Load <CODE>B(I+2,K)</CODE>
+                  <LI> Load <CODE>C(I+2,K)</CODE>
+                  <LI> Load <CODE>B(I+3,K)</CODE>
+                  <LI> Load <CODE>C(I+3,K)</CODE>
+                  <LI> Add  <CODE>B(I,K)</CODE> and <CODE>C(I,K)</CODE>
+                  <LI> Add  <CODE>B(I+1,K)</CODE> and <CODE>C(I+1,K)</CODE>
+                  <LI> Add  <CODE>B(I+2,K)</CODE> and <CODE>C(I+2,K)</CODE>
+                  <LI> Add  <CODE>B(I+3,K)</CODE> and <CODE>C(I+3,K)</CODE>
+                  <LI> Store the <CODE>A(I,K)</CODE>
+                  <LI> Store the <CODE>A(I+1,K)</CODE>
+                  <LI> Store the <CODE>A(I+2,K)</CODE>
+                  <LI> Store the <CODE>A(I+3,K)</CODE>
+                  <LI> Store the result in <CODE>A(I,K)</CODE>
+                  <LI> Increment <CODE>I</CODE> by 4.
+                  <LI> Compare <CODE>I</CODE> with <CODE>N</CODE>
+                  <LI> <EM>Speculative processors only:</EM> start
+                       processing the loads for the next iteration
+                  <LI> <EM>Non-Speculative processors:</EM> Wait for
+                       the result of the <CODE>I-N</CODE> comparison
+                  <LI> If <CODE>I&lt;N</CODE> go back to the top of
+                       the loop body.
+              </OL>
+              <P>
+              Note that because the instructions for <CODE>I, I+1,
+              I+2</CODE> and <CODE>I+3</CODE> are all independent,
+              the compiler (or the processor itself, if it is
+              &quot;out-of-order&quot;) can re-arrange these
+              instructions quite a bit and overlap loads, stores and
+              computations: we can start adding <CODE>B(I,K)</CODE>
+              and <CODE>C(I,K)</CODE> simultaneously with loading
+              <CODE>B(I+3,K)</CODE>, etc., achieving a substantial
+              speedup.
+              <P>
+
+              Another effect that loop unrolling may have is that it may
+              actually reduce the memory bandwidth required for so-called
+              <EM>stencil codes</EM> such as the following (dot-point/
+              cross-point derivative calculation), which naively coded
+              is:
+              <BLOCKQUOTE><CODE>
+              DO R = 1, M<BR>
+              DO C = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C,R)=A(C+1,R)-A(C,R)<BR>
+              END DO<BR>
+              END DO<BR>
+              DO R = 1, M<BR>
+              DO C = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C,R)=A(C,R+1)-A(C,R)<BR>
+              END DO<BR>
+              END DO<BR>
+              </BLOCKQUOTE></CODE>
+              In the naive version, there are two loads and one
+              arithmetic operation per result.  Loop jamming improves
+              this performance by 50%, to three loads and two
+              arithmetic operations per two results
+              (<CODE>A(C,R)</CODE> being loaded into a register once,
+              but used twice):
+              <BLOCKQUOTE><CODE>
+              DO R = 1, M<BR>
+              DO C = 1, N<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C,R)=A(C+1,R)-A(C,R)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C,R)=A(C,R+1)-A(C,R)<BR>
+              END DO<BR>
+              END DO<BR>
+              </BLOCKQUOTE></CODE>
+              Compilers will generally unroll only innermost loops.
+              This, therefore, is one case where programmer-coded loop
+              unrolling can substantially improve performance (but at
+              the cost of nontrivial (heroic?) programmer effort):
+              unrolling both the  <CODE>C</CODE>-loop and the
+              <CODE>R</CODE>-loop by 3 gives 16 loads, 18 arithmetic
+              operations, and 18 results per iteration (bettering the
+              target 1:1 FLOP:LOAD ratio, but at the expense of
+              substantial programmer-effort). Ignoring start-up
+              &quot;remainder&quot; loops (which are rather messy, but
+              constitute only a small fraction of the computation, if
+              <CODE>M</CODE> and <CODE>N</CODE> are large), we have the
+              following.  <CODE>A(C+1,R+1)</CODE> is highlighted to show
+              repeated uses:
+              <BLOCKQUOTE><CODE>
+              DO R = 1, M, 3<BR>
+              DO C = 1, N, 3<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C,R)=A(C+1,R)-A(C,R)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C,R)=<STRONG>A(C+1,R+1)</STRONG>-A(C,R)<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C+1,R)=A(C+2,R)-A(C+1,R)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C+1,R)=<STRONG>A(C+1,R+1)</STRONG>-A(C+1,R)<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C+2,R)=A(C+3,R)-A(C+2,R)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C+2,R)=A(C+2,R+1)-A(C+1,R)<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C,R+1)=<STRONG>A(C+1,R+1)</STRONG>-A(C,R+1)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C,R+1)=A(C+1,R+2)-A(C,R+1)<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C+1,R+1)=A(C+2,R+1)-<STRONG>A(C+1,R+1)</STRONG><BR>
+              &nbsp;&nbsp;&nbsp;DADY(C+1,R+1)=A(C+1,R+2)-<STRONG>A(C+1,R+1)</STRONG><BR>
+              &nbsp;&nbsp;&nbsp;DADX(C+2,R+1)=A(C+3,R+1)-A(C+2,R+1)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C+2,R+1)=A(C+2,R+2)-<STRONG>A(C+1,R+1)</STRONG><BR>
+              &nbsp;&nbsp;&nbsp;DADX(C,R+2)=A(C+1,R+2)-A(C,R+2)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C,R+2)=A(C+1,R+3)-A(C,R+2)<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C+1,R+2)=A(C+2,R+2)-A(C+1,R+2)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C+1,R+2)=A(C+1,R+3)-A(C+1,R+2)<BR>
+              &nbsp;&nbsp;&nbsp;DADX(C+2,R+2)=A(C+3,R+2)-A(C+2,R+2)<BR>
+              &nbsp;&nbsp;&nbsp;DADY(C+2,R+2)=A(C+2,R+3)-A(C+1,R+2)<BR>
+              END DO<BR>
+              END DO<BR>
+              </BLOCKQUOTE></CODE>
+              In principle, one can unroll this system further and get
+              even higher FLOP:LOAD ratios, but in practice the
+              compiler will run out of registers into which to load
+              <CODE>A</CODE>-values at some point and the code will
+              actually slow down. (The code presented here would not
+              be optimal on an Intel x86 processor, which has only 8
+              floating-point registers).
+              <P>
+
+        <DT>  <STRONG>Cache-Blocking</STRONG>
+        <DD>  <EM>This is a very hardware-specific technique, applicable
+              particularly to linear algebra codes, and usually used
+              only in high performance libraries such as
+              <CODE>LAPACK</CODE> or (for simple codes) performed by
+              the compiler.</EM><BR>
+              <EM>&quot;Heroic&quot; Effort:</EM>
+              It is sometimes useful to force the alignment of arrays 
+              and <CODE>struct</CODE> fields to
+              match cache-line boundaries, to unroll loops by exactly
+              the cache-line length, and to structure the loop nests so
+              that you can think of the code as acting on vectors
+              exactly cache-line-length in size, re-using each vector as
+              many times as possible.  Correct implementation is quite
+              tedious and tricky, and it only works for very regular
+              codes for which multiple re-uses of the same data are
+              possible.  This technique is usually reserved for vendor
+              supplied high performance libraries, but we are noting its
+              existence here for completeness sake.
+              <P>
+
+        <DT>  <STRONG>Array-Size/<CODE>COMMON</CODE>-block <CODE>struct</CODE>-field padding</STRONG>
+        <DD>  <EM>This also is a hardware-specific...</EM><BR>
+              Avoid array sizes and array dimensions that are multiples
+              of the cache size (which is usually some large power of 2),
+              in order to avoid cache thrashing.  This effect is most
+              markedly a problem on systems with direct-mapped caches.
+              For <CODE>COMMON</CODE>-blocks, introduce extra dummy
+              arrays into <CODE>COMMON</CODE>-blocks to re-space the
+              arrays and avoid this problem.  Studies show that in the
+              worst cases, cache thrashing can penalize performance by
+              a factor of 40 on some systems.
+              <P>
+              Some compilers will do these padding operations
+              (especially to <CODE>COMMON</CODE>s) themselves at high
+              optimization levels, or with the right command-line
+              options.
+              <P>
+
+        <DT>  <STRONG>Load-balance parallel constructs</STRONG>
+        <DD>  <EM>This is a problem-specific...</EM> and there are lots
+              of things you can do, many of them tricky.  Parallelizing
+              the problem over either a dimension that exactly divides
+              the number of processors, or the dimension of greatest
+              extent is the simplest of these.  Document whatever you
+              are doing in this regard!
+              <P>
+
+   </DL>
+
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "cache">
+    Simple Case Study&nbsp;1:  <BR>
+    Typical Cache Behavior
+</A></H2>
+
+    In the diagram below, we show what a section of the cache might look
+    like at some particular instant in a program's execution.  We are
+    assuming the very-common cache-line size of 32 bytes, which will 
+    hold 8
+    <CODE>INTEGER</CODE>s or <CODE>REAL</CODE>s, or 4
+    <CODE>DOUBLE&nbsp;PRECISION</CODE> values.
+    <P>
+    In this program, we have the following <CODE>TYPE</CODE> and
+    variables:
+    <PRE>
+    ...
+    TYPE MYTYPE
+        LOGICAL :: L1
+        INTEGER :: J1
+        INTEGER :: J2
+        INTEGER :: J3
+        REAL    :: R1
+        REAL    :: R2
+        REAL    :: R3
+        REAL    :: R4
+        REAL    :: R5
+    END TYPE MYTYPE
+    ...
+    INTEGER         : : IDX( 500 )
+    REAL             :: XXX( 500 )
+    REAL             :: YYY( 100,200 )
+    DOUBLE PRECISION :: DDD( 500 )
+    TYPE( MYTYPE )   :: TTT( 500 )
+    ...
+    </PRE>
+    Notice that the leading dimension of <CODE>YYY</CODE> is not
+    a multiple of 8, so that adjacent rows of YYY will not be
+    aaligned in cache. Similarly,  <CODE>MYTYPE</CODE> has 9
+    fields, occupying 36 bytes, so that consecutive elements
+    of array <CODE>TTT</CODE> will have &quot;interesting&quot;
+    cache-alignments.
+    <BLOCKQUOTE>
+    <IMG SRC="cache1.gif" HEIGHT="463" WIDTH="998" ALT="Cache Contents">
+    </BLOCKQUOTE>
+    In this particular example, note the following:
+    <BLOCKQUOTE>
+    <DL>
+        <DT>  In order to modify <CODE>YYY(21,8)</CODE>, we had
+        to read all of <CODE>YYY(17:24,8)</CODE> into a cache line,
+        modify  <CODE>YYY(21,8)</CODE>, and then eventually write
+        the entire cache line back out again.
+        <P>
+        <DT>  Note also that if we are using just field <CODE>R1</CODE>
+        from <CODE>TTT</CODE>, for example, we will always have to read
+        in the surrounding 8 fields from the
+        array-of-<CODE>TYPE</CODE>s, wasting a lot of memory bandwidth
+        in the process.  Accessing the <CODE>TTT(1:500)%R1</CODE>
+        is a badly non-stride-1 process, probably an order of magnitude
+        more expensive than if <CODE>TTT</CODE> had been a 
+        <CODE>TYPE</CODE>-of-arrays instead of an
+        array-of-<CODE>TYPE</CODE>s.<BR>
+        <EM>See <A HREF="#note1">Note&nbsp;1</A>.</EM>
+        <P>
+        <DT>  Under some circumstances, the cache-management hardware 
+        on the processor will recognize, for example, sequential uses
+        of <CODE>XXX(201),XXX(202),XXX(203),...</CODE>, anticipate
+        that this pattern will continue, and load <CODE>XXX(209:216)</CODE>
+        while computations for the previous <CODE>XXX</CODE>-values
+        are still in progress.<BR>
+        <EM>Note that this is not foolproof...</EM>
+        <P>
+        <DT>  In order to fetch new values into a cache-line, the
+        cache-management hardware will try to find a cache line that
+        is not likely to be used in the &quot;near future&quot;, write
+        it back out if necessary, and then use it for the new values.
+        How best to do this has been an active R&ampD area; it isn't
+        foolproof either.
+        <P>
+        <DT>  Sometimes, a bit more speedup can be obtained by 
+        &quot;playing games&quot; with array-sizes and memory-layouts.
+        Doing so fits into the &quot;heroic measures&quot; part
+        of optimization...
+    </DL>
+    </BLOCKQUOTE>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "deps2">
+    Simple Case Study&nbsp;2:  <BR>
+    Data Dependencies in Polynomial Evaluation
+</A></H2>
+
+    One of the utility functions that shows up in the AQM aerosol
+    module code is <CODE>POLY6(A,X)</CODE> which evaluates at
+    <CODE>X</CODE> the (5th order) polynomial with coefficients
+    <CODE>A(1),...,A(6)</CODE>,  The original implementation used
+    a &quot;Horner's Rule&quot; nested multiplication for its
+    evaluation:
+    <BLOCKQUOTE><VAR>
+    POLY6 = A(1) + X*(A(2) + X*(A(3) + X*(A(4) + X*(A(5) + X*(A(6))))))
+    </VAR></BLOCKQUOTE>
+    which (excluding the time required to load the coefficients
+    <CODE>A(1),...,A(6)</CODE> from memory), is a sequence alternating
+    five multiplies with five adds, each operation being dependent upon
+    the previous one.  Every arithmetic operation after the first must
+    wait on the preceeding operation for its input data.  Assuming a
+    4-way superscalar processor with a pipeline depth of 5, the
+    evaluation of these 10 operations takes the processor 41 cycles,
+    during which time it <EM>could</EM> have executed 50*20=1000
+    instructions; the net processor efficiency is about 4%.  With the
+    much longer pipelines of current hardware, the efficiency is worse. 
+    Note that the pipeline-stages on some processors will do the last
+    &quot;write result to register&quot; operation in the pipeline with
+    a simultaneous &quot;write result into next instruction&quot;
+    operation, as indicated by the overlaps in the diagram below.<BR>
+    <EM>
+    Note that on current processors, there are 15-18 pipeline stages,
+    not just 5.  This stretches the horizontal scale by a factor of
+    three ;-(
+    </EM>
+    <P>
+    <BLOCKQUOTE>
+    <IMG SRC="poly0.gif" HEIGHT="232" WIDTH="528" ALT="Naive POLY6 Scheduling">
+    </BLOCKQUOTE>
+    <P>
+    A more efficient but more obscure implementation involves the
+    recursive description of POLY6 that re-factors it using &quot;linear terms&quot;
+    and <VAR>X<SUP>2</SUP></VAR>:
+    quadratics and powers of <CODE>X</CODE>:
+    <BLOCKQUOTE><VAR>
+        POLY6&nbsp;=&nbsp;A(1)&nbsp;+&nbsp;X*A(2)&nbsp;+<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X<SUP>2</SUP>*(A(3)&nbsp;+&nbsp;X*A(4))&nbsp;+<BR>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;X<SUP>4</SUP>*(A(5)&nbsp;+&nbsp;X*A(6))
+    </VAR>:</BLOCKQUOTE>
+    The machine-level arithmetic operations and instruction-scheduling
+    is indicated by the following diagram below, assuming a 4-way
+    superscalar processor, &quot;simple&quot; arithmetic operations, and
+    a pipeline length of 4.  Note how the compiler might re-arrange the
+    calculations to minimize data-dependency delays.  Execution requires
+    21 cycles, for almost doubled processor efficiency.
+    <P>
+    <BLOCKQUOTE>
+    <IMG SRC="poly2.gif" HEIGHT="406" WIDTH="706" ALT="re-factored POLY Scheduling">
+    </BLOCKQUOTE>
+    <P>
+    Note that for a processor with &quot;fused multiply-add&quot; (Intel
+    SandyBridge or later, IBM POWER&lt;n&gt;, SGI R6000), the Horner's
+    Rule <CODE>POLY6</CODE> still has a sequence of five fully-dependent
+    multiply-adds, for a 21-cycle sequence; the  &quot;linear term&quot;
+    reorganization gives a yet-shorter 13-cycle sequence:
+    <BLOCKQUOTE>
+    <IMG SRC="poly3.gif" HEIGHT="326" WIDTH="646" ALT="opt FMADD Scheduling">
+    </BLOCKQUOTE>
+    <P>
+    Consider that if the problem were instead were the evaluation of
+    <STRONG>four polynomials <CODE>A, B, C, D</CODE></STRONG>, at four
+    <CODE>X</CODE>-values <CODE>Xa, Xb, Xc, Xd</CODE>, then one could
+    schedule the evaluations of <CODE>A2X, B2X, C2X, D2X</CODE>
+    together, etc., and complete the four evaluations in just 23
+    cycles, almost quadrupling the computational efficiency.  (In the
+    following, the calculations for the four separate polynomials are
+    indicated by trailing lower-case letters  <CODE>a,b,c,d</CODE>).
+    Notice how rarely the processor stalls, with instructions having to
+    wait for their input data:
+    <P>
+    <BLOCKQUOTE>
+    <IMG SRC="poly4.gif" HEIGHT="1073" WIDTH="573" ALT="4-Way POLY6 Scheduling">
+    </BLOCKQUOTE>
+    <P>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "deps3">
+    Simple Case Study&nbsp;3: <BR>
+    Control Dependencies in MM5 Physics Options
+</A></H2>
+
+    Recall that from the compiler's point of view as it attempts to
+    schedule instructions for our superscalar deeply-pipelined
+    processor, the scope of operation is the <STRONG>basic
+    block</STRONG>, a chunk of machine-code between GOTOs (none going
+    into the middle of it, none leaving it except possibly at the end. 
+    Since <CODE>IF</CODE>-statements involve the creation of basic
+    blocks, and also since they involve data dependencies that break the
+    pipelining, inner-loop <CODE>IF</CODE>-statements can be very
+    expensive computationally.
+    <P>
+    Examples of this can be found in many places in MM5, where
+    constructs like the following were quite common (similar constructs
+    can be found throughout WRF).
+    <PRE>
+    DO I=1,ILX
+        IF ( IMPHYS.GE.1) THEN
+            ...TA, PPA computations only
+            IF ( IMPHYS.GE.2) THEN
+                ...QV computation
+                IF ( IMPHYS.GE.3) THEN
+                    ...QC, QR computations
+                    IF ( IMPHYS.GE.5) THEN
+                       ... QI, QNI computations
+                       IF ( IMPHYS.GE.6) THEN
+                           ... QG, QNC computations
+                       END IF
+                    END IF
+                END IF
+            END IF
+        END IF
+    END DO
+    </PRE>
+
+    Note that the loop body is broken up by these nested
+    <CODE>IF</CODE>-statements into 5 different tiny basic blocks of
+    three or four arithmetic operations each (much smaller than the
+    processor's capacity to execute simultaneously), and that at least
+    ostensibly there are also dependencies upon the outputs of 4
+    different tests of <CODE>IMPHYS</CODE>:  at every such
+    <CODE>IF</CODE>, the processor must stall while waiting to decide
+    if the <CODE>IF</CODE>-condition is true.  If this code were
+    restructured as follows, it would both be much faster and (in my
+    opinion, at least) much easier to read.
+    <PRE>
+    IF ( IMPHYS.GE.6) THEN
+        DO I=1,ILX
+            ...TA, PPA, QV, QC, QR, QI, QNI, QG, QNC computations
+        END DO
+    ELSE IF ( IMPHYS.GE.5) THEN
+        DO I=1,ILX
+            ...TA, PPA, QV, QC, QR, QI, QNI computations
+        END DO
+    ELSE IF ( IMPHYS.GE.3) THEN
+        DO I=1,ILX
+            ...TA, PPA, QV, QC, QR computations
+        END DO
+    ELSE IF ( IMPHYS.GE.2) THEN
+        DO I=1,ILX
+            ...TA, PPA, QV computations
+        END DO
+    ELSE !!  dry model: imphys=1
+        DO I=1,ILX
+            ...TA, PPA computations
+        END DO
+    END IF
+    </PRE>
+    Note that in the frequently used non-dry cases, the loop body
+    consists of a single large multi-variable basic block without any
+    dependencies induced by <CODE>IF</CODE>-statements, computing the
+    effect of this process for potentially all 9 &quot;normal&quot;
+    cross point state variables (or including wind components--all 12
+    state variables, for some modules).  Experience shows that such
+    code does in fact run substantially faster than the common MM5
+    structuring.  <EM>In fact, this speedup is true for all platforms,
+    whether vector-based or microprocessor-based.</EM>
+    <P>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "mrfpbl">
+    Complex Case Study:  <BR>
+    MM5's <VAR>MRFPBL</VAR>
+</A></H2>
+
+    The following description of MM5's <VAR>MRFPBL</VAR> is a
+    simplification (it ignores the computation of vertical model
+    structure and the land-surface fluxes, etc., but it conveys an
+    interesting central idea correctly).  The following techniques can
+    <STRONG>speed it up by a factor of about 2.5</STRONG>.
+    <P>
+
+    <H3>The Original:</H3>
+    For a number of variables (<CODE>U, V, TA, QV, PP, QC, QI,
+    QNC</CODE>), <VAR>MRFPBL</VAR> computes tendencies (<CODE>UTNP, VTNP,
+    TATNP, QVTNP, PPTNP, QCTNP, QITNP, QNCTNP</CODE>)and returns them to
+    <VAR>SOLVE</VAR>.  The essential structure of the original
+    <VAR>MRFPBL</VAR> tendency computation fit the following outline
+    (where note that <VAR>MRFPBL</VAR> acts on an MM5
+    <CODE>I,K</CODE>-slab).
+    <BLOCKQUOTE>
+        For <EM>each</EM> of these variables (call the variable <CODE>X3D</CODE>;
+        the variables are taken one at a time),
+        <BLOCKQUOTE>
+        <OL>
+            <LI>  Loop on <CODE>I,K</CODE> copying this <CODE>I,K</CODE>-slab
+                  of 3-D variable <CODE>X3D</CODE> into a local 2-D
+                  <CODE>I,K</CODE>-variable <CODE>X</CODE>.
+            <LI>  Loop on <CODE>I,K</CODE> setting local tendency
+                  <CODE>XTNP(I,K)</CODE> to zero
+            <LI>  Loop on <CODE>I,K</CODE> computing diffused <CODE>X</CODE>
+                  (call it ( <CODE>AX(I,K)</CODE>)
+            <LI>  Loop on <CODE>I,K</CODE> computing local tendencies
+                  <CODE>XTNP(I,K)=XTNP(I,K)+(AX(I,K)-X(I,K))</CODE>
+            <LI>  Loop on <CODE>I,K</CODE> rescaling
+                  <CODE>XTNP(I,K)=XTNP(I,K)*PSB(I,J))</CODE>
+            <LI>  Loop on <CODE>I,K</CODE> adding the local tendency to the
+                  output argument global tendency
+                  <CODE>X3DTEN(I,J,K)=X3DTEN(I,J,K)+XTNP(I,K)</CODE>
+        </OL>
+        </BLOCKQUOTE>
+    </BLOCKQUOTE>
+    Note that <EM>except for the computation of  <CODE>AX(I,K)</CODE>,
+    this is a one-pass code</EM> that uses 6 loop traversals in order to
+    compute the final <CODE>X3DTEN(I,J,K)</CODE>.  There are no internal
+    <EM>(&quot;miter&quot;)</EM> time steps for <VAR>MRFPBL</VAR>.
+    <P>
+
+    <H3>Improved:</H3>
+    In the original <VAR>MRFPBL</VAR>, each array
+    <CODE>XTNP(I,K)</CODE> is written to memory 3 times and read from
+    memory 4 times.  This entire construct can be converted into a
+    single loop pass that competely eliminates the local arrays
+    <CODE>X</CODE> and <CODE>XTNP</CODE>. The restructured code has
+    the following pattern:
+    <BLOCKQUOTE>
+        For <EM>each</EM> of these variables (call the variable <CODE>X3D</CODE>),
+        <BLOCKQUOTE>
+        Loop on <CODE>I,K</CODE>
+        <OL>
+            <LI>  Compute diffused value <CODE>AX</CODE>
+            <LI>  Increment the global tendency
+                  <CODE>X3DTEN(I,J,K)=X3DTEN(I,J,K)+(AX-X3D(I,J,K))*PSB(I,J)</CODE>
+        </OL>
+        </BLOCKQUOTE>
+    </BLOCKQUOTE>
+    One may further restructure the code as described in the section
+    above, into the pattern
+    <PRE>
+    IF ( IMPHYS(INEST) .GE. 6 ) THEN
+       DO K = 1, KL
+       DO I = IBEG, IEND
+          !! Compute the global tendencies for all
+          !! the relevant variables for this option.
+          ...
+       END DO
+       END DO
+    ELSE IF...
+       ...
+    END IF   !! if imphys>=6,5,3,2,1
+    </PRE>
+    which has the added virtue of reading <CODE>PSB(I,J)</CODE> only
+    once (reducing the ratio of loads per arithmetic operation below
+    1.0) and using it for all the relevant variables, and also of
+    increasing the amount of independent work being thrown at our deeply
+    pipelined, highly-superscalar processor (increasing its
+    computational efficiency thereby).
+    <P>
+
+    <H3>Result:</H3>
+    As expected, the resulting code is more than twice as fast
+    as the original.  The surprising thing is that (at least for the
+    2002-vintage (SGI, IBM) machines and case we benchmarked),
+    <STRONG>optimizing <VAR>MRFPBL</VAR> in this way makes
+    <VAR>SOLVE</VAR> and <VAR>SOUND</VAR> respectively 10% and 9% faster
+    as well!</STRONG> The reason for this is that the elimination of 16
+    <CODE>I,K</CODE> scratch arrays markedly reduces the impact of
+    <VAR>MRFPBL</VAR> on the system caches and the virtual memory system
+    (reduces <EM>cache pollution</EM> and <EM>TLB
+    thrashing</EM>)--leaving cache and TLB contents preserved for
+    continued use by these other routines.  For a typical case, the
+    new   <VAR>MRFPBL</VAR> uses about 2K of local variables, 500 KB
+    less local variables than the original.  This difference is double
+    the entire cache system size on some computer systems!
+    <P>
+
+    In fact, we did all this without spoiling vectorization:  <EM>this
+    code should be <STRONG>faster for all platforms</STRONG>, whether
+    vector or microprocessor based.</EM>  We could potentially go back
+    and re-structure this code much further, putting the
+    <CODE>I</CODE>-loop outermost for microprocessor performance at the
+    expense of vector performance.  However, it would be a considerable
+    bit of work but unless one completely restructures the entire MM5
+    meteorology model to match, the resulting speedups would probably
+    be minor.  Schemes like <VAR>HIRPBL</VAR> and <VAR>GSPBL</VAR> that
+    do have internal miter time steps do profit from the following
+    kind of structure, even without re-writing the rest of MM5
+    (<VAR>MYEPBL</VAR> is already largely structured this way):
+    <PRE>
+    Use K-subscripted scratch variables only
+    ...
+    Parallel I-loop, enclosing
+       K-loop:
+          vertical column setup
+       end K-loop
+       internal time step (&quot;miter&quot;) loop:
+          sequence of K-loops:
+             miter-step vertical column calculations
+          End K-loops
+       End time step (&quot;miter&quot;) loop:
+       K-loop:
+          copy back to MM5 arrays
+       End K-loop
+    End parallel I-loop
+    </PRE>
+    This is probably a good structure for most air quality modules as
+    well, except that each of the loops indicated in this structure
+    further includes one or more nested chemical-species loops, and that
+    if we select the &quot;right&quot; subscript order we don't need to
+    do as much column-setup or copy-back work.  We will see this
+    structure again in the next section, when we talk about the MM5
+    moist physics routines.
+    <P>
+
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "exmois">
+    Complex Case Study 2:  <BR>
+    MM5's <VAR>EXMOIS*</VAR> Microphysics Routines
+</A></H2>
+
+    <EM><STRONG>2015 Note:</STRONG> the WRF <CODE>WSM*</CODE> and
+    <CODE>WDM*</CODE> families of microphysics codes are similar to the
+    below, only worse.  Applying the same techniques gives  better than
+    a factor of 8 speedup for <CODE>WSM6</CODE>...
+    </EM><P>
+
+    MM5's <VAR>EXMOIS*</VAR> routines compute moist microphysics and
+    nonconvective precipitation for a variety of different physics
+    options.  Even though there are several such microphysics routines,
+    all of them have a similar structure.  Consider, for example,
+    <VAR>EXMOISR</VAR>, which I <STRONG>speeded up by a factor of 6 (in
+    dry weather) to 8 (in wet weather)</STRONG>, in a project  a decade
+    ago for the Air Force Weather Agency.
+    <P>
+
+    <VAR>EXMOISR</VAR> is associated with physics option
+    <CODE>IMPHYS=5</CODE>, and computes up through ice micrometeor and
+    number concentrations on an <CODE>I,K</CODE>-slab.  From a dataflow
+    point of view, this model is structured into a long sequence of loop
+    nests, mostly of <CODE>K,I</CODE> (except for the last two, that are
+    <CODE>I,K</CODE>).
+    <P>
+    The loop structure is complex and tedious, and
+    everything is cluttered up with subscripts.
+    <A HREF="http://www.catb.org/jargon/html/M/MEGO.html">MEGO.3</A>.
+    <P>
+    If we extract just the loop structure (<CODE>DO</CODE>s and
+    <CODE>CONTINUE</CODE>s) from <VAR>EXMOISR</VAR>, we have the
+    following structure, with 11 loop nests (with a mean length of
+    51 lines each), as indicated below.  Most of these loops further
+    have <CODE>IF&nbsp;FREEZING...  ELSE... ENDIF</CODE> constructs
+    in them, so the real situation is much messier yet!
+    <PRE>
+      DO 10 I=1, MIX*MJX
+   10 CONTINUE
+      DO 15 K=1,KX
+        DO 15 I=2,ILXM
+   15   CONTINUE
+      DO 20 K=1,KL
+        DO 20 I=IST,IEN
+   20   CONTINUE
+      DO 22 K=1,KL
+        DO 22 I=IST,IEN
+   22   CONTINUE
+      DO 30 K=1,KL
+        DO 30 I=IST,IEN
+   30   CONTINUE
+      DO 40 K=1,KL
+        DO 40 I=IST,IEN
+   40   CONTINUE
+      DO 50 K=1,KL
+        DO 50 I=IST,IEN
+   50   CONTINUE
+      DO 60 K=1,KL
+        DO 60 I=IST,IEN
+   60   CONTINUE
+      DO 70 K=1,KL
+        DO 70 I=IST,IEN
+   70   CONTINUE
+      DO 80 I=IST,IEN
+        DO 90 K=1,KL
+   90   CONTINUE
+        DO 100 N=1,NSTEP    !!  precipitation...
+          DO 110 K=1,KL
+  110     CONTINUE
+          DO 120 K=2,KL
+  120     CONTINUE
+  100   CONTINUE
+   80 CONTINUE
+      DO 95 I=IST,IEN
+        DO 92 K=2,KL
+   92   CONTINUE
+   95 CONTINUE
+    </PRE>
+    Intermediate results are passed from loop-nest to loop nest through
+    <STRONG>2-D <CODE>I,K</CODE>-subscripted scratch arrays--45 of
+    them!</STRONG>  For a <CODE>200&times;200&times;30</CODE> domain,
+    these arrays occupy almost a <STRONG>megabyte</STRONG>, far larger
+    than L2 cache size.  There is no computational data flow reason for
+    the code to be split up this way into a complex sequence of loops.
+    Conceptually, the physics process is a vertical column
+    (<CODE>K</CODE>) process that is performed for each horizontal
+    <CODE>I</CODE>.  There are <EM>no</EM> induction dependencies or the
+    like to prevent the jamming of all these loop nests, and reducing
+    all these scratch arrays to scratch-scalars. The reason for this
+    structure, with lots of (long) simple innermost <CODE>I</CODE>-loops
+    is performance on (badly-obsolete!) vector machines, where strided
+    array accesses are &quot;free&quot; (unlike the microprocessor
+    situation), as long as the loop bodies are simple enough that the
+    compiler can vectorize them.
+    <P>
+    The code can be recast into the form given below, with first a
+    <CODE>K</CODE>-loop 5 used to compute <CODE>SIGMA</CODE>-fraction
+    subexpressions, then an all-encompassing <CODE>I</CODE>-loop that
+    contains first a <CODE>K</CODE>-loop that does the moist-physics and
+    miter-step computations, then a miter <CODE>N,K</CODE>-loop nest
+    that computes precipitation, and finally a cleanup
+    <CODE>K</CODE>-loop.  Not counting blank lines in either, the new
+    code is 156 lines shorter than  the old.  The only arrays needed in
+    the new code are 1-D <CODE>K</CODE>-subscripted ones for the
+    <CODE>SIGMA</CODE>-fractions and the vertical column variables
+    passed in to the <CODE>N,K</CODE>-nest precipitation
+    computation--<STRONG>there are only 14 arrays in all</STRONG>.  All
+    the other working variables can be reduced to scalars, for a
+    <EM>local variable volume <STRONG>less than 2 kilobytes</STRONG>,
+    fitting into level-1 cache on every microprocessor I know!</EM>
+    <PRE>
+      DO 5 K = 2, KX
+    5 CONTINUE
+      DO 95 I=IST,IEN
+        DO 90 K=1,KL
+   90   CONTINUE
+        DO 100 N=1,NSTEP    !!  precipitation...
+           DO 120 K = 2,KL
+  120      CONTINUE
+  100   CONTINUE
+        DO 92 K=2,KL
+   92   CONTINUE
+   95 CONTINUE
+    </PRE>
+    Loop 90 now does all of the moist-physics computation, as well as
+    computing the miter time step.  Nest 100-120 does the precipitation
+    fallout effects, and 92 &quot;cleans up&quot; after that.
+    <P>
+    The <CODE>IF&nbsp;FREEZING...  ELSE... ENDIF</CODE> clauses can all
+    be combined into one single <CODE>IF&nbsp;FREEZING... ELSE...ENDIF</CODE>
+    inside new Loop&nbsp;90, greatly reducing the cost of
+    doing logic-operations while at the same time increasing basic-block
+    size, thereby allowing much better instruction-scheduling
+    optimizations by the compiler.
+    <P>
+    Frankly, I find the code much easier to read! ...as well as being 6+
+    times faster, depending upon the platform and case.
+    <P>
+    Instead of a &quot;cache-buster&quot; code with complex nesting,
+    lots of short basic blocks, and a megabyte of scratch variables, we
+    wind up with a highly optimizable, mostly-scalar code with just a
+    few large basic blocks.  Most variables now live in registers, and
+    the compiler can do a much more thorough job of optimizing it. On
+    the other hand, the innermost loops are over <CODE>K</CODE> instead
+    of <CODE>I</CODE> so for vector machines the available vector-length
+    is probably about 30 instead of 100 or more.  This variant will not
+    perform as well on the vector machines at the Taiwanese or South
+    Korean met offices, and so was politically unacceptable to NCAR (in
+    spite of a better-than-six-fold speedup on microprocessor based
+    machines that all the rest of us use).
+    <P>
+    While the restructuring is taking place, there are numerous places
+    where the strategies noted above (logic refactoring, avoiding
+    expensive operations, loop invariant lifting, etc.) can be employed
+    to improve the code quality still further, from the points of view
+    of both numerical accuracy and computational efficiency.
+    <P>
+    Validation is made rather more difficult by the extreme numerical
+    sensitivity of the moist-physics/clouds MM5 model:  all the
+    buoyancy effects are inherently ill conditioned numerically (and
+    physically in the real world!), and even tiny changes affect the
+    triggering of convective clouds, which then feeds back large scale
+    effects to the grid scale.  Needless to say, such a restructuring
+    of the <VAR>EXMOIS*</VAR> routines is a major effort&nbsp;:-).
+    <P>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME = "note1">
+    <EM>NOTE&nbsp;1: array-of-<CODE>struct/TYPE</CODE>s vs 
+    <CODE>struct/TYPE</CODE>-of-arrays</EM>
+</A></H2>
+
+    <BLOCKQUOTE>
+    There is a &quot;school&quot; (an ideology, actually)  of
+    programming that wants to take the idea of &quot;fine-grained
+    objects&quot; to extremes.  If you have a grid, for example, with
+    numerous properties at each grid cell, they would use something like
+    the following array-of-<CODE>struct/TYPE</CODE> code organization.
+    <BR> 
+    For C:
+    <PRE>
+    typedef struct { float x ;      /* East-West    (M)  */
+                     float y ;      /* North-South  (M)  */
+                     float z ;      /* elev a.s.l.  (M)  */
+                     float tk ;     /*  temperature (K)  */
+                     ...} point ;
+    point model_state[ NROWS ][ NCOLS ] ;
+    ...
+    </PRE>
+    or for Fortran:
+    <PRE>
+    TYPE POINT
+        REAL :: X
+        REAL :: Y
+        REAL :: Z
+        REAL :: TK
+        ...
+    END TYPE POINT
+    TYPE(POINT) :: MODEL_STATE(NCOLS,NROWS)
+    ...
+    </PRE>
+    so that to reference temperature at grid-cell <CODE>(C,R)</CODE>
+    one would use either  <CODE>model_state[r][c].tk</CODE> for C or 
+    <CODE>MODEL_STATE(C,R)%TK</CODE> for Fortran.
+    <P>
+
+    <STRONG>This ideology denies the existence and/or easy
+    implementation of the &quot;field&quot; objects in terms of which
+    the model's governing equations are defined.</STRONG>  It also has
+    very bad performance implications for all but the smallest of
+    models.  It can work acceptably-well if the total memory-usage of a
+    model is less than a 200&nbsp;KB (for current computers), decently
+    for a megabyte-sized model, but will fail badly for a 10-100&nbsp;MB
+    (or larger) model.
+    <P>
+
+    Accompanying this ideology is a tendency to make <U>anything</U>
+    which might be related to a <CODE>POINT</CODE> into a field in that
+    <CODE>struct/TYPE</CODE>.  Since this data-structure definition is
+    global, this is an example of the (bad) practice of unnecessarily
+    <STRONG>programming with global variables</STRONG>, and at the same
+    time substantially reducing both compiler-efficiency (such fields
+    ought to be <EM>local variables</EM> instead, that the compiler can
+    manage better) and cache/memory system efficiency, because it blows
+    up and further scatters the whole-model's memory usage.
+    <P>
+    
+    An alternative organization is something like the following:
+    <PRE>
+    struct { float x[ NROWS ][ NCOLS ];       /* East-West    (M)  */
+             float y[ NROWS ][ NCOLS ];       /* North-South  (M)  */
+             float z[ NROWS ][ NCOLS ];       /* elev a.s.l.  (M)  */
+             float tk[ NROWS ][ NCOLS ];      /*  temperature (K)  */
+             ...}  model_state ;
+    ...
+    </PRE>
+    or
+    <PRE>
+    TYPE MODEL_DATA
+        REAL ::  X(NCOLS,NROWS)
+        REAL ::  Y(NCOLS,NROWS)
+        REAL ::  Z(NCOLS,NROWS)
+        REAL :: TK(NCOLS,NROWS)
+        ...
+    END TYPE MODEL_DATA
+    TYPE(MODEL_DATA) :: MODEL_STATE
+    ...
+    </PRE>
+    so that temperature at <CODE>(C,R)</CODE> is
+    <CODE>model_state.tk[r][c]</CODE> for C, or
+    <CODE>MODEL_STATE%TK(C,R)</CODE> for Fortran.
+    From a purely-logical point of view, these two styles are completely
+    equivalent.  However, for problems of realistic size, the latter
+    style will outperform the former by a factor of 20-40 on ordinary
+    microprocessors (because of the way it interacts with the
+    processor's cache-to-memory interface, and by a factor of up to
+    1,000-10,000 on GPUs (because of the vector-unit implementation
+    there).
+    <P> 
+    </BLOCKQUOTE>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<!---
+<HR>
+
+<H2><A NAME = "foo">
+    <EM>&lt;dummy section&gt;</EM>
+</A></H2>
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+--->
+
+<HR> <!----------------------------------------------------------------->
+Send comments to
+<A HREF = "mailto:carlie.coats@baronams.com"> <ADDRESS>
+          Carlie J. Coats, Jr., Ph.D. <BR>
+          cjcoats@email.unc.edu </ADDRESS> </A><P>
+&copy; CJC 2002:CC A+S
+
+</BODY>      <!--end body  -->
+</HTML>      <!--end html  -->
+
