@@ -19,11 +19,65 @@
 
 <HR> <!----------------------------------------------------------------->
 
-    <UL>
-        <LI> <A HREF = "optimization/efficient_models.html">Optimizing Environmental Models<BR>
-                                                            for Microprocessor Based Systems</A>
+    <DL>
+        <DT> <A HREF = "optimization/efficient_models.html"><STRONG>Optimizing
+             Environmental Models for Microprocessor Based Systems</STRONG></A>&mdash;
+             <EM>The Easy Stuff</EM>
+        <DD> This started as a presentation for US EPA's Office of
+             Research and Development in 2002 when the author was at
+             MCNC&mdash;North Carolina Supercomputing Center, and has
+             been updated from time to time since.  It is amazing just
+             how well the lessons of that time have held up&mdash;the
+             only thing is that the tendencies noted in 2002 have become
+             even stronger over time.
         <P>
-        <LI> <A HREF = "ioapi/index.html" >I/O&nbsp;API Home Page</A>
-        <LI> <A HREF = "ioapi/AA.html"    >I/O&nbsp;API Programmers Manual</A>
-        <P>
-     </UL>
+        <DT> <STRONG>The Models-3 I/O&nbsp;API</STRONG>
+        <DD> <A HREF = "ioapi/index.html" ><EM>I/O&nbsp;API Home Page</EM></A>
+             <P>
+             <A HREF = "ioapi/AA.html"    ><EM>I/O&nbsp;API Programmers Manual</EM></A>
+             <P>
+             The Models-3/EDSS Input/Output Applications Programming
+             Interface (I/O&nbsp;API) provides the environmental model
+             developer with an easy-to-learn, easy-to-use
+             <STRONG>programming library for data storage and
+             access</STRONG>, available from both Fortran and C. The
+             I/O&nbsp;API provides a variety of data structure types for
+             organizing the data, and a set of access routines which
+             offer selective direct access to the data in terms
+             meaningful to the modeler, as well as robust error checking and
+             reporting &quot;behind the scenes&quot;.
+             <P>
+             For example,
+                  <BLOCKQUOTE><CODE>
+                  Read layer 1 of variable 'OZONE' from 'CONCFILE' for
+                  5:00&nbsp;PM GMT on July&nbsp;19, 2018 and put the result
+                  into array&nbsp;A.
+                  </CODE></BLOCKQUOTE>
+             is the direct English translation of a typical I/O&nbsp;API
+             <CODE>READ3()</CODE> call.
+             <P>
+        <DT><STRONG>PAVE-3.0</STRONG>
+        <DD> <A HREF = "pave/PaveManual.html"><EM>PAVE Users Guide</EM></A>
+             <P>
+             <A HREF = "pave/Pave.FAQ.html"  ><EM>PAVE Frequently Asked Questions</EM></A>
+             <P>
+             The <B>Package for Analysis and Visualization of
+             Environmental data </B> (PAVE) is a flexible tool to
+             visualize multivariate gridded environmental datasets. 
+             <STRONG>PAVE Version 3.0</STRONG> is a new release,
+             restructured as a stand-alone application, with major
+             optimizations (after the fashion of <EM>Optimizing
+             Environmental Models</EM>, above, with Linux &quot;
+             medium&quot; memory-model support, so that file size, etc.,
+             is essentially limited by available RAM and inherent netCDF
+             limitations,
+             <P>
+             
+             
+     </DL>
+
+<HR> <!----------------------------------------------------------------->
+
+ </BODY>
+</HTML>
+
