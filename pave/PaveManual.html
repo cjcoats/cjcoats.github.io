@@ -17,8 +17,8 @@ etscape]">
 
 <H2><A NAME="TOC">Table of Contents</A> </H2>
 <OL>
-    <LI> <A HREF="#Intro"           >Introduction and where to obtain software</A>
-    <LI> <A HREF="#Installation"    >Installation instructions</A>
+    <LI> <A HREF="#Intro"           >Introduction</A>
+    <LI> <A HREF="PaveInstall.html" >Download and Installation</A>
     <LI> <A HREF="#ExampleImages"   >Types of plots produced by PAVE</A>
     <LI> <A HREF="#Data"            >Getting your data into PAVE</A>
     <LI> <A HREF="#Formulas"        >Using formulas</A>
@@ -37,8 +37,10 @@ etscape]">
     <LI> <A HREF="#FutureDev"       >Future PAVE Development</A>
 </OL>
 
+
+<HR> <!----------------------------------------------------------------->
 <P>
-<H2><A NAME="Intro">1. 	Introduction and where to obtain software</A> </H2>
+<H2><A NAME="Intro">1. 	Introduction</A> </H2>
 
 <BLOCKQUOTE><EM>
     <STRONG>NOTE</STRONG>  As of the release for <CODE>pave-3.0</CODE>,
@@ -49,301 +51,259 @@ etscape]">
     <CODE>pave-3.0</CODE> maintainer.
 </EM></BLOCKQUOTE>
 
-This document describes how to use the <B>Package for Analysis and
-Visualization of Environmental data </B> (PAVE).  PAVE is a flexible
-application to visualize  multivariate gridded environmental datasets. 
-Features include
-<OL>
-    <LI> baseline graphics with the option to export data to high-end
-         commercial packages,
-    <LI> access and manipulation of datasets located on remote
-         machines,
-    <LI> support for multiple simultaneous visualizations,
-    <LI> an architecture that allows PAVE to be controlled by external
-         processes,
-    <LI> low computational overhead, and
-    <LI> no software distribution cost.
-</OL><P>
+<BLOCKQUOTE>
+    This document describes how to use the <B>Package for Analysis and
+    Visualization of Environmental data </B> (PAVE).  PAVE is a flexible
+    application to visualize  multivariate gridded environmental datasets. 
+    Features include
+    <OL>
+        <LI> baseline graphics with the option to export data to high-end
+             commercial packages,
+        <LI> access and manipulation of datasets located on remote
+             machines,
+        <LI> support for multiple simultaneous visualizations,
+        <LI> an architecture that allows PAVE to be controlled by external
+             processes,
+        <LI> low computational overhead, and
+        <LI> no software distribution cost.
+    </OL><P>
 
-PAVE is licensed  under the terms of the GNU Public License
-Version&nbsp;2 copyright &copy; 1989, 1991 Free Software Foundation, Inc. 
-See its enclosed GPL.txt or
-<A HREF="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">
-https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html</A>.
+    PAVE is licensed  under the terms of the GNU Public License
+    Version&nbsp;2 copyright &copy; 1989, 1991 Free Software Foundation, Inc. 
+    See its enclosed GPL.txt or
+    <A HREF="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">
+    https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html</A>.
 
-<STRONG>PAVE Version 3.0</STRONG> is being released on GitHub in
-March 2018.  There are multiple changes from Version 2.3:
-<UL>
-    <LI>  Linux Medium-memory-model support:  File-size, etc., are
-            essentially limited by available RAM and inherent netCDF
-            limitations (no more than 2 GB per time step).  See
-            <A HREF="https://www.cmascenter.org/ioapi/documentation/all_versions/html/AVAIL.html#medium">
-            https://www.cmascenter.org/ioapi/documentation/all_versions/html/AVAIL.html#medium</A>
-          <P>
+    <STRONG>PAVE Version 3.0</STRONG> is being released on GitHub in
+    March 2018.  There are multiple changes from Version 2.3:
+    <UL>
+        <LI>  Linux Medium-memory-model support:  File-size, etc., are
+                essentially limited by available RAM and inherent netCDF
+                limitations (no more than 2 GB per time step).  See
+                <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#medium">
+                https://cjcoats.github.io/ioapi/AVAIL.html#medium</A>
+              <P>
 
-    <LI>  The primary build is for GNU gcc/g++/gfortran compilers, using
-          I/O API build type BIN=Linux2_x86_64gfort_medium; the build
-          is &quot;as static as possible&quot; and hopefully should run on most
-          64-bit Linux systems &quot;as is.&quot;  The rest of these systems
-          should need minor <CODE>Makefile</CODE> customization, followed by
-          <VAR>make relink</VAR>.
-          <P>
+        <LI>  The primary build is for GNU gcc/g++/gfortran compilers, using
+              I/O API build type <CODE>BIN=Linux2_x86_64gfort_medium</CODE>; the build
+              is &quot;as static as possible&quot; and hopefully should run on most
+              64-bit Linux systems &quot;as is.&quot;  The rest of these systems
+              should need minor <CODE>Makefile</CODE> customization, followed by
+              <VAR>make relink</VAR>.
+              <P>
 
-    <LI>  Major restructuring as a stand-alone application.  References to,
-          and the convoluted directory structures from, MCNC's EDSS have
-          been removed.  Also, additional maps were added, and placed in
-          (build-independdent!) directory
-          <CODE>PAVE_MAPDIR = pave-3.0/maps/</CODE>.
-          <P>
+        <LI>  Major restructuring as a stand-alone application.  References to,
+              and the convoluted directory structures from, MCNC's EDSS have
+              been removed.  Also, additional maps were added, and placed in
+              (build-independdent!) directory
+              <CODE>PAVE_MAPDIR = pave-3.0/maps/</CODE>.
+              <P>
 
-    <LI>  The driver-script  <CODE>PAVE_DIR/bin/pave</CODE> was extensively
-          re-written, and much more easily customized than its predecessor.
-          <P>
+        <LI>  The driver-script  <CODE>PAVE_DIR/bin/pave</CODE> was extensively
+              re-written, and much more easily customized than its predecessor.
+              <P>
 
-    <LI>  PAVE documentation is included as part of the package, in
-          directory <CODE>PAVE_DIR/Docs/</CODE>  Note that much of the
-          original documentation fails the <VAR>weblint</VAR>
-          HTML-validation test&mdash;badly!&mdash;and ios taking some 
-          not-inconsiderable time and effort to fix.
-          <P>
-          Frankly, the documents are badly obsolete and need a lot of
-           work ;-(  This is a work-in-progress...
-          <P>
+        <LI>  PAVE documentation is included as part of the package, in
+              directory <CODE>PAVE_DIR/Docs/</CODE>  Note that much of the
+              original documentation fails the <VAR>weblint</VAR>
+              HTML-validation test&mdash;badly!&mdash;and ios taking some 
+              not-inconsiderable time and effort to fix.
+              <P>
+              Frankly, the documents are badly obsolete and need a lot of
+               work ;-(  This is a work-in-progress...
+              <P>
 
-    <LI>  Provided compressed source-code  tar-balls for (most of) the
-          external libraries needed by PAVE, together with scripts for
-          uncompressing, configuring, building, and installing them,
-          compatibly with the primary
-          <CODE>Linux2_x86_64gfort_medium</CODE> binary build type, for
-          re-building as necessary (the installed libraries, etc., are
-          already in the distributed package's
-          <CODE>${PAVE_DIR}/bin</CODE> and <CODE>${PAVE_DIR}/lib</CODE>)
-          <P>
-          See <CODE>${PAVE_DIR}/INSTALL</CODE> for instructions on
-          re-building PAVE.
-          <P>
+        <LI>  Provided compressed source-code  tar-balls for (most of) the
+              external libraries needed by PAVE, together with scripts for
+              uncompressing, configuring, building, and installing them,
+              compatibly with the primary
+              <CODE>Linux2_x86_64gfort_medium</CODE> binary build type, for
+              re-building as necessary (the installed libraries, etc., are
+              already in the distributed package's
+              <CODE>${PAVE_DIR}/bin</CODE> and <CODE>${PAVE_DIR}/lib</CODE>)
+              <P>
+              See <CODE>${PAVE_DIR}/INSTALL</CODE> for instructions on
+              re-building PAVE.
+              <P>
 
-    <LI>  Many loop-restructuring and other optimizations:  in previous
-          versions, loop-nests over grids were basically structured as
-          badly as possible; grid-statistics, formulas, etc., should
-          be at least an order of magnitude faster now (the larger the
-          dataset, the larger the speedup).
-          <P>
+        <LI>  Many loop-restructuring and other optimizations:  in previous
+              versions, loop-nests over grids were basically structured as
+              badly as possible; grid-statistics, formulas, etc., should
+              be at least an order of magnitude faster now (the larger the
+              dataset, the larger the speedup).
+              <P>
 
-    <LI>  Support for new map-projections (not fully tested yet...):
-          <BLOCKQUOTE>
-          Albers Equal Area<BR>
-          Polar Stereograph<BR>
-          Equatorial Mercator<BR>
-          (General) Transverse Mercator<BR>
-          Lambert Azimuthal Equal Area<BR>
-          </BLOCKQUOTE>
-          <P>
+        <LI>  Support for new map-projections (not fully tested yet...):
+              <BLOCKQUOTE>
+              Albers Equal Area<BR>
+              Polar Stereograph<BR>
+              Equatorial Mercator<BR>
+              (General) Transverse Mercator<BR>
+              Lambert Azimuthal Equal Area<BR>
+              </BLOCKQUOTE>
+              <P>
 
-    <LI>  Map-drawing capabilities were added, to draw maps for
-          &quot;extended&quot; regions that cross the International Date
-          Line, or that follow the WMO's so-called &quot;Longitude&quot;
-          definition that contradicts the International Standards
-          Organization's Standard 6709.
-          <P>
+        <LI>  Map-drawing capabilities were added, to draw maps for
+              &quot;extended&quot; regions that cross the International Date
+              Line, or that follow the WMO's so-called &quot;Longitude&quot;
+              definition that contradicts the International Standards
+              Organization's Standard 6709.
+              <P>
 
-    <LI>  Fixed a number of &quot;grid hacks&quot; in <CODE>pave/utils.c</CODE>
-          that assume whenever I/O&nbsp;API
-          <CODE>XCELL3D&nbsp;&lt;&nbsp;100M</CODE>, the file is a (bad,
-          1993-vintage?) mis-formed file where the user has mistakenly
-          described the grid in Km units instead of M.  These hacks in
-          the original destroy the usability of PAVE for high resolution
-          hydrological-modeling grids.
-          <P>
-</UL>
+        <LI>  Fixed a number of &quot;grid hacks&quot; in <CODE>pave/utils.c</CODE>
+              that assume whenever I/O&nbsp;API
+              <CODE>XCELL3D&nbsp;&lt;&nbsp;100M</CODE>, the file is a (bad,
+              1993-vintage?) mis-formed file where the user has mistakenly
+              described the grid in Km units instead of M.  These hacks in
+              the original destroy the usability of PAVE for high resolution
+              hydrological-modeling grids.
+              <P>
+    </UL>
+    <P>
+
+    PAVE version&nbsp;2.3  was released on October&nbsp;18, 2004; the previous 
+    public release of PAVE was version 2.2 in June, 2004.
+    See <A HREF="#NewFeatures"> New Features</A> 
+    for more information on the improvements made in these and
+    earlier versions.
+    <P>
+    <I>We hope you enjoy your PAVE visualizing experience!</I><P>
+
+    <B>On-line PAVE Resources</B>
+
+    <DL>
+            <DT>Download PAVE
+            <DD> <CODE>git clone https://github.com/cjcoats/pave-3.0</CODE>
+            <DT><A HREF="Pave.FAQ.html">PAVE Frequently Asked Questions </A>
+            <DT><A HREF="#Jumpstart">Getting started with PAVE </A>
+    </DL>
+    <P>
+
+    <A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+
+</BLOCKQUOTE>
+
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME="Installation">2.</A>
+    <A HREF="PaveInstall.html">Download and Installation</A></H2>
 <P>
 
-PAVE version 2.3  was released on October 18, 2004.   
-See <A HREF="paveHistory.html#NewFeatures"> New Features in PAVE 2.3.0</A> 
-for more information on the improvements made in this version. The last 
-public release of PAVE was version 2.2 in June, 2004.  For information 
-on the improvements in version 2.2, please see 
-<A HREF="paveHistory.html#NewFeatures2.2.0"> New Features in PAVE 2.2.0 </A>. 
-Binary executables for the latest version of PAVE are available for IRIX 6.5 
-(SGI), Solaris 2.7 (Sun), Linux 2, and Windows 2000/XP (on PCs with 
-<A HREF="http://www.microsoft.com/windows/sfu/default.asp">Microsoft SFU 
-(Services for Unix)</A> and an X11 server such as 
-<A HREF="http://www.hummingbird.com/products/nc/exceed/index.html">Exceed</A>
-or <A HREF="http://x.cygwin.com/">Cygwin/X</A> with
-<A HREF="http://www.lesstif.org">Lesstif</A> installed).  
-Operating system versions later than the ones specified should also work 
-in most cases.  Older versions of PAVE are available for HP-UX, AIX, and 
-OSF1.  PAVE can be recompiled for later versions of these operating systems
-by installing the libraries from older versions and then compiling the latest
-source code from the PAVE source code distribution.  For information on 
-obtaining and using PAVE, see the on-line PAVE Resources listed below.
-<P>PAVE is a product of the
-<A HREF="http://cf.unc.edu/cep/empd/index.cfm">Center for Environmental
-Modeling for Policy Development</A> at the University of North Carolina.
-<P>
-<I>We hope you enjoy your PAVE visualizing experience!</I><P>
 
-<B>On-line PAVE Resources</B>
-
-<DL>
-        <DT>Download PAVE
-        <DD> <CODE>git clone https://github.com/cjcoats/pave-3.0</CODE>
-        <DT><A HREF="Pave.FAQ.html">PAVE Frequently Asked Questions </A>
-        <DT><A HREF="#Jumpstart">Getting started with PAVE </A>
-</DL>
-<P>
-
-<H2><A NAME="Installation">2. Installation instructions </A></H2>
-
-To install Version 2.3 of PAVE, expand the   tar or zip file into a
-directory, then type &quot;pave&quot; to run the PAVE script   within
-that directory.  If you put the directory containing the PAVE   script
-in your path, the program will run if you type &quot;pave&quot; from any
-location on your system.    On Linux systems, if PAVE doesn't run by
-just typing &quot;pave&quot; try &quot;sh pave&quot;.
-<P>
-
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="ExampleImages">3.	Types of plots produced by PAVE</A> </H2>
 
-<IMG SRC="Gifs/fourtypes.GIF" alt="fourtypes"><P>
-From left to right, these are examples of a smoothed tile plot, a 
-3D mesh plot, a time series line plot, and a time series bar plot.<P>
-<IMG SRC="Gifs/winds.gif" alt="winds"><P>
-From left to right, these are examples of a tile plot of a vertical
-cross section, a wind vector plot, and a scatter plot.  <P>
+    <BLOCKQUOTE>
+    <IMG SRC="Gifs/fourtypes.GIF" alt="fourtypes"><P>
+    From left to right, these are examples of a smoothed tile plot, a 
+    3D mesh plot, a time series line plot, and a time series bar plot.<P>
+    <IMG SRC="Gifs/winds.gif" alt="winds"><P>
+    From left to right, these are examples of a tile plot of a vertical
+    cross section, a wind vector plot, and a scatter plot.
+    <P>
 
-<A HREF="#TOC"> Return To Table of Contents </A>
+    <A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+    </BLOCKQUOTE>
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Data">3. Getting your data into PAVE</A> </H2>
 
-PAVE currently supports four input file formats:  
-<UL>
-    <LI> <A HREF="#IOAPI">I/O&nbsp;API</A> (netCDF), 
-    <LI> <A HREF="#UAMIV"> UAM-IV</A>,  
-    <LI> <A HREF="#UAMV"> UAM-V</A>, and
-    <LI> <A HREF="#chainfiles">&quot;chain files&quot;</A>
-</UL>
+    <BLOCKQUOTE>
+    PAVE currently supports four input file formats:  
+    <UL>
+        <LI> <A HREF="#IOAPI">I/O&nbsp;API</A> (netCDF), 
+        <LI> <A HREF="#UAMIV"> UAM-IV</A>,  
+        <LI> <A HREF="#UAMV"> UAM-V</A>, and
+        <LI> <A HREF="#chainfiles">&quot;chain files&quot;</A>
+    </UL>
 
-(which contain a list files of one of the other three types).  Files of
-these types are loaded into PAVE from the <B>Add/Delete/Select
-Dataset_popup</B> window.  This window comes up automatically when you
-start PAVE, and also appears when you choose <B>Edit/Select From Dataset
-List</B> from PAVE's <B>Datasets</B> menu. See <A HREF="paveJumpstart.html#Jumpstart">
-Quick PAVE Jumpstart</A> for more details on loading datasets.<P>
+    (which contain a list files of one of the other three types).  Files
+    of these types are loaded into PAVE from the <B>Add/Delete/Select
+    Dataset_popup</B> window.  This window comes up automatically when
+    you start PAVE, and also appears when you choose <B>Edit/Select From
+    Dataset List</B> from PAVE's <B>Datasets</B> menu. See
+    <A HREF="#Jumpstart"> Quick PAVE Jumpstart</A> for more details on
+    loading datasets.
+    <P>
 
-<B><A NAME="IOAPI"> I/O&nbsp;API Data</A></B><P> The Models-3/ EDSS Input/Output
-Applications Programming Interface (see
-<A HREF="https://www.cmascenter.org/ioapi/documentation/all_versions/html/AA.html">
-https://www.cmascenter.org/ioapi/documentation/all_versions/html/AA.html</A>
-for further info) provides an easy-to-learn, easy-to-use programming
-interface to files for the air quality model developer and
-model-related-tool developer, in both FORTRAN and C/C++. I/O&nbsp;API
-files are portable across computing platforms.  This means that the same
-file can be read on a Sun workstation, a DEC Alpha workstation, and on a
-Cray supercomputer. If your data is not already in I/O&nbsp;API, UAM-IV,
-or UAM-V format,formats we recommend that you use a translation program
-such as  those found in the I/O&nbsp;API's <VAR>m3tools</VAR> package to
-convert  your data into I/O&nbsp;API format.  Note that these latter are
-available in source code form, so that you may adapt them easily to your
-needs.
-<P>
-
-There is source code for three example conversion programs is
-included with the PAVE distribution.  One of them converts
-an ASCII ROM dataset with a Lat/Lon map projection, and the
-other converts a binary SAQM dataset with a Lambert Conformal
-map projection, the third converts  the standard AIRS AMP350 
-observational data format to the Models-3 I/O API format that 
-PAVE requires.  Note that you will need additional libraries, 
-and possibly header files, in order to successfully compile this
-code.  These libraries and header files can be found in:<P>
-
-<PRE>
-&lt;top level PAVE dir&gt;/&lt;platform type&gt;/lib/*
-</PRE>
-
-The example conversion code is in:<P>
-<PRE>
-&lt;top level PAVE dir&gt;/doc/pave/convert_to_m3ioapi/rom_to_m3ioapi/*
-&lt;top level PAVE dir&gt;/doc/pave/convert_to_m3ioapi/saqm_to_m3ioapi/*
-</PRE>
-The AIRS AMP350 convertor was first provided with the PAVE 2.1 release.
-It can be downloaded from the web site. 
-<br><A HREF="http://www.ie.unc.edu/cempd/EDSS/updates/index.html">http://www.ie.unc.edu/cempd/EDSS/updates/updates.html</A> This program requires the following inputs. <br>
-<OL>
-    <LI>The input AIRS amp350 print format file name.
-    <LI>The time zone conversion file. (provided with the obs2api program - tzt.dat)
-    <LI>Additional hour shift variable. The AIRS data are hourly averaged, and a
-        00 time flag represents the hour 00-01. A user may wish to represent that
-        data segment by the ending hour. In that case, a 1 should be entered here.
-    <LI>Starting year, month, day, hour (GMT) (e.g. 1997 07 10 12)
-    <LI>Ending year, month, day, hour (GMT) (e.g. 1997 07 16 12)
-    <LI> Name of output variable (8 characters max) (e.g. O3_OBS)
-</OL>
-<P>
-NOTE:  these example codes will probably need to be adapted for
-use with your data files.  They were written for
-specific data files being used for testing purposes,
-and were NOT originally intended to be cleanly written
-examples of how to easily convert generic gridded data
-data into PAVE format.  However, they are being
-included here with the hope that you may find them useful.<P>
+    <B><A NAME="IOAPI">I/O&nbsp;API Data</A></B><P>The EPA/MCNC/BAMS/IE
+    Models-3 Input/Output Applications Programming Interface (see
+    <A HREF="https:cjcoats.github.io/ioapi/AA.html">
+    https:cjcoats.github.io/ioapi/AA.html</A> for further info) provides
+    an easy-to-learn, easy-to-use programming interface to files for the
+    air quality model developer and model-related-tool developer, in
+    both FORTRAN and C/C++. I/O&nbsp;API files are portable across
+    computing platforms.  This means that the same file can be read on a
+    Sun workstation, a DEC Alpha workstation, and on a Cray
+    supercomputer. If your data is not already in I/O&nbsp;API, UAM-IV,
+    or UAM-V format,formats we recommend that you use a translation
+    program such as  those found in the I/O&nbsp;API's
+    <VAR>m3tools</VAR> package to convert  your data into I/O&nbsp;API
+    format.  Note that these latter are available in source code form,
+    so that you may adapt them easily to your needs.
+    <P>
 
 
-One sometimes confusing concept is the precise meaning of the
-<CODE>XORIG</CODE>, <CODE>YORIG</CODE>,  <CODE>XCELL</CODE>, and
-<CODE>YCELL</CODE> parameters in an I/O&nbsp;API data file.  See
-<A HREF="https://www.cmascenter.org/ioapi/documentation/all_versions/html/GRIDS.html">
-https://www.cmascenter.org/ioapi/documentation/all_versions/html/GRIDS.html</A>
-for the I/O&nbsp;API documentation on this subject. Below is an image of
-an example of using these parameters with two different data files that
-need to be co-registered within a PAVE plot.  Note that units are in
-meters, except in the case of files with Lat-Lon coordinates, where they
-are in (signed) degrees.
+    One sometimes confusing concept is the precise meaning of the
+    <CODE>XORIG</CODE>, <CODE>YORIG</CODE>,  <CODE>XCELL</CODE>, and
+    <CODE>YCELL</CODE> parameters in an I/O&nbsp;API data file.  See
+    <A HREF="https:cjcoats.github.io/ioapi//GRIDS.html">
+    https:cjcoats.github.io/ioapi//GRIDS.html</A> for the I/O&nbsp;API
+    documentation on this subject. Below is an image of an example of
+    using these parameters with two different data files that need to be
+    co-registered within a PAVE plot.  Note that units are in meters,
+    except in the case of files with Lat-Lon coordinates, where they are
+    in (signed) degrees.
+    <P>
 
-<P>
+    <IMG SRC="Gifs/dot-vs-cross.gif" alt="dot-vs-cross">
+    <P>
 
-<IMG SRC="Gifs/dot-vs-cross.gif" alt="dot-vs-cross"><P>
+    <B><A NAME="UAMIV">UAM-IV Format</A></B><P> Most geographically oriented
+    UAM-IV input and output files are directly readable by PAVE. These include
+    DIFFBREAK, REGIONTOP, TEMPERATURE, WIND, AIRQUALITY, BOUNDARY, TOPCONC,
+    EMISSIONS, PTSOURCE, AVERAGE, and INSTANT.
+    <P>
 
-<B><A NAME="UAMIV">UAM-IV Format</A></B><P> Most geographically oriented
-UAM-IV input and output files are directly readable by PAVE. These include
-DIFFBREAK, REGIONTOP, TEMPERATURE, WIND, AIRQUALITY, BOUNDARY, TOPCONC,
-EMISSIONS, PTSOURCE, AVERAGE, and INSTANT.<P>
+    <B><A NAME="UAMV">UAM-V Format</A></B>
 
-<B><A NAME="UAMV">UAM-V Format</A></B>
+    <P> Some of the UAM-V input and output files are compatible with the UAM-IV
+    file formats.  These files are readily visualized by PAVE because it can
+    obtain all the information it needs from inside the files (i.e. they are
+    &quot;self-describing&quot;).  The files in this category are: EMISSIONS, PTSOURCE,
+    BOUNDARY, AIRQUALITY, and the coarse grid AVERAGE and INSTANT files.
+    <P>
 
-<P> Some of the UAM-V input and output files are compatible with the UAM-IV
-file formats.  These files are readily visualized by PAVE because it can
-obtain all the information it needs from inside the files (i.e. they are
-"self-describing").  The files in this category are: EMISSIONS, PTSOURCE,
-BOUNDARY, AIRQUALITY, and the coarse grid AVERAGE and INSTANT files.  <P>
+    However, many UAM-V files have new formats that are not self-describing.
+    PAVE needs additional information in order to read these files, such as the
+    kind of data in the file, the number of rows, columns, and layers in the
+    data, the geographic region covered, etc. The file types that fall into
+    this category are wind, temperature, cloud, water vapor, rain, vertical
+    diffusion, height, fine grid average, and fine grid instant.
+    <P>
 
-However, many UAM-V files have new formats that are not self-describing.
-PAVE needs additional information in order to read these files, such as the
-kind of data in the file, the number of rows, columns, and layers in the
-data, the geographic region covered, etc. The file types that fall into
-this category are wind, temperature, cloud, water vapor, rain, vertical
-diffusion, height, fine grid average, and fine grid instant.<P>
+    In order to display a file of one of these latter types with PAVE, a
+    UAM-V &quot;metafile&quot; must be used. A metafile is an ASCII file that contains
+    the additional information PAVE needs to read and correctly interpret the
+    data.  To visualize data in a file that needs a metafile, select the
+    metafile from the PAVE file browser, instead of the file that contains
+    the data.  A description of the contents of UAM-V metafiles follows.<P>
 
-In order to display a file of one of these latter types with PAVE, a
-UAM-V "metafile" must be used. A metafile is an ASCII file that contains
-the additional information PAVE needs to read and correctly interpret the
-data.  To visualize data in a file that needs a metafile, select the
-metafile from the PAVE file browser, instead of the file that contains
-the data.  A description of the contents of UAM-V metafiles follows.<P>
+    The very first line of the metafile MUST be the following:
+    <PRE>
+#! UAMV DESCRIPTION FILE
+    </PRE>
 
-The very first line of the metafile MUST be the following:
-
-<P>  <PRE> #! UAMV DESCRIPTION FILE </PRE>
-
-<P> If PAVE does not find the above string, the file is considered to be of
-unknown type and an error is returned.
-<P> Several keywords must be present in the metafile. Each keyword should
-be on a separate line and followed by a value.  Blank lines are permitted.
-The following keywords are required (and are listed in the recommended
-order):<P>
-
-<PRE>
+    If PAVE does not find the above string, the file is considered to be
+    of unknown type and an error is returned.
+    <P>
+    
+    Several keywords must be present in the metafile. Each keyword
+    should be on a separate line and followed by a value.  Blank lines
+    are permitted. The following keywords are required (and are listed
+    in the recommended order):
+    <PRE>
 UAMV_FILE
 UAMV_TYPE
 NCOLS
@@ -356,53 +316,54 @@ DY or DLAT
 UTM_ZONE (for UTM-based domains only)
 FINE_GRID  (for UAM-V output files only - not for input meteorology files)
 TITLE
-</PRE><P>
+    </PRE>
+    <P>
 
 
-<B> Keyword Descriptions </B>
+    <B> Keyword Descriptions </B>
 
-<P> <B>UAMV_FILE</B> - the name of the file that contains the actual data
-to be displayed by PAVE. It can be either a full or a relative pathname to
-the current working directory.<P>
+    <P> <B>UAMV_FILE</B> - the name of the file that contains the actual data
+    to be displayed by PAVE. It can be either a full or a relative pathname to
+    the current working directory.<P>
 
-<B>UAMV_TYPE</B> - the type of data in the UAMV_FILE. Valid choices are:
-Wind, Temp, Cloud, H2O, Rain, Vdif, Height,  FineGridAverage,
-FineGridInstant<P>
+    <B>UAMV_TYPE</B> - the type of data in the UAMV_FILE. Valid choices are:
+    Wind, Temp, Cloud, H2O, Rain, Vdif, Height,  FineGridAverage,
+    FineGridInstant<P>
 
-<B>NCOLS</B> - number of horizontal columns in the grid<P>
+    <B>NCOLS</B> - number of horizontal columns in the grid<P>
 
-<B>NROWS</B> - number of horizontal rows in the grid<P>
+    <B>NROWS</B> - number of horizontal rows in the grid<P>
 
-<B>LEVELS</B> - number of vertical layers in the grid<P>
+    <B>LEVELS</B> - number of vertical layers in the grid<P>
 
-<B>XORG</B> - the x-coordinate of the lower left corner of the grid, in km for
-UTM-based grids and degrees for latitude-longitude grids<P>
+    <B>XORG</B> - the x-coordinate of the lower left corner of the grid, in km for
+    UTM-based grids and degrees for latitude-longitude grids<P>
 
-<B>YORG</B> - the y-coordinate of the lower left corner of the grid, in km
-for UTM-based grids and degrees for latitude-longitude grids<P>
+    <B>YORG</B> - the y-coordinate of the lower left corner of the grid, in km
+    for UTM-based grids and degrees for latitude-longitude grids<P>
 
-<B>DX</B> - size of the horizontal cell in the x-direction for
-UTM-based grids (km)<P>
+    <B>DX</B> - size of the horizontal cell in the x-direction for
+    UTM-based grids (km)<P>
 
-<B>DLON</B> - size of the horizontal cell in x-direction for lat-lon grids
-(degrees)<P>
+    <B>DLON</B> - size of the horizontal cell in x-direction for lat-lon grids
+    (degrees)<P>
 
-<B>DY</B> - size of the horizontal cell in y-direction for UTM-based grids
-(km)<P>
+    <B>DY</B> - size of the horizontal cell in y-direction for UTM-based grids
+    (km)<P>
 
-<B>DLAT</B> - size of the horizontal cell in y-direction for lat-lon grids
-(degrees)<P>
+    <B>DLAT</B> - size of the horizontal cell in y-direction for lat-lon grids
+    (degrees)<P>
 
-<B>FINE_GRID</B> - logical variable. Possible values: 0 and 1. If the value
-is 1, the file represents data on a fine grid, otherwise it is on a coarse
-grid.  For meteorological input files, this value should be set to one only
-if there is a layer of cells outside the domain specified by { XORG, YORG,
-NROWS, NCOLS, DX, and DY]}. <P>
+    <B>FINE_GRID</B> - logical variable. Possible values: 0 and 1. If the value
+    is 1, the file represents data on a fine grid, otherwise it is on a coarse
+    grid.  For meteorological input files, this value should be set to one only
+    if there is a layer of cells outside the domain specified by { XORG, YORG,
+    NROWS, NCOLS, DX, and DY]}. <P>
 
-<B>TITLE</B> - A title for tile plots.  Spaces are allowed.<P>
+    <B>TITLE</B> - A title for tile plots.  Spaces are allowed.<P>
 
 
-Example of a UAM-V temperature metafile on the OTAG coarse grid:<P>
+    Example of a UAM-V temperature metafile on the OTAG coarse grid:<P>
 <PRE>
 #! UAMV DESCRIPTION FILE
 UAMV_FILE /home/user/tmpr.cc.20jul93.ld.rams1
@@ -418,7 +379,7 @@ FINE_GRID  0
 TITLE      Coarse Grid Temperature: July 20, 1993
 </PRE>
 
-Example of a UAM-V fine grid average metafile on the OTAG fine grid:<P>
+    Example of a UAM-V fine grid average metafile on the OTAG fine grid:<P>
 <PRE>
 #! UAMV DESCRIPTION FILE
 UAMV_FILE /home/trayanov/testpave/avrg.ff.20jul93-93.mc.93basA1
@@ -434,7 +395,7 @@ FINE_GRID  1
 TITLE      Base Case Fine Grid Average
 </PRE>
 
-<A NAME="UTMMetaFile">Example of a UAM-V temperature file on a UTM-based grid:</A><P>
+    <A NAME="UTMMetaFile">Example of a UAM-V temperature file on a UTM-based grid:</A><P>
 <PRE>
 #! UAMV DESCRIPTION FILE
 UAMV_FILE /metdata/uamv.t.jun26-28.16km.8.v4
@@ -451,62 +412,67 @@ FINE_GRID  0
 TITLE      Coarse Grid Temperature File
 </PRE>
 
-<B> Creating metafiles with scripts </B><P>
+    <B> Creating metafiles with scripts </B><P>
 
-It is relatively straightforward to use a script to create metafiles.
-Examples of scripts that do this follow.  However, the specifics (such as
-parsing file names to determine file type) depend on the particular
-application.  The two examples given below are for the OTAG project. Note
-that these are hypertext links which are only available if you
-are reading this document using a Web browser.<P>
+    It is relatively straightforward to use a script to create metafiles.
+    Examples of scripts that do this follow.  However, the specifics (such as
+    parsing file names to determine file type) depend on the particular
+    application.  The two examples given below are for the OTAG project. Note
+    that these are hypertext links which are only available if you
+    are reading this document using a Web browser.<P>
 
-<A HREF="make_in_metas">Script to create OTAG input metafiles</A><P>
-<A HREF="make_out_metas">Script to create OTAG output metafiles</A><P>
+    <A HREF="make_in_metas">Script to create OTAG input metafiles</A><P>
+    <A HREF="make_out_metas">Script to create OTAG output metafiles</A><P>
 
-The above scripts are provided with your PAVE installation.  They are called
-make_in_metas and make_out_metas and are located in the 
-scripts/ subdirectory of the top level directory where PAVE is installed.  
-Before using them, be sure to edit
-the upper portion of the scripts to match your episode and directory
-structure.<P>
+    The above scripts are provided with your PAVE installation.  They are called
+    make_in_metas and make_out_metas and are located in the 
+    scripts/ subdirectory of the top level directory where PAVE is installed.  
+    Before using them, be sure to edit
+    the upper portion of the scripts to match your episode and directory
+    structure.<P>
 
-<A NAME="chainfiles"> <B>Viewing multiple sequential files as one dataset
-using chain files</B></A><P>
+    <A NAME="chainfiles"> <B>Viewing multiple sequential files as one dataset
+    using chain files</B></A><P>
 
-Data from multiple files can be concatenated and displayed as if they
-were from a single file. This is useful if you wish to animate over
-sequential data that is stored in multiple files.  In order to do this
-you need to supply a "chain file" - an ASCII file that
-contains a list of the data files to be concatenated.<P>
+    Data from multiple files can be concatenated and displayed as if they
+    were from a single file. This is useful if you wish to animate over
+    sequential data that is stored in multiple files.  In order to do this
+    you need to supply a &quot;chain file&quot; - an ASCII file that
+    contains a list of the data files to be concatenated.<P>
 
-The first line of a chain file must be <P>
-<PRE>#! LIST_OF_CHAINED_FILES</PRE><P>
-If this is not found, PAVE will not recognize that the file is a chain file.
-A list of full path names to the individual files to be concatenated
-should follow this line with one filename per line. Note that no
-blank lines or comment lines are permitted and the files MUST be in the order
-in which you wish the data to be displayed.  The individual files can be one
-of the following types: netCDF, UAM-IV or UAM-V (regular or meta files). <P>
+    The first line of a chain file must be <P>
+<PRE>
+#! LIST_OF_CHAINED_FILES
+</PRE>
+    <P>
+    If this is not found, PAVE will not recognize that the file is a chain file.
+    A list of full path names to the individual files to be concatenated
+    should follow this line with one filename per line. Note that no
+    blank lines or comment lines are permitted and the files MUST be in the order
+    in which you wish the data to be displayed.  The individual files can be one
+    of the following types: netCDF, UAM-IV or UAM-V (regular or meta files). <P>
 
-A script is provided with PAVE to simplify the creation of chain files.
-The script will currently work only in cases where the files to be
-chained reside in a single directory. To create a chain file, cd to the
-directory that contains the files you wish to chain, and type 
+    A script is provided with PAVE to simplify the creation of chain files.
+    The script will currently work only in cases where the files to be
+    chained reside in a single directory. To create a chain file, cd to the
+    directory that contains the files you wish to chain, and type 
 
-<PRE> chain_files name_of_chain_file list_of_files_to_chain</PRE> 
+<PRE>
+chain_files name_of_chain_file list_of_files_to_chain
+</PRE> 
 
-For example:<P> 
+    For example:<P> 
 
 <PRE> chain_files avrg.cc.20-30jul93-93.mc.basB avrg.cc.* </PRE> <P>
 
 
-<B>Limitations:</B>
-The current version of PAVE does not check the files for
-consistency (i.e. whether they are of the same type, whether the grid is the
-same in all the files, or whether the files are listed in the proper
-sequential order). <P>
+    <B>Limitations:</B>
+    The current version of PAVE does not check the files for
+    consistency (i.e. whether they are of the same type, whether the grid is the
+    same in all the files, or whether the files are listed in the proper
+    sequential order). <P>
 
-Here is an example of a chain file:<P>
+    Here is an example of a chain file:<P>
 <PRE>
 #! LIST_OF_CHAINED_FILES
 /home/trayanov/testpave/rain.cc.20jul93.ai.meta
@@ -514,28 +480,30 @@ Here is an example of a chain file:<P>
 /home/trayanov/testpave/rain.cc.22jul93.ai.meta
 </PRE>
 
-<A HREF="#TOC"> Return To Table of Contents </A>
+    <A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+    </BLOCKQUOTE>
 
-<H2><A NAME="Formulas">4.	Using formulas</A> </H2>
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME="Formulas">4.	Using Formulas</A> </H2>
 
 One of PAVE's most powerful features is its formula capability, which 
 enables you to calculate and visualize derived variables from your
-datasets "on the fly". For example, you can calculate the ratio of a
+datasets &quot;on the fly&quot;. For example, you can calculate the ratio of a
 variable from one file to a variable from another file, and then
 visualize the ratio.  It is easy to load formulas into PAVE using the
 <B>Add/Delete/Select Formula_popup</B> window, which appears
 automatically when you start PAVE.  The window can also be brought up
 manually by choosing <B>Edit/Select From Formula List</B> from PAVE's
-<B>Formulas</B> menu. See <A HREF="jumpstart.html#Jumpstart"> Quick PAVE
+<B>Formulas</B> menu. See <A HREF="#Jumpstart"> Quick PAVE
 Jumpstart</A> for more details on loading formulas.
 <P>
 <P> All PAVE visualizations are generated using one or more formulas.  A
-  formula may be very simple. For example, the formula "O3a" refers to the
-  variable "O3" in data set "a" - which is the first dataset that was
+  formula may be very simple. For example, the formula <CODE>O3a</CODE> refers to the
+  variable <CODE>O3</CODE> in data set <VAR>a</VAR> - which is the first dataset that was
   loaded into PAVE. (Note that data sets are given sequential letters as
   they are loaded into PAVE, and are referred to by those letters in PAVE
   formulas.) An example of a formula to calculate the percent difference in
-  O3 between datasets a and b is: "(O3a-O3b)*100/(O3b+0.001)". 
+  O3 between datasets a and b is: <CODE>(O3a-O3b)*100/(O3b+0.00001)</CODE>. 
 <P>
   
   Formulas must be in infix notation, and can contain the following operators,
@@ -613,7 +581,7 @@ The following operators are boolean binary operators.  Boolean operators
 return either 0 or 1 for each cell of the resulting array of data, or
 in the case of two operands (ops) that are single numbers, just the single
 number 0 or 1.  You may find these
-operators useful to "screen out" ranges of your data that are
+operators useful to &quot;screen out&quot; ranges of your data that are
 of particular interest.  For example, if you are only
 concerned about the variable O3a when its value exceeds 0.080, you
 might look at the formula <B>(O3a&gt;0.080)*O3a</B>.  If O3a
@@ -675,7 +643,7 @@ The functionality is listed beside each operator name.
 <B>minz</B>    z index with minimum value in currently selected domain
 <B>maxz</B>    z index with maximum value in currently selected domain
 </PRE>
-where "<B>currently selected domain</B>" includes the currently selected
+where &quot;<B>currently selected domain</B>&quot; includes the currently selected
 rows, columns, layers, and time steps for the currently selected
 formula.  Thus, the minimum and maximum values in the currently selected
 domain occur at the locations <B>(minx,miny,minz,mint)</B> and
@@ -704,8 +672,10 @@ boolean condition.
   are not supported, but hopefully these will be added later.
 <P>
 
-<A HREF="#TOC"> Return To Table of Contents </A>
+<A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Subsetting">5.	Spatial and temporal data subsetting</A></H2>
 
 PAVE allows you to easily subset your data by geographic region, layer
@@ -769,8 +739,10 @@ datasets and formulas, you can use menu items in the <B>Datasets</B> and
   would immediately be reduced accordingly.
 <P>
 
-<A HREF="#TOC"> Return To Table of Contents </A>
+<A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="MenuItems">6.	Navigating through PAVE's menu items</A> </H2>
 PAVE's main graphical user interface is broken into six menus:
 <UL>
@@ -795,30 +767,35 @@ The file menu has six menu items.
   These settings will be used for all subsequent tile plots, until another
   configuration file is chosen.  The ASCII configuration files can be
   edited manually, or saved directly from a tile plot.  For further
-  information, please see the section on <A HREF="paveConfigure.html#Configuring">
-    Configuring plots</A>.
+  information, please see the section on
+  <A HREF="#Configuring">Configuring plots</A>.
+
 <P><B>Load Dataset List From File</B> brings up a file browser that
   allows you to select an ASCII file that contains a list of datasets that
   you would like to visualize with PAVE. Loading in a dataset list from a
   file will first cause PAVE to remove any currently loaded datasets from
   PAVE's memory.  In this way, dataset names loaded in will then be
   referenced by letters a, b, c, etc.
+
 <P><B>Load Formula List From File</B> brings up a file browser that
   allows you to select an ASCII file that contains a list of formulas that
   you would like to visualize with PAVE. Note that any formulas loaded in
   will be verified against the currently loaded datasets.  As long as the
   variables in the formulas match variables in the respective datasets,
   they will be loaded into PAVE.  Otherwise they will be ignored.
+
 <P><B>Save Dataset List To File</B> allows you to save a list of the
   currently loaded datasets to an ASCII file. If you want to look at the
   same set of datasets in many different PAVE sessions, you may find 
   this feature useful.  Dataset lists can subsequently be retrieved
   using the <B>Load Dataset List From File</B> menu item described above.
+
 <P><B>Save Formula List To File</B> allows you to save a list of the
   currently loaded formulas  to an ASCII file.  If you want to look at the
   same set of formulas in many different PAVE sessions, you may find it
   useful to use this feature.  Formula lists can subsequently be retrieved
   using the <B>Load Formula List From File</B> menu item described above.
+
 <P><B>Exit PAVE</B> causes your PAVE session to end.
 <P>
 
@@ -833,12 +810,12 @@ regarding available datasets.
   should appear  (this may take a couple of seconds).  You can then browse
   for datasets on your local machine and on remote machines if your system
   is properly configured.  For more information on using the EDSS File
-  Browser, see <A HREF="paveJumpstart.html#Jumpstart">Quick Pave Jumpstart</A>.  
+  Browser, see <A HREF="#Jumpstart">Quick Pave Jumpstart</A>.  
 <P>
   
   If you want to browse for files on remote machines, first verify that
   you've met the requirements discussed in the 
-  <A HREF="paveJumpstart.html#Requirements"> Requirements for use </A> 
+  <A HREF="#Requirements">Requirements for use </A> 
   section of this document.  Then click on the
   large button in the center of the EDSS File Browser that contains
   information about "Host:", "User:", and "Owner Module:". This brings up a
@@ -850,7 +827,8 @@ regarding available datasets.
 <P>
   
   Datasets selected with the EDSS File Browser are loaded into PAVE
-  sequentially, and are referenced using the letters a, b, c, etc. 
+  sequentially, and are referenced using the letters <CODE>a, b,
+  c,</CODE> etc. 
   When a new dataset it loaded into PAVE, it becomes the currently
   selected dataset.  You can always determine which is the currently
   selected dataset by looking at the "Dataset:" line on the main
@@ -865,6 +843,7 @@ regarding available datasets.
   remove that dataset from PAVE's memory. Clicking on the "Close" button
   will close the window.
 <P>
+
 <P><B>Select Time Range of Current Dataset</B> brings up a window
   with two sliders that can be used to crop the currently selected
   dataset's time range to a smaller time range, which by default is set to
@@ -872,8 +851,9 @@ regarding available datasets.
   time range will affect any plots made using that dataset's variables. 
   The maximum time range that can be used for any of the variables in a
   plot is specified by these sliders.   Please see the section on
-  <A HREF="paveSubsetting.html#Subsetting"> Spatial and temporal data subsetting</A>
+  <A HREF="#Subsetting"> Spatial and temporal data subsetting</A>
   for further information on how PAVE stores time ranges.
+
 <P><B>Select Layer Ranges Matching Current Dataset</B> brings up a window
   with two sliders that can be used to change the currently selected
   dataset's layer range to a different layer range. By default, a dataset's
@@ -885,6 +865,7 @@ regarding available datasets.
   and formulas that share the same layer range information. Please see the
   section on  <A HREF="paveSubsetting.html#Subsetting"> Spatial and temporal data
     subsetting</A> for further information on how PAVE stores layer ranges.
+
 <P><B>Select Regions Of Interest Matching Current Dataset</B> brings up a
   window that can be used to change the currently selected dataset's
   geographic region of interest. By default, a dataset's geographic region
@@ -903,8 +884,8 @@ regarding available datasets.
   select none of them.  Cells can explicitly be toggled on or off by
   dragging the mouse over the region to be toggled.  You may find that
   selecting a particular region is easier if you resize the window to make
-  it larger. Please see the section on <A HREF="paveSubsetting.html#Subsetting"> Spatial
-    and temporal data subsetting</A> for further information on how PAVE
+  it larger. Please see the section on <A HREF="#Subsetting"> Spatial
+  and temporal data subsetting</A> for further information on how PAVE
   stores geographic regions of interest.
 <P><B>View Variables In Current Dataset</B> will cause a window to appear
   that lists the variables in the currently selected dataset, followed by
@@ -923,9 +904,10 @@ regarding available formulas.
 <P><B>Edit/Select From Formula List</B> brings up an "Add/Delete/Select
   Formula" window that allows to you add and delete formulas from PAVE's
   memory.  You can enter a formula using the "Enter New Formula:" typein
-  widget according to the rules described in the  <A HREF="./paveFormulas.html#Formulas">
-    Using formulas</A> section, then click on the "Add" button to load it
+  widget according to the rules described in the  <A HREF="#Formulas">
+  Using formulas</A> section, then click on the <CODE>Add</CODE> button to load it
   into PAVE's memory.
+  <P>
   
   When a new formula is loaded into PAVE, it becomes the currently selected
   formula.  You can always determine which is the currently selected
@@ -992,12 +974,12 @@ The graphics menu is used to create plots.
 <UL>
   <LI>The tile plot's <B>File</B> menu can be used to print and save images 
     and animations; these are described more thoroughly in the   
-  <A HREF="paveExporting.html#Saving"> Printing and exporting images, 
+  <A HREF="#Saving"> Printing and exporting images, 
     animations, and data</A> section.  Also this menu has a 
   "Save Configuration Settings" item that saves the tile plots legend 
-    settings to a file, as discussed in the <A HREF="paveConfigure.html#SavingConfigSettings"> 
+    settings to a file, as discussed in the <A HREF="#SavingConfigSettings"> 
       Saving configuration settings for later use</A> subsection of the 
-  <A HREF="paveConfigure.html#Configuring"> Configuring plots</A> section.<P>
+  <A HREF="#Configuring"> Configuring plots</A> section.<P>
     
   <LI>The tile plot's <B>Interact</B> menu can be used to change the effect of
     a dragging the mouse pointer to select a portion of the tile plot's
@@ -1018,7 +1000,7 @@ The graphics menu is used to create plots.
     displays a window that is used to switch between all the different Zoom
     regions that have been selected for this plot.  The <B>Control..Configure..</B>
     item brings up the tile plot's configuration window, discussed in detail
-    in the <A HREF="paveConfigure.html#Configuring"> Configuring plots</A> section of this
+    in the <A HREF="#Configuring"> Configuring plots</A> section of this
     document.<P>
       
   <LI>The tile plot's <B>Map</B> menu is used to toggle between five different
@@ -1209,13 +1191,12 @@ https://www.cmascenter.org/pave/documentation/2.3/Pave.FAQ.html</A>.
 Models-3 I/O&nbsp;API web pages located at 
 <A HREF="https://www.cmascenter.org/ioapi/documentation/all_versions/html/AA.html">
 https://www.cmascenter.org/ioapi/documentation/all_versions/html/AA.html</A>
-or <A HREF="https://github.com/cjcoats/ioapi-3.2">https://github.com/cjcoats/ioapi-3.2</A>.<P>
+or <A HREF="https://cjcoats.github.io/ioapi">https://cjcoats.github.io/ioapi</A>.<P>
 
-Please try to answer your questions using these resources before entering
-a help ticket at <A HREF="http://bugz.unc.edu">http://bugz.unc.edu</A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
 
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Configuring">7.	Configuring plots</A> </H2>
 
 <H3> <A NAME="ConfigureTimeSeries"> Configuring PAVE Time Series Line Plots</A> </H3>
@@ -1466,9 +1447,12 @@ Once PAVE loads a configuration file, that information will be
 used as the default for all subsequent PAVE plots, until another
 configuration file is specified to PAVE.
 
-<P><A HREF="#TOC"> Return To Table of Contents</A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
-<H2><A NAME="Saving">8.	Printing and exporting images, animations, and data</A> </H2>
+
+<HR> <!----------------------------------------------------------------->
+<H2><A NAME="Saving">8.</A>	Printing and exporting images,
+                            animations, and data </H2>
 
 PAVE provides facilities to <A HREF="#Printing">print plots</A>, <A
 HREF="#ExportImage">export images and animations</A>, and <A
@@ -1482,7 +1466,7 @@ and <A HREF="#Snapshot">snapshot</A> may allow you to accomplish your goals.
 
 You probably need to set your PRINTER environment variable prior to
 launching PAVE for printing to work correctly.  
-(See the <A HREF="paveJumpstart.html#Jumpstart"> Quick PAVE Jump start</A> section for 
+(See the <A HREF="#Jumpstart"> Quick PAVE Jump start</A> section for 
 further information.)<P>
 
 <B>To print tile plots</B>, if you are printing to a black and white printer, 
@@ -1506,9 +1490,9 @@ file, and then you can issue an lpr command from the Unix command line to
 print that file.<P>
 
 <B>To print time series line plots or scatter plots</B>, 
-select the "print" button on the plot's window.  Then type in the filename, 
+select the <CODE>PRINT</CODE> button on the plot's window.  Then type in the filename, 
 complete with path name, in the resulting window.  Your PostScript will be 
-saved to the chosen file, and then you can issue an lpr command from the Unix 
+saved to the chosen file, and then you can issue an <VAR>lpr</VAR> command from the Unix 
 command line to print that file.<P>
 
 <B>To print time series bar plots</B>, 
@@ -1680,8 +1664,10 @@ Electronic Mail regarding XV should be sent to one of these three addresses:
      xvtech@trilon.com                    - bug reports, technical questions
 </PRE>
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Scripting">9.	Driving PAVE using scripts </A></H2> <P>
 
 PAVE has a large number of command line arguments.  These can be typed
@@ -1829,7 +1815,7 @@ X window ID<P>
 
 <B><A NAME="-configFile">-configFile</A> &lt;configFileName&gt;</B> specifies a configuration
 file for PAVE to use for configuring subsequent tile plots.  Please
-see the <A HREF="paveConfigure.html#Configuring"> Configuring plots</A> section for
+see the <A HREF="#Configuring"> Configuring plots</A> section for
 more information on configuration files.<P>
 
 <B><A NAME="-contourRange">-contourRange</A> &lt;minCut&gt; &lt;maxCut&gt;</B> sets the contour
@@ -2445,8 +2431,10 @@ pave \
 -multitime 2 NOc NO2c
 </PRE>
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Environment">10.	Optional Environment Variables</A> </H2>
 The following environment variable settings can be made prior to
 invoking PAVE.  They are completely optional, and most of them
@@ -2623,8 +2611,10 @@ the BLT library, which is an extension to the (Tcl)/Tk library.
 <P> <B>setenv HOST &lt;machine name or ip address&gt;</B> used to specify a remote hostname
 from which to obtain a file, used in the -f option.
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Requirements">11.	Requirements for use </A> </H2>
  You must have access to either a
    Sun running Solaris 2.x, an SGI running IRIX 5.x, a DEC Alpha
@@ -2716,13 +2706,15 @@ t90.ncsc.org demo_t90
    The other files will be set up for you automatically
    whenever PAVE executes.
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Jumpstart">12.	Quick PAVE Jumpstart</A> </H2>
 This section can be used to guide you through an example PAVE session.
 If you are a new user, it can help you become familiar with most
 of PAVE's features.  Once you have satisfied the 
-<A HREF="paveJumpstart.html#Requirements">Requirements for use </A> section above, then: <P>
+<A HREF="#Requirements">Requirements for use </A> section above, then: <P>
 <UL>
 <LI> Login to the machine where PAVE is installed, then
    setenv your DISPLAY environment variable to wherever you
@@ -2734,18 +2726,18 @@ of PAVE's features.  Once you have satisfied the
    Otherwise PAVE will use just "lpr", which defaults to the printer
    "lp", and may or may not be accessible to your system.<P>
 
-<LI> Launch PAVE from the command line by typing "pave" at the Unix
+<LI> Launch PAVE from the command line by typing <VAR>pave</VAR> at the Unix
    prompt.  You will probably need to make sure the scripts subdirectory
-   of the top level PAVE installation directory into your path
-   in order for your shell to be able to resolve the pave location.
-   The README file that comes with PAVE has information on how to do
-   this. <P>
+   of the top level PAVE installation directory into your path in order
+   for your shell to be able to resolve the pave location. The
+   <VAR>AAREADME</VAR> file that comes with PAVE has information on how
+   to do this. <P>
 
-   Typing "pave" launches a "wrapper script", which in turn fires
-   up the software bus and the
-   PAVE executable itself.  The PAVE executable itself should never
-   be launched directly from the command line, as this wrapper script
-   is required to set up PAVE's environment.  <P>
+   Typing "pave" launches a &quot;wrapper script&quot;, which in turn
+   fires up the software bus and the PAVE executable itself.  The PAVE
+   executable itself should never be launched directly from the command
+   line, as this wrapper script is required to set up PAVE's
+   environment.  <P>
 
 <LI> You should see an "Add/Delete/Select Dataset" pop-up window:<P>
 
@@ -2895,12 +2887,12 @@ Use the file browser to add the file
 <LI> NOTE: <B>If you want to do a vector plot, a scatter plot of two
 formulas, or a time series line plot with multiple (2-8) variables
 plotted on it</B>, then you must send commands to PAVE via stdin or
-command line arguments, which are described in the <A HREF="paveScripting.html#Scripting">
+command line arguments, which are described in the <A HREF="#Scripting">
 "Driving PAVE using scripts"</A> section of this document.
 
 Unfortunately there are currently no graphical user interface
 methods to access these features.
-There are <A HREF="paveScripting.html#CommandLineExample">examples</A> of invoking
+There are <A HREF="#CommandLineExample">examples</A> of invoking
 PAVE with command line arguments in the same section.<P>
    <IMG SRC="Gifs/multiTime.gif" alt="multiTime">
    <IMG SRC="Gifs/wind_scatter.gif" alt="wind_scatter"> <P>
@@ -2956,8 +2948,10 @@ Plot" from the Graphics menu, and you will see the plot of that cross section.
    enjoy!
 </UL>
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="Bugs">13.	Known Bugs and Workarounds</A> </H2>
 <P>
 We have a new tool for submitting bug reports, suggestions, and questions.
@@ -3014,7 +3008,7 @@ to the CC list by clicking on the bug id, and entering your information to the A
     <LI><B>Printing tile plots</B> may not work reliably on the Sun platform
     at this time, for reasons unknown to us.  <I>Workaround:</I> save
     your images as Gif or RGB, convert them to PostScript
-    (see the <A HREF="paveExporting.html#Saving"> Saving PAVE Plots to PostScript</A>
+    (see the <A HREF="#Saving"> Saving PAVE Plots to PostScript</A>
     section for more information on this), then print them.
     <P>
     <LI>The <B>non-default maps in PAVE are a bit slow to generate</B>, 
@@ -3035,7 +3029,7 @@ to the CC list by clicking on the bug id, and entering your information to the A
     <LI>In PAVE 1.4.x, PAVE could <B>export netCDF</B> files, but had trouble 
     reading
     them back in if the exported formula was at all complex.  This is corrected
-    in version 1.5.  See <A HREF="paveHistory.html#NewFeatures1.5"> New Features in PAVE 1.5</A>
+    in version 1.5.  See <A HREF="#NewFeatures1.5"> New Features in PAVE 1.5</A>
     for more details.<P>
 
     <LI>In versions prior to PAVE 1.5, the <B>column numbers in tabbed ASCII files
@@ -3064,8 +3058,10 @@ to the CC list by clicking on the bug id, and entering your information to the A
     files.  This has been corrected in PAVE 1.5.
 </OL>
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="RunTimeErrors">14.	Run Time Errors</A> </H2>
 
 <P> <B> Malloc failure:</B> If PAVE prints or pops up a message of the
@@ -3086,8 +3082,10 @@ try quitting and restarting PAVE after you've chosen the scheme that you
 like.  Also, logging out of your current session and logging back in
 should make the maximum number of colors available.
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="NewFeatures">15.	History of new features</A> </H2>
 
 <H3> <A NAME="NewFeatures2.3.0"> New Features in PAVE 2.3.0 </A> </H3>
@@ -3151,12 +3149,12 @@ should make the maximum number of colors available.
     http://www.imagemagick.org</A>).</p></lI>
 
     <LI><P>PAVE now responds to the environment variable <B>ELLIPSOID</B> 
-    to specify the earth's ellipsoid.  See <A HREF="paveEnvtVars.html">Environment
+    to specify the earth's ellipsoid.  See <A HREF="#Environment">Environment
     Variables page</A> for more information.</p></lI>
 
     <LI><P>You can now specify the radius of the earth and treat the earth
     as a spher using the environment variable <B>SPHERICAL_EARTH</B>. 
-    See <A HREF="paveEnvtVars.html">Environment
+    See <A HREF="#Environment">Environment
     Variables page</A> for more information.</p></lI>
 
 </UL>
@@ -4042,8 +4040,10 @@ useful, including:<P>
 
 </UL>
 
-<P><A HREF="#TOC"> Return To Table of Contents </A>
+<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+
+<HR> <!----------------------------------------------------------------->
 <H2><A NAME="FutureDev">16.	Future PAVE Development</A> </H2>
 
 PAVE is no longer supported by CMAS; its distribution is now currently
@@ -4166,12 +4166,12 @@ would benefit, please contact me as described above. <P>
 </UL>
 
 
-<A HREF="#TOC"> Return To Table of Contents </A>
+<A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
 <HR> <!- -------------------------------------------------------------- -->
 
     <PRE>
-$Id: PaveManual.html 77 2018-01-18 15:29:37Z coats $
+$Id: PaveManual.html 77 2018-03-12 15:29:37Z coats $
     </PRE>
 
 Send comments to
