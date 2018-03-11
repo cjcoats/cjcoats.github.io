@@ -41,18 +41,18 @@ etscape]">
 <H2><A NAME="Intro">1. 	Introduction and where to obtain software</A> </H2>
 
 <BLOCKQUOTE><EM>
-<STRONG>NOTE</STRONG>  As of the release for <CODE>pave-3.0</CODE>,
-much of this document is obsolete (as much as 20 years out of date);
-however it is a tedious and detailed task to bring it fully up to date.
-<BR>
--- Carlie J. Coats, Jr., Ph.D.<BR>
-<CODE>pave-3.0</CODE> maintainer.
+    <STRONG>NOTE</STRONG>  As of the release for <CODE>pave-3.0</CODE>,
+    much of this document is obsolete (as much as 20 years out of date),
+    and the original wasa full of HTML-errors;  however it is a tedious
+    and detailed task to bring it fully up to date. <BR>
+    -- Carlie J. Coats, Jr., Ph.D.<BR>
+    <CODE>pave-3.0</CODE> maintainer.
 </EM></BLOCKQUOTE>
 
-This document describes how to use the
-<B>Package for Analysis and Visualization of Environmental data </B>
-(PAVE).  PAVE is a flexible and distributed application to visualize 
-multivariate gridded environmental datasets.  Features include
+This document describes how to use the <B>Package for Analysis and
+Visualization of Environmental data </B> (PAVE).  PAVE is a flexible
+application to visualize  multivariate gridded environmental datasets. 
+Features include
 <OL>
     <LI> baseline graphics with the option to export data to high-end
          commercial packages,
@@ -61,9 +61,15 @@ multivariate gridded environmental datasets.  Features include
     <LI> support for multiple simultaneous visualizations,
     <LI> an architecture that allows PAVE to be controlled by external
          processes,
-    <LI> low computational overhead, and (6) no software
-         distribution cost.
+    <LI> low computational overhead, and
+    <LI> no software distribution cost.
 </OL><P>
+
+PAVE is licensed  under the terms of the GNU Public License
+Version&nbsp;2 copyright &copy; 1989, 1991 Free Software Foundation, Inc. 
+See its enclosed GPL.txt or
+<A HREF="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">
+https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html</A>.
 
 <STRONG>PAVE Version 3.0</STRONG> is being released on GitHub in
 March 2018.  There are multiple changes from Version 2.3:
@@ -179,18 +185,12 @@ Modeling for Policy Development</A> at the University of North Carolina.
 
 <B>On-line PAVE Resources</B>
 
-<table width="435" border=1>
-  <tr>
-    <td><A HREF="http://www.cmascenter.org/download.cfm?temp_id=99999">Download PAVE</A>
-  <tr>
-      <td><A HREF="./Pave.FAQ.html">PAVE FAQs </A>
-  <tr>
-        <td width="425"><A HREF="http://www.ie.unc.edu/cempd/EDSS/pave_doc/index.shtml">PAVE User's manual as seperate chapters </A>
-  <tr>
-          <td><A HREF="http://bugz.unc.edu">Page for submitting bug reports, suggestions, and questions </A>
-  <tr>
-            <td><A HREF="#Jumpstart">Getting started with PAVE </A>
-</table>
+<DL>
+        <DT>Download PAVE
+        <DD> <CODE>git clone https://github.com/cjcoats/pave-3.0</CODE>
+        <DT><A HREF="Pave.FAQ.html">PAVE Frequently Asked Questions </A>
+        <DT><A HREF="#Jumpstart">Getting started with PAVE </A>
+</DL>
 <P>
 
 <H2><A NAME="Installation">2. Installation instructions </A></H2>
@@ -217,9 +217,12 @@ cross section, a wind vector plot, and a scatter plot.  <P>
 <H2><A NAME="Data">3. Getting your data into PAVE</A> </H2>
 
 PAVE currently supports four input file formats:  
-
-<A HREF="#IOAPI">I/O&nbsp;API</A> (netCDF), <A HREF="#UAMIV"> UAM-IV</A>,  
-<A HREF="#UAMV"> UAM-V</A>, and "<A HREF="#chainfiles">chain files</A>" 
+<UL>
+    <LI> <A HREF="#IOAPI">I/O&nbsp;API</A> (netCDF), 
+    <LI> <A HREF="#UAMIV"> UAM-IV</A>,  
+    <LI> <A HREF="#UAMV"> UAM-V</A>, and
+    <LI> <A HREF="#chainfiles">&quot;chain files&quot;</A>
+</UL>
 
 (which contain a list files of one of the other three types).  Files of
 these types are loaded into PAVE from the <B>Add/Delete/Select
