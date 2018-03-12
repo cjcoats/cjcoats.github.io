@@ -35,6 +35,8 @@ etscape]">
     <LI> <A HREF="#NewFeatures"     >History of new features</A>
     <LI> <A HREF="Pave.FAQ.html"    >PAVE FAQ </A>
     <LI> <A HREF="#FutureDev"       >Future PAVE Development</A>
+    <P>
+    <LI> <A HREF="../index.html">   Return To <VAR>cjcoats.github.io</VAR></A>
 </OL>
 
 
@@ -46,7 +48,10 @@ etscape]">
     <STRONG>NOTE</STRONG>  As of the release for <CODE>pave-3.0</CODE>,
     much of this document is obsolete (as much as 20 years out of date),
     and the original wasa full of HTML-errors;  however it is a tedious
-    and detailed task to bring it fully up to date. <BR>
+    and detailed task to bring it fully up to date.
+    <P>
+    For usage-changes (and particularly new capabilities in the
+    wrapper-script), see the document <VAR>${PAVE_DIR}/AAREEADME</VAR>
     -- Carlie J. Coats, Jr., Ph.D.<BR>
     <CODE>pave-3.0</CODE> maintainer.
 </EM></BLOCKQUOTE>
@@ -78,10 +83,10 @@ etscape]">
     March 2018.  There are multiple changes from Version 2.3:
     <UL>
         <LI>  Linux Medium-memory-model support:  File-size, etc., are
-                essentially limited by available RAM and inherent netCDF
-                limitations (no more than 2 GB per time step).  See
-                <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#medium">
-                https://cjcoats.github.io/ioapi/AVAIL.html#medium</A>
+              essentially limited by available RAM and inherent netCDF
+              limitations (no more than 2 GB per time step).  See
+              <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#medium">
+              https://cjcoats.github.io/ioapi/AVAIL.html#medium</A>
               <P>
 
         <LI>  The primary build is for GNU gcc/g++/gfortran compilers, using
@@ -92,15 +97,16 @@ etscape]">
               <VAR>make relink</VAR>.
               <P>
 
-        <LI>  Major restructuring as a stand-alone application.  References to,
-              and the convoluted directory structures from, MCNC's EDSS have
-              been removed.  Also, additional maps were added, and placed in
-              (build-independdent!) directory
+        <LI>  Major restructuring as a stand-alone application.  References
+              to, and the convoluted directory structures from, MCNC's
+              EDSS have been removed.  Also, additional maps were added,
+              and placed in (build-independdent!) directory
               <CODE>PAVE_MAPDIR = pave-3.0/maps/</CODE>.
               <P>
 
-        <LI>  The driver-script  <CODE>PAVE_DIR/bin/pave</CODE> was extensively
-              re-written, and much more easily customized than its predecessor.
+        <LI>  The driver-script  <CODE>PAVE_DIR/bin/pave</CODE> was
+              extensively re-written, offers additional capabilities,
+              and is much more easily customized than its predecessor.
               <P>
 
         <LI>  PAVE documentation is included as part of the package, in
@@ -158,6 +164,12 @@ etscape]">
               the original destroy the usability of PAVE for high resolution
               hydrological-modeling grids.
               <P>
+
+        <LI>  Re-formatted the code for consistency and readability, using
+              <BLOCKQUOTE><VAR>
+              astyle --style=whitesmith --indent=spaces=4 \<BR>
+              &nbsp;--indent-col1-comments --pad-paren --convert-tabs
+              </VAR></BLOCKQUOTE>
     </UL>
     <P>
 
@@ -486,30 +498,35 @@ chain_files name_of_chain_file list_of_files_to_chain
 <HR> <!----------------------------------------------------------------->
 <H2><A NAME="Formulas">4.	Using Formulas</A> </H2>
 
-One of PAVE's most powerful features is its formula capability, which 
-enables you to calculate and visualize derived variables from your
-datasets &quot;on the fly&quot;. For example, you can calculate the ratio of a
-variable from one file to a variable from another file, and then
-visualize the ratio.  It is easy to load formulas into PAVE using the
-<B>Add/Delete/Select Formula_popup</B> window, which appears
-automatically when you start PAVE.  The window can also be brought up
-manually by choosing <B>Edit/Select From Formula List</B> from PAVE's
-<B>Formulas</B> menu. See <A HREF="#Jumpstart"> Quick PAVE
-Jumpstart</A> for more details on loading formulas.
-<P>
-<P> All PAVE visualizations are generated using one or more formulas.  A
-  formula may be very simple. For example, the formula <CODE>O3a</CODE> refers to the
-  variable <CODE>O3</CODE> in data set <VAR>a</VAR> - which is the first dataset that was
-  loaded into PAVE. (Note that data sets are given sequential letters as
-  they are loaded into PAVE, and are referred to by those letters in PAVE
-  formulas.) An example of a formula to calculate the percent difference in
-  O3 between datasets a and b is: <CODE>(O3a-O3b)*100/(O3b+0.00001)</CODE>. 
-<P>
-  
-  Formulas must be in infix notation, and can contain the following operators,
-  listed in their order of precedence: 
-<P>
-<PRE>
+    <BLOCKQUOTE>
+    One of PAVE's most powerful features is its formula capability,
+    which  enables you to calculate and visualize derived variables from
+    your datasets &quot;on the fly&quot;. For example, you can calculate
+    the ratio of a variable from one file to a variable from another
+    file, and then visualize the ratio.  It is easy to load formulas
+    into PAVE using the <B>Add/Delete/Select Formula_popup</B> window,
+    which appears automatically when you start PAVE.  The window can
+    also be brought up manually by choosing <B>Edit/Select From Formula
+    List</B> from PAVE's <B>Formulas</B> menu. See
+    <A HREF="#Jumpstart">Quick PAVE Jumpstart</A> for more details on
+    loading formulas.
+    <P>
+
+    All PAVE visualizations are generated using one or more formulas.  A
+    formula may be very simple. For example, the formula
+    <CODE>O3a</CODE> refers to the variable <CODE>O3</CODE> in data set
+    <VAR>a</VAR> - which is the first dataset that was loaded into PAVE.
+    (Note that data sets are given sequential letters as they are loaded
+    into PAVE, and are referred to by those letters in PAVE formulas.)
+    An example of a formula to calculate the percent difference in 
+    <CODE>O3</CODE> between datasets <VAR>a</VAR> and <VAR>b</VAR> is:
+    <CODE>(O3a-O3b)*100/(O3b+0.00001)</CODE>. 
+    <P>
+
+    Formulas must be in infix notation, and can contain the following operators,
+    listed in their order of precedence: 
+    <P>
+    <PRE>
   Highest  1) abs,  sqr,  sqrt, exp,  log,  ln,   sin,  cos,  tan, 
   Precedence  sind, cosd, tand, minx, miny, minz, maxx, maxy, maxz,
               mint, maxt, mean, sum,  min,  max, 
@@ -521,225 +538,295 @@ Jumpstart</A> for more details on loading formulas.
            7) &&
   Lowest   8) ||
   Precedence
-</PRE>
+    </PRE>
 
-Explanations of these operations are given below.  If you wish to 
-override the default operator precedence, or are uncertain as
-to which operator will take precedence, you can feel free to use
-parentheses in your formulas.  This will force expressions within the
-parentheses to be evaluated first.
-<P>
+    Explanations of these operations are given below.  If you wish to 
+    override the default operator precedence, or are uncertain as to
+    which operator will take precedence, you can feel free to use
+    parentheses in your formulas.  This will force expressions within
+    the parentheses to be evaluated first.
+    <P>
   
-  PAVE also has an occasionally used feature that allows you to specify
-  a time step index after a variable name.  For example, <B>O3a:1 is the
-    first hour of ozone</B>.  So, if you wanted to plot each cell averaged in
-  time over the first six hours of your data, you could enter and plot the
-  following formula:
-<PRE><B>     (O3a:1+O3a:2+O3a:3+O3a:4+O3a:5+O3a:6)/6</B></PRE>
+    PAVE also has an occasionally used feature that allows you to
+    specify a time step index after a CODEiable name.  For example,
+    <B><CODE>O3a:1</CODE> is the first hour of ozone</B>.  So, if you
+    wanted to plot each cell averaged in time over the first six hours
+    of your data, you could enter and plot the following formula:
+    <PRE><CODE>
+    (O3a:1+O3a:2+O3a:3+O3a:4+O3a:5+O3a:6)/6
+    </CODE></PRE>
 
-This is cumbersome and it also uses a lot of memory, but it may be useful
-for you.
-<P>
-  
-  There is another useful feature of the parser that not many
-  people know about, that enables you to compute and visualize the  
-  the <B>rate of change of a variable</B>.  For example, the formula
-  <B>d[O3a]/dt</B> calculates the change in ozone concentration
-  over time.  A limitation of this feature is that the variable
-  between the brackets must be an <I>atomic</I> variable, that is
-  to say, it can not be a formula other than a basic variable from
-  one of your datasets.
-<P>
-  
-  Formulas may also contain integer or floating point constants, or 
-  the following operands which are replaced by PAVE's formula parser
-  to be the constant values noted:
-<PRE>
-<B>E</B>       2.7182818284590452354
-<B>PI</B>      3.14159265358979323846
-<B>NROWS</B>   number of rows in the formula's currently selected domain
-<B>NCOLS</B>   number of rows in the formula's currently selected domain
-<B>NLEVELS</B> number of levels in the formula's currently selected domain
-</PRE>
+    This is cumbersome and it also uses a lot of memory, but it may be
+    useful for you.
+    <P>
 
-The following operators are binary (they have an operand on both
-sides of the operator), and usually return an array of data by
-performing that operation on each cell of the operands' arrays.
-The only time these operators return a single number is when both
-operands (ops) are themselves a single number.  
-<P>
-<PRE>
-<B>+</B>       Returns the sum of the ops
-<B>-</B>       Returns the difference of the ops
-<B>*</B>	Returns the product of the ops
-<B>/</B>	Returns ratio of the ops
-<B>**</B>      Returns the left op raised to the power of the  
-	right op, calculated using the C math library's 
-	pow() function
-</PRE>
-The following operators are boolean binary operators.  Boolean operators
-return either 0 or 1 for each cell of the resulting array of data, or
-in the case of two operands (ops) that are single numbers, just the single
-number 0 or 1.  You may find these
-operators useful to &quot;screen out&quot; ranges of your data that are
-of particular interest.  For example, if you are only
-concerned about the variable O3a when its value exceeds 0.080, you
-might look at the formula <B>(O3a&gt;0.080)*O3a</B>.  If O3a
-is less than or equal to 0.080, the result of the formula will
-be set to 0 in that cell.  Otherwise, the value of O3a will be 
-used in that cell.
-<P>
-<PRE>
-<B>&lt;</B>       Returns 1 if the left op is less than the right op,
-        else 0
-<B>&lt;=</B>      Returns 1 if the left op is less than or equal to  
+    There is another useful feature of the parser that not many people
+    know about, that enables you to compute and visualize the   the
+    <B>rate of change of a variable</B>.  For example, the formula
+    <CODE>d[O3a]/dt</CODE> calculates the change in ozone concentration
+    over time.  A limitation of this feature is that the variable
+    between the brackets must be an <I>atomic</I> variable, that is to
+    say, it can not be a formula other than a basic variable from one of
+    your datasets.
+    <P>
+  
+    Formulas may also contain integer or floating point constants, or 
+    the following operands which are replaced by PAVE's formula parser
+    to be the constant values noted:
+    <BLOCKQUOTE> 
+    <DL>
+        <DT><VAR>E</VAR>
+        <DD> 2.7182818284590452354
+        <DT><VAR>PI</VAR>
+        <DD> 3.14159265358979323846
+        <DT><VAR>NROWS</VAR>
+        <DD> number of rows in the formula's currently selected domain
+        <DT><VAR>NCOLS</VAR>
+        <DD> number of rows in the formula's currently selected domain
+        <DT><VAR>NLEVELS</VAR>
+        <DD> number of levels in the formula's currently selected domain
+    </DL>
+    </BLOCKQUOTE>
+
+    The following operators are binary (they have an operand on both
+    sides of the operator), and usually return an array of data by
+    performing that operation on each cell of the operands' arrays. The
+    only time these operators return a single number is when both
+    operands (ops) are themselves a single number. 
+    <BLOCKQUOTE> 
+    <DL>
+        <DT><CODE>+</CODE>
+        <DD> Returns the sum of the operands
+        <DT><CODE>-</CODE>
+        <DD> Returns the difference of the operands
+        <DT><CODE>*</CODE>
+        <DD> Returns the product of the operands
+        <DT><CODE>/</CODE>
+        <DD> Returns ratio of the operands
+        <DT><CODE>**</CODE>
+        <DD> Returns the left operand raised to the power of the  
+	         right operand, calculated using the C math library's 
+	         <CODE>pow()</CODE> function
+    </DL>
+    </BLOCKQUOTE>
+
+    The following operators are boolean binary operators.  Boolean operators
+    return either 0 or 1 for each cell of the resulting array of data, or
+    in the case of two operands (ops) that are single numbers, just the single
+    number 0 or 1.  You may find these
+    operators useful to &quot;screen out&quot; ranges of your data that are
+    of particular interest.  For example, if you are only
+    concerned about the variable O3a when its value exceeds 0.080, you
+    might look at the formula <B>(O3a&gt;0.080)*O3a</B>.  If O3a
+    is less than or equal to 0.080, the result of the formula will
+    be set to 0 in that cell.  Otherwise, the value of O3a will be 
+    used in that cell.
+    <BLOCKQUOTE> 
+    <DL>
+        <DT><CODE>&lt;</CODE>
+        <DD> Returns 1 if the left op is less than the right op,
+        <DT><CODE>&lt;=</CODE>
+        <DD> Returns 1 if the left op is less than or equal to  
         the right op, else 0
-<B>&gt;</B>       Returns 1 if the left op is greater than the right
+        <DT><CODE>&gt;</CODE>
+        <DD> Returns 1 if the left op is greater than the right
         op, else 0
-<B>&gt;=</B>      Returns 1 if the left op is greater than or equal 
+        <DT><CODE>&gt;=</CODE>
+        <DD> Returns 1 if the left op is greater than or equal 
         to the right op, else 0
-<B>!=</B>      Returns 1 if the left op is not equal to the 
+        <DT><CODE>!=</CODE>
+        <DD> Returns 1 if the left op is not equal to the 
         right op, else 0
-<B>==</B>      Returns 1 if the left op is equal to the right op, else 0
-<B>&amp;&amp;</B>      Returns 1 if both ops are non-zero, else 0
-<B>||</B>	Returns 1 if either op is non-zero, else 0
-</PRE>
+        <DT><CODE>==</CODE>
+        <DD> Returns 1 if the left op is equal to the right op, else 0
+        <DT><CODE>&amp;&amp;</CODE>
+        <DD> Returns 1 if both ops are non-zero, else 0
+        <DT><CODE>||</CODE>
+        <DD> Returns 1 if either op is non-zero, else 0
+    </DL>
+    </BLOCKQUOTE>
 
 
-The following operators are unary (they have a single operand on the
-right side of the operator), and usually return a time-stepped matrix of
-data by performing that operation on each cell of the operand's array.
-The only time these operators return a single number is when the operand
-is itself a single number.  The C math library routines called are listed
-with most of these operators.  For further information on these routines,
-please check your man pages.
+    The following operators are unary (they have a single operand on the
+    right side of the operator), and usually return a time-stepped matrix of
+    data by performing that operation on each cell of the operand's array.
+    The only time these operators return a single number is when the operand
+    is itself a single number.  The C math library routines called are listed
+    with most of these operators.  For further information on these routines,
+    please check your man pages.
+    <BLOCKQUOTE><VAR>
+    <DL>
+        <DT>abs
+        <DD> fabs(op)
+        <DT>sqrt
+        <DD> sqrt(op) 
+        <DT>sqr
+        <DD> Returns the square of the op
+        <DT>log
+        <DD> log10(op) 
+        <DT>exp
+        <DD> exp(op) 
+        <DT>ln
+        <DD> log(op)
+        <DT>sin
+        <DD> sin(op)
+        <DT>cos
+        <DD> cos(op) 
+        <DT>tan
+        <DD> tan(op)
+        <DT>sind
+        <DD> sin(op*(PI/180.0)) 
+        <DT>cosd
+        <DD> cos(op*(PI/180.0))
+        <DT>tand
+        <DD> tan(op*(PI/180.0))
+    </DL>
+    </VAR></BLOCKQUOTE>
 
-<PRE><B>abs</B>     fabs(op)
-<B>sqrt</B>    sqrt(op) 
-<B>sqr</B>     Returns the square of the op
-<B>log</B>     log10(op) 
-<B>exp</B>	exp(op) 
-<B>ln</B>	log(op)
-<B>sin</B>	sin(op) 
-<B>cos</B>	cos(op) 
-<B>tan</B>	tan(op)
-<B>sind</B>	sin(op*(PI/180.0)) 
-<B>cosd</B>	cos(op*(PI/180.0))
-<B>tand</B>    tan(op*(PI/180.0)) </PRE>
+    The following unary operators return a single number in all cases. 
+    Their single operand must follow on the right hand side of the
+    operator. The functionality is listed beside each operator name.
+    <BLOCKQUOTE>
+    <DL>
+        <DT><STRONG>mean</STRONG>
+        <DD> average cell value for all cells in currently selected domain
+        <DT><STRONG>sum</STRONG>
+        <DD> sum of all cell values in currently selected domain
+        <DT><STRONG>mint</STRONG>
+        <DD> time step index with minimum value in currently selected domain
+        <DT><STRONG>maxt</STRONG>
+        <DD> time step index with maximum value in currently selected domain
+        <DT><STRONG>minx</STRONG>
+        <DD> <CODE>X</CODE> index with minimum value in currently selected domain
+        <DT><STRONG>maxx</STRONG>
+        <DD> <CODE>X</CODE> index with maximum value in currently selected domain
+        <DT><STRONG>miny</STRONG>
+        <DD> <CODE>Y</CODE> index with minimum value in currently selected domain
+        <DT><STRONG>maxy</STRONG>
+        <DD> <CODE>Y</CODE> index with maximum value in currently selected domain
+        <DT><STRONG>minz</STRONG>
+        <DD> <CODE>Z</CODE> index with minimum value in currently selected domain
+        <DT><STRONG>maxz</STRONG>
+        <DD> <CODE>Z</CODE> index with maximum value in currently selected domain
+        <DT><STRONG>nrows</STRONG>
+        <DD> number of rows in the currently selected domain
+        <DT><STRONG>ncols</STRONG>
+        <DD> number of rows in the currently selected domain
+        <DT><STRONG>nlevels</STRONG>
+        <DD> number of levels in the currently selected domain
+    </DL>
+    </BLOCKQUOTE>
 
-The following unary operators return a single number in all cases.  Their
-single operand must follow on the right hand side of the operator.
-The functionality is listed beside each operator name.
-<P>
-<PRE>
-<B>mean</B>    average cell value for all cells in currently selected domain
-<B>sum</B>     sum of all cell values in currently selected domain
-<B>mint</B>    time step index with minimum value in currently selected domain
-<B>maxt</B>    time step index with maximum value in currently selected domain
-<B>minx</B>    x index with minimum value in currently selected domain
-<B>maxx</B>    x index with maximum value in currently selected domain
-<B>miny</B>    y index with minimum value in currently selected domain
-<B>maxy</B>    y index with maximum value in currently selected domain
-<B>minz</B>    z index with minimum value in currently selected domain
-<B>maxz</B>    z index with maximum value in currently selected domain
-</PRE>
-where &quot;<B>currently selected domain</B>&quot; includes the currently selected
-rows, columns, layers, and time steps for the currently selected
-formula.  Thus, the minimum and maximum values in the currently selected
-domain occur at the locations <B>(minx,miny,minz,mint)</B> and
-<B>(maxx,maxy,maxz,maxt)</B>, respectively. An interesting use of the sum
-operator is to calculate the sum of the result of a boolean expression
-(e.g. <B>sum(O3A&gt;120)</B>) to find the number of cell-hours that meet the
-boolean condition.
-<P>
-  
-  The unary min and max operators behave a little differently:
-<P>
-<PRE>
-<B>min</B>     For each cell (i,j,k) in the currently selected domain,
-        this calculates the minimum value for that cell
-        over the currently selected time steps.  In other words,
-        the minimum value in cells (i,j,k,tmin..tmax).
+    where &quot;currently selected domain&quot; includes the currently
+    selected rows, columns, layers, and time steps.  So the
+    currently selected domain is bounded by
+    <BLOCKQUOTE><VAR>
+        (minx,miny,minz,mint)&lt;-&gt;(maxx,maxy,maxz,maxt)
+    </VAR></BLOCKQUOTE>
 
-<B>max</B>     For each cell (i,j,k) in the currently selected domain,
-        this calculates the maximum value for that cell
-        over the currently selected time steps.  In other words,
-        the maximum value in cells (i,j,k,tmin..tmax).
-</PRE>
+    The unary min and max operators behave a little differently:<p>
 
-<P>
-<P>NOTE: currently the unary + and - operators [as in -1 or -(x+y)]
-  are not supported, but hopefully these will be added later.
-<P>
+    <BLOCKQUOTE>
+    <DL>
+        <DT><STRONG>min</STRONG>
+        <DD>For each cell <VAR>(i,j,k)</VAR> in the currently selected domain,
+	        this calculates the minimum value for that cell
+	        over the currently selected time steps.  In other words,
+	        the minimum value in cells <VAR>(i,j,k,tmin..tmax)</VAR>.
+        <DT><STRONG>max</STRONG>
+        <DD>For each cell <VAR>(i,j,k)</VAR> in the currently selected domain,
+            this calculates the maximum value for that cell
+            over the currently selected time steps.  In other words,
+            the maximum value in cells <VAR>(i,j,k,tmin..tmax)</VAR>.
+    </DL>
+    </BLOCKQUOTE>
 
-<A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+    <P>
+    
+    NOTE: currently the unary + and - operators [as in -1 or -(x+y)]
+    are not supported, but hopefully these will be added later.
+    <P>
+
+    <A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+    </BLOCKQUOTE>
 
 
 <HR> <!----------------------------------------------------------------->
 <H2><A NAME="Subsetting">5.	Spatial and temporal data subsetting</A></H2>
 
-PAVE allows you to easily subset your data by geographic region, layer
-range, and time range.  This section explains the  concepts of how PAVE
-manages this information in its memory space.  An understanding of this
-section should help you with your PAVE usage.  To adjust layer ranges,
-geographic regions of interest (domains), or time step ranges for
-datasets and formulas, you can use menu items in the <B>Datasets</B> and
-<B>Formulas</B> menus on PAVE's main interface window. 
-<P>
-  
-  Each dataset has some number of layers greater than or equal to one, some
-  number of time steps greater than or equal to one, and some geographic
-  region onto which its grid maps.  A geographic region, often referred to
-  as a domain,  is defined by the map projection type (Lat/Lon, UTM,
-  Lambert Conformal, etc.), the number of rows and columns in the dataset,
-  and the geographic boundaries of the area on which the grid falls.
-<P>
-  
-  For each unique geographic region (or domain) that PAVE learns about by
-  examining the dataset(s) chosen by the user, PAVE keeps a single
-  <B>domain object</B>. Domain objects are where the currently selected
-  geographic region for formulas and datasets are stored in memory.  When a
-  domain object is created by PAVE, it defaults to having all of its cells
-  selected, until the user chooses a subregion within that domain. Because
-  PAVE only stores a single domain object for each unique domain that it
-  learns of, there may be numerous datasets and formulas that make use of
-  the same domain object.  Therefore, when a user chooses to modify a
-  formula's <B>or</B> a dataset's selected region of interest, the region
-  of interest for <B>all</B> formulas and datasets that refer to the same
-  region and have the same grid dimensions will be affected. Any subsequent
-  plots of any formulas who rely on that domain object will  reflect its
-  newly selected geographic region of interest.  
-<P>
-  
-  Similarly, PAVE uses <B>layers objects</B> to store information about
-  currently selected layer ranges.  Each dataset i has some Ni number of layers
-  associated with it, and each formula j has some Nj number of layers associated with it.  
-  For each unique number of layers that PAVE learns about, PAVE keeps a <B>single</B> 
-  layers object in memory.  Therefore, when a user chooses to modify a formula's <B>or</B> 
-  a dataset's selected layer range, there may be more than one dataset
-  and more than one formula on which the modified layer range has an effect.
-  When PAVE learns about a new unique number of layers, the layers object that 
-  it creates by default has only the first layer selected, until the user modifies
-  the layer range for this layers object.
-<P>
-  
-  Time ranges are handled differently than layer ranges and geographic regions of interest.
-  Each dataset has exactly one unique <B>time range object</B> associated with it.  That 
-  time range object is associated only with that one dataset.  Each formula also has exactly
-  one unique time range object associated with it.  That time range object is 
-  associated only with that one formula.  Because a formula may rely on more than
-  one dataset to derive its data, a formula's time step range is always bounded by the
-  time ranges of the datasets it depends on.  For example, a formula could 
-  have three datasets from which it derives data.  Those datasets could have 
-  72, 48, and 24 time steps of data in their currently selected time range objects.  
-  In this case, the maximum number of time steps in that formula's
-  time range object could ever have would be 24.  Should the user reduce the number of 
-  steps in the currently selected time range of any of the three datasets to less than
-  24, then the maximum number of time steps in that formula's time range object
-  would immediately be reduced accordingly.
-<P>
+    <BLOCKQUOTE>
+    PAVE allows you to easily subset your data by geographic region,
+    layer range, and time range.  This section explains the  concepts of
+    how PAVE manages this information in its memory space.  An
+    understanding of this section should help you with your PAVE usage. 
+    To adjust layer ranges, geographic regions of interest (domains), or
+    time step ranges for datasets and formulas, you can use menu items
+    in the <B>Datasets</B> and <B>Formulas</B> menus on PAVE's main
+    interface window.
+    ]<P>
 
-<A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+    Each dataset has some number of layers greater than or equal to one,
+    some number of time steps greater than or equal to one, and some
+    geographic region onto which its grid maps.  A geographic region,
+    often referred to as a domain,  is defined by the map projection
+    type (Lat/Lon, UTM, Lambert Conformal, etc.), the number of rows and
+    columns in the dataset, and the geographic boundaries of the area on
+    which the grid falls.
+    <P>
+
+    For each unique geographic region (or domain) that PAVE learns about
+    by examining the dataset(s) chosen by the user, PAVE keeps a single
+    <B>domain object</B>. Domain objects are where the currently
+    selected geographic region for formulas and datasets are stored in
+    memory.  When a domain object is created by PAVE, it defaults to
+    having all of its cells selected, until the user chooses a subregion
+    within that domain. Because PAVE only stores a single domain object
+    for each unique domain that it learns of, there may be numerous
+    datasets and formulas that make use of the same domain object. 
+    Therefore, when a user chooses to modify a formula's <B>or</B> a
+    dataset's selected region of interest, the region of interest for
+    <B>all</B> formulas and datasets that refer to the same region and
+    have the same grid dimensions will be affected. Any subsequent plots
+    of any formulas who rely on that domain object will  reflect its
+    newly selected geographic region of interest.
+    <P>
+
+    Similarly, PAVE uses <B>layers objects</B> to store information
+    about currently selected layer ranges.  Each dataset i has some Ni
+    number of layers associated with it, and each formula j has some Nj
+    number of layers associated with it.   For each unique number of
+    layers that PAVE learns about, PAVE keeps a <B>single</B>  layers
+    object in memory.  Therefore, when a user chooses to modify a
+    formula's <B>or</B>  a dataset's selected layer range, there may be
+    more than one dataset and more than one formula on which the
+    modified layer range has an effect. When PAVE learns about a new
+    unique number of layers, the layers object that  it creates by
+    default has only the first layer selected, until the user modifies
+    the layer range for this layers object.
+    <P>
+
+    Time ranges are handled differently than layer ranges and geographic
+    regions of interest. Each dataset has exactly one unique <B>time
+    range object</B> associated with it.  That  time range object is
+    associated only with that one dataset.  Each formula also has
+    exactly one unique time range object associated with it.  That time
+    range object is  associated only with that one formula.  Because a
+    formula may rely on more than one dataset to derive its data, a
+    formula's time step range is always bounded by the time ranges of
+    the datasets it depends on.  For example, a formula could  have
+    three datasets from which it derives data.  Those datasets could
+    have  72, 48, and 24 time steps of data in their currently selected
+    time range objects.   In this case, the maximum number of time steps
+    in that formula's time range object could ever have would be 24. 
+    Should the user reduce the number of  steps in the currently
+    selected time range of any of the three datasets to less than 24,
+    then the maximum number of time steps in that formula's time range
+    object would immediately be reduced accordingly.
+    <P>
+
+    <A HREF="#TOC"><EM>Return To <STRONG>Table of
+Contents</STRONG></EM></A>
+    </BLOCKQUOTE>
 
 
 <HR> <!----------------------------------------------------------------->
@@ -1072,7 +1159,7 @@ The graphics menu is used to create plots.
   at that formula's selected geographic region of interest, layer range,
   and time step range.  Each time step's
   data is averaged linearly to produce that time step's data point.
-  <B>WARNING: If multiple layers are selected, PAVE 1.4.2 will show data
+  <B>WARNING: If multiple layers are selected, PAVE&nbsp;1.4.2 will show data
     for only the topmost layer instead of averaging the data over the
   selected layers.</B>
 <P>
@@ -1972,7 +2059,7 @@ to the Models-3 I/O API format that PAVE requires.<P>
 
 <B><A NAME="-obsidtable">-obsidtable</A> &lt;filename&gt;</B> An example lookup table for 
 converting AIRS AMP350 numeric observation station ids to text names is available 
-with the airs.lookup file provided with the PAVE 2.1b release.  The required format for the 
+with the airs.lookup file provided with the PAVE&nbsp;2.1b release.  The required format for the 
 file is a two column, space delimited ascii file, the entries in the first column contain 
 the AIRS AMP350 numeric observation station ids that can be unquoted or quoted, 
 the entries for the second column contain the cooresponding name e.g. "CITY, COUNTY, STATE" 
@@ -2050,7 +2137,7 @@ and makes it the currently selected formula.<P>
 <B><A NAME="-save2d">-save2d</A> &lt;imagetype&gt; &lt;filename&gt;</B> used to save a timeseries plot to
 an image file.  Supported imagetypes include GIF, RGB, XWD, MPEG, or PS.  The environment variable
 GRAPH2DCFG is used to specify the graph2d.blt BLT configuration file. An example graph2d.blt BLT
-configuration file is provided with the PAVE 2.1b release.<P>
+configuration file is provided with the PAVE&nbsp;2.1b release.<P>
 
 <B><A NAME="-save2ascii">-save2ascii</A> &lt;filename&gt;</B>export data to a tab delimited data file suitable for
 reading into a spreadsheet application such as Excel or Lotus<P>
@@ -2711,67 +2798,78 @@ t90.ncsc.org demo_t90
 
 <HR> <!----------------------------------------------------------------->
 <H2><A NAME="Jumpstart">12.	Quick PAVE Jumpstart</A> </H2>
-This section can be used to guide you through an example PAVE session.
-If you are a new user, it can help you become familiar with most
-of PAVE's features.  Once you have satisfied the 
-<A HREF="#Requirements">Requirements for use </A> section above, then: <P>
-<UL>
-<LI> Login to the machine where PAVE is installed, then
-   setenv your DISPLAY environment variable to wherever you
-   are sitting. (as in "<B>setenv DISPLAY mymachine.wherever.gov:0</B>").
-   If you will be printing tile plots directly from PAVE, you may
-   also want to set your PRINTER environment variable appropriately.
-   For example, if you "<B>setenv PRINTER 200p_qms</B>", then PAVE will
-   use "lpr -P200p_qms" to print tile plots.
-   Otherwise PAVE will use just "lpr", which defaults to the printer
-   "lp", and may or may not be accessible to your system.<P>
 
-<LI> Launch PAVE from the command line by typing <VAR>pave</VAR> at the Unix
-   prompt.  You will probably need to make sure the scripts subdirectory
-   of the top level PAVE installation directory into your path in order
-   for your shell to be able to resolve the pave location. The
-   <VAR>AAREADME</VAR> file that comes with PAVE has information on how
-   to do this. <P>
+    <BLOCKQUOTE>
+    This section can be used to guide you through an example PAVE session.
+    If you are a new user, it can help you become familiar with most
+    of PAVE's features.  Once you have satisfied the 
+    <A HREF="#Requirements">Requirements for use </A> section above, then: <P>
 
-   Typing "pave" launches a &quot;wrapper script&quot;, which in turn
-   fires up the software bus and the PAVE executable itself.  The PAVE
-   executable itself should never be launched directly from the command
-   line, as this wrapper script is required to set up PAVE's
-   environment.  <P>
+    <UL>
 
-<LI> You should see an "Add/Delete/Select Dataset" pop-up window:<P>
+    <LI> Login to the machine where PAVE is installed.  If it is a remote
+         machine,  <VAR>setenv</VAR> your <CODE>DISPLAY</CODE> environment
+         variable to wherever you are sitting, as in 
+         <BLOCKQUOTE><VAR>
+            setenv DISPLAY mymachine.wherever.gov:0
+         </VAR></BLOCKQUOTE>
+         If you will be printing tile plots directly from PAVE, you may
+         also want to set your <CODE>PRINTER</CODE> environment variable appropriately.
+         For example, if you 
+         <BLOCKQUOTE><VAR>
+            setenv PRINTER 200p_qms
+         </VAR></BLOCKQUOTE>
+         then PAVE will use print-command <VAR>lpr -P200p_qms</VAR> to print
+         tile plots. Otherwise PAVE will use the print-command
+         <VAR>lpr</VAR>, which defaults to the printer <VAR>lp</VAR>, and
+         may or may not be accessible to your system.<P>
 
-<IMG SRC="Gifs/dataSelector.GIF" alt="dataSelector"> <P>
+    <LI> Launch PAVE from the command line by typing <VAR>pave</VAR> at the Unix
+         prompt.  You will probably need to make sure the scripts subdirectory
+         of the top level PAVE installation directory into your path in order
+         for your shell to be able to resolve the pave location. The
+         <VAR>AAREADME</VAR> file that comes with PAVE has information on how
+         to do this. <P>
 
-Click on its "Add" button, and an EDSS file browser should appear:<P>
-<IMG SRC="Gifs/fileBrowser.GIF" alt="fileBrowser"> <P>(this may take a
-couple seconds). The file browser has a "Filter" widget at the top.  You
-can see the files in a particular directory by typing or pasting in the
-directory name and adding a "/*" at the end and hitting return. 
-Alternatively, you can navigate through the directory structure by double
-clicking on directories in the Directories list (or single clicking and
-hitting return).  Once you get to the directory that contains the file
-you want, you can select the file by clicking on it in the Files list.<P>
+         Typing "pave" launches a &quot;wrapper script&quot;, which in turn
+         fires up the software bus and the PAVE executable itself.  The PAVE
+         executable itself should never be launched directly from the command
+         line, as this wrapper script is required to set up PAVE's
+         environment.  <P>
 
-Use the file browser to add the file
-   
-<PRE>
-   "<B>&lt;top level PAVE directory&gt;</B>/example_data/RADM_CONC_1"
-</PRE>
+    <LI> You should see an "Add/Delete/Select Dataset" pop-up window:<P>
 
-   (If RADM_CONC_1 is not available, choose any dataset in the
-   directory.)  This will become PAVE's dataset "a", and this will be the
-   currently selected dataset. Do the same with
-   
-<PRE>
-   "<B>&lt;top level PAVE directory&gt;</B>/example_data/399a.uam.emis.d1"
-</PRE>
-   which will become dataset b.
-<P>
+         <IMG SRC="Gifs/dataSelector.GIF" alt="dataSelector"> <P>
 
-   There may be several other example datasets in <B>&lt;top level PAVE
-   directory&gt;</B>/example_data that you may want to play around with,
-   although some may be missing due to disk space considerations:
+         Click on its "Add" button, and an EDSS file browser should appear:<P>
+         <IMG SRC="Gifs/fileBrowser.GIF" alt="fileBrowser"> <P>(this may take a
+         couple seconds). The file browser has a "Filter" widget at the top.  You
+         can see the files in a particular directory by typing or pasting in the
+         directory name and adding a "/*" at the end and hitting return. 
+         Alternatively, you can navigate through the directory structure by double
+         clicking on directories in the Directories list (or single clicking and
+         hitting return).  Once you get to the directory that contains the file
+         you want, you can select the file by clicking on it in the Files list.<P>
+
+         Use the file browser to add the file
+
+         <PRE>
+       "<B>&lt;top level PAVE directory&gt;</B>/example_data/RADM_CONC_1"
+         </PRE>
+
+         (If RADM_CONC_1 is not available, choose any dataset in the
+         directory.)  This will become PAVE's dataset "a", and this will be the
+         currently selected dataset. Do the same with
+
+<PRE><B>
+   &lt;top level PAVE directory&gt;/example_data/399a.uam.emis.d1
+</B></PRE>
+       which will become dataset <VAR>b</VAR>.
+       <P>
+
+       There may be several other example datasets in <B>&lt;top level PAVE
+       directory&gt;</B>/example_data that you may want to play around with,
+       although some may be missing due to disk space considerations:
 
 <PRE>
    -rw-r--r--   1 thorpe   edss     8549788 Aug 17 09:26 399a.avrg.bin.d2
@@ -2782,401 +2880,455 @@ Use the file browser to add the file
    -rw-r--r--   1 thorpe   edss      201048 Aug 17 09:32 exact1
 </PRE>
 
-<LI> After adding the dataset, you should see a "Species List" window:<P>
+    <LI> After adding the dataset, you should see a "Species List" window:<P>
 
-<IMG SRC="Gifs/speciesList.gif" alt="speciesList"> <P>
+         <IMG SRC="Gifs/speciesList.gif" alt="speciesList"> <P>
 
-   This should now be displaying the species available in dataset b, the
-   currently selected dataset.
-<P>
-<LI> Go back to the "Add/Delete/Select Dataset" window
-   and "Select" the first dataset (denoted by "a") by clicking on it.
-   This now becomes the currently selected dataset,
-   and you should now see that dataset's available variables in the
-   "Species List" popup.  Click on "HOa" to add that variable to
-   the available formulas list.
-<P>
-<LI> You should see an "Add/Delete/Select Formula" window:<P>
+         This should now be displaying the species available in dataset b, the
+         currently selected dataset.
+         <P>
 
-<IMG SRC="Gifs/formulaSelector.gif" alt="formulaSelector"> <P>
+    <LI> Go back to the "Add/Delete/Select Dataset" window
+         and "Select" the first dataset (denoted by "a") by clicking on it.
+         This now becomes the currently selected dataset,
+         and you should now see that dataset's available variables in the
+         "Species List" popup.  Click on "HOa" to add that variable to
+         the available formulas list.
+         <P>
 
-   Add item "HOa+HO2a" in the "Enter New Formula:" typein box
-   and click on "Add".  Add "NOb" and "O3a" as well.
-   You now have a total of four formulas added to your
-   formula list, and O3a is the currently selected formula.
-<P>
-<LI> When PAVE window is up, select the following sequences from
-   the menu bar at the top of PAVE window:
+    <LI> You should see an "Add/Delete/Select Formula" window:<P>
+
+         <IMG SRC="Gifs/formulaSelector.gif" alt="formulaSelector"> <P>
+
+         Add item "HOa+HO2a" in the "Enter New Formula:" typein box
+         and click on "Add".  Add "NOb" and "O3a" as well.
+         You now have a total of four formulas added to your
+         formula list, and O3a is the currently selected formula.
+         <P>
+
+    <LI> When PAVE window is up, select the following sequences from
+         the menu bar at the top of PAVE window:
+          <PRE>
+            "Graphics/Create Tile Plot"
+            <IMG SRC="Gifs/tile.GIF" alt="tile">
+            "Graphics/Create 3d Mesh Plot"
+            <IMG SRC="Gifs/mesh.GIF" alt="mesh">
+            "Graphics/Create Time Series Line Plot"
+            <IMG SRC="Gifs/line.GIF" alt="line">
+            "Graphics/Create Time Series Bar Plot"
+            <IMG SRC="Gifs/bar.GIF" alt="bar">
+           </PRE>
+           <B>NOTE:</B> All the plots above are associated with the selected
+           formula, which is probably O3a.  The selected formula
+           can be modified with the "Formulas menu/ Edit/Select from Formula List"
+           window.
+            <P>
+            The tile plot and mesh plot show data for the selected region at a 
+            particular time step, and can be animated to show other time steps.  The
+            time series line and bar plots show data averaged over the selected
+            region at each time step. Here are some things to try with the plots:<P>
+            <UL>
+                <LI>If you want to adjust a tile plot's legend min/max cutoffs,
+                choose "Control/Configure" from the plot's menu bar.
+                <P>
+                <LI>If you want to animate a tile plot over time, select
+                the "Control/Animate" menu item on a tile plot.  This
+                brings up a window from which you can start the
+                animation.
+                <P>
+                <LI>If you want to animate all existing tile plots synchronously,
+                select the "Graphics/Animate Tile Plots Synchronously" menu
+                item from the main PAVE window.  This presents a window
+                that you can use to start the animations.
+                <P>
+                <LI>When using a slider (such as in the Animate window for Tile Plots), to
+                scroll by one time step in either direction, click on the slider
+                itself and then use the left and right arrow buttons on the
+                keyboard.
+            </UL>
+            <P>
+
+    <LI> Select "Formulas/Select Region of Interest Matching Current Formula"
+         from the menu bar. The domain window associated with the selected formula
+         will be displayed.<P>
+         <IMG SRC="Gifs/Domain.gif" alt="Domain"> <P>
+         By default, the entire domain is selected for any dataset/formula
+         loaded into PAVE.  This is indicated by a light blue background on
+         all of the cells in the domain window.  You may want to do a time
+         series of a single cell, or perhaps a tile plot of a smaller region
+         of cells.  To subselect a region, just left-click-and-drag over
+         any blue areas to <B>deselect</B> cells, and conversely over
+         any white areas to <B>select</B> cells. Also, you can use
+         the Edit menu's "Select All" and "Select None" items to
+         turn all the cells in the domain on or off.
+         Subsequent plots will show data only from the subselected region.<P>
+
+         This window can be closed using the File menu's "Close" item.
+         Also note the File menu's "Save Domain To File" and
+         "Load Domain From File" menu items that allow you to
+         save and later retrieve frequently used domain subselections.
+         <P>
+
+    <LI> How to add a remote dataset:
+         If you have followed the optional instructions under
+         point 3. of the <A HREF="#Requirements">Requirements to use PAVE</A> section of
+         this document, you can add remote datasets using the
+         file browser provided to choose datasets.
+
+         Select "Datasets/Edit/Select from Dataset List" from the menu bar. An
+         <B>Add/Delete/Select Dataset</B> window will appear. Click on the
+         "Add" button, and an EDSS file browser should appear (this may take a
+         couple seconds).
+
+         Now click on the large button in the center of the file browser that
+         contains "Host:", "User:", and "Owner Module:" information. This
+         brings up a "host selector" window in which you can enter the remote
+         host name (e.g. sequoia.nesc.epa.gov).  Clicking on Select should
+         then enable you to browse for files on the remote machine, starting
+         from your home directory. <P>
+
+    <LI> NOTE: <B>If you want to do a vector plot, a scatter plot of two
+         formulas, or a time series line plot with multiple (2-8) variables
+         plotted on it</B>, then you must send commands to PAVE via stdin or
+         command line arguments, which are described in the <A HREF="#Scripting">
+         "Driving PAVE using scripts"</A> section of this document.
+
+         Unfortunately there are currently no graphical user interface
+         methods to access these features.
+         There are <A HREF="#CommandLineExample">examples</A> of invoking
+         PAVE with command line arguments in the same section.<P>
+         <IMG SRC="Gifs/multiTime.gif" alt="multiTime">
+         <IMG SRC="Gifs/wind_scatter.gif" alt="wind_scatter">
+         <P>
+
+    <LI> Explore the menu items available to you from tile plot windows.<P>
+         <UL>
+             <LI>The background map can be toggled between county boundaries,
+                medium (the default map) or high resolution state boundaries,
+                rivers, or roads.  
+             <LI>Tile plots can be <B>printed</B>, or saved as
+                <B>PostScript, XWD, RGB, or Gif</B> images. 
+             <LI>You can zoom in on, probe the data values in, and generate time
+                 series plots for specific regions of tile plots.<P>
+         </UL>
+
+    <LI> To view a <B>vertical cross section</B> of data using the Tile Plot, first 
+         click on the dataset for which you would like to view the cross
+         section. Then under the datasets menu, choose "Select Layer Ranges Matching
+         Current Dataset".  You should see a window with sliders for the highest and
+         lowest layers to use.  Set these appropriately depending on which layers you
+         want to see.  To see a vertical cross section, the lowest and highest should
+         be different layers (as opposed to just plotting a horizontal cross section -
+         in that case the min and max layers are set to the same value). <I>[Note that
+         you can also select a layer range for a <B>formula</B> using the corresponding
+         options under the Formulas menu.] </I>
+         <P>
+
+         After selecting the layers you want to see, type a statement of the
+         following form into PAVE's standard input:
 <PRE>
-        "Graphics/Create Tile Plot"
-        <IMG SRC="Gifs/tile.GIF" alt="tile">
-        "Graphics/Create 3d Mesh Plot"
-        <IMG SRC="Gifs/mesh.GIF" alt="mesh">
-        "Graphics/Create Time Series Line Plot"
-        <IMG SRC="Gifs/line.GIF" alt="line">
-        "Graphics/Create Time Series Bar Plot"
-        <IMG SRC="Gifs/bar.GIF" alt="bar">
-</PRE>
-   <B>NOTE:</B> All the plots above are associated with the selected
-         formula, which is probably O3a.  The selected formula
-         can be modified with the "Formulas menu/ Edit/Select from Formula List"
-         window.
-<P>
-    The tile plot and mesh plot show data for the selected region at a 
-    particular time step, and can be animated to show other time steps.  The
-    time series line and bar plots show data averaged over the selected
-    region at each time step. Here are some things to try with the plots:<P>
-<UL>
-         <LI>If you want to adjust a tile plot's legend min/max cutoffs,
-         choose "Control/Configure" from the plot's menu bar.
-<P>
-         <LI>If you want to animate a tile plot over time, select
-         the "Control/Animate" menu item on a tile plot.  This
-         brings up a window from which you can start the
-         animation.
-<P>
-         <LI>If you want to animate all existing tile plots synchronously,
-         select the "Graphics/Animate Tile Plots Synchronously" menu
-         item from the main PAVE window.  This presents a window
-         that you can use to start the animations.
-
-<P> <LI>When using a slider (such as in the Animate window for Tile Plots), to
-         scroll by one time step in either direction, click on the slider
-         itself and then use the left and right arrow buttons on the
-         keyboard.
-</UL>
-<P>
-<LI> Select "Formulas/Select Region of Interest Matching Current Formula"
-   from the menu bar. The domain window associated with the selected formula
-   will be displayed.<P>
-<IMG SRC="Gifs/Domain.gif" alt="Domain"> <P>
-   By default, the entire domain is selected for any dataset/formula
-   loaded into PAVE.  This is indicated by a light blue background on
-   all of the cells in the domain window.  You may want to do a time
-   series of a single cell, or perhaps a tile plot of a smaller region
-   of cells.  To subselect a region, just left-click-and-drag over
-   any blue areas to <B>deselect</B> cells, and conversely over
-   any white areas to <B>select</B> cells. Also, you can use
-   the Edit menu's "Select All" and "Select None" items to
-   turn all the cells in the domain on or off.
-   Subsequent plots will show data only from the subselected region.<P>
-
-   This window can be closed using the File menu's "Close" item.
-   Also note the File menu's "Save Domain To File" and
-   "Load Domain From File" menu items that allow you to
-   save and later retrieve frequently used domain subselections.
-<P>
-<LI> How to add a remote dataset:
-   If you have followed the optional instructions under
-   point 3. of the <A HREF="#Requirements">Requirements to use PAVE</A> section of
-   this document, you can add remote datasets using the
-   file browser provided to choose datasets.
-
-   Select "Datasets/Edit/Select from Dataset List" from the menu bar. An
-   <B>Add/Delete/Select Dataset</B> window will appear. Click on the
-   "Add" button, and an EDSS file browser should appear (this may take a
-   couple seconds).
-
-   Now click on the large button in the center of the file browser that
-   contains "Host:", "User:", and "Owner Module:" information. This
-   brings up a "host selector" window in which you can enter the remote
-   host name (e.g. sequoia.nesc.epa.gov).  Clicking on Select should
-   then enable you to browse for files on the remote machine, starting
-   from your home directory. <P>
-
-<LI> NOTE: <B>If you want to do a vector plot, a scatter plot of two
-formulas, or a time series line plot with multiple (2-8) variables
-plotted on it</B>, then you must send commands to PAVE via stdin or
-command line arguments, which are described in the <A HREF="#Scripting">
-"Driving PAVE using scripts"</A> section of this document.
-
-Unfortunately there are currently no graphical user interface
-methods to access these features.
-There are <A HREF="#CommandLineExample">examples</A> of invoking
-PAVE with command line arguments in the same section.<P>
-   <IMG SRC="Gifs/multiTime.gif" alt="multiTime">
-   <IMG SRC="Gifs/wind_scatter.gif" alt="wind_scatter"> <P>
-        
-
-
-<LI> Explore the menu items available to you from tile plot windows.<P>
-     <UL>
-     <LI>The background map can be toggled between county boundaries,
-        medium (the default map) or high resolution state boundaries,
-        rivers, or roads.  
-     <LI>Tile plots can be <B>printed</B>, or saved as
-        <B>PostScript, XWD, RGB, or Gif</B> images. 
-     <LI>You can zoom in on, probe the data values in, and generate time
-         series plots for specific regions of tile plots.<P>
-     </UL>
-<LI>
-To view a <B>vertical cross section</B> of data using the Tile Plot, first 
-click on the dataset for which you would like to view the cross
-section. Then under the datasets menu, choose "Select Layer Ranges Matching
-Current Dataset".  You should see a window with sliders for the highest and
-lowest layers to use.  Set these appropriately depending on which layers you
-want to see.  To see a vertical cross section, the lowest and highest should
-be different layers (as opposed to just plotting a horizontal cross section -
-in that case the min and max layers are set to the same value). <I>[Note that
-you can also select a layer range for a <B>formula</B> using the corresponding
-options under the Formulas menu.] </I> <P>
-
-After selecting the layers you want to see, type a statement of the
-following form into PAVE's standard input:<P>
-
 -subdomain 80 20 80 90<P>
+</PRE>
+        Here the arguments to -subdomain are: x1 y1 x2 y2 to define the region
+        to be selected.  This will cause the data where x = 80, and y is between
+        20 and 90 to be selected.  To see this region on the screen (and/or
+        to set this region using the User Interface rather than a command line
+        option), you can choose "Select Regions of Interest Matching Current Dataset".
+        A window showing the domain will come up.
+        Alternatively, you can select the cells with the mouse, but this
+        gets difficult when grid cells are small and you want to select a very
+        precise area.
+        <P>
 
-Here the arguments to -subdomain are: x1 y1 x2 y2 to define the region
-to be selected.  This will cause the data where x = 80, and y is between
-20 and 90 to be selected.  To see this region on the screen (and/or
-to set this region using the User Interface rather than a command line
-option), you can choose "Select Regions of Interest Matching Current Dataset".
-A window showing the domain will come up.
-Alternatively, you can select the cells with the mouse, but this
-gets difficult when grid cells are small and you want to select a very
-precise area.  <P>
+        Now that the layers and region to be plotted are selected, you need to set
+        the cross section type.  Under the Graphics menu, choose "Set Tile Plot
+        Cross Section Type" and you will see a submenu of X, Y, or Z cross sections.
+        To make a plot for the above example choose "X Cross Section" (remember this
+        by noting that x is constant).  Next, draw the plot for a formula using
+        that dataset by choosing "Create Tile
+        Plot" from the Graphics menu, and you will see the plot of that cross section.
+        <P>
 
-Now that the layers and region to be plotted are selected, you need to set
-the cross section type.  Under the Graphics menu, choose "Set Tile Plot
-Cross Section Type" and you will see a submenu of X, Y, or Z cross sections.
-To make a plot for the above example choose "X Cross Section" (remember this
-by noting that x is constant).  Next, draw the plot for a formula using
-that dataset by choosing "Create Tile
-Plot" from the Graphics menu, and you will see the plot of that cross section.
-<P>
-<LI> Explore the rest of the menu items not documented above &
-   enjoy!
-</UL>
+    <LI> Explore the rest of the menu items not documented above &
+       enjoy!
+    </UL>
 
-<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+    <P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
+    </BLOCKQUOTE>
 
 <HR> <!----------------------------------------------------------------->
 <H2><A NAME="Bugs">13.	Known Bugs and Workarounds</A> </H2>
-<P>
-We have a new tool for submitting bug reports, suggestions, and questions.
-A complete list of the bugs and their status may be obtained by doing
-a query on PAVE.  Please submit bugs or requests for enhancement to Bugzilla for any bugs or
-requests for enhancements that are needed.  If you would like to be notified of any
-change of status for bugs that were submitted by another user, please add your e-mail address
-to the CC list by clicking on the bug id, and entering your information to the Add CC text box.
 
-<A HREF="http://bugz.unc.edu"> http://bugz.unc.edu</A> <P>
-
-<OL>
-    <LI>In versions prior to PAVE 2.1, the PAVE formula parser was not smart enough to 
-    determine the difference between <B>plotting TA for dataset n (TAn) and using the tan function</B>.  
-    Similar problems might occur with the combination CO and s.  <I>Workaround:</I>
-    make your dataset use a different letter.<P> 
-
-    <LI>If the file $EDSS_DIR/$EDSS_ENV/bin/OPTIMIZE/.pave_exe.pave_usage.log
-    is not writable by the user, versions prior to 1.5 would print out some
-    information and then crash with a <B>segmentation fault</B> or a <B>memory 
-    fault</B>.  PAVE 1.5 gracefully exits and gives a meaningful error message.  <P>
-
-    <LI><B>In versions prior to PAVE 2.1 Mesh plots didn't display on some non-8 bit 
-    graphics displays</B>.  This problem has been solved by using convert from
-    ImageMagick.  For PAVE 1.7 and below the problem occurred on non-8 bit graphic displays  
-    (e.g. a DEC 5000 X-Server, some SGIs, Linux machines, 
-    some Windows machines).  <I>Workaround (for versions prior to PAVE 2.1.0):</I> set your 
-    display to use 8 bit graphics.  On Windows machines this can be done by configuring 
-    your display Color Palette to use 256 colors.  On Linux, the X-server can be started with 
-    an 8 bit depth using <I>startx -bpp 8</I>.<P>
-
-    <LI><B>Probing in vector plots</B> causes PAVE to crash in version 1.7 and
-    before.  This is fixed in version 1.7.1.<P>
-
-    <LI><B>On Linux, "Close" buttons do not work properly</B> for some windows.  
-    <I>Workaround:</I> close the windows using the window manager decorations.<P>
-
-    <LI><B>Time series plots over a region do not work if all of the data in
-    the selected region is missing for one of the selected time steps.</B><P>
-
-    <LI>PAVE sometimes prints a message like <B>"Can't allocate ramp color 214"</B>
-    and runs out of colors to use.  <I>Workaround:</I> exit
-    PAVE, exit out of any other applications running on your X-display that
-    are using lots of colors (AVS, drawing/painting programs, etc), and then
-    get back into PAVE.  If you were running <B>netscape</B>, try restarting it with
-    the option <B>-ncols 64</B> to limit the number of colors it uses.  <P>
-
-    <LI>Occasionally when saving tile plot images to data files, the
-    <B>menus "disappear" from the tile plot</B>.  They are still active
-    however they are "invisible".  <I>Workaround:</I>  iconify the tile
-    plot, de-iconify it, and you should be able to see the menus
-    again.
+    <BLOCKQUOTE>
+    The UNC Institute for the Environment <VAR>BugZilla</VAR> has been
+    out of service for quite some time.  For bugs and comments, please
+    use <A HREF="https://github.com/cjcoats/pave-3.0">https://github.com/cjcoats/pave-3.0</A>
     <P>
-    <LI><B>Printing tile plots</B> may not work reliably on the Sun platform
-    at this time, for reasons unknown to us.  <I>Workaround:</I> save
-    your images as Gif or RGB, convert them to PostScript
-    (see the <A HREF="#Saving"> Saving PAVE Plots to PostScript</A>
-    section for more information on this), then print them.
-    <P>
-    <LI>The <B>non-default maps in PAVE are a bit slow to generate</B>, 
-    especially the first time you create a plot with a given map projection.
-    We hope to speed up the map generation process with future
-    versions of PAVE.
-    <P>
-    <LI><B>If you choose "File/Exit" and PAVE does not shut down</B>, there may be
-    a mesh plot or time series line plot still running that prevents
-    PAVE from exiting.  <I>Workaround: </I> locate any line or mesh plot windows
-    that you have created, and quit out of them before exiting PAVE.<P>
 
-    <LI><B>Miscellaneous memory leaks.</B>  <I>Workaround:</I>  
-    If you run PAVE for a large
-    number of plots and you notice performance degradation, exit
-    out of PAVE and then restart it.
-    <P>
-    <LI>In PAVE 1.4.x, PAVE could <B>export netCDF</B> files, but had trouble 
-    reading
-    them back in if the exported formula was at all complex.  This is corrected
-    in version 1.5.  See <A HREF="#NewFeatures1.5"> New Features in PAVE 1.5</A>
-    for more details.<P>
+    <OL>
+        <LI> In versions prior to PAVE&nbsp;2.1, the PAVE formula parser was
+             not smart enough to  determine the difference between
+             <B>plotting TA for dataset n (TAn) and using the tan
+             function</B>.   Similar problems might occur with the
+             combination CO and s.  <I>Workaround:</I> make your dataset
+             use a different letter.<P> 
 
-    <LI>In versions prior to PAVE 1.5, the <B>column numbers in tabbed ASCII files
-    </B> output from PAVE were sometimes incorrect.  This has been corrected in
-    PAVE 1.5.<P>
+        <LI> If the file <VAR>.pave_exe.pave_usage.log</VAR>
+             is not writable by the user, versions prior to 1.5 would
+             print out some information and then crash with a
+             <B>segmentation fault</B> or a <B>memory  fault</B>.  PAVE
+             1.5 gracefully exits and gives a meaningful error message. 
+             <P>
 
-    <LI>In versions prior to PAVE 1.5,
-    if you use the tile plot <B>Control..Time Series</B> menu item to generate 
-    a time series plot from a tile plot that was generated by first selecting 
-    a <B>subdomain</B>, PAVE may not show the correct data.  <I>Workaround: </I>
-    (1) <B>Download the latest PAVE</B>; (2) Use this menu
-    item only from plots that are not on a subdomain - zoom in on the subdomain
-    instead and then generate the plot; (3) select the subdomain for which you 
-    want the time series plot and choose Create Time Series Line Plot from the 
-    Graphics menu to create the plot.<P>
+        <LI> <B>In versions prior to PAVE&nbsp;2.1, Mesh plots didn't display
+             on some non-8 bit  graphics displays</B>.  This problem has
+             been solved by using convert from ImageMagick.  For PAVE
+             1.7 and below the problem occurred on non-8 bit graphic
+             displays   (e.g. a DEC 5000 X-Server, some SGIs, Linux
+             machines,  some Windows machines).  <I>Workaround (for
+             versions prior to PAVE&nbsp;2.1.0):</I> set your  display to use
+             8 bit graphics.  On Windows machines this can be done by
+             configuring  your display Color Palette to use 256 colors. 
+             On Linux, the X-server can be started with  an 8 bit depth
+             using <I>startx -bpp 8</I>.
+             <P>
 
-    <LI>In versions prior to PAVE 1.5,
-    creating a <B>time series plot</B> from the Graphics menu when there are 
-    <B>multiple
-    layers </B> of data selected generates a plot for the top data layer only, 
-    instead of for the data averaged over the selected layers.  Version 1.5
-    reports an error message if the user requests a time series plot over
-    multiple layers.<P>
+        <LI> <B>Probing in vector plots</B> causes PAVE to crash in
+             version 1.7 and earlier.  This is fixed in version 1.7.1.
+             <P>
 
-    <LI>In versions prior to PAVE 1.5, there was a bug reading <B>UAM-IV wind</B>
-    files.  This has been corrected in PAVE 1.5.
-</OL>
+        <LI> <B>On Linux, "Close" buttons do not work properly</B> for
+             some windows.<BR>
+             <I>Workaround:</I> close the windows using the window manager
+             decorations.
+             <P>
 
-<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+        <LI> <B>Time series plots over a region do not work if all of 
+             the data in the selected region is missing for one of the
+             selected time steps.</B>
+             <P>
 
+        <LI> PAVE sometimes prints a message like
+             <BLOCKQUOTE><CODE>
+             Can't allocate ramp color 214
+             </CODE></BLOCKQUOTE>
+             and runs out of colors to use.<BR>
+             <I>Workaround:</I> exit
+             PAVE, exit out of any other applications running on your
+             X-display that are using lots of colors (AVS,
+             drawing/painting programs, etc), and then get back into
+             PAVE.  If you were running <VAR>netscape</VAR>, try
+             restarting it with the option <VAR>-ncols 64</VAR> to limit
+             the number of colors it uses.
+             <P>
+
+        <LI> Occasionally when saving tile plot images to data files, the
+             <B>menus &quot;disappear&quot; from the tile plot</B>. 
+             They are still active however they are
+             &quot;invisible&quot;.<BR>
+             <I>Workaround:</I>  iconify the tile plot, de-iconify it,
+             and you should be able to see the menus again.
+             <P>
+
+        <LI> <B>Printing tile plots</B> may not work reliably on the Sun platform
+             at this time, for reasons unknown to us. 
+             <I>Workaround:</I> save your images as Gif or RGB, convert
+             them to PostScript (see the <A HREF="#Saving"> Saving PAVE
+             Plots to PostScript</A> section for more information on
+             this), then print them. <P>
+
+        <LI> The <B>non-default maps in PAVE are a bit slow to generate</B>, 
+             especially the first time you create a plot with a given
+             map projection. We hope to speed up the map generation
+             process with future versions of PAVE.
+             <P>
+
+        <LI> <B>If you choose "File/Exit" and PAVE does not shut down</B>,
+             there may be a mesh plot or time series line plot still
+             running that prevents PAVE from exiting.  <I>Workaround:
+             </I> locate any line or mesh plot windows that you have
+             created, and quit out of them before exiting PAVE.
+             <P>
+
+        <LI> <B>Miscellaneous memory leaks.</B> <BR>
+             <I>Workaround:</I>   If you run PAVE for a large number of
+             plots and you notice performance degradation, exit out of
+             PAVE and then restart it.
+             <P>
+
+        <LI> In PAVE&nbsp;1.4.x, PAVE could <B>export netCDF</B> files,
+             but had trouble  reading them back in if the exported
+             formula was at all complex.  This is corrected in version
+             1.5.  See <A HREF="#NewFeatures"> New Features in PAVE
+             1.5</A> for more details.
+             <P>
+
+        <LI> In versions prior to PAVE&nbsp;1.5, the <B>column numbers in
+             tabbed ASCII files </B> output from PAVE were sometimes
+             incorrect.  This has been corrected in PAVE&nbsp;1.5.
+             <P>
+
+        <LI> In versions prior to PAVE&nbsp;1.5,
+             if you use the tile plot <B>Control..Time Series</B> menu
+             item to generate  a time series plot from a tile plot that
+             was generated by first selecting  a <B>subdomain</B>, PAVE
+             may not show the correct data.<BR>
+             <I>Workaround: </I> (1) <B>Download the latest PAVE</B>;
+             (2) Use this menu item only from plots that are not on a
+             subdomain - zoom in on the subdomain instead and then
+             generate the plot; (3) select the subdomain for which you 
+             want the time series plot and choose Create Time Series
+             Line Plot from the  Graphics menu to create the plot.
+             <P>
+
+        <LI> In versions prior to PAVE&nbsp;1.5,
+             creating a <B>time series plot</B> from the Graphics menu
+             when there are  <B>multiple layers </B> of data selected
+             generates a plot for the top data layer only,  instead of
+             for the data averaged over the selected layers.  Version
+             1.5 reports an error message if the user requests a time
+             series plot over multiple layers.
+             <P>
+
+        <LI> In versions prior to PAVE&nbsp;1.5, there was a bug reading
+             <B>UAM-IV wind</B> files.  This has been corrected in
+             PAVE&nbsp;1.5.
+             <P>
+    </OL>
+
+    <P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+
+    </BLOCKQUOTE>
 
 <HR> <!----------------------------------------------------------------->
 <H2><A NAME="RunTimeErrors">14.	Run Time Errors</A> </H2>
 
-<P> <B> Malloc failure:</B> If PAVE prints or pops up a message of the
-form "malloc failure" or "VIS_DATA_Dup() failed" this means that PAVE has
-run out of usable memory while trying to perform the requested
-operation.  To make more memory available, try closing some plots or quit
-and restart PAVE.
+    <BLOCKQUOTE>
 
-<P> <B> Can't allocate ramp color xxx:</B> If PAVE prints a message about
-not being able to allocate a color that means that all available colors
-for the current session on your system have been used up.  Applications
-like netscape will use as many colors as possible.  To keep more colors
-available to applications like PAVE, try running netscape with the option
--ncols 64 to prevent it from getting all the colors.  This problem may
-also occur if you've selected a lot of different color schemes during
-your current PAVE session.  To get all colors in the desired color scheme
-try quitting and restarting PAVE after you've chosen the scheme that you
-like.  Also, logging out of your current session and logging back in
-should make the maximum number of colors available.
+    <B> Malloc failure:</B> If PAVE prints or pops up a message of the
+    form <CODE>malloc failure</CODE> or <CODE>VIS_DATA_Dup()
+    failed</CODE> this means that PAVE has run out of usable memory
+    while trying to perform the requested operation.  To make more
+    memory available, try closing some plots or quit and restart PAVE.
+    <P>
 
-<P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+    <B> Can't allocate ramp color xxx:</B> If PAVE prints a message about
+    not being able to allocate a color that means that all available colors
+    for the current session on your system have been used up.  Applications
+    like netscape will use as many colors as possible.  To keep more colors
+    available to applications like PAVE, try running netscape with the option
+    -ncols 64 to prevent it from getting all the colors.  This problem may
+    also occur if you've selected a lot of different color schemes during
+    your current PAVE session.  To get all colors in the desired color scheme
+    try quitting and restarting PAVE after you've chosen the scheme that you
+    like.  Also, logging out of your current session and logging back in
+    should make the maximum number of colors available.
+    <P>
+
+    <A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
+    </BLOCKQUOTE>
 
 
 <HR> <!----------------------------------------------------------------->
 <H2><A NAME="NewFeatures">15.	History of new features</A> </H2>
 
-<H3> <A NAME="NewFeatures2.3.0"> New Features in PAVE 2.3.0 </A> </H3>
-<UL>
-    <LI><P>The pave script now responds to the environment variable 
-    <B>KILL_PROCESS_GROUP</B>.  If KILL_PROCESS_GROUP is set to ON (which is the
-    default behavior in the pave script), then all processes started by 
-    PAVE during the session (e.g. time series plots) will be killed when 
-    PAVE exits.  However, we have found that on Linux, if PAVE is being 
-    run from a script the parent script is also killed. Therefore, you
-    may wish to do setenv KILL_PROCESS_GROUP OFF before running PAVE 
-    on Linux - especially if you are using scripts.</p></lI>
+<H3> <A NAME="NewFeatures2.3.0"> New Features in PAVE&nbsp;2.3.0 </A> </H3>
 
-    <LI><P>The pave script now reponds to the environment variable 
-    <B>LOCAL_FILES_ONLY</B>. If LOCAL_FILES_ONLY is set to ON (the default value
-    is OFF), PAVE will execute without running the software bus.  This is
-    useful when running from scripts because you can run multiple instances
-    of PAVE from the same user account.  A limitation is that when 
-    LOCAL_FILES_ONLY is ON and you are running PAVE in interactive mode,
-    we have been unable to get the local file browser to communicate 
-    back to PAVE properly when new files are added.  However, files that
-    were added in prior sessions or via the command line may be analyzed.</p></lI>
+    <BLOCKQUOTE>
+    <UL>
+        <LI><P>The pave script now responds to the environment variable 
+        <B>KILL_PROCESS_GROUP</B>.  If KILL_PROCESS_GROUP is set to ON (which is the
+        default behavior in the pave script), then all processes started by 
+        PAVE during the session (e.g. time series plots) will be killed when 
+        PAVE exits.  However, we have found that on Linux, if PAVE is being 
+        run from a script the parent script is also killed. Therefore, you
+        may wish to do setenv KILL_PROCESS_GROUP OFF before running PAVE 
+        on Linux - especially if you are using scripts.</p></lI>
 
-    <LI><P>The pave script now reponds to the environment variable 
-    <B>PAVE_DEBUG</B>.  If PAVE_DEBUG is set to ON (default is OFF), 
-    then the script prints some debugging information about the various
-    paths used when PAVE is executed. This is useful if you are having
-    problems getting PAVE or one of its components to work.  You can
-    turn this on by doing setenv PAVE_DEBUG ON before running PAVE.
-    </p></lI>
+        <LI><P>The pave script now reponds to the environment variable 
+        <B>LOCAL_FILES_ONLY</B>. If LOCAL_FILES_ONLY is set to ON (the default value
+        is OFF), PAVE will execute without running the software bus.  This is
+        useful when running from scripts because you can run multiple instances
+        of PAVE from the same user account.  A limitation is that when 
+        LOCAL_FILES_ONLY is ON and you are running PAVE in interactive mode,
+        we have been unable to get the local file browser to communicate 
+        back to PAVE properly when new files are added.  However, files that
+        were added in prior sessions or via the command line may be analyzed.</p></lI>
 
-    <LI>A set of new command line arguments was added that control 
-    whether various parts of tile plots are drawn.  You may find this useful
-    when placing PAVE outputs in other documents.  Note that the syntax
-    to prevent the drawing of titles was already in earlier versions of 
-    PAVE - just give a string of spaces as the argument for the title 
-    command line arguments (e.g. -titleString " " -subTitle 1 " " 
-    -subTitle2 " ").  The new commands to control whether the other 
-    parts of the plot are drawn are:
-    <PRE><CODE>
+        <LI><P>The pave script now reponds to the environment variable 
+        <B>PAVE_DEBUG</B>.  If PAVE_DEBUG is set to ON (default is OFF), 
+        then the script prints some debugging information about the various
+        paths used when PAVE is executed. This is useful if you are having
+        problems getting PAVE or one of its components to work.  You can
+        turn this on by doing setenv PAVE_DEBUG ON before running PAVE.
+        </p></lI>
+
+        <LI>A set of new command line arguments was added that control 
+        whether various parts of tile plots are drawn.  You may find this useful
+        when placing PAVE outputs in other documents.  Note that the syntax
+        to prevent the drawing of titles was already in earlier versions of 
+        PAVE - just give a string of spaces as the argument for the title 
+        command line arguments (e.g. -titleString " " -subTitle 1 " " 
+        -subTitle2 " ").  The new commands to control whether the other 
+        parts of the plot are drawn are:
+        <PRE><CODE>
 -drawLegend ON|OFF
 -drawMinMax ON|OFF
 -drawTimeStamp ON|OFF
 -drawTiles ON|OFF
 -drawGridLabels ON|OFF
-    </CODE></PRE></lI>
+        </CODE></PRE></lI>
 
-    <LI><P>A new command line argument <B>-onlyDrawLegend ON|OFF</B>
-    was added.  In this case, you'll get a plot for which only the
-    legend is drawn.  This is useful if you want to place the legend
-    in another document.  You can crop this plot when exporting images
-    using scripts by using the -imageMagickArgs command line option. 
-    </p></lI>
+        <LI><P>A new command line argument <B>-onlyDrawLegend ON|OFF</B>
+        was added.  In this case, you'll get a plot for which only the
+        legend is drawn.  This is useful if you want to place the legend
+        in another document.  You can crop this plot when exporting images
+        using scripts by using the -imageMagickArgs command line option. 
+        </p></lI>
 
-    <LI><P>The command line argument <B>-imageMagickArgs 'args'</B> was added.
-    When used, this command line argument will pass the contents of
-    args to the convert program that is called when images are converted
-    from X-window dumps to other image formats.  For more information
-    on the command line arguments for convert, see the ImageMagick 
-    documentation (available from <A HREF="http://www.imagemagick.org">
-    http://www.imagemagick.org</A>).</p></lI>
+        <LI><P>The command line argument <B>-imageMagickArgs 'args'</B> was added.
+        When used, this command line argument will pass the contents of
+        args to the convert program that is called when images are converted
+        from X-window dumps to other image formats.  For more information
+        on the command line arguments for convert, see the ImageMagick 
+        documentation (available from <A HREF="http://www.imagemagick.org">
+        http://www.imagemagick.org</A>).</p></lI>
 
-    <LI><P>PAVE now responds to the environment variable <B>ELLIPSOID</B> 
-    to specify the earth's ellipsoid.  See <A HREF="#Environment">Environment
-    Variables page</A> for more information.</p></lI>
+        <LI><P>PAVE now responds to the environment variable <B>ELLIPSOID</B> 
+        to specify the earth's ellipsoid.  See <A HREF="#Environment">Environment
+        Variables page</A> for more information.</p></lI>
 
-    <LI><P>You can now specify the radius of the earth and treat the earth
-    as a spher using the environment variable <B>SPHERICAL_EARTH</B>. 
-    See <A HREF="#Environment">Environment
-    Variables page</A> for more information.</p></lI>
+        <LI><P>You can now specify the radius of the earth and treat the earth
+        as a spher using the environment variable <B>SPHERICAL_EARTH</B>. 
+        See <A HREF="#Environment">Environment
+        Variables page</A> for more information.</p></lI>
 
-</UL>
+    </UL>
+    </BLOCKQUOTE>
 
-<H3> <A NAME="NewFeatures2.2.0"> New Features in PAVE 2.2.0 </A> </H3>
-<UL>
-    <LI><P>Updated COPYRIGHT info to GNU Public License.</p>
-    <LI><P>Removed references to MCNC.</p>
-    <LI><P>PAVE by MCNC is no longer put on plots by default.</p>
-    <LI><P>The map region is no longer preclipped by default.</p>
-    <LI><P>Added PNG as a format to which images can be exported.</p>
-    <LI><P>PAVE now kills BLT and other child processes upon exit.  This works for Interix, but should be tested more thoroughly on other platforms.</p>
-    <LI><P>The limitation on the maximum number of timesteps was removed.  Now annual hourly files can be analyzed.</p>
-    <LI><P>Updated Makefiles to have more utility.</p>
-    <LI><P>Corrected problem with very large and small numbers changing to scientific notation then causing problems in formulas.</p>
-</UL>
+<H3> <A NAME="NewFeatures2.2.0"> New Features in PAVE&nbsp;2.2.0 </A> </H3>
 
-<H3> <A NAME="NewFeatures2.1.0"> New Features in PAVE 2.1.0 </A> </H3>
+    <BLOCKQUOTE>
+    <UL>
+        <LI><P>Updated COPYRIGHT info to GNU Public License.</p>
+        <LI><P>Removed references to MCNC.</p>
+        <LI><P>PAVE by MCNC is no longer put on plots by default.</p>
+        <LI><P>The map region is no longer preclipped by default.</p>
+        <LI><P>Added PNG as a format to which images can be exported.</p>
+        <LI><P>PAVE now kills BLT and other child processes upon exit.  This works for Interix, but should be tested more thoroughly on other platforms.</p>
+        <LI><P>The limitation on the maximum number of timesteps was removed.  Now annual hourly files can be analyzed.</p>
+        <LI><P>Updated Makefiles to have more utility.</p>
+        <LI><P>Corrected problem with very large and small numbers changing to scientific notation then causing problems in formulas.</p>
+    </UL>
+    </BLOCKQUOTE>
 
-<UL>
-    <LI> <B>All of the new features available in 2.1.0 are noted on the pave -usage
-    command with &lt;NEW!!&gt;</B><P>
+<H3> <A NAME="NewFeatures2.1.0"> New Features in PAVE&nbsp;2.1.0 </A> </H3>
+
+    <BLOCKQUOTE>
+    <UL>
+        <LI> <B>All of the new features available in 2.1.0 are noted on the pave -usage
+        command with &lt;NEW!!&gt;</B><P>
 <PRE>
        [ -alias &lt;aliasNAME=definition&gt; (NEW)!!!]       
        [ -animatedGIF &lt;filename&gt;(NEW!!!)]             
@@ -3204,291 +3356,329 @@ should make the maximum number of colors available.
        [ -vectobs &lt;formula&gt; &lt;formula&gt; (NEW!!!) ]
 </PRE>
 
-    <LI><B>Aliasing of complex formulae</B>
-    PAVE has been modified to allow for the aliasing of complex formulae, 
-    with the use of hierarchical formulas allowed.  Alias definitions are saved
-    in a .pave.alias file, and will be reloaded in future executions of PAVE.  -printalias
-    allows the user to view the alias definitions.
-    This will improve the 
-    overall ease of complex formula definitions.<P>
+        <LI><B>Aliasing of complex formulae</B>
+        PAVE has been modified to allow for the aliasing of complex formulae, 
+        with the use of hierarchical formulas allowed.  Alias definitions are saved
+        in a .pave.alias file, and will be reloaded in future executions of PAVE.  -printalias
+        allows the user to view the alias definitions.
+        This will improve the 
+        overall ease of complex formula definitions.<P>
 
-    <LI><B>Write animated GIFs directly</B>
-    PAVE was modified to output animated .gif files within version 2.1.0 using the -animatedGIF
-    &lt;filename&gt;, as an option to the previous MPEG choice.<P>
+        <LI><B>Write animated GIFs directly</B>
+        PAVE was modified to output animated .gif files within version 2.1.0 using the -animatedGIF
+        &lt;filename&gt;, as an option to the previous MPEG choice.<P>
 
-    <LI><B>Added capability to write multiple variables to a single netCDF file.</B> 
-    PAVE was modified to write out multiple variables, given by different
-    formulae to the same netCDF file using -multivarNcf.  Previous versions of pave allowed the
-    user to write out a variable given by a formula to a netCDF file.<P>
+        <LI><B>Added capability to write multiple variables to a single netCDF file.</B> 
+        PAVE was modified to write out multiple variables, given by different
+        formulae to the same netCDF file using -multivarNcf.  Previous versions of pave allowed the
+        user to write out a variable given by a formula to a netCDF file.<P>
 
-    <LI><B>Calculate the n-hour average and/or sum</B>,  -NhourAverage -NhourSum.<P>
+        <LI><B>Calculate the n-hour average and/or sum</B>,  -NhourAverage -NhourSum.<P>
 
-    <LI><B>Calculate the n-layer average and/or sum</B>, -NlayerAverage and -NlayerSum.<P>
+        <LI><B>Calculate the n-layer average and/or sum</B>, -NlayerAverage and -NlayerSum.<P>
 
-    <LI><B>PAVE is able to visualize standard AIRS AMP350 observational data</B>,
-    allowing observations to be probed -obs, observations to be plotted via time series
-    -obsTimeSeries, and the overlay of wind vector observations -vectobs.
-    The user is able to configure these plots using the GUI and the command line options
-    -obsSize, -ObsThick.  Additional options include -minMaxObs, -minMaxModelObs.  
-    The AIRS2M3 program has been added to the I/O API Related Programs to read pollutant monitor values from an 
-    AIRS AMP350 file, convert to PPM, and output the result to an I/O API "observational-data" file.<P>
+        <LI><B>PAVE is able to visualize standard AIRS AMP350 observational data</B>,
+        allowing observations to be probed -obs, observations to be plotted via time series
+        -obsTimeSeries, and the overlay of wind vector observations -vectobs.
+        The user is able to configure these plots using the GUI and the command line options
+        -obsSize, -ObsThick.  Additional options include -minMaxObs, -minMaxModelObs.  
+        The AIRS2M3 program has been added to the I/O API Related Programs to read pollutant monitor values from an 
+        AIRS AMP350 file, convert to PPM, and output the result to an I/O API "observational-data" file.<P>
 
-    <LI><B>Supports user adjustment of time stamp to account for desired time zones</B>, -tzoffset <P>
+        <LI><B>Supports user adjustment of time stamp to account for desired time zones</B>, -tzoffset <P>
 
-    <LI><B>Allows conversion from the native time zone to the user desired timezone</B>, -tzset <P>
+        <LI><B>Allows conversion from the native time zone to the user desired timezone</B>, -tzset <P>
 
-    <LI><B>Allow the export of ASCII and netCDF files using the scripting interface</B>
-    PAVE was modified by adding the command line arguments: -save2ascii, and -save2ncf<br>
-    Previous versions of pave allowed the export of ASCII and netCDF files only
-    through the graphical user interface (GUI).<P>
+        <LI><B>Allow the export of ASCII and netCDF files using the scripting interface</B>
+        PAVE was modified by adding the command line arguments: -save2ascii, and -save2ncf<br>
+        Previous versions of pave allowed the export of ASCII and netCDF files only
+        through the graphical user interface (GUI).<P>
 
-    <LI><B>An unlimited number of species can now be used within formulas.</B>
-    PAVE was modified to allow for an unlimited number of species to be
-    specified within formulas.  Previous versions of PAVE had a limit of 30
-    species that could be included in the formula through the user interface.
-    Users had a need for formulae with a greater number of species.<P>
+        <LI><B>An unlimited number of species can now be used within formulas.</B>
+        PAVE was modified to allow for an unlimited number of species to be
+        specified within formulas.  Previous versions of PAVE had a limit of 30
+        species that could be included in the formula through the user interface.
+        Users had a need for formulae with a greater number of species.<P>
 
-    <LI><B> Update formulas after deleting datasets.  </B>
-    PAVE was modified so that formulas for subsequent data sets
-    are not deleted when earlier data sets are deleted.
-    For example suppose you have three open PAVE datasets: a,b,c.  In earlier
-    versions of PAVE if you have O3a, O3b, O3c in the formula list,
-    and then delete dataset 'b', using the Add/Delete/Select Dataset window
-    you would lose the formula O3b and also the formula O3c.  PAVE 2.1.0 now
-    automatically moves the formula from variable "O3" in data set "c" to "O3" in dataset "b",
-    once dataset b has been removed.<P>
+        <LI><B> Update formulas after deleting datasets.  </B>
+        PAVE was modified so that formulas for subsequent data sets
+        are not deleted when earlier data sets are deleted.
+        For example suppose you have three open PAVE datasets: a,b,c.  In earlier
+        versions of PAVE if you have O3a, O3b, O3c in the formula list,
+        and then delete dataset 'b', using the Add/Delete/Select Dataset window
+        you would lose the formula O3b and also the formula O3c.  PAVE&nbsp;2.1.0 now
+        automatically moves the formula from variable "O3" in data set "c" to "O3" in dataset "b",
+        once dataset b has been removed.<P>
 
-    <LI><B>Bug fix</B> - Prior to PAVE 2.1.0 the formula parser was not smart enough to 
-    differentiate between Variable names and arithmetic operator names.
-    Example: <B>plotting TA for dataset n (TAn) and using the tan function</B>.
+        <LI><B>Bug fix</B> - Prior to PAVE&nbsp;2.1.0 the formula parser was not smart enough to 
+        differentiate between Variable names and arithmetic operator names.
+        Example: <B>plotting TA for dataset n (TAn) and using the tan function</B>.
 
-</UL>
+    </UL>
 
-<H3> <A NAME="NewFeatures1.7"> New Features in PAVE 1.7 and 1.7.1</A> </H3>
+    </BLOCKQUOTE>
 
-<UL>
-    <LI> 
-    <B>The numerical divisions between the color bins to be controlled by the 
-    user.</B>  In earlier versions of PAVE, the divisions between the color 
-    bins were calculated automatically based of the specified minimum value,
-    maximum value and the number of bins used.  The range of each bin 
-    was the same.  For example, each bin might be 10 PPB of ozone, or 1 m/s.  
-    Users can now control the bin divisions by setting the environment variable 
-    LEGEND_BINS or the command line argument legendBins to a comma separated 
-    list that contains the divisions between the bins.  The advantage of the
-    command line argument is that you can change the values of the bins during
-    the PAVE session.
-    After using the legendBins command line argument, you can set the bin
-    determination to use the default method by entering <B>-legendBins
-    DEFAULT</B>.
-    The following example causes a plot to be drawn with three 
-    colors with values in the ranges 1-10, 10-100, and 100-1000:
+<H3> <A NAME="NewFeatures1.7"> New Features in PAVE&nbsp;1.7 and 1.7.1</A> </H3>
+
+    <BLOCKQUOTE>
+    <UL>
+        <LI> 
+        <B>The numerical divisions between the color bins to be controlled by the 
+        user.</B>  In earlier versions of PAVE, the divisions between the color 
+        bins were calculated automatically based of the specified minimum value,
+        maximum value and the number of bins used.  The range of each bin 
+        was the same.  For example, each bin might be 10 PPB of ozone, or 1 m/s.  
+        Users can now control the bin divisions by setting the environment variable 
+        LEGEND_BINS or the command line argument legendBins to a comma separated 
+        list that contains the divisions between the bins.  The advantage of the
+        command line argument is that you can change the values of the bins during
+        the PAVE session.
+        After using the legendBins command line argument, you can set the bin
+        determination to use the default method by entering <B>-legendBins
+        DEFAULT</B>.
+        The following example causes a plot to be drawn with three 
+        colors with values in the ranges 1-10, 10-100, and 100-1000:
 <PRE>
 setenv LEGEND_BINS "1,10,100,1000"
 </PRE>
 
-    <LI><B>On SGI 64 bit capable computers, files larger than two gigabytes
-    can now be displayed. </B> This is done using a 64 bit capable "visd"
-    on the SGI, which then transfers the selected data to the main PAVE
-    interface.  The only restriction is that amount of selected data must be
-    less than 2 Gbytes.  If the main PAVE program is being executed on the 
-    SGI that holds the large data files, PAVE can be forced to use the visd 
-    to read data files if the user sets the environment variable USE_LOCAL_VISD.
-    This should not be set unless large files are being visualized
-    because it is slower than reading a local file directly.  If the large
-    file is being browsed remotely and resides on a 64 bit capable SGI, the 
-    64 bit capable visd will be started by default (if it is installed).  
-    Examples of 64 bit capable SGIs are Octanes, O200s, and O2000s.  Some O2s 
-    are 64 bit capable, and some are not.<P>
+        <LI><B>On SGI 64 bit capable computers, files larger than two gigabytes
+        can now be displayed. </B> This is done using a 64 bit capable "visd"
+        on the SGI, which then transfers the selected data to the main PAVE
+        interface.  The only restriction is that amount of selected data must be
+        less than 2 Gbytes.  If the main PAVE program is being executed on the 
+        SGI that holds the large data files, PAVE can be forced to use the visd 
+        to read data files if the user sets the environment variable USE_LOCAL_VISD.
+        This should not be set unless large files are being visualized
+        because it is slower than reading a local file directly.  If the large
+        file is being browsed remotely and resides on a 64 bit capable SGI, the 
+        64 bit capable visd will be started by default (if it is installed).  
+        Examples of 64 bit capable SGIs are Octanes, O200s, and O2000s.  Some O2s 
+        are 64 bit capable, and some are not.<P>
 
-    <LI><B>County and state lines can be displayed in different colors (gray /
-    black) if the environment variable PAVE_DISTINCT_STATE_COUNTIES is set.</B>
-    This will occur when the user selects  "Counties (SLOW the first time)" 
-    from the Tile window plot's Map menu.
-    The different color state and county lines can be obtained when
-    using a script by issuing the <B>-mapCounties </B>command line argument and 
-    setting PAVE_DISTINCT_STATE_COUNTIES.  Note that after the two color county
-    map has been displayed, it may not be possible to switch to another map
-    during the same PAVE session.
-    <P>
-    <LI><B>Vector plots and vector tile plots have a "vector legend", which
-    will be turned on if the user selects "Scale Vectors" from the Configure
-    window.</B> The value of the Vector Scale type-in from the same window 
-    represents the length of the vector legend and the rest of the vectors are 
-    scaled accordingly.  This makes the Vector Scale more meaningful than 
-    in previous versions, although the behavior is somewhat opposite (i.e. the 
-    larger the Vector Scale, the smaller the vectors because the legend is
-    always the same size).
-    <P>
-    <LI><B>Vectors can be drawn with a user specified color.</B> This option
-    is controlled by setting the VECTOR_COLOR environment variable to any 
-    color name recognized by the X-Windows system.  Potential colors and
-    RGB values are usually found in /usr/lib/X11/rgb.txt for 
-    non-Suns or /usr/openwin/lib/X11/rgb.txt on Suns.
-    <P>
-    <LI><B>Handling of missing data and time steps other than 1 hour for
-    I/O API files is improved.</B>
-    Data in I/O API files with values less than or equal to
-    AMISS3 (-9.0E36), such as BADVAL3 are now treated as missing data.
-    This means that no color is assigned on tile plots and values are treated 
-    internally as the IEEE constant for "Not a number".  Also, it is now
-    possible to export netCDF files with time steps other than 1 hour, and
-    a more current version of the I/O API is used.
-    <P>
-    <LI><B>Animations are now synchronized based on their times, not their
-    time steps.</B>  If Animate Tile Plots Synchronously was chosen in
-    previous versions of PAVE, the first time step of each file was shown
-    followed by the second, etc.  In the current version, the system 
-    examines the actual time the data corresponds to an animates the plots
-    synchronously.
-    <P>
-    <LI><B>Problems with saving multiple screen captures from a script
-    using %02d have been corrected.</B> In prior versions, there was a 
-    problem when the user tried to save GIF files for all time steps of a 
-    dataset from a script using the syntax
-    <PRE>
-    -tinit 0 -tfinal 12 -gtype tile -saveImage GIF /tmp/test%02d.gif 
-    </PRE>
-    <P>
-    <LI><B>Corrections were made to visualizing some UAM-IV and UAM-V files.</B>
-    In earlier versions, UAM-IV boundary files were not visualized properly
-    unless the number of grid cells in the X & Y directions were the same.
-    Also, version 1.7.1 supports the visualization for pressure in UAM-V height/
-    pressure files, and cwater in UAM-V cloud/cwater files whereas in earlier
-    versions only the height and cloud variables were available, respectively.
-    <P>
-    <LI><B>Commands entered from standard input now support single and double 
-    quotes</B>, thus allowing strings such as titles with multiple words to 
-    be passed directly to PAVE from standard input.
-    <P>
-    <LI><B>Window management with command line arguments is improved.</B>  The
-    -windowId command line argument now returns the X-window ID of the most
-    recently created window.  The time step displayed by a window can be
-    controlled using the -showwindow <I>windowId timestep</I> command line 
-    argument.  A window can be closed with the -closeWindow <I>windowId</I>
-    command line argument.  A window can be raised (brought to the front)
-    with -raiseWindow <I>windowID</I>.
-    <P>
-    <LI><B>The maximum number of timesteps for a dataset has been increased</B>
-    such that a datasets with up to 120 days of hourly data can be visualized.
-    <P>
-    <LI><B>The Linux version no longer gives errors about "XmDeleteIemsPos",
-    and is statically linked so external libraries are not needed.</B>
-    <P>
-    <LI><B>The Solaris file browser can now display remote files.</B>
-    <P>
-    <LI>The rare cases when map lines would extend below the visualization
-    area or black boxes would appear over the date/time information have 
-    been fixed, and a bug that occurred when map lines had more than 2500 
-    vertices has been corrected.
-    <P>
-    <LI>It is possible to hide the "PAVE by MCNC" string on PAVE plots (e.g.
-    for publication purposes).
-    <P>
-</UL>
+        <LI><B>County and state lines can be displayed in different colors (gray /
+        black) if the environment variable PAVE_DISTINCT_STATE_COUNTIES is set.</B>
+        This will occur when the user selects  "Counties (SLOW the first time)" 
+        from the Tile window plot's Map menu.
+        The different color state and county lines can be obtained when
+        using a script by issuing the <B>-mapCounties </B>command line argument and 
+        setting PAVE_DISTINCT_STATE_COUNTIES.  Note that after the two color county
+        map has been displayed, it may not be possible to switch to another map
+        during the same PAVE session.
+        <P>
+        <LI><B>Vector plots and vector tile plots have a "vector legend", which
+        will be turned on if the user selects "Scale Vectors" from the Configure
+        window.</B> The value of the Vector Scale type-in from the same window 
+        represents the length of the vector legend and the rest of the vectors are 
+        scaled accordingly.  This makes the Vector Scale more meaningful than 
+        in previous versions, although the behavior is somewhat opposite (i.e. the 
+        larger the Vector Scale, the smaller the vectors because the legend is
+        always the same size).
+        <P>
+        <LI><B>Vectors can be drawn with a user specified color.</B> This option
+        is controlled by setting the VECTOR_COLOR environment variable to any 
+        color name recognized by the X-Windows system.  Potential colors and
+        RGB values are usually found in /usr/lib/X11/rgb.txt for 
+        non-Suns or /usr/openwin/lib/X11/rgb.txt on Suns.
+        <P>
+        <LI><B>Handling of missing data and time steps other than 1 hour for
+        I/O API files is improved.</B>
+        Data in I/O API files with values less than or equal to
+        AMISS3 (-9.0E36), such as BADVAL3 are now treated as missing data.
+        This means that no color is assigned on tile plots and values are treated 
+        internally as the IEEE constant for "Not a number".  Also, it is now
+        possible to export netCDF files with time steps other than 1 hour, and
+        a more current version of the I/O API is used.
+        <P>
+        <LI><B>Animations are now synchronized based on their times, not their
+        time steps.</B>  If Animate Tile Plots Synchronously was chosen in
+        previous versions of PAVE, the first time step of each file was shown
+        followed by the second, etc.  In the current version, the system 
+        examines the actual time the data corresponds to an animates the plots
+        synchronously.
+        <P>
+        <LI><B>Problems with saving multiple screen captures from a script
+        using %02d have been corrected.</B> In prior versions, there was a 
+        problem when the user tried to save GIF files for all time steps of a 
+        dataset from a script using the syntax
+        <PRE>
+        -tinit 0 -tfinal 12 -gtype tile -saveImage GIF /tmp/test%02d.gif 
+        </PRE>
+        <P>
+        <LI><B>Corrections were made to visualizing some UAM-IV and UAM-V files.</B>
+        In earlier versions, UAM-IV boundary files were not visualized properly
+        unless the number of grid cells in the X & Y directions were the same.
+        Also, version 1.7.1 supports the visualization for pressure in UAM-V height/
+        pressure files, and cwater in UAM-V cloud/cwater files whereas in earlier
+        versions only the height and cloud variables were available, respectively.
+        <P>
+        <LI><B>Commands entered from standard input now support single and double 
+        quotes</B>, thus allowing strings such as titles with multiple words to 
+        be passed directly to PAVE from standard input.
+        <P>
+        <LI><B>Window management with command line arguments is improved.</B>  The
+        -windowId command line argument now returns the X-window ID of the most
+        recently created window.  The time step displayed by a window can be
+        controlled using the -showwindow <I>windowId timestep</I> command line 
+        argument.  A window can be closed with the -closeWindow <I>windowId</I>
+        command line argument.  A window can be raised (brought to the front)
+        with -raiseWindow <I>windowID</I>.
+        <P>
+        <LI><B>The maximum number of timesteps for a dataset has been increased</B>
+        such that a datasets with up to 120 days of hourly data can be visualized.
+        <P>
+        <LI><B>The Linux version no longer gives errors about "XmDeleteIemsPos",
+        and is statically linked so external libraries are not needed.</B>
+        <P>
+        <LI><B>The Solaris file browser can now display remote files.</B>
+        <P>
+        <LI>The rare cases when map lines would extend below the visualization
+        area or black boxes would appear over the date/time information have 
+        been fixed, and a bug that occurred when map lines had more than 2500 
+        vertices has been corrected.
+        <P>
+        <LI>It is possible to hide the "PAVE by MCNC" string on PAVE plots (e.g.
+        for publication purposes).
+        <P>
+    </UL>
 
-<H3> <A NAME="NewFeatures1.6"> New Features in PAVE 1.6</A> </H3>
-<UL>
-    <LI> Up-to-date I/O API and netCDF libraries were used.  This corrected
-    a problem with reading the data from netCDF files on HP-UX.<P>
-    <LI> PAVE no longer leaves Browser processes running after it is exited.<P>
-    <LI> When you zoom in to a region, the region plotted always shows a whole 
-    number of grid cells (before, partial cells could be plotted and probing
-    at the edge of the plot caused an error message).<P>
-    <LI> DEC OSF version is compiled with native C and C++ so that missing data
-    (represented as NaN - Not a Number) is treated correctly<P>
-    <LI> The configure window was made smaller so that it can be displayed on a 
-    1024 x 768 PC monitor.<P>
-    <LI> Vector plots now display <B>all vectors</B> by default.<P>
-    <LI> A slider has been placed on the Configure window to control how 
-    frequently vectors are plotted<P>
-    <LI> Command line options were added: -vectorScale real# controls the 
-    scale of the vectors, -vectorPlotEvery integer (=N) plots every N vectors.<P>
-    <LI> A bug in time series plots has been corrected.<P>
-    <LI> IRIX 6.x is now supported by the PAVE script.<P>
-    <LI> A script <B>pavewin</B> that starts PAVE in its own window is now included.<P>
-    <LI> A bug that caused pave to crash when time series plots were attempted on formulas
-    with division has been corrected.<P>
-    <LI> CONNECTION TO BUS HAS CRASHED message no longer appears when PAVE is
-    exited normally.<P>
-    <LI> The user guide has been split into multiple files for faster access
-    from the web.<P>
-</UL>
+    </BLOCKQUOTE>
 
-<H3> <A NAME="NewFeatures1.5"> New Features in PAVE 1.5</A> </H3>
+<H3> <A NAME="NewFeatures1.6"> New Features in PAVE&nbsp;1.6</A> </H3>
 
-<B>New features:</B>
-<P>
-<UL>
-    <LI>I/O API / netCDF <B>boundary files</B> can now be visualized.
-    <P>
-    <LI><B>Missing data</B> is now supported in UAM and netCDF files.  Areas with 
-    missing data are shown in the background color of white.  For UAM files,
-    the default value for missing data is -999.0.  This can be overridden 
-    with the environment variable UAM_MISSING_VALUE.
-    <P>
-    <LI> The numeric format specified in the configure window for a tile plot 
-    is now also used to format the numbers in the tabular display when probing
-    the data.
-    <P>
-    <LI>Dates with the format YYMMDD are now supported for UAM-IV format files.
-    <P>
-    <LI> The limit for the length of a formula has been increased to 2500
-    characters.
+    <BLOCKQUOTE>
+    <UL>
+        <LI> Up-to-date I/O API and netCDF libraries were used.  This corrected
+        a problem with reading the data from netCDF files on HP-UX.<P>
+
+        <LI> PAVE no longer leaves Browser processes running after it is exited.<P>
+
+        <LI> When you zoom in to a region, the region plotted always shows a whole 
+        number of grid cells (before, partial cells could be plotted and probing
+        at the edge of the plot caused an error message).<P>
+
+        <LI> DEC OSF version is compiled with native C and C++ so that missing data
+        (represented as NaN - Not a Number) is treated correctly<P>
+
+        <LI> The configure window was made smaller so that it can be displayed on a 
+        1024 x 768 PC monitor.<P>
+
+        <LI> Vector plots now display <B>all vectors</B> by default.<P>
+
+        <LI> A slider has been placed on the Configure window to control how 
+        frequently vectors are plotted<P>
+
+        <LI> Command line options were added: -vectorScale real# controls the 
+        scale of the vectors, -vectorPlotEvery integer (=N) plots every N vectors.<P>
+
+        <LI> A bug in time series plots has been corrected.<P>
+
+        <LI> IRIX 6.x is now supported by the PAVE script.<P>
+
+        <LI> A script <B>pavewin</B> that starts PAVE in its own window is now included.<P>
+
+        <LI> A bug that caused pave to crash when time series plots were attempted on formulas
+        with division has been corrected.<P>
+
+        <LI> CONNECTION TO BUS HAS CRASHED message no longer appears when PAVE is
+        exited normally.<P>
+
+        <LI> The user guide has been split into multiple files for faster access
+        from the web.<P>
+    </UL>
+    </BLOCKQUOTE>
+
+<H3> <A NAME="NewFeatures1.5"> New Features in PAVE&nbsp;1.5</A> </H3>
+
+    <BLOCKQUOTE>
+    <UL>
+        <LI>I/O API / netCDF <B>boundary files</B> can now be visualized.
+        <P>
+
+        <LI><B>Missing data</B> is now supported in UAM and netCDF files.  Areas with 
+        missing data are shown in the background color of white.  For UAM files,
+        the default value for missing data is -999.0.  This can be overridden 
+        with the environment variable UAM_MISSING_VALUE.
+        <P>
+
+        <LI> The numeric format specified in the configure window for a tile plot 
+        is now also used to format the numbers in the tabular display when probing
+        the data.
+        <P>
+
+        <LI>Dates with the format YYMMDD are now supported for UAM-IV format files.
+        <P>
+
+        <LI> The limit for the length of a formula has been increased to 2500
+             characters.
     </UL>
     <P>
+
     <B>There are several bug fixes with this release:</B>
-    <P>
+
     <UL>
-    <P>
-    <LI><B>If you generate a time series plot from the Interact menu for a plot
-    of a subdomain, the correct data is now displayed.</B>
-    <P>
-    <LI><B>NetCDF files produced by PAVE using Export to netCDF can now be read
-    back in to PAVE.</B>  The default species name for the output variable is 
-    "VAR". This can be overridden by setting the environment variable
-    PAVE_EXPORT_VARNAME to another alphanumeric string.  Information about the
-    formula that was exported and the datasets used to create it is stored in
-    the FDESC portion of the netCDF file.  This can be viewed using the ncdump
-    utility.
-    <P>
-    <LI>A bug in the reader for <B>UAM-IV winds</B> has been corrected.
-    <P>
-    <LI>The column numbers in tabbed ASCII output files has been corrected, and
-    the time stamp labels are now all written on their own lines.
-    <P>
-    <LI>If the file $EDSS_DIR/$EDSS_ENV/bin/OPTIMIZE/.pave_exe.pave_usage.log
-    is not writable by the user, the system now gracefully exits and gives
-    a meaningful error message instead of producing a segmentation fault.
-    <P>
-    <LI>If multiple layers are selected and a time series plot is requested,
-    an error message saying that this operation is not supported now appears.
-    This may be supported at some point in the future.
-</UL>
+        <LI> <B>If you generate a time series plot from the Interact menu for a plot
+             of a subdomain, the correct data is now displayed.</B>
+             <P>
+
+        <LI> <B>NetCDF files produced by PAVE using Export to netCDF can
+             now be read back in to PAVE.</B>  The default species name
+             for the output variable is  <CODE>VAR</CODE>. This can be
+             overridden by setting the environment variable
+             <CODE>PAVE_EXPORT_VARNAME</CODE> to another alphanumeric
+             string.  Information about the formula that was exported
+             and the datasets used to create it is stored in the
+             <CODE>FDESC</CODE> portion of the netCDF file.  This can be
+             viewed using the <VAR>ncdump</VAR> utility.
+             <P>
+
+        <LI> A bug in the reader for <B>UAM-IV winds</B> has been corrected.
+             <P>
+
+        <LI> The column numbers in tabbed ASCII output files has been corrected,
+             and the time stamp labels are now all written on their own lines.
+             <P>
+
+        <LI> If the file <VAR>.pave_exe.pave_usage.log</VAR>
+             is not writable by the user, the system now gracefully
+             exits and gives a meaningful error message instead of
+             producing a segmentation fault.
+             <P>
+
+        <LI>If multiple layers are selected and a time series plot is requested,
+        an error message saying that this operation is not supported now appears.
+        This may be supported at some point in the future.
+
+    </UL>
+    </BLOCKQUOTE>
 
 
 <H3> <A NAME="NewFeatures1.4.2"> New Features in PAVE v1.4.2</A> </H3>
 There are several minor bug fixes with this release:<P>
 
-<UL>
-    <LI>  A bug was fixed with the world maps which prevented domains that
-    crossed the greenwich meridian from displaying a map.<P>
+    <BLOCKQUOTE>
+    <UL>
+        <LI>  A bug was fixed with the world maps which prevented domains that
+              crossed the greenwich meridian from displaying a map.<P>
 
-    <LI>  A bug was fixed that prevented netCDF "chained" files from
-    being read into PAVE.<P>
+        <LI>  A bug was fixed that prevented netCDF "chained" files from
+              being read into PAVE.<P>
 
-    <LI>  Integer data in netCDF can now successfully be read by PAVE.<P>
+        <LI>  Integer data in netCDF can now successfully be read by PAVE.
+              <P>
 
-</UL>
+    </UL>
+    </BLOCKQUOTE>
 
 
 <H3> <A NAME="NewFeatures1.4.1"> New Features in PAVE v1.4.l</A> </H3>
 
-<B>PAVE now can display a world map for data which falls outside 
-the North America region.</B>
-For further information on how to use the world map, please see the
-PAVE FAQ located at
-<A HREF="Pave.FAQ.html#WorldMap"> Pave.FAQ.html#WorldMap</A>.<P>
+    <BLOCKQUOTE>
+    <B>PAVE now can display a world map for data which falls outside 
+    the North America region.</B> For further information on how to use
+    the world map, please see the PAVE FAQ located at
+    <A HREF="Pave.FAQ.html#WorldMap">Pave.FAQ.html#WorldMap</A>.<P>
+    </BLOCKQUOTE>
 
 
 <H3> <A NAME="NewFeatures1.4"> New Features in PAVE v1.4</A> </H3>
@@ -3654,6 +3844,7 @@ e,
 </UL>
 
 <H3> <A NAME="NewFeatures1.4b"> New Features in PAVE v1.4 beta</A> </H3>
+
 Version 1.4 beta fixes an X-Window related bug that caused
 PAVE to crash occasionally with certain selected domains of interest.
 <H3> <A NAME="NewFeatures1.4a"> New Features in PAVE v1.4 alpha</A> </H3>
@@ -3872,46 +4063,42 @@ Note the following about the format of the configuration
 file:
 <P>
 <UL>
-<LI>
-   Any of the entries can be deleted from the configuration file.
-  PAVE would then use its default setting for any entry not supplied.
-<P>
 
-<LI>
-   ColorMapType should be one of the following:
-        <PRE>
-        NEWTON_COLORMAP         [for Newton RGB (AVS)]
-        JET_COLORMAP            [for Newton RGB (InkJet)]
-        GREY_COLORMAP           [for Grey Scale (AVS)]
-        </PRE>
+    <LI> Any of the entries can be deleted from the configuration file.
+         PAVE would then use its default setting for any entry not supplied.
+         <P>
 
-<LI>
-   The colors are denoted by values for the red, green, and
-  blue components of each color, respectively, in a 0..255 (inclusive)
-  scale.  The fourth entry in each color line should be of
-  the form "ColorNumberI", where I is the number of the color
-  (1..Number_Tiles) being described on that line.
-<P>
+    <LI> ColorMapType should be one of the following:
+            <PRE>
+    NEWTON_COLORMAP         [for Newton RGB (AVS)]
+    JET_COLORMAP            [for Newton RGB (InkJet)]
+    GREY_COLORMAP           [for Grey Scale (AVS)]
+            </PRE>
 
-<LI>
-   The Number_Tiles value should exactly match the number
-  of colors supplied.
-<P>
+    <LI> The colors are denoted by values for the red, green, and
+      blue components of each color, respectively, in a 0..255 (inclusive)
+      scale.  The fourth entry in each color line should be of
+      the form "ColorNumberI", where I is the number of the color
+      (1..Number_Tiles) being described on that line.
+    <P>
 
-<LI>
-   The Legend_Format line expects its argument to be that
-  usable by the C language's printf() routine for formatting
-  a float for output.
-<P>
+    <LI> The Number_Tiles value should exactly match the number
+         of colors supplied.
+         <P>
 
-<LI>
-   Invert_Colormap, Save_MPEG_Files, Disable_Map, Smooth_Plot,
-  Draw_Grid_Lines, and Scale_Vectors are boolean values -
-  they should be set to either 0 or 1.
-<P>
+    <LI> The Legend_Format line expects its argument to be that
+         usable by the C language's printf() routine for formatting
+         a float for output.
+         <P>
+
+    <LI> Invert_Colormap, Save_MPEG_Files, Disable_Map, Smooth_Plot,
+         Draw_Grid_Lines, and Scale_Vectors are boolean values -
+         they should be set to either 0 or 1.
+         <P>
+
 </UL>
-
 <P>
+
 Configuration files can be loaded into PAVE sessions in two ways -
 using the user interface or from the command line.  PAVE's main
 window now has a "File... Choose Configuration File For New Tile Plots"
@@ -3988,25 +4175,30 @@ is buried.
 </UL>
 
 <H3> <A NAME="NewFeatures1.3"> New Features in PAVE v1.3</A> </H3>
-There are a number of new features in this version that you may find
-useful, including:<P>
-<UL>
-        <LI> User controllable unit labels
 
-        <LI> The default color map for tile plots has been
-             improved
+    <BLOCKQUOTE>
+    There are a number of new features in this version that you may find
+    useful, including:<P>
+    <UL>
+            <LI> User controllable unit labels
 
-        <LI> MPEG animations can now be saved under Solaris 2.5
+            <LI> The default color map for tile plots has been
+                 improved
 
-        <LI> The IBM version has been upgraded from AIX3 to AIX4
+            <LI> MPEG animations can now be saved under Solaris 2.5
 
-        <LI> Several bugs that caused crashes have been fixed
+            <LI> The IBM version has been upgraded from AIX3 to AIX4
 
-</UL>
+            <LI> Several bugs that caused crashes have been fixed
+
+    </UL>
+    </BLOCKQUOTE>
 
 
 <H3> <A NAME="NewFeatures1.3beta"> New Features in PAVE v1.3beta</A> </H3>
-<UL>
+
+    <BLOCKQUOTE>
+    <UL>
         <LI> Saving RGB, PostScript, XWD, and Gif images
 
         <LI> Saving MPEG animations
@@ -4038,7 +4230,8 @@ useful, including:<P>
 
         <LI> Command line arguments for many of the above features
 
-</UL>
+    </UL>
+    </BLOCKQUOTE>
 
 <P><A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
@@ -4046,129 +4239,140 @@ useful, including:<P>
 <HR> <!----------------------------------------------------------------->
 <H2><A NAME="FutureDev">16.	Future PAVE Development</A> </H2>
 
-PAVE is no longer supported by CMAS; its distribution is now currently
-done by Carlie J. Coats, Jr., on an un-funded personal basis, because
-it is more accessible than many alternatives, and can be adapted to 
-support huge data sets (unlike some of the alternatives.
-<P>
-
-PAVE is now widely used by the Air Quality Modeling Community.
-We are appreciative of the communities contributions and adoption 
-of this visualization product.  We are seeking to pool together 
-funding to support requests for enhancements and bug fixes 
-from multiple groups to enable the continued support of this product.  
-If you or someone you know is interested in some of these features 
-and if you are able to provide funding, or ideas about how to obtain 
-funding to continue development, please contact me via 
-email  <A HREF="mailto:carlie@jyarborough.com">carlie@jyarborough.com</A>.<br><P>
-
-Some of the features CMAS would have liked to add, as of version 2.3,
-are listed below.  If you know of additional features that the community
-would benefit, please contact me as described above. <P>
-
-<UL>
-
-    <LI><B>Support CF-format netCDF</B><P>
-
-    See <A HREF="http://cfconventions.org/">http://cfconventions.org/</A>
+    <BLOCKQUOTE>
+    PAVE is no longer supported by CMAS; its distribution is now
+    currently done by Carlie J. Coats, Jr., on an un-funded personal
+    basis, for the good of the environmental modeling community and
+    because it is more accessible than many alternatives, and can be
+    adapted to  support huge data sets (unlike some of the
+    alternatives).
     <P>
 
-    <LI><B> Update external software</B><P>
-
-    It would be a good idea to update PAVE to use the most recent versions of
-    BLT for time series plots, Tcl/Tk, and PLPLOT.
-    <P>
-    <STRONG><EM>Done, at least partially, for <CODE>pave-3.0</CODE>.</EM></STRONG>
-    <P>
-
-    <LI><B> Update MPEG generation to use ImageMagick</B><P>
-
-    Currently the MPEG generation uses an old technique.  It would be good
-    to update this to use ImageMagick to generate MPEGs as well as the
-    other formats.</p>
-
-    <LI><B> Fix Lesstif issues of window placement and closing</B><P>
-
-    Currently, when Lesstif is used, some of the default windows don't come
-    up in the correct positions and the Close buttons don't work properly.</p>
-    <STRONG><EM>Now uses OpenMotif.  Done, for <CODE>pave-3.0</CODE>?</EM></STRONG>
+    PAVE is now widely used by the Air Quality Modeling Community. We
+    are appreciative of the communities contributions and adoption  of
+    this visualization product.  We are seeking to pool together 
+    funding to support requests for enhancements and bug fixes  from
+    multiple groups to enable the continued support of this product.  
+    If you or someone you know is interested in some of these features 
+    and if you are able to provide funding, or ideas about how to
+    obtain  funding to continue development, please contact me via 
+    email  <A HREF="mailto:carlie@jyarborough.com">carlie@jyarborough.com</A>.
     <P>
 
-    <LI><B> Improved statistical capabilities</B><P>
+    Some of the features CMAS would have liked to add, as of version 2.3,
+    are listed below.  If you know of additional features that the community
+    would benefit, please contact me as described above. <P>
 
-       People often want to use simple statistics to assist with their data
-    analysis (e.g. mean, std. dev.).  It would be good if PAVE could produce
-    these.  In addition, people may want to slice the data in different ways to
-    obtain these statistics (e.g. mean for each time step or for each vertical
-    layer).  There are also a number of commonly used statistics that deal with
-    comparing model data with observations.  We may want to examine the "tables" 
-    generated for OTAG for ideas for other typically used statistics.<P>
+    <UL>
 
-    <LI><B> Properly visualize polar stereographic and other data</B><P>
+        <LI><B>Support CF-format netCDF</B><P>
 
-    Only limited testing has been done using PAVE with the polar stereographic
-    map projection.  More testing is required, and any bug fixes should be 
-    implemented.
-    <P>
-    <STRONG><EM>Done, for <CODE>pave-3.0</CODE>.  Also added support
-    (as yet relatively un-tested) for Albers Equal Area and Transverse
-    Mercator projections.</EM></STRONG>
-    <P>
+        See <A HREF="http://cfconventions.org/">http://cfconventions.org/</A>
+        <P>
 
-    <LI><B> Add new types of plots and options for existing ones</B><P>
+        <LI><B> Update external software</B><P>
 
-       Additional kinds of plots have been requested by users.  Some examples
-    include: vertical cross section plots where the size of the layers is
-    proportional to actual layer size, vertical profiles, contour plots, flux
-    plots, observational data plots described above, PIG plots, nested grid plots,
-    adaptive grid plots, box & whisker plots.  Also, making scatter plots internal 
-    to PAVE would help reduce the problems associated with transferring data to 
-    BLT and would provide additional flexibility.
-    <P>
+        It would be a good idea to update PAVE to use the most recent versions of
+        BLT for time series plots, Tcl/Tk, and PLPLOT.
+        <P>
+        <STRONG><EM>Done, at least partially, for <CODE>pave-3.0</CODE>.</EM></STRONG>
+        <P>
 
-    <LI><B> Improve use of map backgrounds</B><P>
+        <LI><B> Update MPEG generation to use ImageMagick</B><P>
 
-    It would be useful to be able to plot multiple maps (e.g. state + counties, 
-    or counties + roads) using different colors and thicknesses as needed.  
-    Another possibility would be to allow backgrounds generated by packages such 
-    as GISs to be displayed - these might show roads, water, cities, etc.
-    <P>
-    <STRONG><EM>New maps addedfor <CODE>pave-3.0</CODE>.</EM></STRONG>
-    <P>
+        Currently the MPEG generation uses an old technique.  It would be good
+        to update this to use ImageMagick to generate MPEGs as well as the
+        other formats.</p>
 
-    <LI><B> Increase configurability of plots</B><P>
+        <LI><B> Fix Lesstif issues of window placement and closing</B><P>
 
-       It would be useful in some cases to allow users to define the cutoffs
-    between the colors plotted (currently PAVE makes each bin of equal size from
-    the min to the max).  Another alternative might include assigning bins according
-    to percentiles.  Additional configuration options could be added to vector 
-    plots wrt the density of the vectors plotted.<P>
+        Currently, when Lesstif is used, some of the default windows don't come
+        up in the correct positions and the Close buttons don't work properly.</p>
+        <STRONG><EM>Now uses OpenMotif.  Done, for <CODE>pave-3.0</CODE>?</EM></STRONG>
+        <P>
 
-    <LI><B> Improve plot labeling &amp; layout</B><P>
+        <LI><B> Improved statistical capabilities</B><P>
 
-       The density and location of grid cell numbering on tile plots and in the 
-    domain selector could be improved. Also, the legend could be outlined in black
-    to set off any white or light values and be positioned relative to the size of
-    the legend labels.  The size of tile plots could be made user configurable, 
-    and the aspect ratio preserved when the plot is manually resized.  Data 
-    plotted on time series plots could be labeled more clearly.  <P>
+        People often want to use simple statistics to assist with their data
+        analysis (e.g. mean, std. dev.).  It would be good if PAVE could produce
+        these.  In addition, people may want to slice the data in different ways to
+        obtain these statistics (e.g. mean for each time step or for each vertical
+        layer).  There are also a number of commonly used statistics that deal with
+        comparing model data with observations.  We may want to examine the "tables" 
+        generated for OTAG for ideas for other typically used statistics.<P>
 
-    <LI><B> Optimize PAVE performance and memory usage</B><P>
+        <LI><B> Properly visualize polar stereographic and other data</B><P>
 
-    PAVE performance, both CPU and memory related, can be improved in a number
-    of ways.  For example, loops can be reordered to reduce paging to disk, memory
-    leaks can be plugged, and memory can be reused in some formulas.
-    <P>
-    <STRONG><EM>Done, for <CODE>pave-3.0</CODE>.</EM></STRONG>
-    <P>
+        Only limited testing has been done using PAVE with the polar stereographic
+        map projection.  More testing is required, and any bug fixes should be 
+        implemented.
+        <P>
+        <STRONG><EM>Done, for <CODE>pave-3.0</CODE>.  Also added support
+        (as yet relatively un-tested) for Albers Equal Area and Transverse
+        Mercator projections.</EM></STRONG>
+        <P>
 
-    <LI><B> and many more...</B><P>
-</UL>
+        <LI><B> Add new types of plots and options for existing ones</B><P>
+
+           Additional kinds of plots have been requested by users.  Some examples
+        include: vertical cross section plots where the size of the layers is
+        proportional to actual layer size, vertical profiles, contour plots, flux
+        plots, observational data plots described above, PIG plots, nested grid plots,
+        adaptive grid plots, box & whisker plots.  Also, making scatter plots internal 
+        to PAVE would help reduce the problems associated with transferring data to 
+        BLT and would provide additional flexibility.
+        <P>
+
+        <LI><B> Improve use of map backgrounds</B><P>
+
+        It would be useful to be able to plot multiple maps (e.g. state + counties, 
+        or counties + roads) using different colors and thicknesses as needed.  
+        Another possibility would be to allow backgrounds generated by packages such 
+        as GISs to be displayed - these might show roads, water, cities, etc.
+        <P>
+        <STRONG><EM>New maps addedfor <CODE>pave-3.0</CODE>.</EM></STRONG>
+        <P>
+
+        <LI><B> Increase configurability of plots</B><P>
+
+           It would be useful in some cases to allow users to define the cutoffs
+        between the colors plotted (currently PAVE makes each bin of equal size from
+        the min to the max).  Another alternative might include assigning bins according
+        to percentiles.  Additional configuration options could be added to vector 
+        plots wrt the density of the vectors plotted.<P>
+
+        <LI><B> Improve plot labeling &amp; layout</B><P>
+
+           The density and location of grid cell numbering on tile plots and in the 
+        domain selector could be improved. Also, the legend could be outlined in black
+        to set off any white or light values and be positioned relative to the size of
+        the legend labels.  The size of tile plots could be made user configurable, 
+        and the aspect ratio preserved when the plot is manually resized.  Data 
+        plotted on time series plots could be labeled more clearly.  <P>
+
+        <LI><B> Optimize PAVE performance and memory usage</B><P>
+
+        PAVE performance, both CPU and memory related, can be improved in a number
+        of ways.  For example, loops can be reordered to reduce paging to disk, memory
+        leaks can be plugged, and memory can be reused in some formulas.
+        <P>
+        <STRONG><EM>Done, for <CODE>pave-3.0</CODE>.</EM></STRONG>
+        <P>
+
+        <LI><B> and many more...</B><P>
+    </UL>
+
+    </BLOCKQUOTE>
 
 
 <A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
 
 <HR> <!- -------------------------------------------------------------- -->
+
+
+    <BLOCKQUOTE>
+    <A HREF="../index.html"><EM>Return To <STRONG>cjcoats.github.io</STRONG></EM></A>
+    </BLOCKQUOTE>
 
     <PRE>
 $Id: PaveManual.html 77 2018-03-12 15:29:37Z coats $
