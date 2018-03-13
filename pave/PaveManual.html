@@ -304,7 +304,7 @@ etscape]">
 
     The very first line of the metafile MUST be the following:
     <PRE>
-#! UAMV DESCRIPTION FILE
+    #! UAMV DESCRIPTION FILE
     </PRE>
 
     If PAVE does not find the above string, the file is considered to be
@@ -316,18 +316,18 @@ etscape]">
     are permitted. The following keywords are required (and are listed
     in the recommended order):
     <PRE>
-UAMV_FILE
-UAMV_TYPE
-NCOLS
-NROWS
-LEVELS
-XORG
-YORG
-DX or DLON
-DY or DLAT
-UTM_ZONE (for UTM-based domains only)
-FINE_GRID  (for UAM-V output files only - not for input meteorology files)
-TITLE
+    UAMV_FILE
+    UAMV_TYPE
+    NCOLS
+    NROWS
+    LEVELS
+    XORG
+    YORG
+    DX or DLON
+    DY or DLAT
+    UTM_ZONE (for UTM-based domains only)
+    FINE_GRID  (for UAM-V output files only - not for input meteorology files)
+    TITLE
     </PRE>
     <P>
 
@@ -376,72 +376,64 @@ TITLE
 
 
     Example of a UAM-V temperature metafile on the OTAG coarse grid:<P>
-<PRE>
-#! UAMV DESCRIPTION FILE
-UAMV_FILE /home/user/tmpr.cc.20jul93.ld.rams1
-UAMV_TYPE  Temp
-NCOLS      64
-NROWS      63
-LEVELS      5
-XORG       -99.0
-YORG       26.0
-DLON       0.5
-DLAT       0.3333333
-FINE_GRID  0
-TITLE      Coarse Grid Temperature: July 20, 1993
-</PRE>
+    <PRE>
+    #! UAMV DESCRIPTION FILE
+    UAMV_FILE /home/user/tmpr.cc.20jul93.ld.rams1
+    UAMV_TYPE  Temp
+    NCOLS      64
+    NROWS      63
+    LEVELS      5
+    XORG       -99.0
+    YORG       26.0
+    DLON       0.5
+    DLAT       0.3333333
+    FINE_GRID  0
+    TITLE      Coarse Grid Temperature: July 20, 1993
+    </PRE>
 
     Example of a UAM-V fine grid average metafile on the OTAG fine grid:<P>
-<PRE>
-#! UAMV DESCRIPTION FILE
-UAMV_FILE /home/trayanov/testpave/avrg.ff.20jul93-93.mc.93basA1
-UAMV_TYPE  FineGridAverage
-NCOLS      137
-NROWS      110
-LEVELS     7
-XORG       -92.0
-YORG       32.0
-DLON       0.16666667
-DLAT       0.11111111
-FINE_GRID  1
-TITLE      Base Case Fine Grid Average
-</PRE>
+    <PRE>
+    #! UAMV DESCRIPTION FILE
+    UAMV_FILE /home/trayanov/testpave/avrg.ff.20jul93-93.mc.93basA1
+    UAMV_TYPE  FineGridAverage
+    NCOLS      137
+    NROWS      110
+    LEVELS     7
+    XORG       -92.0
+    YORG       32.0
+    DLON       0.16666667
+    DLAT       0.11111111
+    FINE_GRID  1
+    TITLE      Base Case Fine Grid Average
+    </PRE>
 
     <A NAME="UTMMetaFile">Example of a UAM-V temperature file on a UTM-based grid:</A><P>
-<PRE>
-#! UAMV DESCRIPTION FILE
-UAMV_FILE /metdata/uamv.t.jun26-28.16km.8.v4
-UAMV_TYPE  Temp
-NCOLS      35
-NROWS      50
-LEVELS     8
-XORG       200.0
-YORG       4400.0
-DX         16.0
-DY         16.0
-UTM_ZONE   16
-FINE_GRID  0
-TITLE      Coarse Grid Temperature File
-</PRE>
+    <PRE>
+    #! UAMV DESCRIPTION FILE
+    UAMV_FILE /metdata/uamv.t.jun26-28.16km.8.v4
+    UAMV_TYPE  Temp
+    NCOLS      35
+    NROWS      50
+    LEVELS     8
+    XORG       200.0
+    YORG       4400.0
+    DX         16.0
+    DY         16.0
+    UTM_ZONE   16
+    FINE_GRID  0
+    TITLE      Coarse Grid Temperature File
+    </PRE>
 
     <B> Creating metafiles with scripts </B><P>
 
-    It is relatively straightforward to use a script to create metafiles.
-    Examples of scripts that do this follow.  However, the specifics (such as
-    parsing file names to determine file type) depend on the particular
-    application.  The two examples given below are for the OTAG project. Note
-    that these are hypertext links which are only available if you
-    are reading this document using a Web browser.<P>
-
-    <A HREF="make_in_metas">Script to create OTAG input metafiles</A><P>
-    <A HREF="make_out_metas">Script to create OTAG output metafiles</A><P>
-
-    The above scripts are provided with your PAVE installation.  They are called
-    make_in_metas and make_out_metas and are located in the 
-    scripts/ subdirectory of the top level directory where PAVE is installed.  
-    Before using them, be sure to edit
-    the upper portion of the scripts to match your episode and directory
-    structure.<P>
+    It is relatively straightforward to use a script to create
+    metafiles. Examples of scripts that do this follow.  However, the
+    specifics (such as parsing file names to determine file type) depend
+    on the particular application.  For PAVE-3.0,There are two examples
+    <VAR>make_in_metas</VAR> and <VAR>make_out_metas</VAR> that were
+    originally created for the OTAG project; these can be found in
+    <VAR>${PAVE_DIR}/bin/</VAR>
+    <P>
 
     <A NAME="chainfiles"> <B>Viewing multiple sequential files as one dataset
     using chain files</B></A><P>
@@ -470,12 +462,14 @@ TITLE      Coarse Grid Temperature File
     directory that contains the files you wish to chain, and type 
 
 <PRE>
-chain_files name_of_chain_file list_of_files_to_chain
+    chain_files name_of_chain_file list_of_files_to_chain
 </PRE> 
 
     For example:<P> 
 
-<PRE> chain_files avrg.cc.20-30jul93-93.mc.basB avrg.cc.* </PRE> <P>
+<PRE>
+    chain_files avrg.cc.20-30jul93-93.mc.basB avrg.cc.*
+</PRE> <P>
 
 
     <B>Limitations:</B>
@@ -486,10 +480,10 @@ chain_files name_of_chain_file list_of_files_to_chain
 
     Here is an example of a chain file:<P>
 <PRE>
-#! LIST_OF_CHAINED_FILES
-/home/trayanov/testpave/rain.cc.20jul93.ai.meta
-/home/trayanov/testpave/rain.cc.21jul93.ai.meta
-/home/trayanov/testpave/rain.cc.22jul93.ai.meta
+    #! LIST_OF_CHAINED_FILES
+    /home/trayanov/testpave/rain.cc.20jul93.ai.meta
+    /home/trayanov/testpave/rain.cc.21jul93.ai.meta
+    /home/trayanov/testpave/rain.cc.22jul93.ai.meta
 </PRE>
 
     <A HREF="#TOC"><EM>Return To <STRONG>Table of Contents</STRONG></EM></A>
