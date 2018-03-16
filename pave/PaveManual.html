@@ -2,8 +2,6 @@
 <HTML>
 <HEAD>
    <TITLE>PAVE User Guide</TITLE>
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.01Gold (X11; U; SunOS 5.5 sun4m) [N
-etscape]">
 </HEAD>
 <BODY BGCOLOR="#FFFFFF">
 
@@ -245,15 +243,24 @@ etscape]">
     https:cjcoats.github.io/ioapi/AA.html</A> for further info) provides
     an easy-to-learn, easy-to-use programming interface to files for the
     air quality model developer and model-related-tool developer, in
-    both FORTRAN and C/C++. I/O&nbsp;API files are portable across
+    both Fortran and C/C++. I/O&nbsp;API files are portable across
     computing platforms.  This means that the same file can be read on a
-    Sun workstation, a DEC Alpha workstation, and on a Cray
+    PC, a Sun workstation, a DEC Alpha workstation, and on a Cray
     supercomputer. If your data is not already in I/O&nbsp;API, UAM-IV,
     or UAM-V format,formats we recommend that you use a translation
     program such as  those found in the I/O&nbsp;API's
     <VAR>m3tools</VAR> package to convert  your data into I/O&nbsp;API
     format.  Note that these latter are available in source code form,
-    so that you may adapt them easily to your needs.
+    so that you may adapt them easily to your needs. See in particular
+    <UL>
+        <LI> <STRONG><VAR>airnow2m3</VAR></STRONG> (documentation pending, or see source.)
+        <LI> <A HREF="https://cjcoats.github.io/ioapi/AIRS2M3.html"><STRONG><VAR>airstom3</VAR></STRONG></A>
+        <LI> <A HREF="https://cjcoats.github.io/ioapi/CAMXTOM3.html"><STRONG><VAR>camxtom3</VAR></STRONG></A>
+        <LI> <A HREF="https://cjcoats.github.io/ioapi/M3FALE.html"><STRONG><VAR>m3fake</VAR></STRONG></A>
+             for CSV ASCII data
+        <LI> <A HREF="https://cjcoats.github.io/ioapi/MPASTOM3.html"><STRONG><VAR>mpastom3</VAR></STRONG></A>
+        <LI> <A HREF="https://cjcoats.github.io/ioapi/WRFTOM3.html"><STRONG><VAR>wrftom3</VAR></STRONG></A>
+    </UL>
     <P>
 
 
@@ -3677,10 +3684,12 @@ There are several minor bug fixes with this release:<P>
 
 <H3> <A NAME="NewFeatures1.4"> New Features in PAVE v1.4</A> </H3>
 
-<UL>
-<LI> <B>The following operators have been added to PAVE's formula parser:</B><P>
+    <BLOCKQUOTE>
 
-<PRE>
+    <UL>
+        <LI> <B> The following operators have been added to PAVE's formula parser:</B><P>
+
+        <PRE>
    Op   Name                  Function
    --   ----                  --------
  a &lt;  b Less than             Returns 1 if a &lt;  b, else 0
@@ -3691,15 +3700,15 @@ There are several minor bug fixes with this release:<P>
  a != b Not equal             Returns 1 if a does not equal b, else 0
  a && b And                   Returns 1 if a != 0 and b != 0, else 0
  a || b Or                    Returns 1 if a != 0 or b != 0, else 0
-</PRE>
+        </PRE>
 
-  Please note that PAVE's operator precedence (highest to lowest)
-  is as follows.  If you wish to override the precedence given below,
-  or are uncertain as to which operator will take precedence, you can
-  feel free to use parentheses in your formulas.  This will force
-  expressions within the parentheses to be evaluated first.<P>
+        Please note that PAVE's operator precedence (highest to lowest)
+        is as follows.  If you wish to override the precedence given below,
+        or are uncertain as to which operator will take precedence, you can
+        feel free to use parentheses in your formulas.  This will force
+        expressions within the parentheses to be evaluated first.<P>
 
-<PRE>
+        <PRE>
   Highest  1) abs, log, sqr, sqrt, exp, ln, sin, cos, tan, sind, cosd,
   Precedence  tand, minx, miny, minz, max, maxy, maxz, mean, min, max,
               sum, mint, maxt
@@ -3711,138 +3720,151 @@ There are several minor bug fixes with this release:<P>
            7) &&
   Lowest   8) ||
   Precedence
-</PRE>
+        </PRE>
 
 
-<LI><B>Variables from UAM and netCDF formatted data files can now be mixed
-  within the same formula</B>, and a suitable map will be produced,
-  provided the variables lie on the same domain and have the same map
-  projection.  In addition, minor discrepancies in the precision of
-  the map information associated with the variables will not prevent
-  PAVE from drawing a map in the plots.<P>
+        <LI> <B>Variables from UAM and netCDF formatted data files can
+             now be mixed within the same formula</B>, and a suitable map
+             will be produced, provided the variables lie on the same domain
+             and have the same map projection.  In addition, minor
+             discrepancies in the precision of the map information
+             associated with the variables will not prevent PAVE from
+             drawing a map in the plots.
+             <P>
 
 
-<LI> <B>PAVE now "plots" formulas that result in a single number</B> (for exampl
-e,
-  "mean(O3a)") by sending that single number to the text window, along
-  with information about the time and domain currently selected.<P>
+        <LI> <B> PAVE now "plots" formulas that result in a single number</B> 
+             (for example, <CODE>mean(O3a)</CODE>) by sending that single
+             number to the text window, along with information about the
+             time and domain currently selected.
+             <P>
 
 
-<LI> <B>The data is now labeled much more clearly on all time series plots</B>.
-  The annotations include information on the spatial and temporal
-  subdomin used to get the data for the plot, as well as the datasets
-  used.<P>
+        <LI> <B> The data is now labeled much more clearly on all time series plots</B>.
+                 The annotations include information on the spatial and
+                 temporal subdomin used to get the data for the plot, as
+                 well as the datasets used.
+                 <P>
 
 
-<LI> <B>There is now a black frame drawn around a tile plot's color legend</B>.
-  This makes the legend much more readable when white is chosen as one
-  of the colors.<P>
+        <LI> <B>There is now a black frame drawn around a tile plot's color legend</B>.
+             This makes the legend much more readable when white is chosen
+             as one of the colors.
+             <P>
 
-<LI> <B>PAVE now displays "PAVE by MCNC"</B> in tiny letters on tile plots
-  and bar plots.<P>
+        <LI> <B>PAVE now displays "PAVE by MCNC"</B> in tiny letters on
+             tile plots and bar plots.
+             <P>
 
-<LI> <B>There are now several new command line arguments</B> that can be 
-  given to PAVE.  They are:<P>
+        <LI> <B>There are now several new command line arguments</B>
+             that can be given to PAVE.  They are:
+             <BLOCKQUOTE>
+             <DL>
+                <DT><CODE> <B>-barplotYformat</B> &lt;format string&gt;</CODE>
+                <DD>  <CODE>&lt;format string&gt;</CODE> is a format character 
+                      string that will be used by <VAR>sprintf()</VAR> to
+                      draw the y axis labels on bar plots.  The default
+                      format is <VAR>%g</VAR>.  NOTE:  This option does not
+                      work on the IBM platform.
+                      <P>
+                <DT><CODE> <B>-tileYlabelsOnRight</B></CODE>
+                <DD> The <CODE>-tileYlabelsOnRight</CODE> causes the tile plot's
+                     Y axis labels to appear on the right hand side of the
+                     plot, rather than the default of the left hand side.
+                     <P>
+                <DT><CODE> <B>-subTitle1</B> &quot;&lt;sub title 1 string&gt;&quot;<BR>
+                           <B>-subTitle2</B> &quot;&lt;sub title 2 string&gt;&quot;</CODE>
+                <DD> The <CODE>-subTitle1</CODE> and <CODE>-subTitle2</CODE> arguments allow
+                     the user to control a tile or vector plot's subtitles if desired.<P>
 
-<PRE>
-        <B>-barplotYformat</B> &lt;format string&gt;
-        <B>-tileYlabelsOnRight</B>
-        <B>-subTitle1</B> "&lt;sub title 1 string&gt;"
-        <B>-subTitle2</B> "&lt;sub title 2 string&gt;"
-        <B>-height</B> &lt;tile plot height in pixels&gt;
-        <B>-width</B> &lt;tile plot width in pixels&gt;
-	<B>-copyright</B>
-	<B>-system</B> "&lt;System Command&gt;"
-</PRE>
+                <DT><CODE> <B>-height</B> &lt;tile plot height in pixels&gt;<BR>
+                           <B>-width</B> &lt;tile plot width in pixels&gt;</CODE>
+                <DD> The <CODE>-width</CODE> and <CODE>-height</CODE> command line  
+                     arguments have been added to PAVE, to allow the user to
+                     control a tile plot's width and height in pixels. All
+                     subsequent plots will use the supplied value for
+                     height/width, until a non-positive value is supplied as
+                     a subsequent argument.  At that point PAVE's default
+                     height/width will be used.
+                     <P>
+                <DT><CODE> <B>-copyright</B></CODE>
+                <DD> The <CODE>-copyright</CODE> option prints out copyright
+                     information on PAVE itself and the third party
+                     &quot;external library&quot; applications that it uses.
+                     <P>
+                <DT><CODE> <B>-system</B> &quot;&lt;System Command&gt;&quot;</CODE>
+                <DD> The <CODE>-system</CODE> option allows the user to supply a
+                     command to be fed to the Unix command line using a call
+                     to the system() library routine.
+                     <P>
+             </DL>
+             </BLOCKQUOTE>
 
-  <B>&lt;format string&gt;</B> is a format character string that will be used by
-  sprintf() to draw the y axis labels on bar plots.  The default
-  format is %g.  NOTE:  This option does not work on the IBM platform.<P>
-
-  The <B>-tileYlabelsOnRight</B> causes the tile plot's Y axis labels to appear
-  on the right hand side of the plot, rather than the default of the
-  left hand side.<P>
-
-
-  The <B>-width</B> and <B>-height</B> command line arguments 
-  have been added to PAVE, to allow the user to control a tile
-  plot's width and height in pixels.
-  All subsequent plots will use the supplied value for height/width, until
-  a non-positive value is supplied as a subsequent argument.  At that point
-  PAVE's default height/width will be used.<P>
-
-  The <B>-subTitle1</B> and <B>-subTitle2</B> arguments allow
-     the user to control a tile or vector plot's subtitles if desired.<P>
-
-
-  The <B>-copyright</B> option prints out copyright
-  information on PAVE itself and all of the third party public
-  domain applications that it uses.<P>
-
-
-  The <B>-system</B> option allows the user to supply a
-  command to be fed to the Unix command line using a call to the
-  system() library routine.<P>
-
-
-<LI><B>There are several user interface changes in this version.</B><P>
-
- <B>The "close" and "quit" menu items have been removed from the Motif
-  menu</B> accessed from the upper left hand corner of a tile plot window or
-  a time series bar plot window.<P>
-
-
- <B>A Tile Plots "Configure..." window has been reorganized</B> to
-  be smaller, in order to fit on smaller displays.<P>
-
-
- <B>Several other minor user interface improvements</B> have been made.<P>
-
-
-
-<LI><B>There are several bug fixes in this version.</B><P>
-
- <B>A bug with colors and tile plot configuration files has been resolved</b
->.
-  Users can now select a configuration file with color information in it,
-  make plots, and then select a configuration file without color information,
-  and the original colormaps will correctly be used.<P>
+        <LI> <B>There are several user interface changes in this version.</B>
+             <UL>
+                <LI> <B>The &quot;close&quot; and &quot;quit&quot; menu items
+                     have been removed from the Motif menu</B> accessed from
+                     the upper left hand corner of a tile plot window or a
+                     time series bar plot window.
+                     <P>
+                <LI> <B>A Tile Plots &quot;Configure...&quot; window has been
+                      reorganized</B> to be smaller, in order to fit on smaller
+                      displays.
+                      <P>
+                <LI>  <B>Several other minor user interface improvements</B>
+                      have been made.
+                      <P>
+             </UL>
 
 
- <B>Closing a tile plot while it is animating no longer causes PAVE to crash
-</B>.<P>
+        <LI><B>There are several bug fixes in this version.</B><P>
+             <UL>
+                <LI> <B>A bug with colors and tile plot configuration files
+                     has been resolved</b>. Users can now select a
+                     configuration file with color information in it, make
+                     plots, and then select a configuration file without color
+                     information, and the original colormaps will correctly be
+                     used.
+                     <P>
+                <LI> <B>Closing a tile plot while it is animating no longer
+                     causes PAVE to crash </B>.
+                     <P>
+                <LI> <B>Chained files with greater than one layer no longer
+                     cause PAVE to crash</B>.
+                     <P>
+                <LI>  <B>Double clicking on the upper left hand corner of the
+                      main PAVE window, a tile plot window, or time series bar
+                      plot window will now have no effect</B> . Previously,
+                      this caused PAVE to immediately crash.
+                      <P>
+                <LI> <B><CODE>NaN</CODE> (bogus not-a-number) data in a
+                      tile plot no longer causes PAVE to crash</B>. 
+                      Instead, a warning message is printed to the
+                      <VAR>stderr</VAR> stream, and no color is plotted in
+                      that part of the image.
+                      <P>
+                <LI> <B>PAVE no longer kills all processes in its process
+                      group when exiting</B>.  This means that parent processes
+                      (such as VisDriver or the EDSS Console) will remain alive
+                      when PAVE exits. However it also means that any mesh
+                      plots will prevent PAVE's completion, until they are quit
+                      out of individually.
+                      <P>
+                <LI> <B>Several other minor bugs have been fixed</B>.
+                <P>
+             </UL>
 
-
- <B>Chained files with greater than one layer no longer cause PAVE to
-  crash</B>.<P>
-
-
- <B>Double clicking on the upper left hand corner of the main PAVE window,
-  a tile plot window, or time series bar plot window will now have no effect</B>
-.
-  Previously, this caused PAVE to immediately crash.<P>
-
- <B>nan (bogus not-a-number) data in a tile plot no longer causes PAVE
-  to crash</B>.  Instead, a warning message is printed to the stderr stream, and
-  no color is plotted in that part of the image.<P>
-
-
- <B>PAVE no longer kills all processes in its process group when
-  exiting</B>.  This means that parent processes (such as VisDriver
-  or the EDSS Console) will remain alive when PAVE exits.
-  However it also means that any mesh plots will prevent PAVE's
-  completion, until they are quit out of individually.<P>
-
-
- <B>Several other minor bugs have been fixed</B>.<P>
-</UL>
+    </UL>
+    </BLOCKQUOTE>
 
 <H3> <A NAME="NewFeatures1.4b"> New Features in PAVE v1.4 beta</A> </H3>
 
 Version 1.4 beta fixes an X-Window related bug that caused
 PAVE to crash occasionally with certain selected domains of interest.
-<H3> <A NAME="NewFeatures1.4a"> New Features in PAVE v1.4 alpha</A> </H3>
-There are a number of new features in this version that you may find
+
+]<H3> <A NAME="NewFeatures1.4a"> New Features in PAVE v1.4 alpha</A> </H3>
+T
+here are a number of new features in this version that you may find
 useful, including:<P>
 <UL>
         <LI>
@@ -3866,9 +3888,9 @@ in general.
 in tile plots, using a Color Chooser window that
 enables setting of the individual red, green, and blue
 components on a 0..255 scale using sliders.  This window is
-accessible from a tile plot's "Control...Configure.."
+accessible from a tile plot's &quot;Control...Configure..&quot;
 window, by clicking on the color shown in the
-"Edit Color #" box.  For ideas on colors to use, see the file
+&quot;Edit Color #&quot; box.  For ideas on colors to use, see the file
 <PRE>/usr/lib/X11/rgb.txt</PRE> for non-Suns or
 <PRE>/usr/openwin/lib/X11/rgb.txt</PRE> on Suns.
 <P>
@@ -3884,8 +3906,8 @@ window, by clicking on the color shown in the
 <LI> 
 <B>There are now two additional titles that are user controllable
 on the PAVE tile plots.</B>  These can be changed using a tile plot's
-"Control...Configure.." window.  They are called
-"Subtitle 1" and "Subtitle 2".  Subtitle 1 is usually initialized
+&quot;Control...Configure..&quot; window.  They are called
+&quot;Subtitle 1&quot; and &quot;Subtitle 2&quot;.  Subtitle 1 is usually initialized
 to an empty string (and therefore not shown on the plot), but if
 a UAM data file is used to create the plot, then the file_id
 character string will be used.  Subtitle 2 is initialized to a list
@@ -3894,25 +3916,25 @@ of datasets used to make that plot.
              
 <LI>
 <B>There is now a vector scale that is user controllable.</B>
-Using a vector plot's "Control...Configure.." window, the
-user can select the "Scale Vectors" radio button to scale
+Using a vector plot's &quot;Control...Configure..&quot; window, the
+user can select the &quot;Scale Vectors&quot; radio button to scale
 them by vector magnitude, as opposed to the default which is
-to use a unit vector length for all vectors.  Once "Scale Vectors"
-is selected, then the value contained in the "Vector Scale"
+to use a unit vector length for all vectors.  Once &quot;Scale Vectors&quot;
+is selected, then the value contained in the &quot;Vector Scale&quot;
 typein widget will be used to scale the length.  The default
 vector scale is 1.
 <P>
 
 <LI>
 <B>A Tile Plot's File menu now has the following menu items:
-"Time Series At Max Point" and "Time Series At Min Point"</B>,
+&quot;Time Series At Max Point&quot; and &quot;Time Series At Min Point&quot;</B>,
 which find the location of the min or max value in that
 tile plot's data, and plots a time series of the data at
 that point.
 <P>
 
 <LI> 
-<B>A Tile Plot's Interact menu now has a "Time Series" menu
+<B>A Tile Plot's Interact menu now has a &quot;Time Series&quot; menu
 item.</B>  This interact mode causes a time series to be
 generated for a tile plot's data over a point or region
 that is dragged or clicked on.
@@ -3929,7 +3951,7 @@ is because each hour I's calculation is computed using
 
         O3a:I+1 - O3a:I
 
-Note that only "atomic" variables may be used in formulas
+Note that only &quot;atomic&quot; variables may be used in formulas
 using this operator.  You cannot make such formulas any
 more complex than the above example, ie the following
 would be ILLEGAL: d[O3a+O3a]/dt and d[O3a]/dt+O3a.
@@ -3959,7 +3981,7 @@ by a beep from their terminal.
 <B>If the user wishes to save the parameter file used by mpeg_encode
 to create an MPEG animation, there is an option under a tile
 plot's Control...Configure window to enable this.</B>  Checking
-on the "Keep MPEG Input" button will cause the following files
+on the &quot;Keep MPEG Input&quot; button will cause the following files
 to remain in the same directory as any MPEGs saved from that
 tile plot:
 <P>
@@ -3972,12 +3994,12 @@ tile plot:
 </PRE>
 <P>
 Note that the MPEG animation will be generated regardless of
-the setting of the "Keep MPEG Input" button.
+the setting of the &quot;Keep MPEG Input&quot; button.
 <P>
 
 Parameter files are used by mpeg_encode to generate the MPEG
 files from a stream of XWD images saved by PAVE.  If you want
-to generate an MPEG file "manually" using mpeg_encode, the
+to generate an MPEG file &quot;manually&quot; using mpeg_encode, the
 command line format is:
 <P>
 
@@ -4072,7 +4094,7 @@ file:
     <LI> The colors are denoted by values for the red, green, and
       blue components of each color, respectively, in a 0..255 (inclusive)
       scale.  The fourth entry in each color line should be of
-      the form "ColorNumberI", where I is the number of the color
+      the form &quot;ColorNumberI&quot;, where I is the number of the color
       (1..Number_Tiles) being described on that line.
     <P>
 
@@ -4081,7 +4103,7 @@ file:
          <P>
 
     <LI> The Legend_Format line expects its argument to be that
-         usable by the C language's printf() routine for formatting
+         usable by the C language's <VAR>printf()</VAR> routine for formatting
          a float for output.
          <P>
 
@@ -4105,14 +4127,15 @@ configuration file is specified to PAVE.
 <P>
 
         <LI>
-<B>The "Formulas...Edit/Select From Formula List" window has
-been modified somewhat to facilitate easier additions of a number
-of formulas.</B>  From left to right, the buttons on now read "Add",
-"Close", and "Delete".  The first formula typed in by a user should
-be followed by a click on the "Add" button.  Once that occurs, the
-default button will be "Add".  Each subsequent formula need only
-be followed by a carriage return, which will then perform the
-same function as clicking on the "Add" button.
+<B>The &quot;Formulas...Edit/Select From Formula List&quot; window has
+been modified somewhat to facilitate easier additions of a number of
+formulas.</B>  From left to right, the buttons on now read
+&quot;Add&quot;, &quot;Close&quot;, and &quot;Delete&quot;.  The first
+formula typed in by a user should be followed by a click on the
+&quot;Add&quot; button.  Once that occurs, the default button will be
+&quot;Add&quot;.  Each subsequent formula need only be followed by a
+carriage return, which will then perform the same function as clicking
+on the &quot;Add&quot; button.
 <P>
 
         <LI>
@@ -4369,7 +4392,7 @@ is buried.
     </BLOCKQUOTE>
 
     <PRE>
-$Id: PaveManual.html 77 2018-03-12 15:29:37Z coats $
+$Id: PaveManual.html 87 2018-03-14 13:34:05Z coats $
     </PRE>
 
 Send comments to
