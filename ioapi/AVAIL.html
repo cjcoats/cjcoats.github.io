@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 77 2018-01-18 15:29:37Z coats $" -->
+<!-- "$Id: AVAIL.html 90 2018-03-21 17:18:07Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -193,6 +193,13 @@ m3stat:
                        <CODE>tar</CODE>-file; for previous versions, the
                        untar-operation above will undo your
                        customization.
+                       <P>
+                       You will need to copy the relevant <CODE>Makefile.*</CODE>
+                       templates to <CODE>Makefile</CODE> in the
+                       <VAR>${BASEDIR}/ioapi</VAR> and
+                       <VAR>${BASEDIR}/m3tools</VAR> directories.  For
+                       most users, you want to start with
+                       <CODE>Makefile.nocpl</CODE>.
                        <P>
                        In particular, you will need to customize
                        <VAR>make</VAR>-variables <CODE>BASEDIR</CODE>
@@ -834,12 +841,17 @@ or (PGI)
     Version&nbsp;3.6, <VAR>netCDF</VAR> supports a new variant of the
     underlying data format, with essentially no (software based)
     limitations on file, record, or array size.  This format is not
-    yet supported by the I/O&nbsp;API (partly because the old and new
+    yet supported by older versions of the I/O&nbsp;API (partly because the old and new
     <VAR>netCDF</VAR> formats are not fully compatible); design analysis
-    is in progress at this time (May&nbsp;2005), and means are
-    necessary to specify which files will be opened with which format.
-    Certain individuals, we are informed, have modified the
-    I/O&nbsp;API to use the new 64-bit netCDF format.
+    was in progress in 2005, and for I/O&nbsp;API versions 3.1 and
+    later, large-file support is automatic for input files and can be
+    turned on for output files by doing the following before running the
+    relevant model (this is the default for I/O&nbsp;3.2):
+    <BLOCKQUOTE><CODE>
+    setenv IOAPI_OFFSET_64 YES
+    </COE></BLOCKQUOTE>
+    See <A HREF="ENVIRONMENT.html">Standard I/O&nbsp;API environment variables</A>
+    in the documentation.
     <P>
 
     For more information, see URL
@@ -1571,7 +1583,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 77 2018-01-18 15:29:37Z coats $
+    $Id: AVAIL.html 90 2018-03-21 17:18:07Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
