@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 90 2018-03-21 17:18:07Z coats $" -->
+<!-- "$Id: AVAIL.html 92 2018-03-27 15:53:01Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -37,6 +37,9 @@
         <LI>  <A HREF = "#v22">I/O&nbsp;API Version&nbsp;2.2</A>
         <LI>  <A HREF = "#v21">I/O&nbsp;API Version&nbsp;2.0 and 2.1</A>
                <P>
+        <LI>  <STRONG><A HREF = "#win64">NOTES on <VAR>CygWin</VAR>
+              under MS Windows</A></STRONG>
+              <P>
         <LI>  <STRONG><A HREF = "#ncf4">NOTES on <VAR>netCDF</VAR> Version&nbsp;4</A></STRONG>
               <P>
         <LI>  <STRONG><A HREF = "#gfort">NOTES on <VAR>gfortran</VAR></A></STRONG>
@@ -669,6 +672,73 @@ or (PGI)
 
 <HR> <!----------------------------------------------------------------->
 
+    <H3><A NAME="win64">NOTES on <VAR>CygWin</VAR> under MS Windows</A></H3>
+
+    <BLOCKQUOTE>
+    I/O&nbsp;API Version&nbsp;3.2 can be successfully installed under
+    the CygWin64 unix-emulation environment for Microsoft Windows.  You
+    will need to make sure you install a good development environment
+    with it; fortunately, what you need is available in the Cygwin
+    repositories.
+    <P>
+
+    My recommendation is to install CygWin64 with at least the following
+    additional packages:
+    <BLOCKQUOTE><CODE>
+    binutils cmake coreutils diffutils dos2unix findutils gcc-core
+    gcc-gfortran gcc-g++ gdb git gnuplot grep libcurl-devel libcurl4
+    libgd-devel libgd3 libhdf5-devel libhdf5_10 libjpeg-devel libjpeg8
+    libnetcdf libnetcdf-devel libnetcdf-fortran libnetcdf-fortran-devel
+    libpng16-devel libpng16 libtool netcdf netcdf-fortran ncview openmpi
+    tar tcsh tree util-linux vim wget xhost xinit xorg-server xorg-x11-fonts-dpi100
+    xterm xxdiff zlib zlib-devel zlib0 
+    </CODE></BLOCKQUOTE>
+    Note that this installation will include Version 4.4 of the netCDF
+    libraries, for both Fortran and C; you will not need to build these
+    libraries yourself &quot;from scratch&quot;. On the other hand, when
+    you build programs using the I/O&nbsp;API (and therefore netCDF),
+    you will need to refer to them a bit differently than normal usage,
+    as
+    <BLOCKQUOTE><CODE>
+    -lnetcdff.dll -lnetcdf.dll
+    </CODE></BLOCKQUOTE>
+    For example, you will have to edit the definition of
+    <CODE>LIBS</CODE> in <VAR>m3tools/Makefile</VAR>:
+    <BLOCKQUOTE><CODE>
+    LIBS = -L${OBJDIR} -lioapi -lnetcdff.dll -lnetcdf.dll $(OMPLIBS) $(ARCHLIB) $(ARCHLIBS)
+    </CODE></BLOCKQUOTE>
+    <P>
+
+    The Cygwin64 package list is at 
+    <BLOCKQUOTE>
+    <A HREF="https://cygwin.com/packages/package_list.html">https://cygwin.com/packages/package_list.html</A>
+    </BLOCKQUOTE>
+    To install additional packages after the initial installation, open
+    the <VAR>File Explorer</VAR> on <VAR>Downloads</VAR> and run
+    <VAR>setupx86_64.exe</VAR> found there.  When you get to package
+    selection, choose &quot;uninstalled&quot; and pick your selections
+    from the menu.
+    <P>
+
+    You may also wish to install a GUI editor that understands UNIX line
+    conventions (which are different from Windows; Windows
+    <VAR>notepad</VAR> screws this up badly).  I've found that the
+    <A HREF="http://www.crimsoneditor.com/"><VAR>Crimson Editor</VAR></A>
+    is a free and workable choice for such an editor.  (For CygWin
+    graphical programs such as the <VAR>nedit</VAR> editor, you will
+    need to install and run the X-windows server...)
+    <P>
+    
+     
+    <P>
+
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
     <H3><A NAME="ncf4">NOTE on  <VAR>netCDF</VAR> Version&nbsp;4</A></H3>
 
     <BLOCKQUOTE>
@@ -836,12 +906,12 @@ or (PGI)
     with &quot;large file support&quot; for most 32-bit platforms (and
     for 64-bit platforms like Cray, IRIX64, Alpha, IA64, and x86_64).
     This suffices for most environmental modeling applications; the
-    limitation is that (the totality of variables in) an individual
-    time step may not exceed 4&nbsp;GBytes.  Starting with
-    Version&nbsp;3.6, <VAR>netCDF</VAR> supports a new variant of the
-    underlying data format, with essentially no (software based)
-    limitations on file, record, or array size.  This format is not
-    yet supported by older versions of the I/O&nbsp;API (partly because the old and new
+    limitation is that (the totality of variables in) an individual time
+    step may not exceed 4&nbsp;GBytes.  Starting with Version&nbsp;3.6,
+    <VAR>netCDF</VAR> supports a new variant of the underlying data
+    format, with essentially no (software based) limitations on file,
+    record, or array size.  This format is not yet supported by older
+    versions of the I/O&nbsp;API (partly because the old and new
     <VAR>netCDF</VAR> formats are not fully compatible); design analysis
     was in progress in 2005, and for I/O&nbsp;API versions 3.1 and
     later, large-file support is automatic for input files and can be
@@ -849,7 +919,7 @@ or (PGI)
     relevant model (this is the default for I/O&nbsp;3.2):
     <BLOCKQUOTE><CODE>
     setenv IOAPI_OFFSET_64 YES
-    </COE></BLOCKQUOTE>
+    </CODE></BLOCKQUOTE>
     See <A HREF="ENVIRONMENT.html">Standard I/O&nbsp;API environment variables</A>
     in the documentation.
     <P>
@@ -1583,7 +1653,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 90 2018-03-21 17:18:07Z coats $
+    $Id: AVAIL.html 92 2018-03-27 15:53:01Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
