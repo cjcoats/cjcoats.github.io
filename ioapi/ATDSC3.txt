@@ -1,8 +1,12 @@
 
 !.........................................................................
-! Version "@(#)$Header$"
-!    EDSS/Models-3 I/O API.
-!    Copyright (C) 1992-2002 MCNC
+! Version "$Id: ATDSC3.txt 96 2018-04-04 21:17:59Z coats $"
+!   EDSS/Models-3 I/O API.
+!   Copyright (C) 1992-2002 MCNC,
+!   (C) 1992-2002,2005-2013 Carlie J. Coats, Jr.,
+!   (C) 2003-2011 Baron Advanced Meteorological Systems, LLC.,
+!   (C) 2014 UNC Institute for the Environment.
+!
 !    Distributed under the GNU LESSER GENERAL PUBLIC LICENSE version 2.1
 !    See file "LGPL.txt" for conditions of use.
 !....................................................................
@@ -18,7 +22,7 @@
 !       resulting modified INCLUDE-file.
 !
 !       By making any changes to this INCLUDE file, the user
-!       explicitly agrees that in the case any assistance is 
+!       explicitly agrees that in the case any assistance is
 !       required of MCNC or of the I/O API author, Carlie J. Coats, Jr.
 !       as a result of such changes, THE USER AND/OR HIS PROJECT OR
 !       CONTRACT AGREES TO REIMBURSE MCNC AND/OR THE I/O API AUTHOR,
@@ -67,12 +71,12 @@
 !
 !          WRDICT3:  FTYPE3D, TSTEP3D, NCOLS3D, NROWS3D, NLAYS3D, NVARS3D,
 !                    NTHIK3D, GDTYP3D, P_ALP3D, P_BET3D, P_GAM3D, XORIG3D,
-!                    YORIG3D, XCELL3D, YCELL3D, XCELL3D, YCELL3D, GDNAM3D, 
+!                    YORIG3D, XCELL3D, YCELL3D, XCELL3D, YCELL3D, GDNAM3D,
 !                    VNAME3D, UNITS3D, VDESC3D
 !
 !....................................................................
 !
-  
+
 !    VARIABLE ATTRIBUTES
 
         CHARACTER*16   ATNAM3D( MXATTS3, MXVARS3)  ! variable attrib. name
@@ -83,16 +87,12 @@
 
         !!non-character per-variable attribute data
 
-        COMMON  / BATTS3 /                                              &
-     &                                                                  &
-     &      NATTS3D, FATTS3D
-     
-     
+        COMMON  / BATTS3 /  NATTS3D, FATTS3D
+
+
         !! character-string per-variable attribute data
 
-        COMMON  / CATTS3 /                                              &
-     &                                                                  &
-     &      ATNAM3D
-     
+        COMMON  / CATTS3 /  ATNAM3D
+
 !................   end   ATDSC3.EXT   ....................................
 
