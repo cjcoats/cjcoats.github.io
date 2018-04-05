@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRID2XY.html 416 2016-08-24 19:15:43Z coats $" -->
+<!-- "$Id: GRID2XY.html 96 2018-04-04 21:17:59Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> SUBROUTINE GRID2XY </TITLE>
 </HEAD>
@@ -43,10 +43,10 @@ different map projection, with optional <CODE>SPHER1</CODE>,
 
 <H2> Summary: </H2>
 
-    Compute cell-centers  <CODE>&lt;XLOC1,YLOC1&gt;</CODE> for all
-    (input) <VAR>GRID_I</VAR> grid-cells relative to the coordinate
-    system for (output) <VAR>GRID_O</VAR> using USGS GCTP-package
-    routine <CODE>GTPZ0()</CODE>.  The usual
+    Compute locations  <CODE>&lt;XLOC_O_O,YLOC_O&gt;</CODE> for all
+    (input) <VAR>GRID_I</VAR> grid-cell centerss relative to the
+    coordinate system for (output) <VAR>GRID_O</VAR> using USGS
+    GCTP-package routine <CODE>GTPZ0()</CODE>.  The usual
     <A HREF="GRIDS.html#horiz">I/O&nbsp;API coordinate-description
     conventions</A> are used  for the
     <CODE>GDTYP,P_ALP,P_BET,P_GAM,XCENT,YCENT</CODE> input and output

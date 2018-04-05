@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 95 2018-03-28 20:48:26Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 96 2018-04-04 21:17:59Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 95 2018-03-28 20:48:26Z coats $
+    $Id: NEWSTUFF.html 96 2018-04-04 21:17:59Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,10 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#apr042018">Fixes to
+               <VAR>ioapi/rdatt3,wratt3</VAR> and 
+               <VAR>m3tools/mtxcalc,mtxcple</VAR>;
+               web updates</A>
          <LI>  <A HREF = "#mar272018">Bug-fix to
                <VAR>m3tools/mtxcalc</VAR></A>; better flags
                for <VAR>gfortran</VAR> debug <CODE>Makeinclude</CODE>s
@@ -727,6 +731,32 @@
     The usual usages of either double-quotes to force the inclusion
     of a trailing blank or of escaping the trailing blank with a
     backslash (\) don't work for GNU <VAR>make</VAR> ;-(
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "apr042018">
+    Fixes to <VAR>ioapi/rdatt3,wratt3</VAR> and 
+    <VAR>m3tools/mtxcalc,mtxcple</VAR>;
+    web updates</A>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Bug-fixes in <VAR>ioapi/rdatt3</VAR> and <VAR>ioapi/wratt3</VAR>: 
+    fixed bug introduced by I/O&nbsp;API 3.2 PnetCDF changes.
+    <P>
+    Bug-fixes in   <VAR>m3tools/mtxcalc</VAR>
+    <P>
+    Enhanced <VAR>m3tools/mtxcple</VAR> does not attempt to
+    read/transform non<CODE>REAL</CODE> variables.
+    <P>
+    Flag-fix in <VAR>ioapi/Makeinclude.Linux2_x86_64g95dbg</VAR>
+    <P>
+    Updated web-copies of OI/O&nbsp;API <CODE>INCLUDE</CODE>-files.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -6836,7 +6866,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 95 2018-03-28 20:48:26Z coats $
+    $Id: NEWSTUFF.html 96 2018-04-04 21:17:59Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
