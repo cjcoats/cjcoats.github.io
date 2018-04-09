@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 92 2018-03-27 15:53:01Z coats $" -->
+<!-- "$Id: AVAIL.html 102 2018-04-09 16:01:49Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -37,6 +37,9 @@
         <LI>  <A HREF = "#v22">I/O&nbsp;API Version&nbsp;2.2</A>
         <LI>  <A HREF = "#v21">I/O&nbsp;API Version&nbsp;2.0 and 2.1</A>
                <P>
+        <LI>  <STRONG><A HREF = "#cmaq">NOTE for users of
+              <VAR>CMAQ</VAR> and <VAR>SMOKE</VAR> </A></STRONG>
+              <P>
         <LI>  <STRONG><A HREF = "#win64">NOTES on <VAR>CygWin</VAR>
               under MS Windows</A></STRONG>
               <P>
@@ -451,12 +454,13 @@ m3stat:
 
                   <P>
                   <LI>  Acquire and build the netCDF library,
-                        <VAR>libnetcdf.a</VAR>, for each configuration.
+                        <VAR>libnetcdf.a</VAR> (and <VAR>libnetcdff.a</VAR>
+                        for netCDF-4.1 or later), for each configuration.
                         The netCDF home page is
                         <A HREF="https://www.unidata.ucar.edu/software/netcdf/">
                         https://www.unidata.ucar.edu/software/netcdf/</A>
                         For each configuration,copy or link the resulting
-                        <VAR>libnetcdf.a</VAR> ( and <VAR>libnetcdff.a</VAR>,
+                        <VAR>libnetcdf.a</VAR> (and <VAR>libnetcdff.a</VAR>,
                         if you're building netCDF version 4.1 or later)
                         to the appropriate object
                         directory <CODE>$BASEDIR/$BIN</CODE>.
@@ -665,6 +669,81 @@ or (PGI)
 
     </DL>
 
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
+    <H3><A NAME="cmaq">NOTE for users of <VAR>CMAQ</VAR> and 
+    <VAR>SMOKE</VAR></A></H3>
+
+    <BLOCKQUOTE>
+    According to the ISO Fortran Standard, there are two &quot;source
+    formats&quot; for Fortran source code -- the older
+    (<CODE>f77</CODE>)  &quot;fixed&quot; format with code in columns
+    7-72 and continuation markers in column 6, and the
+    (<CODE>f90</CODE>) &quot;free&quot; format, with source in columns
+    1-132 and ampersand (&quot;&&quot;) for trailing continuation
+    markers, as well as a specification for code which is acceptable to
+    both forms.
+    <P>
+    
+    Since it us used by various models that use &quot;free&quot; format, 
+    the I/O&nbsp;API carefully follows the Standard in this regard, and
+    uses the &quot'both-form&quot' format for its Fortran
+    <CODE>INCLUDE</CODE> files.
+    <P>
+
+    Some of the models&mdash;in particular, <VAR>CMAQ</VAR> and 
+    <VAR>SMOKE</VAR> however, do not&mdash;instead using a
+    &quot;fixed-132&quot; format. The I/O&nbsp;API <VAR>Makefile</VAR>
+    has a way of dealing with this; the commands
+    <BLOCKQUOTE><VAR>
+    cd &lt;installation directory&gt;/ioapi<BR>
+    make fixed_src
+    </VAR></BLOCKQUOTE>
+    will create a new directory <VAR>ioapi/fixed_src</VAR> and populate
+    it with copies of the <CODE>INCLUDE</CODE> files that have been
+    edited to work with the non-Standard &quot;fixed-132&quot; format.
+    You will need to use these <CODE>INCLUDE</CODE> files with
+    <VAR>CMAQ</VAR> and  <VAR>SMOKE</VAR>.
+    <P>
+
+    <STRONG>ASIDE on FILE EXTENSIONS:</STRONG>
+    <BLOCKQUOTE>
+    The &quot;industry standard&quot; for Fortran source-file naming is
+    that the extensions for file names should be as follows:
+    <UL>
+        <LI><CODE>.f</CODE> for fixed format Fortran source code
+        <LI><CODE>.f90</CODE> for free format Fortran source code
+        <LI><CODE>.F</CODE> for fixed format Fortran source code that
+            needs to be run through the C pre-processor <VAR>cpp</VAR>
+            before compiling (because it uses <CODE>#include</CODE>,
+        <CODE>#define</CODE> and that sort of thing)
+        <LI><CODE>.F90</CODE> for free format Fortran source code that
+            needs to be run through the C pre-processor <VAR>cpp</VAR>
+    </UL>
+    Virtually all UNIX/Linux Fortran compilers will automatically use
+    the file-extension to determine which source form to expect, unless
+    you override this expectation with explicit flags specifying
+    otherwise.
+    <P>
+    The <VAR>findent</VAR> program is an excellent resource for
+    converting code back and forth between the two forms (and even the
+    non-Standard one); see 
+    <A HREF="https://sourceforge.net/projects/findent/">
+    https://sourceforge.net/projects/findent/</A>.
+    <P>
+
+    It is also much more convenient for <VAR>make</VAR> dependencies if
+    Fortran <CODE>MODULE</CODE>s are one per file, with file name the
+    lower case of the  <CODE>MODULE</CODE> name&mdash;
+    <CODE>MODULE&nbsp;MODFOO</CODE> will be in the file named
+    <VAR>modfoo.f</VAR> or  <VAR>modfoo.f90</VAR>, as appropriate.
+    <P>
+    </BLOCKQUOTE>
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -1653,7 +1732,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 92 2018-03-27 15:53:01Z coats $
+    $Id: AVAIL.html 102 2018-04-09 16:01:49Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
