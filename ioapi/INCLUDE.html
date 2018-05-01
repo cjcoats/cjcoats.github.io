@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: INCLUDE.html 72 2017-12-12 17:54:20Z coats $" -->
+<!-- "$Id: INCLUDE.html 105 2018-05-01 14:17:48Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> MODULES AND PUBLIC INCLUDE FILES </TITLE>
 </HEAD>
@@ -78,6 +78,12 @@
                                   <P>
         <LI> <A HREF = "#atdsc "> <VAR>ATDSC3.EXT</VAR> and <VAR>atdsc3.h</VAR>:</A>
                                   Extra attributes for <CODE>TSERIES3</CODE> files
+                                  <P>
+        <LI> <STRONG><EM>NOTE:</EM></STRONG> <VAR>STATE3.EXT</VAR> and
+             <VAR>STATE3V.EXT</VAR> are <U>private</U> include-files,
+             for internal I/OP&nbsp;API use only.<BR>
+             <EM>Not to be used for model or other application
+             codes.</EM>
     </UL>
     <P>
 
@@ -454,7 +460,7 @@
         <LI>  <STRONG>ATNAM3D( MXATTS3, MXVARS3 )</STRONG>:
               attribute-names for the indicated attribute of the
               indicated variable
-        <LI>  <STRONG></STRONG>:
+        <LI>  <STRONG>FATTS3D</STRONG>:
               values of the indicated attribute of the
               indicated variable
     </UL>
