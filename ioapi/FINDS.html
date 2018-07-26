@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: FINDS.html 175 2015-02-27 12:57:33Z coats $" -->
+<!-- "$Id: FINDS.html 107 2018-07-26 14:05:39Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> FIND*() </TITLE>
 </HEAD>
@@ -41,10 +41,10 @@ number and types of the keys and key-lists:
     INTEGER FUNCTION FIND4( K1, K2, K3, K4,
  &amp;                          N, LIST1, LIST2, LIST3, LIST4 )
 
-    INTEGER FUNCTION FIND1( L1, N, LLST1 )
-    INTEGER FUNCTION FIND2( L1, L2, N, LLST1, LLST2 )
-    INTEGER FUNCTION FIND3( L1, L2, L3, N, LLST1, LLST2, LLST3 )
-    INTEGER FUNCTION FIND4( L1, L2, L3, L4,
+    INTEGER FUNCTION FINDL1( L1, N, LLST1 )
+    INTEGER FUNCTION FINDL2( L1, L2, N, LLST1, LLST2 )
+    INTEGER FUNCTION FINDL3( L1, L2, L3, N, LLST1, LLST2, LLST3 )
+    INTEGER FUNCTION FINDL4( L1, L2, L3, L4,
  &amp;                          N, LLST1, LLST2, LLST3, LLST4 )
 
     INTEGER FUNCTION FINDR1( X1, N, XLST1 )
@@ -156,10 +156,12 @@ number and types of the keys and key-lists:
 
     See also <A HREF = "SORTI.html">SORTIC, SORTI1, SORTI2, SORTI3,
     SORTI4, SORTL1, SORTL2, SORTL3, SORTL4, SORTR1, SORTR2, SORTR3,
-    SORTR4</A> for sorting key-tuple  tables, and
+    SORTR4</A> for sorting key-tuple  tables,
     <A HREF = "SORTI.html">LOCATC, LOCAT1, LOCAT2, LOCAT3,  LOCAT4, LOCATR1,
     LOCATR2, LOCATR3, LOCATR4</A> for determining where to insert
-    entries into sorted  key-tuple tables.
+    entries into sorted  key-tuple tables, and
+    <A HREF = "INDEX1.html">INDEX1, INDEXILNT1, INDEXL1</A> for 
+    single-key lookups into unsorted tables.
     <P>
 
     For Fortran-90 generic interface <CODE>FINDKEY()</CODE> and

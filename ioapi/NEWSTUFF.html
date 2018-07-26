@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 96 2018-04-04 21:17:59Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 107 2018-07-26 14:05:39Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 96 2018-04-04 21:17:59Z coats $
+    $Id: NEWSTUFF.html 107 2018-07-26 14:05:39Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,10 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#jul262018">New routine
+               <CODE>INDEXL1()</CODE> and generic
+               <CODE>INDEXKEY()</CODE></A>; <VAR>m3tools/latlon</VAR>
+               enhancement
          <LI>  <A HREF = "#apr042018">Fixes to
                <VAR>ioapi/rdatt3,wratt3</VAR> and 
                <VAR>m3tools/mtxcalc,mtxcple</VAR>;
@@ -739,10 +743,52 @@
 
 <HR> <!----------------------------------------------------------------->
 
+<H2> <A NAME = "jul262018">
+    New routine <CODE>INDEXL1()</CODE> and new generic
+    <CODE>INDEXKEY()</CODE>
+</A></H2>
+
+    <BLOCKQUOTE>
+    New <A HREF="INDEX1.html"><CODE>INTEGER*8</CODE>-key lookup routine
+    <CODE>INDEXL1()</CODE> and new generic interface
+    <CODE>INDEXKEY()</CODE></A> in  <CODE>MODULE M3UTILIO:</CODE>
+    <PRE>
+    INTERFACE INDEXKEY
+
+        INTEGER FUNCTION INDEX1( NAME, N, NLIST )
+        CHARACTER*(*), INTENT(IN   ) :: NAME        !  Character string being searched for
+        INTEGER      , INTENT(IN   ) :: N           !  Length of array to be searched
+        CHARACTER*(*), INTENT(IN   ) :: NLIST(*)    !  array to be searched
+        END FUNCTION INDEX1
+
+        INTEGER FUNCTION INDEXINT1( IKEY, N, NLIST )
+        INTEGER, INTENT(IN   ) :: IKEY        !  integer being searched for
+        INTEGER, INTENT(IN   ) :: N           !  Length of array to be searched
+        INTEGER, INTENT(IN   ) :: NLIST(*)    !  array to be searched
+        END FUNCTION INDEXINT1
+
+        INTEGER FUNCTION INDEXL1( LKEY, N, NLIST )
+        INTEGER*8, INTENT(IN   ) :: LKEY        !  integer being searched for
+        INTEGER,   INTENT(IN   ) :: N           !  Length of array to be searched
+        INTEGER*8, INTENT(IN   ) :: NLIST(*)    !  array to be searched
+        END FUNCTION INDEXL1
+
+    END INTERFACE       !!  indexkey
+    </PRE>
+    <P>
+    Add more coordinate systems to <VAR>m3tools/latlon</VAR>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
 <H2> <A NAME = "apr042018">
     Fixes to <VAR>ioapi/rdatt3,wratt3</VAR> and 
     <VAR>m3tools/mtxcalc,mtxcple</VAR>;
-    web updates</A>
+    web updates
 </A></H2>
 
     <BLOCKQUOTE>
@@ -6866,7 +6912,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 96 2018-04-04 21:17:59Z coats $
+    $Id: NEWSTUFF.html 107 2018-07-26 14:05:39Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

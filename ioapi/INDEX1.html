@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: INDEX1.html 156 2015-02-12 22:04:24Z coats $" -->
+<!-- "$Id: INDEX1.html 107 2018-07-26 14:05:39Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> INDEX1() </TITLE>
 </HEAD>
@@ -15,16 +15,34 @@
 <H1>    INDEX1() </H1>
 
 <H2> Fortran version: </H2>
+<STRONG>Fortran-90 generic routine <VAR>INDEXDKEY()</VAR> for I/O&nbsp;API-3.2:</STRONG> 
+compiler selects the appropriate type-specific form depending upon the
+number and types of the keys and key-lists:
+
 <PRE>
-    INTEGER FUNCTION INDEX1( NAME, N, NLIST )
+    INTEGER FUNCTION INDEXKEY( KEY, N, LIST )
+        INTEGER  N              !   table size
+        &lt;type&gt;   KEY
+        &lt;type&gt;   LIST(N)
+</PRE><P>
+
+<STRONG>Type-specific forms:</STRONG>
+
+<PRE>
+    INTEGER FUNCTION INDEX1( NAME, N, LIST )
         CHARACTER*(*), INTENT(IN   ) :: NAME        !  Character string being searched for
         INTEGER      , INTENT(IN   ) :: N           !  Length of array to be searched
-        CHARACTER*(*), INTENT(IN   ) :: NLIST( N )  !  array to be searched
+        CHARACTER*(*), INTENT(IN   ) :: LIST( N )   !  array to be searched
 
-    INTEGER FUNCTION INDEXINT1( IKEY, N, NLIST )
-        INTEGER, INTENT(IN   ) :: IKEY        !  integer being searched for
-        INTEGER, INTENT(IN   ) :: N           !  Length of array to be searched
-        INTEGER, INTENT(IN   ) :: NLIST(*)    !  array to be searched
+    INTEGER FUNCTION INDEXINT1( IKEY, N, LIST )
+        INTEGER, INTENT(IN   ) :: IKEY          !  integer being searched for
+        INTEGER, INTENT(IN   ) :: N             !  Length of array to be searched
+        INTEGER, INTENT(IN   ) :: LIST(*)       !  array to be searched
+
+    INTEGER FUNCTION INDEXL1( LKEY, N, LIST )
+        INTEGER*8, INTENT(IN   ) :: LKEY        !  integer*8 being searched for
+        INTEGER,   INTENT(IN   ) :: N           !  Length of array to be searched
+        INTEGER*8, INTENT(IN   ) :: LIST(*)     !  array to be searched
 </PRE><P>
 
 <H2> NO C version: </H2>
@@ -32,11 +50,12 @@
 
 <H2> Summary: </H2>
 
-    Searches for character-string key <CODE>NAME</CODE> or
-    <CODE>INTEGER&nbsp;IKEY</CODE> in unsorted
-    list <CODE>NLIST</CODE> and  returns the subscript
+    Searches for character-string key <CODE>NAME</CODE>,
+    <CODE>INTEGER&nbsp;IKEY</CODE>, or <CODE>INTEGER*8&nbsp;LKEY</CODE>
+    in unsorted list <CODE>NLIST</CODE> and  returns the subscript
     <CODE>(1...N)</CODE> at which it is found, or returns 0  when
-    <CODE>NAME</CODE> (<CODE>IKEY</CODE>) not found in <CODE>NLIST</CODE>
+    <CODE>NAME</CODE> (<CODE>IKEY</CODE>) not found in
+    <CODE>NLIST</CODE>
     <P>
 
     <STRONG>See also</STRONG>:
