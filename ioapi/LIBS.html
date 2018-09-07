@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: LIBS.html 446 2017-01-11 19:15:33Z coats $" -->
+<!-- "$Id: LIBS.html 108 2018-09-07 18:59:37Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Object Libraries, Executables, and Supported Machines
@@ -139,7 +139,8 @@
         <DD>  Like <CODE>IRIX64</CODE> but compiled for debug.
               <P>
         <DT>  <STRONG><CODE>IRIX64r8</CODE></STRONG>
-        <DD>
+        <DD>  Like <CODE>IRIX64</CODE> but  compiled for
+              <CODE>INTEGER*8</CODE> and <CODE>REAL*8</CODE>
               <P>
         <DT>  <STRONG><CODE>IRIX6n32</CODE></STRONG>
         <DD>  For SGI <VAR>IRIX&nbsp;6&nbsp;-n32</VAR>
@@ -279,11 +280,6 @@
               Portland Group <VAR>pgcc</VAR> and <VAR>pgf90</VAR>, with
               OpenMP support.
               <P>
-        <DT>  <STRONG><CODE>Linux2_x86_64pg</CODE></STRONG>
-        <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
-              Portland Group <VAR>pgcc</VAR> and <VAR>pgf90</VAR>, with
-              OpenMP support.
-              <P>
         <DT>  <STRONG><CODE>Linux2_x86_64pgmpi</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64pg</CODE> but compiled
               for using PnetCDF/MPI distributed I/O in CMAQ.
@@ -291,7 +287,7 @@
         <DT>  <STRONG><CODE>Linux2_x86_64pg_gcc_nomp</CODE></STRONG>
         <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
               GNU <VAR>gcc</VAR> and Portland Group  <VAR>pgf90</VAR>,
-              with OpenMPturned off.
+              with OpenMP turned off.
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64pg_pgcc_nomp</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64pg</CODE> but with OpenMP turned
@@ -403,6 +399,22 @@
               <P>
         <DT>  <STRONG><CODE>SunOS5dbg</CODE></STRONG>
         <DD>  Like <CODE>SunOS5</CODE> but compiled for debug
+              <P>
+        <DT>  <STRONG><CODE>WIN_x86_64gfort</CODE></STRONG>
+        <DD>  For CygWin64 under 64-bit MS-Windows, using GNU
+              <VAR>gcc</VAR> and <VAR>gfortran</VAR>, with OpenMP support.
+              <P>
+        <DT>  <STRONG><CODE>WIN_x86_64gfort_medium</CODE></STRONG>
+        <DD>  Like <CODE>WIN_x86_64gfort</CODE> but compiled for
+              medium memory model
+              <P>
+        <DT>  <STRONG><CODE>WIN_x86_64mingw64</CODE></STRONG>
+        <DD>  For MingW64 under 64-bit MS-Windows, using GNU
+              <VAR>gcc</VAR> and <VAR>gfortran</VAR>, with OpenMP support.
+              <P>
+        <DT>  <STRONG><CODE>WIN_x86gfort</CODE></STRONG>
+        <DD>  For CygWin32 under MS-Windows, using GNU
+              <VAR>gcc</VAR> and <VAR>gfortran</VAR>, with OpenMP support.
               <P>
         <DT>  <STRONG><CODE>cray</CODE></STRONG>
         <DD>  for <VAR>UNICOS</VAR> on Cray vector machines using
