@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: OPEN3.html 130 2015-01-26 14:01:23Z coats $" -->
+<!-- "$Id: OPEN3.html 109 2018-10-16 15:12:53Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> OPEN3()  and  open3c() </TITLE>
 </HEAD>
@@ -33,22 +33,23 @@
 </PRE><P> 
 
 <H2> See Also:</H2> 
-    <A HREF = "PROMPTMFILE.html">PROMPTMFILE()</A>,
-    which is a (text-mode interactive) wrapper around OPEN3() that
+    <A HREF = "PROMPTMFILE.html"><CODE>PROMPTMFILE()</CODE></A>,
+    which is a (text-mode interactive) wrapper around <CODE>OPEN3()</CODE> that
     prompts the user for the logical name of the file to be opened.
-    <P> 
-    Also see <A HREF = "GETDFILE.html">GETDFILE()</A> and
-    <A HREF = "GETEFILE.html">GETEFILE()</A>, for opening
+    <P>
+    Also see <A HREF = "GETDFILE.html"><CODE>GETDFILE()</CODE></A> and
+    <A HREF = "GETEFILE.html"><CODE>GETEFILE()</CODE></A>, for opening
     Fortran sequential and direct access files by logical name.
     <P> 
 
 <H2> Summary: </H2>
     Open or create Models-3 file with <A HREF = "ENVIRONMENT.html"> 
-    logical name </A> FNAME, with  file mode/status FSTATUS of one of 
+    logical name </A> <CODE>FNAME</CODE>, with  file mode/status
+    <CODE>FSTATUS</CODE> of one of 
     the following 
     <A HREF = "INCLUDE.html#magic"> &quot;magic number&quot; tokens </A> 
     (defined in INCLUDE-file 
-    <A HREF = "INCLUDE.html#parms">  PARMS3.EXT </A>):
+    <A HREF = "INCLUDE.html#parms"><VAR>PARMS3.EXT</VAR></A>):
 <PRE>
     FSREAD3==1 for read-only,
     FSRDWR3==2 for read/write/update of existing files,
@@ -64,40 +65,41 @@
                file description
 </PRE><P> 
 
-    If FNAME is being opened for write, copies 
-    <A HREF = "ENVIRONMENT.html"> scenario description </A>
-    from file with logical name SCENDESC, name PGNAME of the 
-    caller, and value of 
-    <A HREF = "ENVIRONMENT.html"> environment variable </A>
-    EXECUTION_ID to 
-    the file's history (maintained in the file header).
+    If FNAME is being opened for write, copies
+    <A HREF = "ENVIRONMENT.html"> scenario description </A> from file
+    with logical name <CODE>SCENDESC</CODE>, name <CODE>PGNAME</CODE> of
+    the  caller, and value of  <A HREF = "ENVIRONMENT.html"> environment
+    variable </A> <CODE>EXECUTION_ID</CODE> to  the file's history
+    (maintained in the file header).
+    <P> 
+
+    May be called multiple times for a file (provided you don't
+    attempt to go from readonly to any read/write status).
     <P> 
     
-    If file may possibly be created (i.e., if the access mode is
-    either FSNEW3, FSUNKN3, or FSCREA3), the user must supply a file
-    description in the COMMONs in INCLUDE-file 
-    <A HREF = "INCLUDE.html#fdesc"> FDESC3.EXT </A> (for
+    If file may possibly be created (i.e., if the access mode is either
+    <CODE>FSNEW3</CODE>, <CODE>FSUNKN3</CODE>, or <CODE>FSCREA3</CODE>),
+    the user must supply a file description in the <CODE>COMMON</CODE>s
+    in INCLUDE-file 
+    <A HREF = "INCLUDE.html#fdesc"><VAR>FDESC3.EXT</VAR></A> (for
     Fortran) or in the data structures pointed to by arguments
-    bdesc and cdesc (for C).  In the latter case, the file
-    description struct pointers are only required when the file is
-    being opened &quot;new&quot; or &quot;unknown&quot;.
+    <CODE>bdesc</CODE> and <CODE>cdesc</CODE> (for C).  In the latter
+    case, the file description struct pointers are only required when
+    the file is being opened &quot;new&quot; or &quot;unknown&quot;.
     <P> 
 
     &quot;Normal&quot; modeling usage should be to open input files as
     <CODE>FSREAD3</CODE> and output files as <CODE>FSUNKN3</CODE>.  If
-    you open output files  as <CODE>FSNEW3</CODE>, you must take care
-    to remove pre-existing files before running your program.
+    you open output files  as <CODE>FSNEW3</CODE>, you must take care to
+    remove pre-existing files before running your program.
     <P>
 
     <STRONG>NOTE: </STRONG> Joan Novak (EPA)  and Ed Bilicki (MCNC) 
     have declared as a software standard that <STRONG>modeling programs
-    may not  use FSCREA3 as the mode for opening files.</STRONG>  
-    FSCREA3 is reserved for use by analysis/data extraction programs
-    only.
+    may not  use <CODE>FSCREA3</CODE> as the mode for opening
+    files.</STRONG>   <CODE>FSCREA3</CODE> is reserved for use by
+    analysis/data extraction programs only.
     <P>
-
-    May be called multiple times for a file (provided you don't
-    attempt to go from readonly to any read/write status).
 
 <H2> Preconditions: </H2>  
 
@@ -134,21 +136,25 @@
     starting date and time from the file itself.
     <P> 
     
-    For FSNEW3, FSUNKN3, or FSCREA3, caller must supply file description
-    (which must follow Models-3 <A HREF = "DATETIME.html"> 
-    date and time conventions </A>).
+    For <CODE>FSNEW3</CODE>, <CODE>FSUNKN3</CODE>, or
+    <CODE>FSCREA3</CODE>, caller must supply file description (which
+    must follow Models-3 <A HREF = "DATETIME.html">date and time
+    conventions</A>).
     <P> 
     
-    I/O API must already be initialized by a call to 
+    I/O&nbsp;API must already be initialized by a call to 
     <A HREF = "INIT3.html"> INIT3() or init3c(). </A>
     <P> 
     
-    OPEN3() must not be called for read/write/update (FSRDWR3, FSNEW3,
-    FSUNK3, or FSCREA3) on a file already open for read-only (FSREAD3).
+    <CODE>OPEN3()</CODE> must not be called for read/write/update
+    (<CODE>FSRDWR3, FSNEW3, FSUNK3</CODE>, or <CODE>FSCREA3</CODE>) on a
+    file already open for read-only (<CODE>FSREAD3</CODE>).
     <P>
 
-    OPEN3() must not be called for new (FSNEW3) on a file already
-    open.
+    <CODE>OPEN3()</CODE> must not be called for new
+    (<CODE>FSNEW3</CODE>) on a file already open (if the file
+    already exists, that contradicts the &quot;new&quot;).
+    <P>
     
 <H2> Fortran Usage: </H2>
 
@@ -234,7 +240,7 @@ Up: <STRONG>Public I/O Routines </STRONG>
 </A><P>
 
 <A HREF = "AA.html"> 
-To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+To: <STRONG>Models-3/EDSS I/O&nbsp;API:   The Help Pages</STRONG> 
 </A><P>
 
 </BODY>
