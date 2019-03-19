@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEXTIME.html 156 2015-02-12 22:04:24Z coats $" -->
+<!-- "$Id: NEXTIME.html 110 2019-03-19 15:18:14Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> NEXTIME() and nextimec() </TITLE>
 </HEAD>
@@ -34,7 +34,12 @@
 
     Add <A HREF = "DATETIME.html">time increment</A> <CODE>DTIME</CODE> to the 
     <A HREF = "DATETIME.html">date and time</A> <CODE>JDATE:JTIME</CODE>.
-    Output is fully normalized.
+    Output is fully normalized.<BR>
+    In particular
+    <BLOCKQUOTE><CODE>
+    CALL NEXTIME( JDATE, JTIME, 0 )
+    </CODE></BLOCKQUOTE>
+    may be used to put <CODE>JDATE:JTIME</CODE> into normal form.
     <P> 
 
     <CODE>DTIME</CODE> may be positive, negative (to step <EM>backwards</EM> in time),

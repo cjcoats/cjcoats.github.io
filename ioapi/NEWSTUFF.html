@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 108 2018-09-07 18:59:37Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 110 2019-03-19 15:18:14Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 108 2018-09-07 18:59:37Z coats $
+    $Id: NEWSTUFF.html 110 2019-03-19 15:18:14Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,11 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#mar192019"> 
+               <CODE>RDTFLAG(*)</CODE> now puts both its input argument
+               date&amp;time and the on-file date&amp;time into normal
+               form, for compatibility with &quot;unusual&quot;
+               date&amp;time usage in MEGAN.
          <LI>  <A HREF = "#sep072018">Bug-fix in
                <VAR>m3tools/mtxcalc</VAR></A>; clean-ups in
                <CODE>MODULE&nbsp;MODGCTP</CODE>.
@@ -690,6 +695,23 @@
         % nm libnetcdff.a | grep ncclos<BR>
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "mar192019">
+    <CODE>RDTFLAG(*)</CODE> now puts both its input argument
+    date&amp;time and the on-file date&amp;time into normal
+    form...
+</A></H2>
+
+    <BLOCKQUOTE>
+    ...for compatibility with &quot;unusual&quot; date&amp;time usage in MEGAN.
     <P>
     </BLOCKQUOTE>
 
@@ -6941,7 +6963,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 108 2018-09-07 18:59:37Z coats $
+    $Id: NEWSTUFF.html 110 2019-03-19 15:18:14Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
