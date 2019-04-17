@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: index.html 77 2018-01-18 15:29:37Z coats $" -->
+<!-- "$Id: index.html 111 2019-04-17 13:45:16Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     The EDSS/Models-3 I/O&nbsp;API
@@ -113,11 +113,21 @@
         <DT>  <STRONG>I/O&nbsp;API-3.1 to I/O&nbsp;API-3.2:</STRONG>
         <DD>  <EM>Minor source code changes required:</EM>
         <P>
+        <EM>Respond to netCDF-4 API backwards incompatibility:</EM><BR>
+        Replace netCDF-2 <CODE>CALL&nbsp;NC*()</CODE> statements
+        throughout with the corresponding netCDF-3
+        <CODE>IERR&nbsp;=&nbsp;NF_*()</CODE>, to accommodate the fact
+        that recent versions of netCDF-Fortran silently did away with
+        the former.<BR>
+        I/O&nbsp;API-3.2 works with both netCDF-3 and netCDF-4 (but
+        netCDF-4 breaks I/O&nbsp;API-3.1)
+        <P>
         More <CODE>INTERFACE</CODE>s in <CODE>MODULE&nbsp;M3UTILIO</CODE>
         <P>
         Experimental <CODE>MODULE&nbsp;MATXATTS</CODE> becomes
         <CODE>MODULE&nbsp;MODATTS3</CODE>, with additional support for
-        various extra (CF, CMAQ, SMOKE(?)) metadata.
+        various extra (CF, CMAQ, SMOKE(place-holder for future
+        specification)) metadata.
         <P>
         New <CODE>MODULE&nbsp;MODGCTP</CODE> for geospatial transform
         and interpolation operations; now contains some
@@ -132,16 +142,10 @@
         <CODE>MODULE&nbsp;MODPDATA</CODE>  encapsulates data structures
         and routines for distributed CMAQ I/O.
         <P>
-        New <CODE>MODULE&nbsp;MODWRFIO</CODE> for WRF-netCDF I/O.
+        New <CODE>MODULE&nbsp;MODWRFIO</CODE> for WRF-netCDF-format I/O.
         <P>
         New <CODE>MODULE&nbsp;MODMPASFIO</CODE> for MPAS-format-netCDF I/O
         and MPAS (unstructured Voronoi-complex) grid-geometry utilities.
-        <P>
-        Replace netCDF-2 <CODE>CALL&nbsp;NC*()</CODE> statements
-        throughout with the corresponding netCDF-3
-        <CODE>IERR&nbsp;=&nbsp;NF_*()</CODE>, to accommodate the fact
-        that recent versions of netCDF-Fortran silently did away with
-        the former.
         <P>
         Remove previously-deprecated <VAR>m3tools/utmtool</VAR>
         (superseded by <VAR>m3tools/projtool</VAR>).
@@ -333,7 +337,7 @@
     </BLOCKQUOTE>
 
     <PRE>
-    $Id: index.html 77 2018-01-18 15:29:37Z coats $
+    $Id: index.html 111 2019-04-17 13:45:16Z coats $
     </PRE>
 
  </BODY>

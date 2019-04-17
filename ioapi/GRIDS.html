@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRIDS.html 75 2018-01-12 15:48:16Z coats $" -->
+<!-- "$Id: GRIDS.html 111 2019-04-17 13:45:16Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> On The Definition of Grids and Coordinates for Models-3  </TITLE>
 </HEAD>
@@ -511,10 +511,17 @@ follows:
     <LI>  <STRONG>VGSIGZ3</STRONG>:  sigma-Z
     <LI>  <STRONG>VGWRFEM</STRONG>:  WRF mass-core (WRF-EM) dry-sigma
     <LI>  <STRONG>VGWRFNM</STRONG>:  WRF NMM-core vertical coordinate
+    <LI>  <STRONG>GISLAY3</STRONG>:  (non-geometric) GIS layer
     <LI>  <STRONG>IMISS3</STRONG>:  vertical coordinate type not applicable 
                                     (e.g., time-dependent vertical 
                                     coordinates), or &quot;other&quot;.
 </UL>
+Note that as a special case, it may be useful to &quot;abuse&quot; the
+notion of &quot;layer&quot; in the same fashion as GIS systems
+do&mdash;for example, to have fractional land cover subscripted by
+land-cover category.  In that case, the layer-type token should be
+<CODE>GISLAY3</CODE>, and the file-description should describe the GIS
+layers in its <CODE>FDESC3D</CODE> field.
 
 The <A HREF = "INCLUDE.html#fdesc"> <CODE>FDESC3.EXT</CODE> </A>
 attribute <VAR>NLAYS3D</VAR> stores the actual number of layers in a

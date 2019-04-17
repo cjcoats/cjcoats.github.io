@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GETDFILE.html 103 2015-01-16 16:55:45Z coats $" -->
+<!-- "$Id: GETDFILE.html 111 2019-04-17 13:45:16Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> GETDFILE() </TITLE>
 </HEAD>
@@ -53,10 +53,16 @@
     (formatted iff <CODE>TRUE</CODE>, else unformatted).
     <P> 
 
-    <EM>WARNING:  interpretation of <CODE>RECLEN</CODE> -- whether it
-    measures record  length in words or in bytes -- is vendor-dependent
-    </EM> (and not always easy to dig out of the vendor's
-    documentation).
+    <EM>WARNING:  interpretation of <CODE>RECLEN</CODE>&nbsp;&mdash;
+    whether it measures record  length in words or in bytes&nbsp;&mdash;
+    is vendor-dependent </EM> (and not always easy to dig out of the
+    vendor's documentation).  For <VAR>gfortran</VAR>, <VAR>sunf95</VAR>,
+    and <VAR>pgf90</VAR>,  record length is specified in bytes; for
+    <VAR>ifort</VAR>, record length is specified in 4-byte
+    &quot;words&quot; unless the compiler command-line flag
+    <CODE>-assume&nbsp;byterecl</CODE> is used, in which case record
+    length is specified in bytes.<BR>
+    <EM>Note that mis-interpretation of this can lead to obscure run-time errors...</EM>
     <P> 
     
     <A HREF = "ENVIRONMENT.html"> Logs </A> the file-opening, together 
