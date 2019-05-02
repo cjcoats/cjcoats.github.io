@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 108 2018-09-07 18:59:37Z coats $" -->
+<!-- "$Id: AVAIL.html 112 2019-05-02 13:36:49Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -339,12 +339,12 @@ m3stat:
                                  libraries are not compatible with
                                  &quot;normal&quot; libraries.</STRONG>
                                  Make sure you keep them separate.<BR>
-                                 You will want to build both, since the
-                                 PnetCDF enabled libraries are for CMAQ
-                                 only.
-                            <LI> What is called <VAR>mpif90</VAR> is really
-                                 a script that understands about an
-                                 underlying compiler-set (e.g., Intel
+                                 <STRONG>You will want to build
+                                 both</STRONG>, since the PnetCDF
+                                 enabled libraries are for CMAQ only.
+                            <LI> What is called <VAR>mpif90</VAR> is
+                                 really a script that understands about
+                                 an underlying compiler-set (e.g., Intel
                                  <VAR>ifort/icc</VAR>, PGI
                                  <VAR>pgf90/pgcc</VAR>, etc.), a set of
                                  (MPI-installation specific)
@@ -366,8 +366,8 @@ m3stat:
                                  had to be hacked badly to deal with the above.
                         </OL>
                   <P>
-                  <LI> If you want to enable the <STRONG>360-day or 365-day
-                        (no-leap-year) climatology year
+                  <LI> If you want to enable the <STRONG>360-day or
+                        365-day (no-leap-year) climatology year
                         configuration</STRONG> (365-day for
                         <EM>I/O&nbsp;API 3.2 only</EM>), customize your
                         <VAR>ioapi/Makefile</VAR> by adding
@@ -730,7 +730,8 @@ or (PGI)
     Virtually all UNIX/Linux Fortran compilers will automatically use
     the file-extension to determine which source form to expect, unless
     you override this expectation with explicit flags specifying
-    otherwise.
+    otherwise.  Sadly, what these flags are varies from compiler to
+    compiler.
     <P>
     The <VAR>findent</VAR> program is an excellent resource for
     converting code back and forth between the two forms (and even the
@@ -842,8 +843,8 @@ or (PGI)
     </STRONG>
 
     NetCDF Version&nbsp;4.x have lots of additional build options,
-    that will require a complex set of additional libraries in
-    <VAR>Makefile</VAR>s <STRONG>and all other model-building systems</STRONG>.
+    that will require a complex set of additional libraries in your
+    <STRONG><VAR>Makefile</VAR>s and all other model-building systems</STRONG>.
     It is recommended that you disable these options by adding the
     command-line flags below to your netCDF <VAR>configure</VAR>
     command:
@@ -944,7 +945,7 @@ or (PGI)
     The <CODE>large</CODE> memory model is rarely needed (who
     writes models that compile into object files larger than
     2 GB, anyway??), and seems to be supported only by the Intel
-    compilers and the latest versions of the GNU compilers
+    compilers, and the latest versions of the GNU compilers
     <EM>provided that the compiler itself is compiled with
     this option</EM>.
     You will need the following compile-option for it:
@@ -1020,6 +1021,7 @@ or (PGI)
 
     <H3><A NAME="warn">Other Notes and Warnings</A></H3>
 
+    <BLOCKQUOTE>
     <DL>
         <DT>  <STRONG>Strong Recommendation &nbsp;1</STRONG>
         <DD>  <EM>Don't change any I/O&nbsp;API <CODE>INCLUDE</CODE>
@@ -1032,7 +1034,7 @@ or (PGI)
               license specifies that by making any changes to any of
               these <CODE>INCLUDE</CODE> files, the user explicitly
               agrees that <STRONG>in the case any assistance is
-              required of BAMS or of the I/O&nbsp;API author,
+              required of UNC CEMPD or of the I/O&nbsp;API author,
               Carlie&nbsp;J. Coats,&nbsp;Jr. as a result of such
               changes, the user and/or his project or contract agrees to
               reimburse UNC CEMPD and/or the I/O&nbsp;API author,
@@ -1070,7 +1072,7 @@ or (PGI)
               memory model.  For others, check your compiler
               documentation.)
               <P>
-        <DT>  Note &nbsp;4 (appliocable for v3.0 and earlier only)
+        <DT>  <STRONG>Note&nbsp;4</STRONG> (applicable for v3.0 and earlier only)
         <DD>  On at least Sun Solaris and SGI IRIX platforms, <VAR>f77</VAR>
               and <VAR>f90</VAR> are known not to be link compatible; you will
               need to keep builds for them separate (which is the original
@@ -1082,6 +1084,7 @@ or (PGI)
               10, 11, and 12, for example) separate.
               <P>
     </DL>
+    </BLOCKQUOTE>
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
 
@@ -1090,6 +1093,7 @@ or (PGI)
 
 <H3> <A NAME="v32">I/O&nbsp;API Version&nbsp;3.2 Availability</A></H3>
 
+    <BLOCKQUOTE>
     <A HREF="NEWSTUFF.html#jan2015">NOTE, January 15, 2015:</A>
     Version&nbsp;3.2 of the I/O&nbsp;API library source code and
     documentation is available from GitHub from
@@ -1112,12 +1116,13 @@ or (PGI)
 
     Due to <CODE>INTERFACE</CODE> changes in
     <CODE>MODULE&nbsp;M3UTILIO</CODE>, new
-    <CODE>MODULE&nbsp;MODGCTP</CODE> , and new module
+    <CODE>MODULE&nbsp;MODGCTP</CODE>, and new module
     <CODE>MODULE&nbsp;MODATTS3</CODE> (which replaces
     <CODE>MODULE&nbsp;MATXATTS</CODE>), there will be minor source-code
     changes in programs that use it; re-compilation and re-linking will
     be required:  see <A HREF="NEWSTUFF.html#ver32">here for more details.</A>
     <P>
+    </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
@@ -1127,6 +1132,7 @@ or (PGI)
 
 <H3> <A NAME="v31">I/O&nbsp;API Version&nbsp;3.1 Availability</A></H3>
 
+    <BLOCKQUOTE>
     Version&nbsp;3.1 of the I/O&nbsp;API library source code is
     <A HREF ="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz">available here
     for download</A> in <VAR>tar-gzip</VAR>ped  form. This version is
@@ -1206,9 +1212,9 @@ or (PGI)
     The build procedure is <STRONG><A HREF="#build">given above.</A></STRONG>.
     <P>
 
-    Version&nbsp;3.1 can read all files generated by Version&nbsp;3.0;
-    Version&nbsp;3.0 can read all files generated by Version&nbsp;3.1,
-    provided that the number if variables in the file
+    Version&nbsp;3.1 can read all files generated by Versions&nbsp;3.0
+    and earlier; Version&nbsp;3.0 can read all files generated by
+    Version&nbsp;3.1, provided that the number if variables in the file
     <CODE>NVARS3D&nbsp;&lt;&nbsp;121</CODE>.
     <P>
 
@@ -1218,7 +1224,7 @@ or (PGI)
     Version&nbsp;3.1 should not be mixed with previous versions.
     <P>
 
-    </STRONG>.
+    </STRONG>
     Note that proper use of <CODE>MODULE&nbsp;M3UTILIO</CODE>
     ensures that the library and user object code use consistent
     parameter values (as well as ensuring correctness of most
@@ -1233,6 +1239,7 @@ or (PGI)
     This release is current as of October&nbsp;1, 2015 and includes all
     bug-fixes up through that date.
     <P>
+    </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
@@ -1241,8 +1248,10 @@ or (PGI)
 
 <H3> <A NAME="v30">I/O&nbsp;API Version&nbsp;3.0 Availability</A></H3>
 
-    <STRONG>Version&nbsp;3.0 of the I/O&nbsp;API library source code
-    should be considered obsolescent, and used only if necessary.</STRONG>
+    <BLOCKQUOTE>
+    <STRONG>Version&nbsp;3.0 (or earlier) of the I/O&nbsp;API library
+    source code should be considered obsolete, and used only if
+    necessary.</STRONG>
     <P>
 
     Version&nbsp;3.0 of the I/O&nbsp;API library source code is
@@ -1429,6 +1438,7 @@ or (PGI)
         <P>
     </DL>
     <P>
+    </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
@@ -1437,10 +1447,12 @@ or (PGI)
 
 <H3> <A NAME="v22">I/O&nbsp;API Version&nbsp;2.2 Availability</A></H3>
 
-    <STRONG>Version&nbsp;2.2 of the I/O&nbsp;API library source code
-    should be considered obsolete.</STRONG>
+    <STRONG>Version&nbsp;2.2 (and all older versions) of the
+    I/O&nbsp;API library source code should be considered
+    obsolete.</STRONG>
     <P>
 
+    <BLOCKQUOTE>
     Version&nbsp;2.2 of the I/O&nbsp;API library source code is
     <A HREF = "https://www.cmascenter.org/ioapi/download/ioapi_22.tar.gz">available
     here for download</A> in <VAR>tar-gzip</VAR>ped form. New features
@@ -1468,6 +1480,7 @@ or (PGI)
     </UL>
     <P>
     <EM>This download is current as of October&nbsp;18,&nbsp;2003</EM>
+    </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
@@ -1476,6 +1489,7 @@ or (PGI)
 
 <H3> <A NAME="v21">I/O&nbsp;API Version&nbsp;2.0 and 2.1 Availability</A></H3>
 
+    <BLOCKQUOTE>
     <EM>Updated May&nbsp;7,2002 for SMOKE release:  now produces a
     library named <CODE>libioapi_v2.1.a</CODE> instead of
     Version&nbsp;2.0's <CODE>libioapi_new.a</CODE></EM>
@@ -1647,6 +1661,7 @@ or (PGI)
     however, it is probably advisable not to mix  <EM>f77</EM> and
     <EM>f90</EM> compiles on a not-well-understood new platform.
     <P>
+    </BLOCKQUOTE>
 
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -1657,6 +1672,7 @@ or (PGI)
 
     <H3><A NAME="note">NOTE on File Types</A></H3>
 
+    <BLOCKQUOTE>
     Files with extension &quot;.gz&quot; or &quot;.tgz&quot; are
     compressed with the GNU <VAR>gzip</VAR> utility.  Source for
     <VAR>gzip</VAR> is available from
@@ -1671,6 +1687,40 @@ or (PGI)
     &quot;.tgz&quot; files.
     <P>
 
+    The &quot;industry standard&quot; for Fortran source-file naming is
+    that the extensions for file names should be as follows:
+    <UL>
+        <LI><CODE>.f</CODE> for fixed format Fortran source code
+        <LI><CODE>.f90</CODE> for free format Fortran source code
+        <LI><CODE>.F</CODE> for fixed format Fortran source code that
+            needs to be run through the C pre-processor <VAR>cpp</VAR>
+            before compiling (because it uses <CODE>#include</CODE>,
+        <CODE>#define</CODE> and that sort of thing)
+        <LI><CODE>.F90</CODE> for free format Fortran source code that
+            needs to be run through the C pre-processor <VAR>cpp</VAR>
+    </UL>
+    Virtually all UNIX/Linux Fortran compilers will automatically use
+    the file-extension to determine which source form to expect, unless
+    you override this expectation with explicit flags specifying
+    otherwise.  Sadly, what these flags are varies from compiler to
+    compiler.
+    <P>
+    The <VAR>findent</VAR> program is an excellent resource for
+    converting code back and forth between the two forms (and even the
+    non-Standard one); see 
+    <A HREF="https://sourceforge.net/projects/findent/">
+    https://sourceforge.net/projects/findent/</A>.
+    <P>
+
+    It is also much more convenient for <VAR>make</VAR> dependencies if
+    Fortran <CODE>MODULE</CODE>s are one per file, with file name the
+    lower case of the  <CODE>MODULE</CODE> name&mdash;
+    <CODE>MODULE&nbsp;MODFOO</CODE> should be in the file named
+    <VAR>modfoo.f</VAR> or  <VAR>modfoo.f90</VAR>, as appropriate
+    (depending upon source-form).
+    <P>
+    </BLOCKQUOTE>
+
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
 
@@ -1679,6 +1729,7 @@ or (PGI)
 
     <H3><A NAME="disc">DISCLAIMER</A></H3>
 
+    <BLOCKQUOTE>
     This source code and these object libraries are available in
     unsupported form only, and neither MCNC nor Baron Advanced
     Meteorological Systems LLC  accepts any liability for its
@@ -1690,6 +1741,7 @@ or (PGI)
     On the other hand, its <A HREF = "mailto:carlie@jyarborough.com">author</A>
     thinks it is  <STRONG>good stuff<SUP>TM</SUP></STRONG> and welcomes
     comments and suggestions.
+    </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
@@ -1698,6 +1750,7 @@ or (PGI)
 
 <H3> <A NAME="docs">I/O&nbsp;API Documents</A></H3>
 
+    <BLOCKQUOTE>
     Documentation for the EDSS/Models-3/BAMS I/O&nbsp;API is
     available only as HTML -- it was designed from the start as a
     heavily cross-linked hyperdocument, and <STRONG>is not available in
@@ -1712,6 +1765,7 @@ or (PGI)
     and its documentation is
     <A HREF = "https://www.cmascenter.org/ioapi/download/ioapi-2.1.tar.gz">available here.</A>;
     <P>
+    </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
@@ -1735,7 +1789,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 108 2018-09-07 18:59:37Z coats $
+    $Id: AVAIL.html 112 2019-05-02 13:36:49Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
