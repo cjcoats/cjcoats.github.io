@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 102 2018-04-09 16:01:49Z coats $" -->
+<!-- "$Id: ERRORS.html 113 2019-05-07 17:41:01Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -31,6 +31,8 @@
                 files.</A>
          <LI>  <A HREF="#dups">Errors after retrofitting
                <CODE>MODULE&nbsp;M3UTILIO</CODE></A>
+         <LI>  <A HREF="#inst">&quot;Instruction... not supported&quot;
+               issues</A>
          <LI>  <A HREF="#syms">Missing-symbol issues</A>
          <LI>  <A HREF="#ccfc">Compiler/system-library compatibility issues</A>
          <LI>  <A HREF="AVAIL.html#ncf4">netCDF Version&nbsp;4 issues</A>
@@ -76,7 +78,7 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 102 2018-04-09 16:01:49Z coats $"
+    !! Version "$Id: ERRORS.html 113 2019-05-07 17:41:01Z coats $"
     </PRE>
     </BLOCKQUOTE>
 <P>
@@ -120,42 +122,105 @@ Error: Symbol 'getnum' at (1) conflicts with symbol from module 'm3utilio', use-
     <CODE>INCLUDE</CODE>-statements, function-declarations, and
     <CODE>EXTERNAL</CODE> statements.
     <P>
+    </BLOCKQUOTE>
 
     <A HREF="#contents">Back to &quot;Troubleshooting&quot; Contents</A>
     <P>
-    </BLOCKQUOTE>
 
 
 
 <HR> <!----------------------------------------------------------------->
 
-<H2><A NAME="syms">
+<H2><A NAME="inst">
 
-     Missing-symbol issues
+     &quot;Instruction... not supported&quot; issues
 
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Problem:</EM>  When I try to link, I get &quot;missing
-    symbol&quot; errors.
+    <EM>Problem:</EM>  at run-time, messages like
+        <BLOCKQUOTE><CODE>
+        Please verify that both the operating system and  the processor
+        support Intel® X87, CMOV, MMX, FXSAVE, SSE, SSE2, SSE3, SSSE3,
+        SSE4_1, SSE4_2, MOVBE, POPCNT, F16C, AVX, FMA, BMI, LZCNT and
+        AVX2 instructions.
+        </CODE></BLOCKQUOTE>
     <P>
-    If the symbols begin with <CODE>nc_</CODE> or <CODE>nf_</CODE>, this
-    may be <A HREF="AVAIL.html#ncf4">a netCDF3-netCDF4 or netCDF-library
-    oreder problem.</A>
+    Starting with the Pentium II processor (1997), successive
+    generations of Intel processors have introduced more and more
+    powerful vector-style instructions (<CODE>MMX, SSE, SSE2, SSE3,
+    SSE4.1, SSE4.2, AVX, AVX2, AVX-512, ...</CODE>) that can
+    substantially speed up array-style calculations (including,
+    particularly, the I/O&nbsp;API <CODE>INTERP3()</CODE>).  Note that,
+    for example, a program using <CODE>AVX</CODE> is potentially up to
+    twice as fast on appropriate calculations as one using
+    <CODE>SSE4.2</CODE> (etc.)&mdash;in fact, the degree of speedup is a
+    good measure of how well array based calculations are coded:  good
+    CFD applications will typically get an <CODE>AVX</CODE> speedup
+    factor of about 1.8, whereas the (more poorly-coded) WRF gets only
+    about 1.3 (which can be improved substantially by re-coding the
+    advection and diffusion routines to be less memory-system-hostile).
     <P>
-    Otherwise, especially if the symbols have a <CODE>mp</CODE> 
-    somewhere in them, you probably need to add the appropriate OpenMP
-    fiags to the compile and link commands used to build your program.
+    
+    When the executable
+    program using one or more of these instructions is run on an
+    earlier-version processor that does not support them, one gets an
+    error-message like the above.
     <P>
-    Note that for two decades, the I/O&nbsp;API has supported safe
-    OpenMP parallelism&mdash;in both models and in certain of the
-    <VAR>m3tools</VAR> programs.  That means that to build programs, you
-    need to use the compile- and link-options appropriate to this fact: 
-    see the variables <CODE>OMPFLAGS</CODE> (for the compile-stage) and
-    <CODE>OMPLIBS</CODE> (for the link-stage) from the 
-    <VAR>Makeinclude.${BIN}</VAR> used to build your I/O&nbsp;API
-    library, in order to see what is needed for your compiler.
+    
+    On a Linux system, you can see what instructions are supported by
+    running the following at the command line
+    <BLOCKQUOTE><CODE>
+    cat /proc/cpuinfo
+    </CODE></BLOCKQUOTE>
+    and then looking at the <CODE>flags</CODE> sections for the
+    instructions listed below.
     <P>
+    
+    Use of these instructions is typically governed by command-line
+    directives given to the compiler; different compilers use different
+    flags to govern this, and have different defaults.  GNU and Intel
+    compilers typically default to <CODE>SSE3</CODE>; PGI compilers
+    typically default to the instruction set for the processor on which
+    the compiler itself is being run.  See your compiler's documentation
+    on how to control this.
+    <P>
+    
+    <STRONG>Recent Intel processors and their instruction sets</STRONG>
+    <DL>
+        <DT> Nehalem (2008)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2</CODE>
+
+        <DT> Sandy Bridge (2011)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX</CODE>
+
+        <DT> Ivy Bridge (2012)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX</CODE>
+
+        <DT> Haswell (2013)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2,
+        FMA3</CODE>
+
+        <DT> Broadwell (2015)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2,
+        FMA3</CODE>
+
+        <DT> Skylake (2015)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2,
+        FMA3</CODE>
+
+        <DT> Skylake-X (2017)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2,
+        AVX-512, FMA3</CODE>
+
+        <DT> Kaby Lake (2017)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2,
+        FMA3</CODE>
+
+        <DT> Coffee Lake (2018)
+        <DD> <CODE>MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX, AVX2,
+        FMA3</CODE>
+    </DL>
     </BLOCKQUOTE>
     <P>
 
