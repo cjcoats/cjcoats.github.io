@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 109 2018-10-16 15:12:53Z coats $" -->
+<!-- "$Id: AA.html 116 2019-06-11 21:16:16Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -1534,6 +1534,14 @@ Contents
              Perform coordinate conversions and grid-related
              computations for Lat-Lon, Lambert, and UTM coordinate
              systems.
+        <DT> <A HREF = "WNDWDESC.html" >
+             <STRONG>wndwdesc</STRONG>:
+             </A>
+             <EM>New June&nbsp;12, 2019 for Version 3.2</EM><BR>
+             Take diagonally-opposing Lat-Lon coordinates for a grid,
+             and compute the col-row bounds for the windowed sub-grid
+             that encloses them, and produces a single-grid
+             <CODE>GRIDDESC</CODE> file  for the indicated sub-grid.
         <P>
         <DT> <STRONG><A NAME="datepgms">Programs</A> for date-manipulation</STRONG><P>
              Verbose, prompt based, <STRONG>for interactive use</STRONG>:
@@ -1708,7 +1716,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 109 2018-10-16 15:12:53Z coats $
+$Id: AA.html 116 2019-06-11 21:16:16Z coats $
     </PRE>
 
 </BODY>
