@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 117 2019-06-15 14:56:29Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 118 2019-06-15 20:50:32Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 117 2019-06-15 14:56:29Z coats $
+    $Id: NEWSTUFF.html 118 2019-06-15 20:50:32Z coats $
     </EM>
     <HR>
 
@@ -42,7 +42,8 @@
                <STRONG><VAR>wndwdesc</VAR></STRONG></A> computes the 
                corners for the windowed sub-grid of a specified grid
                that encloses specified Lat-Lon corners, and writes the
-               result to a <CODE>GRIDDESC</CODE> file.
+               result to a <CODE>GRIDDESC</CODE> file.<BR>
+               Bug-fix in file-list mode.
          <LI>  <A HREF = "#mar192019"> 
                <CODE>RDTFLAG(*)</CODE></A> now puts both its input argument
                date&amp;time and the on-file date&amp;time into normal
@@ -733,6 +734,10 @@
     windowed sub-grid of that grid, computes the col-row boundaries for
     that windowed sub-grid, and generates a single-grid
     <A HREF="GRIDDESC.html"><VAR>GRIDDESC</VAR> file</A> for that sub-grid.
+    <P>
+    There were problems with <AHREF="BUFFERED.html#list"><CODE>LIST:</CODE>
+    file lists.  These problems are now fixed (this extension had not
+    been tested, and needed a bit of work).  Now fixed.
     <P>
     </BLOCKQUOTE>
 
@@ -7001,7 +7006,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 117 2019-06-15 14:56:29Z coats $
+    $Id: NEWSTUFF.html 118 2019-06-15 20:50:32Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
