@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 116 2019-06-11 21:16:16Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 117 2019-06-15 14:56:29Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 116 2019-06-11 21:16:16Z coats $
+    $Id: NEWSTUFF.html 117 2019-06-15 14:56:29Z coats $
     </EM>
     <HR>
 
@@ -33,8 +33,12 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
-         <LI>  <A HREF = "#jun122019"> 
-               <VAR>M3TOOLS</VAR> program
+         <LI>  <A HREF = "#jun152019"> 
+               Bugs for default <CODE>RUNLEN</CODE> in <VAR>M3TOOLS</VAR>
+               programs <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
+               <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, <VAR>vertot</VAR>,
+               reported by Winston Rao, NY DEC.  Now fixed.<BR>
+               New <VAR>M3TOOLS</VAR> program
                <STRONG><VAR>wndwdesc</VAR></STRONG></A> computes the 
                corners for the windowed sub-grid of a specified grid
                that encloses specified Lat-Lon corners, and writes the
@@ -701,6 +705,34 @@
         % nm libnetcdff.a | grep ncclos<BR>
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "jun152019">
+    Bugfix for <VAR>M3TOOLS</VAR> programs <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
+    <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, <VAR>vertot</VAR><BR>
+    New <VAR>M3TOOLS</VAR> program <VAR>wndwdesc</VAR></A>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Winston Rao (NY DEC) reported an off-by-one bug in processing the
+    default value for <CODE>RUNLEN</CODE> (which comes in from a
+    user-prompt) for  <VAR>M3TOOLS</VAR> programs <VAR>m3diff</VAR>,
+    <VAR>m3stat</VAR>, <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, and
+    <VAR>vertot</VAR> for I/O&nbsp;API 3.2.  This bug is now fixed.
+    <P>
+    New <VAR>M3TOOLS</VAR> program
+    <A HREF="WNDWDESC.html"><VAR>wndwdesc</VAR></A> takes a grid name
+    and the Lat-Lon coordinates for points in opposite corners of a
+    windowed sub-grid of that grid, computes the col-row boundaries for
+    that windowed sub-grid, and generates a single-grid
+    <A HREF="GRIDDESC.html"><VAR>GRIDDESC</VAR> file</A> for that sub-grid.
     <P>
     </BLOCKQUOTE>
 
@@ -6969,7 +7001,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 116 2019-06-11 21:16:16Z coats $
+    $Id: NEWSTUFF.html 117 2019-06-15 14:56:29Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
