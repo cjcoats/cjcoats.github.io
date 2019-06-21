@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 112 2019-05-02 13:36:49Z coats $" -->
+<!-- "$Id: AVAIL.html 120 2019-06-21 14:18:20Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -114,8 +114,8 @@ Foreword
     If you run into troubles with I/O&nbsp;API related programs, it is
     useful to know the versions of all the software components.  The
     CVS-related program <VAR>ident</VAR> can report to you versioning
-    keywords in the various components of object, library, or executable
-    files. For example:
+    keywords in the various components of source, object, library, or
+    executable files. For example:
     <PRE>
 % cd $HOME/apps/$BIN
 % ident init3.o
@@ -143,12 +143,12 @@ m3stat:
                for I/O&nbsp;API Versions&nbsp;3.0, 3.1, and 3.2</H3>
 
     <BLOCKQUOTE>
-    As of this writing (Dec&nbsp;2015), I/O&nbsp;API Versions 2.2 and
-    earlier are obsolete; 3.0 is obsolescent, in critical-fixes-only
-    mode; 3.1 is the current stable/production version; and 3.2 is the
-    development/R&amp;D version.  See the <A HREF = "NEWSTUFF.html">Change
-    Log&nbsp;/&nbsp;&quot;What's New&quot;&nbsp;/&nbsp;Research Directions</A>
-    page for further information.
+    As of this writing (June&nbsp;2019), I/O&nbsp;API Versions 2.2 and
+    earlier are obsolete; 3.0 and 3.1 obsolescent, in critical-fixes-only
+    mode; and 3.2 is the current stable/production version.  See the
+    <A HREF = "NEWSTUFF.html">Change Log&nbsp;/&nbsp;&quot;What's
+    New&quot;&nbsp;/&nbsp;Research Directions</A> page for further
+    information.
     <P>
     <DL>
         <DT>  <STRONG>To set up the installation:</STRONG>
@@ -219,6 +219,34 @@ m3stat:
                        <CODE>-lnetcdff.dll&nbsp;-lnetcdf.dll</CODE>,
                        as well as not using the flag  <CODE>-fsecond-underscore</CODE>
                        in the <VAR>Makeinclude.${BIN}</VAR>.
+                       <P>
+                       Note that the <CODE>Makefile</CODE>s and
+                       environment-variable <CODE>BIN</CODE>-structure
+                       support the simultaneous building and maintenance
+                       of multiple versions of both
+                       the I/O&nbsp;API and <VAR>m3tools</VAR> programs
+                       using the <CODE>bins</CODE>, <CODE>bins</CODE>,
+                       <CODE>binclean</CODE>, <CODE>bindirs</CODE>, and
+                       <CODE>binrelink</CODE> <VAR>make</VAR>-targets,
+                       which may be customized to support the versions
+                       you want.
+                       Examples of such versions (each of which has its
+                       own <CODE>Makeinclude.${BIN}</CODE>) are:
+                       <UL>
+                            <LI> Choice of compilers
+                            <LI> Choice of different compiler-options
+                                 (optimized, debug, profiling)
+                            <LI> Choice of <A HREF = "#medium">memory
+                                 model</A>: <EM>small</EM> (normal) vs
+                                 <EM>medium</EM>
+                            <LI> &quot;normal&quot; vs global-climate vs
+                                 <VAR>pnetCDF/MPI</VAR>
+                                 distributed-output vs coupling-mlode
+                       </UL>
+                       Note that if you update the I/O&nbsp;API library, then
+                       <VAR>cd ../m3tools; make relink</VAR> will
+                       efficiently re-build the <VAR>m3tools</VAR>
+                       programs.
                        <P>
                        Additional definitions in <VAR>make</VAR>-variable
                        <CODE>DEFINEFLAGS</CODE> turn on various optional
@@ -292,7 +320,7 @@ m3stat:
                            <DT><CODE>Makeinclude.*MPI</CODE>
                            <DD>PnetCDF/MPI enabled distributed-I/O version
                            of library
-                           <DT><CODE>Makeinclude.Linux2_x86_64ifort_medium*</CODE>
+                           <DT><CODE>Makeinclude.*_medium*</CODE>
                            <DD>medium-memory-model (large stack/large-array)
                                version of library
                        </DL>
@@ -379,12 +407,14 @@ m3stat:
                         libraries separate from the normal (leap-year
                         enabled) libraries.</EM>
                  <P>
-                  <LI>  For each desired configuration,
-                        <STRONG><VAR>setenv&nbsp;BIN&nbsp;&lt;machinetype&gt;</VAR></STRONG>,
+                  <LI>  For each desired configuration of machine,
+                        compiler-set, and other options,
+                        <STRONG><VAR>setenv&nbsp;BIN&nbsp;&lt;type&gt;</VAR></STRONG>,
                         where <CODE>&lt;machinetype&gt;</CODE> matches
                         the extension on one of the
-                        <CODE>ioapi/Makeinclude.*</CODE>.  Then do a
-                        top-level <VAR>make&nbsp;dirs</VAR> to build the
+                        <CODE>ioapi/Makeinclude.*</CODE> (creating a new
+                        one, if necessary).  Then do a top-level
+                        <VAR>make&nbsp;dirs</VAR> to build the
                         object-directories.
                         <P>
                         The usual pattern for generating <CODE>BIN</CODE> is
@@ -493,7 +523,8 @@ m3stat:
                   <LI>  Edit the relevant files
                         <VAR>ioapi/Makeinclude.$BIN</VAR> for your
                         system specific compiler options, PVM
-                        installation location, etc., as appropriate.
+                        installation location, etc., or create new ones,
+                        as appropriate.
                   <P>
                   <LI>  Edit the <VAR>Makefile</VAR>s to set
                         <VAR>make</VAR>-variable <CODE>BASEDIR</CODE>,
@@ -521,7 +552,11 @@ m3stat:
                   <LI>  <VAR>setenv&nbsp;BIN&nbsp;...</VAR>, followed by
                         one of the <VAR>make&nbsp;&lt;target&gt;</VAR>
                         commands below,  as appropriate for your
-                        configuration(s),
+                        configuration(s).<BR>
+                        Alternatively, <STRONG><VAR>make&nbsp;BIN=&lt;machinetype&gt;</VAR></STRONG>
+                        (where note that a command-line
+                        variable-definition overrides the environement
+                        variable definition).
                   <P>
                   <LI>  Note that a top-level <VAR>make</VAR> will
                         generate messages about installing the
@@ -1789,7 +1824,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 112 2019-05-02 13:36:49Z coats $
+    $Id: AVAIL.html 120 2019-06-21 14:18:20Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

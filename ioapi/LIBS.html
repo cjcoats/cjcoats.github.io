@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: LIBS.html 108 2018-09-07 18:59:37Z coats $" -->
+<!-- "$Id: LIBS.html 120 2019-06-21 14:18:20Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Object Libraries, Executables, and Supported Machines
@@ -29,13 +29,13 @@
     <P>
 
     The current release version of the I/O&nbsp;API library is
-    Version&nbsp;3.1; Versions&nbsp;3.0 is in maintenance only
+    Version&nbsp;3.2; Versions&nbsp;3.0 and 3.1 in maintenance only
     release mode, and versions 2.2 and 2.1 are available for
     historic interest. To download source for these, please go to the
     <A HREF="AVAIL.html">I/O&nbsp;API Download Page.</A>
     <P>
 
-    Release Version&nbsp;3.0, 3.1, 3.2-<VAR>beta</VAR> of the
+    Release Version&nbsp;3.0, 3.1, 3.2 of the
     I/O&nbsp;API and the I/O&nbsp;-related tool and sample programs, as
     well as obsolete prior versions 2.1 and 2.2, are available here
     on the CMAS Center web site:
@@ -47,8 +47,8 @@
          <DT><A HREF = "https://www.cmascenter.org/ioapi/download/ioapi-2.1.tar.gz">ioapi-2.1.tar.gz</A>
     </DL></BLOCKQUOTE>
     in source code form.  New features of 2.2 and later releases are
-    <A HREF = "NEWSTUFF.html">documented herein the Change Log</A>; build instructions
-    are <A HREF="AVAIL.html#build">available here</A>.
+    <A HREF = "NEWSTUFF.html">documented herein the <EM>Change Log</EM></A>;
+    build instructions are <A HREF="AVAIL.html#build">available here</A>.
     <P>
 
     For each supported architecture, there are several relevant archive
@@ -64,7 +64,7 @@
              manipulation routines </A>, and the
              <A HREF = "AA.html#utility"> utility routines</A>.
         <DT> <STRONG>libnetcdf.a</STRONG> (and  <STRONG>libnetcdff.a</STRONG>
-             for netCDF-4 or later)
+             for netCDF-4.1 or later)
         <DD> contains object files for the underlying
              <A HREF = "https://www.unidata.ucar.edu/software/netcdf/">
              netCDF library</A>; it is compiled with optimization on
@@ -80,15 +80,16 @@
     <P>
 
     Note that optimized and debug versions of the libraries are normally
-    built into distinct build-directories (e.g.,
-    <VAR>Linux2_x86_64ifort</VAR> vs <VAR>Linux2_x86_64ifortdbg</VAR>);
-    you should segregate profiling-enabled (etc.) libraries similarly.
-    If you call I/O&nbsp;API routines, you will need
-    <STRONG>both</STRONG>  <VAR>libioapi.a</VAR> and
+    built into distinct build-directories each with its own
+    <VAR>$BIN</VAR> (e.g., <VAR>Linux2_x86_64ifort</VAR> vs
+    <VAR>Linux2_x86_64ifortdbg</VAR>); you should segregate
+    profiling-enabled, global;-climate, and distributed-I/O (etc.)
+    libraries similarly. If you call I/O&nbsp;API routines, you will
+    need <STRONG>both</STRONG>  <VAR>libioapi.a</VAR> and
     <VAR>libnetcdf.a</VAR> (and, for netCDF-4, <VAR>libnetcdff.a</VAR>;
     these are normally copied into the relevant build-directory); if you
     build with PnetCDF/MPI distributed I/O enabled, you will need
-    <VAR>libpnetcdf.a</VAR> if you build with coupling mode enabled, you
+    <VAR>libpnetcdf.a</VAR>; if you build with coupling mode enabled, you
     will also need <VAR>libpvm3.a</VAR>. If you call only coordinate and
     grid or date and time manipulation  routines or utility routines,
     you will just need <VAR>libioapi.a</VAR>.
