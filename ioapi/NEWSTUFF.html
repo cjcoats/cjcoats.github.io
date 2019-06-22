@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 120 2019-06-21 14:18:20Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 121 2019-06-22 14:18:29Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 120 2019-06-21 14:18:20Z coats $
+    $Id: NEWSTUFF.html 121 2019-06-22 14:18:29Z coats $
     </EM>
     <HR>
 
@@ -148,7 +148,7 @@
                </A>
          <LI>  <A HREF = "#aug172016">
                Support for <CODE>INTEGER*1</CODE> and
-               <CODE>INTEGER*2</CODE> to <CODE>REAQDNCVAR()</CODE>
+               <CODE>INTEGER*2</CODE> to <CODE>READNCVAR()</CODE>
                </A>
          <LI>  <A HREF = "#jul262016">
                New <VAR>m3tools</VAR> program</A>
@@ -273,8 +273,6 @@
                Bug-fixes from Christian Hogrefe in <VAR>m3tools</VAR> programs
                <CODE>JULDATE</CODE> and <CODE>M3XTRACT</CODE>
                </A>
-               top-level <CODE>Makefile.template</CODE>
-               top-level <CODE>Makefile.template</CODE>
         <LI>  <A HREF = "#may2611">
                Bug-fix for file type <CODE>CUSTOM3</CODE> in  <VAR>m3tools</VAR> program
                <CODE>M3STAT</CODE>
@@ -718,15 +716,16 @@
 <H2> <A NAME = "jun152019">
     Bugfix for <VAR>M3TOOLS</VAR> programs <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
     <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, <VAR>vertot</VAR><BR>
-    New <VAR>M3TOOLS</VAR> program <VAR>wndwdesc</VAR></A>
+    New <VAR>M3TOOLS</VAR> program <VAR>wndwdesc</VAR>
 </A></H2>
 
     <BLOCKQUOTE>
     Winston Rao (NY DEC) reported an off-by-one bug in processing the
     default value for <CODE>RUNLEN</CODE> (which comes in from a
-    user-prompt) for  <VAR>M3TOOLS</VAR> programs <VAR>m3diff</VAR>,
-    <VAR>m3stat</VAR>, <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, and
-    <VAR>vertot</VAR> for I/O&nbsp;API 3.2.  This bug is now fixed.
+    user-prompt) for  <A HREF="AA.html#tools"><VAR>M3TOOLS</VAR>
+    programs</A> <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
+    <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, and <VAR>vertot</VAR> for
+    I/O&nbsp;API 3.2.  This bug is now fixed.
     <P>
     New <VAR>M3TOOLS</VAR> program
     <A HREF="WNDWDESC.html"><VAR>wndwdesc</VAR></A> takes a grid name
@@ -736,7 +735,7 @@
     <A HREF="GRIDDESC.html"><VAR>GRIDDESC</VAR> file</A> for that sub-grid.
     <P>
     There were problems with
-    <A HREF="BUFFERED.html#list"><CODE>LIST:</CODE> file lists.  These
+    <A HREF="BUFFERED.html#list"><CODE>LIST:</CODE></A> file lists.  These
     problems are now fixed (June 15.&nbsp;2019. This extension had not
     been tested, and needed a bit of work).  Now fixed.
     <P>
@@ -755,7 +754,9 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    ...for compatibility with &quot;unusual&quot; date&amp;time usage in MEGAN.
+    ...for compatibility with &quot;unusual&quot; date&amp;time usage in
+    MEGAN. (<CODE>RDTFLAG(*)</CODE> is an internal routine called by
+    <CODE>READ3(*)</CODE> internals.)
     <P>
     </BLOCKQUOTE>
 
@@ -771,7 +772,8 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    There was a typo in the refined-grid definition for <VAR>m3tools/mtxcalc</VAR>
+    There was a typo in the refined-grid definition for 
+    <A HREF="MTXCALC.html"><VAR>m3tools/mtxcalc</VAR></A>
     that had the effect of &quot;squashing&quot; the output-range for
     the matrix that was calculated.  Fixed.
     <P>
@@ -887,17 +889,19 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    Bug-fixes in <VAR>ioapi/rdatt3</VAR> and <VAR>ioapi/wratt3</VAR>: 
+    Bug-fixes in <A HREF="RDATT3.html"><VAR>ioapi/rdatt3</VAR></A> and
+    <A HREF="WRATT3.html"><VAR>ioapi/wratt3</VAR></A>: 
     fixed bug introduced by I/O&nbsp;API 3.2 PnetCDF changes.
     <P>
-    Bug-fixes in   <VAR>m3tools/mtxcalc</VAR>
+    Bug-fixes in   <A
+    HREF="MTXCALC.html"><VAR>m3tools/mtxcalc</VAR></A>
     <P>
-    Enhanced <VAR>m3tools/mtxcple</VAR> does not attempt to
-    read/transform non<CODE>REAL</CODE> variables.
+    Enhanced <A HREF="MTXCPLE.html"><VAR>m3tools/mtxcple</VAR></A> does
+    not attempt to read/transform non<CODE>REAL</CODE> variables.
     <P>
     Flag-fix in <VAR>ioapi/Makeinclude.Linux2_x86_64g95dbg</VAR>
     <P>
-    Updated web-copies of OI/O&nbsp;API <CODE>INCLUDE</CODE>-files.
+    Updated web-copies of I/O&nbsp;API <CODE>INCLUDE</CODE>-files.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -912,8 +916,8 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    Bug-fix in <VAR>m3tools/mtxcalc</VAR>:  fixed uninitialized
-    <CODE>NUMER, DENOM</CODE> variables.
+    Bug-fix in <A HREF="MTXCALC.html"><VAR>m3tools/mtxcalc</VAR></A>:
+    fixed uninitialized <CODE>NUMER, DENOM</CODE> variables.
     <P>
     
     <P>
@@ -1010,8 +1014,9 @@
     <BLOCKQUOTE>
     Ehsan Mosadegh <EM>(dri.edu)</EM> reports a problem related to a missing
     <CODE>EFLAG</CODE> initialization in <VAR><STRONG>m3tools</STRONG></VAR>
-    program <VAR><STRONG>m3tshift</STRONG></VAR>.  This bug was also present
-    in program <VAR><STRONG>m3wndw</STRONG></VAR>.
+    program <A HREF="M3TSHIFT.html"><VAR><STRONG>m3tshift</STRONG></VAR></A>.
+    This bug was also present
+    in program <A HREF="M3WNDW.html"><VAR><STRONG>m3wndw</STRONG></VAR></A>.
     <P>
     Now fixed.
     <P>
@@ -1131,11 +1136,13 @@
     <BLOCKQUOTE>
     Bug reported by Kathy Brehme, Edward Anderson: incorrect default
     <CODE>RUNLEN</CODE> in <VAR>m3tools</VAR> program
-    <VAR>vertot</VAR>. Same bug existed in <VAR>vertintegral</VAR>; bug
+    <A HREF="VERTOT.html"><VAR>vertot</VAR></A>. Same bug existed in
+    <A HREF="VERTINTEGRAL.html"><VAR>vertintegral</VAR></A>; bug
     fixed in both.
     <P>
-    Enhanced default for <CODE>RUNLEN</CODE> in <VAR>m3tools</VAR>
-    programs <VAR>m3stat, m3tshift, m3wndw, m3xtract</VAR>.
+    Enhanced default for <CODE>RUNLEN</CODE> in
+    <A HREF="AA.html#tools"><VAR>m3tools</VAR></A> programs <VAR>m3stat,
+    m3tshift, m3wndw, m3xtract</VAR>.
     <P>
     Enhanced <CODE>Makeinclude.*</CODE>: <VAR>make</VAR>-variables
     <CODE>MODI, E132</CODE> for module-include path, 132-column-fixed
@@ -1178,7 +1185,7 @@
     <BLOCKQUOTE>
     Bug-fixes for incorrect read  of variables <VAR>lonCell</VAR> and
     write of <VAR>kiteAreasOnVertex</VAR> to/from file headers, in
-    <CODE>MODULE&nbsp;MODMPASFIO</CODE>.
+    <A HREF="MODMPASFIO.html"><CODE>MODULE&nbsp;MODMPASFIO</CODE></A>.
     <P>
     </BLOCKQUOTE>
 
@@ -1189,8 +1196,9 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "jul192017">
-   Bug-fixes in <CODE>EQMERC, SETEQM, SETTRM</CODE> 
-</A></H2>
+   Bug-fixes</A> in <A HREF="LAMBERT.html"><CODE>EQMERC, SETEQM,
+   SETTRM</CODE></A>
+</H2>
 
     <BLOCKQUOTE>
     <CODE>EQMER()</CODE> had an incorrect test for <CODE>P_ALP</CODE>
@@ -1199,7 +1207,8 @@
     <CODE>SETEQM, SETTRM</CODE> had incorrectly-worded error messages.
     <P>
 
-    Bug-fix in <CODE>MODMPASFIO/ARC2MPAS()</CODE>.
+    Bug-fix in <A
+    HREF="MODMPASFIO.html"><CODE>MODMPASFIO/ARC2MPAS()</CODE></A>.
     <P>
     </BLOCKQUOTE>
 
@@ -1210,10 +1219,11 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "jul052017">
-     Bug-fixes for time stepped versions of read and write
-     operations in <CODE>MODULE MODMPASFIO</CODE> and
-     <CODE>MODULE MODNCFIO</CODE>
-</A></H2>
+     Bug-fixes</A> for time stepped versions of read and write
+     operations in 
+     <A HREF="MODMPASFIO.html"><CODE>MODULE MODMPASFIO</CODE></A> and
+     <A HREF="MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>
+</H2>
 
     <BLOCKQUOTE>
     Subject says it:  in both of these, there was a consistent error
@@ -1234,11 +1244,13 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    Bug in <CODE>MODMPASFIO/MPSTR2DT()</CODE>  which then causes bad
-    results from <CODE>MODMPASFIO/READMPSTEPS()</CODE>.
+    Bug in <CODE><A HREF="MODMPASFIO.html">MODMPASFIO</A>/MPSTR2DT()</CODE>
+    which then causes bad results from
+    <CODE>MODMPASFIO/READMPSTEPS()</CODE>.
     <P>
     Eliminate (annoyingly-numerous) &quot;Processing coordinate
-    transform&quot; messages in <CODE>MODULE MODNCFIO</CODE>.
+    transform&quot; messages in
+    <A HREF="MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>.
     <P>
     </BLOCKQUOTE>
 
@@ -1338,6 +1350,7 @@
 
     <BLOCKQUOTE>
     Added routines <CODE>READNVSTEP*(FNAME,TSTEP,VNAME,...)</CODE>
+    to <A HREF="MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>
     for reading one time step (<CODE>TSTEP=1,2,3,...</CODE>) of the
     indicated variable from time-stepped &quot;raw netCDF&quot; file
     <CODE>FNAME</CODE>.
@@ -1403,7 +1416,7 @@
 
 <H2> <A NAME = "aug172016">
     Support for <CODE>INTEGER*1</CODE> and <CODE>INTEGER*2</CODE>
-    for <CODE>REAQDNCVAR()</CODE>
+    for <CODE>READNCVAR()</CODE>
 </A></H2>
 
     <BLOCKQUOTE>
@@ -1456,7 +1469,8 @@
     <BLOCKQUOTE>
     New routines <CODE>READNCVAR4DD(), READNCVAR4DI(), READNCVAR4DR(),
     READNCVEC4DD(), READNCVEC4DI(), READNCVEC4DR()</CODE>
-    in the generic routine <CODE>READNCVAR()</CODE>
+    in the generic routine <CODE>READNCVAR()</CODE>in 
+    <A HREF="MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>
     <P>
     Bug-fixes (fixed bad dimension-check) for
     <CODE>READNCVAR3DD(), READNCVAR3DI(), READNCVAR3DR(),
@@ -1476,12 +1490,12 @@
 
     <BLOCKQUOTE>
     Missing <CODE>IMPLICIT NONE</CODE> and <CODE>EXTERNAL</CODE> declarations
-    in <CODE>LASTTIME()</CODE>.
+    in <A HREF="LASTTIME.html"><CODE>LASTTIME()</CODE></A>.
     <P>
     Error in calculation of <CODE>NRECS</CODE> argumnent for
-    <CODE>RUNSPEC()</CODE>
+    <A HREF="RUNSPEC.html"><CODE>RUNSPEC()</CODE></A>
     <P>
-    Bug-fixes by Edward Anderson, Lockheed Martin, for
+    Bug-fixes by Edward Anderson, Lockheed Martin, for internal routine
     <CODE>CKFILE3()</CODE>.
     <P>
     </BLOCKQUOTE>
@@ -1494,8 +1508,9 @@
 
 
 <H2> <A NAME = "jun242016">
-     Bug-fixes in <CODE>DBLLIST(), INTLIST(), REALIST(), STRLIST()</CODE> routines
-</A></H2>
+     Bug-fixes</A> in <A HREF="LISTS.html"><CODE>DBLLIST(), INTLIST(), REALIST(),
+     STRLIST()</CODE></A> routines
+</H2>
 
     <BLOCKQUOTE>
     Corrected mis-handling of delimiters in COMMA-or-BLANK delimited lists.
@@ -1569,7 +1584,8 @@
 
     <BLOCKQUOTE>
     Chris Nolte, US EPA ORD, points out a bug in the I/O&nbsp;API 3.2
-    version of <VAR>m3tools</VAR> program <VAR>m3tproc</VAR>, together
+    version of <VAR>m3tools</VAR> program 
+    <A HREF="M3TPROC.html"><VAR>m3tproc</VAR></A>, together
     with a documentation problem and a <VAR>m3tools/Makefile</VAR> problem.<BR>
     FIXED.
     <P>
@@ -1583,8 +1599,8 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "apr292016">
-    More CMAQ metadata in <CODE>MODULE MODATTS3</CODE>
-</A></H2>
+    More CMAQ metadata</A> in <A HREF="MODATTS3.html"><CODE>MODULE MODATTS3</CODE></A>
+</H2>
 
     <BLOCKQUOTE>
     Metadata now contains values for all environment based control
@@ -1598,8 +1614,9 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "apr222016">
-    Bug-fixes for MPI/PnetCDF mode in <CODE>MODULE MODATTS3</CODE>
-</A></H2>
+    Bug-fixes</A> for MPI/PnetCDF mode in
+    <A HREF="MODATTS3.html"><CODE>MODULE MODATTS3</CODE></A>
+</H2>
 
     <BLOCKQUOTE>
     Subject says it.
@@ -1746,8 +1763,9 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "mar082016">
-    Compatibility fixes for I/O&nbsp;API 3.2; <CODE>DOWNCASE()</CODE>
-</A></H2>
+    Compatibility fixes</A> for I/O&nbsp;API 3.2;
+    <A HREF="UPCASE.html"><CODE>DOWNCASE()</CODE></A>
+</H2>
 
     <BLOCKQUOTE>
     B. H. Baek (UNC IE) discovered bacvkwards-compatibility problems
@@ -1939,7 +1957,7 @@
 
 <H2> <A NAME = "nov112015">
     I/O&nbsp;API v3.2 support for 360/365-day (no leap-year)
-               climate modeling years
+    climate modeling years
 </A></H2>
 
     <BLOCKQUOTE>
@@ -1978,7 +1996,9 @@
     will not be included in the release <VAR>ioapi-3.2.tar.gz</VAR>;
     for both of the directories <VAR>ioapi</VAR> and <VAR>m3tools</VAR>
     you will need to copy one of the <VAR>Makefile.*</VAR> templates
-    to  <VAR>Makefile</VAR> and customize it.
+    to  <VAR>Makefile</VAR> and customize it.  This prevents the
+    situation where an I/O&nbsp;API upgrade clobbers your existing
+    customization.
     <P>
     </BLOCKQUOTE>
 
@@ -2471,7 +2491,7 @@
         <LI> Define standard <VAR>CMAQ</VAR> and <VAR>SMOKE</VAR>
              metadata and finish the relevant routines in
              <A HREF="MODATTS3.html"><CODE>MODULE&nbsp;MODATTS3</CODE></A>
-             accordingly.
+             accordingly.  <VAR>CMAQ</VAR> metadata now in place.
              <P>
         <LI> Do overloaded <CODE>LL2LAM()</CODE> routines, to support
              both single-precision and double-precision operation?
@@ -2606,10 +2626,10 @@
 
     July&nbsp;9, 2014:
     <P>
-    Mohammad Omary, UNC IE, turned up a bug in using <VAR>m3tools</VAR> program
-    <VAR>m3diff</VAR> on files with distinct time step sequences (e.g.
-    comparing file A for July 2009 with File B for August 2014.  This is
-    fixed in the new version.
+    Mohammad Omary, UNC IE, turned up a bug in using <VAR>m3tools</VAR>
+    program <A HREF="M3DIFF.html"><VAR>m3diff</VAR></A> on files with
+    distinct time step sequences (e.g. comparing file A for July 2009
+    with File B for August 2014.  This is fixed in the new version.
     <P>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -2625,8 +2645,8 @@
     June&nbsp;12, 2014:
     <P>
     There are now the following additional sort-by-string-table
-    routines, covered by the <CODE>MODULE M3UTILIO SORTI()</CODE>
-    generic interface:
+    routines, covered by the <A HREF="SORTI.html"><CODE>MODULE M3UTILIO
+    SORTI()</CODE></A> generic interface:
     <DL>
         <DT><CODE>SORTINC4( N, M, INDX(N), CTABLE(N) )</CODE>
         <DD>arguments <CODE>INTEGER N, M, INDX(N); CHARACTER(*) CTABLE(N)</CODE><BR>
@@ -2660,13 +2680,13 @@
     environment-variable routines <CODE>ENVLIST,ENVDBLE, ENVINT,
     ENVREAL, ENVSTR, ENVYN, INTLIST,  REALIST, STRLIST</CODE>
     <P>
-    <CODE>MODULE M3UTILIO</CODE> now has generic interfaces
-    for the following:
+    <A HREF="M3UTILIO.html"><CODE>MODULE M3UTILIO</CODE></A> now has
+    generic interfaces for the following:
     <DL>
-        <DT><CODE>ENVLIST</CODE>
+        <DT><A HREF="LISTS.html"><CODE>ENVLIST</CODE></A>
         <DD><CODE>INTLIST, REALIST, STRLIST</CODE>
         <P>
-        <DT><CODE>FINDKEY</CODE>
+        <DT><A HREF="FINDS.html"><CODE>FINDKEY</CODE></A>
         <DD><CODE>FINDC, FIND1, FIND2, FIND3, FIND4,
                   FINDR1, FINDR2, FINDR3, FINDR4</CODE>
         <P>
@@ -2674,7 +2694,7 @@
         <DD><CODE>LOCAT1, LOCAT2, LOCAT3, LOCAT4, LOCATC, LOCATR1,
                   LOCATR2, LOCATR3, LOCATR4</CODE>
         <P>
-        <DT><CODE>SORTI</CODE>
+        <DT><A HREF="SORTI.html"><CODE>SORTI</CODE></A>
         <DD><CODE>SORTIC4, SORTIC8,
                   SORTI1, SORTI2, SORTI3, SORTI4,
                   SORTR1,SORTR2, SORTR3, SORTR4</CODE>
@@ -2710,9 +2730,9 @@
 
     January&nbsp;17, 2014:
     <P>
-    John N. McHenry, BAMS, turned up a bug in using <VAR>m3tools</VAR> program
-    <VAR>m3merge</VAR> on time independent files.  This is fixed in
-    the new version.
+    John N. McHenry, BAMS, turned up a bug in using<VAR>m3tools</VAR>
+    program <A HREF="M3MERGE.html"><VAR>m3merge</VAR></A> on time
+    independent files.  This is fixed in the new version.
     <P>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -2808,9 +2828,10 @@
     December&nbsp;13, 2012:
     <P>
     Bonyoung Koo, Environ, found a set of bugs in
-    <VAR>m3tools/m3combo</VAR>  associated with the use of this tool
-    for <CODE>CUSTOM</CODE> and  <CODE>BOUNDARY</CODE> files.  This bug
-    is now fixed in both I/O&nbsp;API versions 3.0 and 3.1.
+    <A HREF="M3COMBO.html"><VAR>m3tools/m3combo</VAR></A>  associated
+    with the use of this tool for <CODE>CUSTOM</CODE> and 
+    <CODE>BOUNDARY</CODE> files.  This bug is now fixed in both
+    I/O&nbsp;API versions 3.0 and 3.1.
     <P>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -2839,8 +2860,8 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "oct3012">
-   Enhancement and bug-fix for <CODE>m3tools/projtool</CODE>.
-</A></H2>
+   Enhancement and bug-fix</A> for <A HREF="PROJTOOL.html"><CODE>m3tools/projtool</CODE></A>.
+</H2>
 
     October&nbsp;30, 2012:
     <P>
@@ -2884,8 +2905,8 @@
     September&nbsp;18, 2012:
     <P>
     Sarika Kulkarni, CA ARB, provided a bug-fix to the I/O&nbsp;API
-    Version&nbsp;3.1 <VAR>m3xtract</VAR>; this is now incorporated
-    into the release.
+    Version&nbsp;3.1 <A HREF="M3XTRACT.html"><VAR>m3xtract</VAR></A>;
+    this is now incorporated into the release.
     <P>
     The primary I/O&nbsp;API author, Carlie Coats, has performed
     &quot;musical offices&quot; again, and is now at
@@ -2974,8 +2995,8 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "aug2911">
-   Bug-fixes in <CODE>SUBROUTINE CURREC()</CODE>
-</A></H2>
+   Bug-fixes</A> in <CODE>SUBROUTINE <A HREF="CURRSTEP.html">CURREC()</A></CODE>
+</H2>
 
     August&nbsp;29, 2011:
     <P>
@@ -3246,13 +3267,14 @@ I/O&nbsp;API Version&nbsp;3.1 <EM>Beta</EM>&nbsp;1
              have been link-compatible with the newer Fortran-9x
              compilers.
              <P>
-        <LI> Use of new <VAR>MODULE M3UTILIO</VAR> is encouraged, and
-             use of <CODE>INCLUDE</CODE>-files  <CODE>PARMS3.EXT</CODE>,
-             <CODE>FDESC3.EXT</CODE>, and <CODE>IODECL3.EXT</CODE> is
-             deprecated.  This <VAR>MODULE</VAR> gives access to all the
-             I/O&nbsp;API  <CODE>PARAMETER</CODE>s and declarations,
-             including Fortran-90-style explicit interfaces for all the
-             relevant routines.
+        <LI> Use of new <A HREF="M3UTILIO.html"><VAR>MODULE M3UTILIO</VAR></A>
+             is encouraged, and use of <CODE>INCLUDE</CODE>-files 
+             <CODE>PARMS3.EXT</CODE>, <CODE>FDESC3.EXT</CODE>, and
+             <CODE>IODECL3.EXT</CODE> is deprecated.  This
+             <VAR>MODULE</VAR> gives access to all the I/O&nbsp;API 
+             <CODE>PARAMETER</CODE>s and declarations, including
+             Fortran-90-style explicit interfaces for all the relevant
+             routines.
              <P>
         <LI> For programs dealing with spatial transforms (e.g. by
              sparse matrices), new <VAR>MODULE MATXATTS</VAR> provides
@@ -3576,8 +3598,9 @@ compiling with a <VAR>f90</VAR> compiler.
 
 <HR> <!----------------------------------------------------------------->
 
-<H2> <A NAME = "nov2808">Fix for WMO-screwup Longitude conventions
-in programs <VAR>M3CPLE</VAR> and <VAR>MTXCALC</VAR>
+<H2> <A NAME = "nov2808">
+    Hack/Fix for WMO-screwup Longitude conventions
+    in programs <VAR>M3CPLE</VAR> and <VAR>MTXCALC</VAR>
 </A></H2>
 
     November&nbsp;28, 2008:
@@ -3585,15 +3608,18 @@ in programs <VAR>M3CPLE</VAR> and <VAR>MTXCALC</VAR>
     <BLOCKQUOTE>
 
     It turns out that the WMO has invented a &quot;standard&quot; that
-    conflicts with ISO Standard 6709 (and centuries of common usage), by
-    which&mdash;according to WMO&mdash;longitudes should be always
-    positive, and North America has longitude range something like +200
-    to +300. We have encountered (obscure, hard-to-expect,
-    hard-to-diagnose) problems dealing with data following these
-    conventions, and have therefore implemented heuristics to deal with
-    this in <CODE>m3tools</CODE> programs <CODE>M3CPLE</CODE>
-    <CODE>MTXCALC</CODE>.
+    conflicts with ISO Standard 6709 (as well as treaty obligations and
+    centuries of common usage), by which&mdash;according to
+    WMO&mdash;longitudes should be always positive, and North America
+    has longitude range something like +200 to +300. We have encountered
+    (obscure, hard-to-expect, hard-to-diagnose) problems dealing with
+    data following these conventions, and have therefore implemented
+    heuristics to deal with this in <CODE>m3tools</CODE> programs
+    <CODE>M3CPLE</CODE> <CODE>MTXCALC</CODE>.
     <P>
+    Be aware that you will have to deal with this WMOism in GRIB2 data,
+    as well as a lot of other data coming out of national meteorology
+    organizations.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -3732,7 +3758,8 @@ in programs <VAR>M3CPLE</VAR> and <VAR>MTXCALC</VAR>
     <P>
 
     <BLOCKQUOTE>
-    Bonyoung Koo reported a further bug in <CODE>m3combo</CODE>, that
+    Bonyoung Koo reported a further bug in
+    <A HREF="M3COMBO.html"><CODE>m3combo</CODE></A>, that
     happens with relatively long variable-names (not found in my test
     case), and suggested exactly what the fix needed to be.  Thanks!
     <P>
@@ -4023,8 +4050,7 @@ in programs <VAR>M3CPLE</VAR> and <VAR>MTXCALC</VAR>
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "jan2907">
-    Daylight savings time; program <VAR>M3STAT</VAR>; negative
-    <CODE>JDATE</CODE>s
+    bug-fix in <VAR>JSTEP3()</VAR>
 </A></H2>
 
     January&nbsp;29, 2007:
@@ -7007,7 +7033,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 120 2019-06-21 14:18:20Z coats $
+    $Id: NEWSTUFF.html 121 2019-06-22 14:18:29Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
