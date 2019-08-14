@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 120 2019-06-21 14:18:20Z coats $" -->
+<!-- "$Id: AVAIL.html 122 2019-08-14 16:09:25Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -155,10 +155,10 @@ m3stat:
         <DD>  <OL>
                   <LI> Download the <EM>gzip</EM>ped tar-file
                        of the source code for the version you want
-                       from the CMAS wsb-site:
-                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz"><VAR>ioapi-3.2.tar.gz</VAR></A>
-                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A>, or
-                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.
+                       from the CMAS web-site:<BR>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz"><VAR>ioapi-3.2.tar.gz</VAR></A><BR>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A><BR>, or
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.<BR>
                        It contains directories <CODE>ioapi</CODE> for
                        the I/O&nbsp;API library source code,
                        <CODE>HTML</CODE> for the documentation,
@@ -169,6 +169,17 @@ m3stat:
                        for the NCEP <VAR>libnotcdf.a</VAR> library (a
                        dummy library for installation sites that don't
                        allow <VAR>netCDF</VAR> on-site).
+                       <P>
+                       For CMAQ-DDM, <VAR>ioapi-3.2-large</VAR> has
+                       expanded maximum-number-of-files and
+                       maximum-variables-per-file parameter-values.
+                       <STRONG>This version should be kept carefully
+                       isolated from the regular version of the
+                       I/O&nbsp;API, and should be used only for
+                       CMAQ-DDM and CMAQ-ISAM.  It can be downloaded
+                       from the CMAS web-site:<BR>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-large.tar.gz"><VAR>ioapi-3.2-large.tar.gz</VAR></A><BR>
+                       </STRONG>
                        <P>
                        Version&nbsp;3.2 is also available on GitHub from
                        <A HREF="https://github.com/cjcoats/ioapi-3.2"><VAR>&lt;https://github.com/cjcoats/ioapi-3.2&gt;</VAR></A>.
@@ -1824,7 +1835,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 120 2019-06-21 14:18:20Z coats $
+    $Id: AVAIL.html 122 2019-08-14 16:09:25Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

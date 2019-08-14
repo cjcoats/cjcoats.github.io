@@ -2,9 +2,9 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 151 2015-02-06 17:18:13Z coats $" -->
+<!-- "$Id: v3stuff.html 122 2019-08-14 16:09:25Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
-<TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
+<TITLE>I/O&nbsp;API:  New Stuff in Versions 3.x</TITLE>
 </HEAD>
 
 <BODY BGCOLOR="#FFFFFF"
@@ -13,20 +13,25 @@
       LEFTMARGIN="15"
       MARGINWIDTH="15">
 
-<H1>I/O&nbsp;API:  New Stuff with Versions 3.x</H1>
+<H1>I/O&nbsp;API:  New Stuff in Versions 3.x</H1>
 
 <H2><A NAME = "contents">Contents&nbsp;/&nbsp;Agenda</A></H2>
 
     <UL>
         <LI>  <A HREF = "#git"     >On Github: I/O&nbsp;API-3.2</A>
+        <LI>  <A HREF = "#mswin"   >MS-Windows support</A>
         <LI>  <A HREF = "#CF"      >CF-compliant geospatial metadata option</A>
         <LI>  <A HREF = "#PN"      >PNCF/MPI distributed I/O option</A>
+        <LI>  <A HREF = "#large"   >I/O&nbsp;API Versions 3.2 and 3.2-large</A>
         <LI>  <A HREF = "#snoop"   >Snoop-Mode option for read-operations</A>
         <LI>  <A HREF = "#m3atts"  >New Module <CODE>MODATTS3</CODE></A>
         <LI>  <A HREF = "#gctp"    >New Module <CODE>MODGCTP</CODE></A>
         <LI>  <A HREF = "#ncfio"   >New Module <CODE>MODNCFIO</CODE></A>
+        <LI>  <A HREF = "#mpas"    >New Module <CODE>MODMPASFIO</CODE></A>
+        <LI>  <A HREF = "#wrf"     >New Module <CODE>MODWRFIO</CODE></A>
+        <LI>  <A HREF = "#list"    >Input file-lists</A>
         <LI>  <A HREF = "#generic" >New Fortran-90 Generic Routines</A>
-        <LI>  <A HREF = "#tools"   ><VAR>m3tools</VAR> Programs</A>
+        <LI>  <A HREF = "#tools"   ><VAR>M3Tools</VAR> Programs</A>
         <LI>  <A HREF = "#subs"    >New <CODE>SUBROUTINE</CODE>s and <CODE>FUNCTION</CODE>s</A>
         <LI>  <A HREF = "#gfort"   ><VAR>gfortran</VAR> hacks</A>
         <LI>  <A HREF = "#ncf"     ><VAR>netCDF-4</VAR> Issues</A>
@@ -45,7 +50,7 @@
     <A HREF = "https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz">available
     here for download</A> in <VAR>gzip</VAR>ped-<VAR>tar</VAR> source
     code form from the CMAS Center web-site, or is available on GitHub from
-    <A HREF="https://github.com/cjcoats/ioapi-3.2"><VAR>&lt;https://github.com/cjcoats/ioapi-3.2&gt;</VAR></A>.
+    <A HREF="https://github.com/cjcoats/ioapi-3.2"><STRONG><VAR>https://github.com/cjcoats/ioapi-3.2</VAR></STRONG></A>.
     To install a distribution-copy using <VAR>git</VAR> directly from
     GitHub, go to the directory under which do the installation, and
     then do the command
@@ -54,28 +59,44 @@
     </PRE>
     Sub-directories and files are:
     <UL>
-        <LI><STRONG><VAR>HTML</VAR></STRONG>:  documentation directory
         <LI><STRONG><VAR>ioapi</VAR></STRONG>: library source directory
-        <LI><STRONG><VAR>m3tools</VAR></STRONG>: tools-program source directory
+        <LI><STRONG><VAR>M3Tools</VAR></STRONG>: tools-program source directory
         <LI><STRONG><VAR>LICENSE</VAR></STRONG>:  GPL-2 text
         <LI><STRONG><VAR>Makefile</VAR></STRONG>:  Top-level <VAR>make</VAR> file
         <LI><STRONG><VAR>Makefile.template</VAR></STRONG>:  master copy of top-level <VAR>make</VAR> file
-        <LI><STRONG><VAR>README.TXT</VAR></STRONG>:  ASCII &quot;readme&quot;
+        <LI><STRONG><VAR>README.txt</VAR></STRONG>:  ASCII &quot;readme&quot;
         <LI><STRONG><VAR>README.md</VAR></STRONG>:  markup-language &quot;readme&quot;
         <LI><STRONG><VAR>VERSION.txt</VAR></STRONG>:  tarball-release date file
         <LI><STRONG><VAR>exclude</VAR></STRONG>: file used in <VAR>make gtar</VAR> tarball-creation
     </UL>
-    <STRONG>TO DO</STRONG>:  The HTML sub-directory in this
-    project-repository has the full set of documentation
-    git-configuration-managed as HTML pages, in a manner consistent with
-    the release-tarballs and the CMAS Center I/O&nbsp;API web-pages. 
-    I've read the GitHub docs on project pages, and found them
-    remarkably un-helpful.  Is it their idea that I need to create 
-    a duplicate copy of the docs and maintain both copies&nbsp;?!
-    <BR>
-    <EM>Help&nbsp;!!</EM>
+    The full set of documentation is also  git-configuration-managed as
+    HTML pages, in a manner consistent with the release-tarballs and the
+    CMAS Center I/O&nbsp;API web-pages.  It can be found at 
+    <A HREF="https://cjcoats.github.io/ioapi/AA.html"><STRONG>
+    <VAR>https://cjcoats.github.io/ioapi/AA.html</VAR></STRONG></A>
     <P>
 
+    </BLOCKQUOTE>
+
+Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+<P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME = "mswin">MS-Windows support</A></H2>
+
+    <BLOCKQUOTE>
+    <EM>I/O&nbsp;API-3.2:</EM><P>
+    Support for 32-bit and 64-bit windows builds of the I/O&nbsp;API
+    under <VAR>CygWin</VAR>, using <VAR>gfortran</VAR> and <VAR>gcc</VAR>.
+    Note that <VAR>Makefile</VAR>s must be changed slightly by adding
+    an extra <CODE>.dll</CODE> suffixes to the library-directives for
+    the netCDF libraries:
+    <PRE>
+    ... -lnetcdff.dll -lnetcdf.dll ...
+    </PRE>
+    See <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#win64"><STRONG>
+    <VAR>https://cjcoats.github.io/ioapi/AVAIL.html#win64</VAR></STRONG></A>
     </BLOCKQUOTE>
 
 Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -86,15 +107,37 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "CF">CF-compliant geospatial metadata option</A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.2:</EM><P>
-    Creation of CF-compliant geospatial metadata during file-creation
-    can be turned on by environment variable <CODE>IOAPI_CFMETA</CODE>:<BR>
+    CF (Climate and Forecast) netCDF metadata conventions
+    are used by a number of global climate and meteorology models.  This
+    allows the direct import of model data directly into  a number of
+    GIS, analysis, and graphics packages, including GRASS and ARC-INFO.
+    These conventions define metadata that provide a definitive
+    description of what the data in each variable represents, and the
+    spatial and temporal properties of the data. This enables users of
+    data from different sources to decide which quantities are
+    comparable, and facilitates building applications with powerful
+    extraction, regridding, and display capabilities.
+    <BR>
+    See <A HREF="http://cfconventions.org/"><STRONG><VAR>http://cfconventions.org/</VAR></STRONG></A>
+    and <A HREF="https://en.wikipedia.org/wiki/Climate_and_Forecast_Metadata_Conventions"><STRONG><VAR>
+    https://en.wikipedia.org/wiki/Climate_and_Forecast_Metadata_Conventions</VAR></STRONG></A>
+    <P>
+    Automatic creation of the relevant CF-compliant geospatial metadata
+    during file-creation can be turned on by environment variable
+    <CODE>IOAPI_CFMETA</CODE>:<BR>
         <BLOCKQUOTE>
         <VAR>setenv IOAPI_CFMETA&nbsp;&nbsp;Y</VAR>
         </BLOCKQUOTE>
         or by calling subroutine <CODE>INITCF()</CODE> in 
         <CODE>MODULE&nbsp;MODATTS3</CODE>:  see below.
+        </BLOCKQUOTE>
+    (There are portions of the CF standard that are not reasonable in
+    this context, particularly as regards standardization of variable
+    names and units in forms that are not well-suited for atmospheric
+    chemistry modeling; these are not supported, and in fact production
+    of them cannot be automated...)
     </BLOCKQUOTE>
+    <P>
 
 Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <P>
@@ -104,26 +147,24 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "PN">PnetCDF/MPI distributed I/O option</A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.2:</EM>
-    <P>
     The I/O&nbsp;API can now be configured to use PnetCDF to provide
-    distributed I/O for CMAQ (turning this on is a build-time option for
-    the I/O API), on a file-by-file basis. Distributed I/O is only
-    supported for gridded files on the cross-point grid; to turn it on,
-    prefix the path-name by a <VAR>MPI:</VAR> prefix, as in the example
-    below:
+    distributed I/O on a file-by-file basis for CMAQ (turning this on is
+    a build-time option for the I/O API). Distributed I/O is only
+    supported for gridded files on the cross-point grid; to turn it on
+    for a particular file in a CMAQ run, prefix the path-name by a
+    <VAR>MPI:</VAR> prefix, as in the example below:
     <PRE>
     setenv  CHEMCONC3D  MPI:/mydir/cmaq.conc.US36_CRO.2015233.ncf
     </PRE>
     <P>
-    <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/BUFFERED.html#pncf">See this description.</A>
+    <A HREF="BUFFERED.html#pncf">See this description.</A>
     <P>
     I/O&nbsp;API libraries and builds using PnetCDF are not link
     compatible with ordinary builds, and should be kept carefully
     separate from them. You can build the I/O&nbsp;API to use
     PnetCDF/MPI distributed I/O using
     <VAR>make&nbsp;-f&nbsp;Makefile.pncf</VAR> and the following binary
-    types and <CODE>Makeinclude</CODE> files (or use them as templates
+    types and <CODE>Makeinclude</CODE> files (or you can use them as templates
     to build your own custom binary type):    
     <BLOCKQUOTE><CODE><DL>
         <DT>Makeinclude.Linux2_x86_64gfortmpi
@@ -147,11 +188,43 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 
 <HR> <!- ------------------------------------------------------------- ->
 
+<H2><A NAME = "large">I/O&nbsp;API Versions 3.2 and 3.2-large</A></H2>
+
+    <BLOCKQUOTE>
+    I/O&nbsp;API Version 3.2 as of Aug.&nbsp;1, 2019, has been enhanced
+    to support up to 256 files (each with up to 2048 variables.  There
+    should be no compatibility issues with this change, since the
+    maximum-file parameter <CODE>MXFILE3</CODE> is only used internally
+    by the I/O&nbsp;API, and should not be needed by any external program.
+    <P>
+
+    For use in CMAQ's DDM and ISAM versions, there is an additional
+    version, <STRONG>I/O&nbsp;API-3.2-large</STRONG> that supports
+    up to 512 files, each with up to 16384 variables; it may be 
+    downloaded from the CMAS web-site as
+    <STRONG><VAR>ioapi-3.2-large.tar.gz</VAR></STRONG>.  There is
+    an accompanying set of <VAR>M3Tools</VAR> programs.
+    <P>
+    Note that executable programs built using 3.2-large will use
+    substantially more memory than programs built with normal 3.2, and 
+    may encounter performance degradation due to the extra strain that
+    large-mode places on your computer's memory system.
+    <BR>
+    <STRONG>Version 3.2-large should be kept carefully separate from normal
+    3.2:  object-files and libraries built with the one are <EM>not</EM>
+    compatible with object-files or libraries built with the other.
+    Mixing the two versions can lead to hard-to-diagnose errors.
+    </STRONG>
+    </BLOCKQUOTE>
+
+Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+<P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
 <H2><A NAME = "snoop">Snoop-Mode option for read-operations</A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.2:</EM>
-    <P>
     The I/O&nbsp;API can now be configured (e.g., for
     forecast-modeling-system operations) to enable
     &quot;model-pipelining&quot; by responding to end-of-file conditions
@@ -172,11 +245,15 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
         is turned off.
         <P>
         </BLOCKQUOTE>
-        This not only allows the generation of early-hour products well
-        before the entire forecast is complete, it also enables
-        the operating system to make better use of its internal
-        I/O-buffers, further increasing modeling system efficiency.
-        <P>
+    This not only allows the generation of early-hour forecast
+    products well before the entire forecast is complete, it also
+    enables the operating system to make better use of its internal
+    I/O-buffers, further increasing modeling system efficiency.
+    <P>
+
+    <EM>Unfortunately, both CMAQ and SMOKE do not allow easy use of this
+    capability because their program-codes insist (inappropriately!) that all time
+    steps of all input data be available before model-start.</EM>
     </BLOCKQUOTE>
 
 Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -187,12 +264,7 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "m3atts">New Module <CODE>MODATTS3</CODE></A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.1:</EM>  <CODE>MODULE&nbsp;M3ATTS</CODE>
-    has only the matrix-attribute routines and metadata described
-    below.
-    <P>
-    <EM>I/O&nbsp;API-3.2:</EM><P>
-    New <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/MODATTS3.html"><CODE>MODULE&nbsp;MODATTS3</CODE></A>
+    New <A HREF="MODATTS3.html"><CODE>MODULE&nbsp;MODATTS3</CODE></A>
     replaces <CODE>MODULE&nbsp;MATXATTS</CODE> (so that all
     <CODE>USE&nbsp;MATXATTS</CODE> statements need to become
     <CODE>USE&nbsp;MODATTS3</CODE> in your codes):
@@ -270,40 +342,39 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "gctp">New Module <CODE>MODGCTP</CODE></A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.2:</EM><P>
-    New <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/MODGCTP.html"><CODE>MODULE&nbsp;MODGCTP</CODE></A> with
+    New <A HREF="MODGCTP.html"><CODE>MODULE&nbsp;MODGCTP</CODE></A> with
     all the coordinate-transform related routines and
     <CODE>INTERFACE</CODE>s:<BR> <EM>Old but modified:</EM> (moved from
     <CODE>MODULE&nbsp;M3UTILIO</CODE>)
       <UL>
           <LI>  <CODE>INTERFACE</CODE> for 
-                <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/GCTP.html"><CODE>GTPZ0()</CODE></A>
+                <A HREF="GCTP.html"><CODE>GTPZ0()</CODE></A>
           <LI>  <CODE>INTERFACE</CODE>s and new implementations for
                 <CODE>GTPZ0()</CODE>-spheroid initialization procedures
-                <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/SETSPHERE.html"><CODE>SETSPHERE(), INITSPHERES(),
+                <A HREF="SETSPHERE.html"><CODE>SETSPHERE(), INITSPHERES(),
                 SPHEREDAT()</CODE></A>
           <LI>  <CODE>INTERFACE</CODE>s and new implementations for
                 single-precision/single-point/specific-projection
                 coordinate-transform functions 
-                <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/LAMBERT.html"><CODE>INITPROJ(), ..., 
+                <A HREF="LAMBERT.html"><CODE>INITPROJ(), ..., 
                 LAMBERT(), ..., ALB2EQM()</CODE></A>
                 <P>
       </UL>
       <EM>New:</EM>
       <UL>
+          <LI>  Generic (single-point/scattered-point-array) coordinate-transform
+                procedure <A HREF="XY2XY.html"><CODE>XY2XY()</CODE></A>
+          <LI>  Grid-node-array generic coordinate-transform
+                procedure <A HREF="GRID2XY.html"><CODE>GRID2XY()</CODE></A>
+          <LI>  High-performance OpenMP-Parallel generic bilinear
+                interpolation package 
+                <A HREF="GRID2INDX.html"><CODE>GRID2INDX(), PNTS2INDX(),
+                INDXMULT()</CODE></A>
           <LI>  <CODE>PARAMETER</CODE>s <CODE>STDSPHERES(0:21)</CODE>
                 and <CODE>SPHERENAMES(0:21)</CODE> for GCTP spheroid
                 names and indices;
           <LI>  <CODE>GTPZ0()</CODE>-argument initialization procedure
-                <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/M3TOGTPZ.html"><CODE>M3TOGTPZ()</CODE></A>
-          <LI>  Scattered-point-array generic coordinate-transform
-                procedure <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/XY2XY.html"><CODE>XY2XY()</CODE></A>
-          <LI>  Grid-node-array generic coordinate-transform
-                procedure <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/GRID2XY.html"><CODE>GRID2XY()</CODE></A>
-          <LI>  High-performance OpenMP-Parallel generic bilinear
-                interpolation package 
-                <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/GRID2INDX.html"><CODE>GRID2INDX(), PNTS2INDX(),
-                INDXMULT()</CODE></A>
+                <A HREF="M3TOGTPZ.html"><CODE>M3TOGTPZ()</CODE></A>
       </UL>
       <P>
 
@@ -317,6 +388,10 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "ncfio">New Module <CODE>MODNCFIO</CODE></A></H2>
 
     <BLOCKQUOTE>
+    This module exists for two reasons:  to reconcile problems
+    between netCDF and pnetCDF for use in distributed I/O (above),
+    and to provide high level I/O facilities for &quot;Raw netCDF&quot;.
+    <P>
     Due to inconsistencies between them, it was difficult to use
     the vendor supplied <CODE>INCLUDE</CODE> files
     <VAR>netcdf.inc</VAR> (or <VAR>NETCDF.EXT</VAR>) and <VAR>pnetcdf.inc</VAR> 
@@ -324,7 +399,7 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <U>some but not all</U> of the netCDF definitions that were
     needed, so it was not possible to use <CODE>#ifdef</CODE>s 
     to select between them.  New 
-    <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/MODNCFIO.html"><CODE>MODULE&nbsp;MODNCFIO</CODE></A>
+    <A HREF="MODNCFIO.html"><CODE>MODULE&nbsp;MODNCFIO</CODE></A>
     puts all the definitions in a consistent form in one place
     (with conditional compilation, to determine whether or not
     PnetCDF is active).
@@ -332,19 +407,150 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     This module also supplies new routines for use with a specified
     &quot;raw netCDF&quot; file:
     <UL>
+        <LI> <CODE>CREATENC()</CODE> creates a new &quot;raw netCDF&quot;
+             file,  according to the supplied file definition.
         <LI> <CODE>DESCNCVAR()</CODE> returns the list of variables and
-             their units, types, and dimensions, and 
+             their units, types, and dimensions,  
         <LI> <CODE>READNCVAR()</CODE> is a generic routine that reads
-             a specified 1-D, 2-D, 3-D, or 4-D variable of type
+             a specified 1-D, 2-D, 3-D, or 4-D variable or time step 
+             of a variable of type
              <CODE>INTEGER</CODE>, <CODE>REAL</CODE>,
              <CODE>REAL*8</CODE>, <CODE>INTEGER*1</CODE>, or
              <CODE>INTEGER*2</CODE>, with both fully-dimensioned and
-             single-indexed forms for the output-buffers.
+             single-indexed forms for the output-buffers from a
+             &quot;raw netCDF&quot; file  
+        <LI> <CODE>WRITENCVAR()</CODE> is a generic routine that 
+             writes a specified variable or time step of a variable
+             to a specified &quot;raw netCDF&quot; file  
     </UL>
-    The upcoming SMOKE uses <CODE>READNCVAR()</CODE> to read global
+    Note that directly manipulating netCDF files using the low level 
+    access routines provided by netCDF, while doing proper error checking
+    and logging is quite tedious (which is reflected in the fact that
+    <CODE>MODULE&nbsp;MODNCFIO</CODE> requires about 20,000 lines of code
+    to do these tasks (You <EM>don't</EM> want to have to write all that
+    code for yourself from scratch!>
+    <P>
+    The latest version of SMOKE uses <CODE>READNCVAR()</CODE> to read global
     gridded emissions data.  Many other uses (e.g., to read
     <CODE>INTEGER*2</CODE> gridded NLDAS land-cover for CONUS) can easily
     be imagined.
+    <P>
+    </BLOCKQUOTE>
+
+Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+<P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME = "mpas">New Module <CODE>MODMPASFIO</CODE></A> and related
+<VAR>M3Tools</VAR> Programs</H2>
+
+    <BLOCKQUOTE>
+    MPAS is a potentially-global unstructured-grid model for
+    meteorology, land surface,  and atmospheric chemistry modeling that
+    has been proposed for the next generation of EPA air quality
+    modeling (among other things).  See
+    <A HREF="https://mpas-dev.github.io/files/documents/MPAS-MeshSpec.pdf">
+    https://mpas-dev.github.io/files/documents/MPAS-MeshSpec.pdf</A> for the
+    MPAS grid and netCDF-file specifications. Note that MPAS grid
+    definitions and MPAS-netCDF-format file specifications are very
+    complex.
+    <P>
+    New <A HREF="MODMPASFIO.html"><CODE>MODULE&nbsp;MODMPASFIO</CODE></A>
+    provides a copy of the MPAS required grid related and indexing
+    variables, together with routines to initialize them, perform
+    various grid related tasks, and to read and writhe time independent
+    and time stepped MAPS-format-netCDF files.  This is a really massive
+    chunk of code, managing the hugely-complex detail that is required
+    for MPAS related programming.
+    <P>
+    There are also four related <EM><STRONG>M3Tools</STRONG></EM> 
+    programs:
+    <UL>
+        <LI><EM><STRONG>mpasdiff</STRONG></EM>:  compute per-variable
+        and per-layer-range-of-variable statistical
+        comparisons between MPAS-format-netCDF files
+        <LI><EM><STRONG>mpasstat</STRONG></EM>: compute statistics for
+        variables and layer-ranges-of-variable in a MPAS-format-netCDF file
+        <LI><EM><STRONG>mpastom3</STRONG></EM>:  interpolate variables
+        from MPAS-format-netCDF files
+        to GRIDDED I/O API files; and
+        <LI><EM><STRONG>mpaswtest</STRONG></EM>:  sample program for
+        MPAS grid manipulation, that does MPAS-grid allocation of
+        emissions line sources.
+    </UL>
+    </BLOCKQUOTE>
+
+Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+<P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME = "wrf">New Module <CODE>MODWRFIO</CODE></A> and related
+<VAR>M3Tools</VAR> Programs</H2>
+
+    <BLOCKQUOTE>
+    This module contains routines and INTERFACEs for reading and writing
+    WRF format netCDF files:
+    <UL>
+        <LI><CODE><STRONG>OPENWRF()</STRONG></CODE>: opens the indicated
+        WRF-netCDF format file for read or read/write. 
+        <LI><CODE><STRONG>CRTWRF()</STRONG></CODE>: Opens/creates a new
+        WRF-netCDF format file  for read/write.
+        <LI><CODE><STRONG>READWRF()</STRONG></CODE>: Reads the indicated
+        time step for the indicated variable from the current WRF-netCDF
+        format file.  Generic, for 1-D, 2-D, and 3-D variables of types
+        INTEGER, REAL, or DOUBLE
+        <LI><CODE><STRONG>WRITEWRF()</STRONG></CODE>: Writes the indicated
+        time step for the indicated variable to the current WRF-netCDF
+        format file (also generic).
+        <LI><CODE><STRONG>CLOSEWRF()</STRONG></CODE>: Close/flush the
+        indicated WRF-netCDF format file
+    </UL> 
+    <P>
+    There are also two related <EM><STRONG>M3Tools</STRONG></EM> 
+    programs; these are much more generic (not tied to specific
+    WRF versions nor CMAQ-variable output) than MCIP:
+    <UL>
+        <LI><EM><STRONG>wrftom3</STRONG></EM>:  Convert/extract/window
+        variables from WRF-format netCDF files to GRIDDED I/O API files
+        <LI><EM><STRONG>wrfgriddesc</STRONG></EM>: Create a GRIDDESC file
+        from the header-data in a WRF-format netCDF file. 
+    </UL>
+    </BLOCKQUOTE>
+
+Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+<P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME = "list">Input File Lists:<BR>
+Easy Processing for Sequences of Files</H2>
+
+    <BLOCKQUOTE>
+    <CODE>READ3()</CODE> and  <CODE>INTERP3()</CODE> can handle lists of
+    consecutive files, to cover multi-run/multi-file studies.  For example
+    if you have a month-long set of 31 single-day files, here is how an
+    I/O&nbsp;API based program can process all of them as though they
+    were the single file <CODE>FOO</CODE>
+    <PRE>
+        setenv  FOO      &quot;LIST:NAME_1,...,NAME_31&quot;
+        setenv  NAME_1   &lt;path&gt;
+        ...
+        setenv  NAME_31  &lt;path&gt;
+    </PRE>
+    provided that files <CODE>NAME_1</CODE> through <CODE>NAME_31</CODE> have
+    the same grid, variable-sets, and time-steps.
+    <P>
+    <CODE>READ3()</CODE> and  <CODE>INTERP3()</CODE>  will find the
+    first file in the list containing the indicated date&amp;time,
+    and read the data from it.  Note that this is automatically part of
+    the I/O&nbsp;API, so that, for example,
+    <EM><STRONG>M3Tools</STRONG></EM> program
+    <EM><STRONG>m3stat</STRONG></EM> can be used to process an entire
+    month's single-day model data without having to post-process it into
+    a single file.  Or the CMAQ CCTM could do an entire month-long run
+    using a sequence of single-day emissions and meteorology input files.
     <P>
     </BLOCKQUOTE>
 
@@ -363,10 +569,10 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <CODE>REAL8</CODE> arguments, etc.  Transform routines in
     <CODE>MODULE MODGCTP</CODE> exist in both same-sphere and
     sphere-to-sphere forms.  In addition to the many generic
-    routines now found in <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/M3ATTS.html"><CODE>MODULE&nbsp;M3ATTS</CODE></A>
-    and <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/MODGCTP.html"><CODE>MODULE&nbsp;MODGCTP</CODE></A>,
+    routines now found in <A HREF="M3ATTS.html"><CODE>MODULE&nbsp;M3ATTS</CODE></A>
+    and <A HREF="MODGCTP.html"><CODE>MODULE&nbsp;MODGCTP</CODE></A>,
     the following are now defined in
-    <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/M3UTILIO.html"><CODE>MODULE&nbsp;M3UTILIO</CODE></A>
+    <A HREF="M3UTILIO.html"><CODE>MODULE&nbsp;M3UTILIO</CODE></A>
     <P>
     Note that these generic <CODE>INTERFACE</CODE>s require
     <CODE>USE&nbsp;M3UTILIO</CODE>.
@@ -374,8 +580,7 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <DL>
         <DT><CODE>SUBROUTINE BILIN()</CODE>:
         <DD> <CODE>BILIN11L(), BILIN12L(), BILIN21L(), BILIN22L(),
-        BILIN11(), BILIN12(), BILIN2L(), BILIN22()</CODE><BR>
-        <EM>I/O&nbsp;API-3.2 and later</EM>
+        BILIN11(), BILIN12(), BILIN2L(), BILIN22()</CODE>
         <P>
 
         <DT><CODE>SUBROUTINE BMATVEC()</CODE>:
@@ -384,48 +589,41 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
         <P>
 
         <DT><CODE>LOGICAL FUNCTION ENVLIST()</CODE>:
-        <DD> <CODE>INTLIST(), REALIST(), DBLLIST(), STRLIST()</CODE><BR>
-        <EM>I/O&nbsp;API-3.2 and later</EM>
+        <DD> <CODE>INTLIST(), REALIST(), DBLLIST(), STRLIST()</CODE>
         <P>
 
         <DT><CODE>&lt;type&gt; FUNCTION ENVGET()</CODE>:
         <DD> <CODE>BENVINT(), BENVDBLE(), BENVREAL(),
         ENVINT(), ENVDBLE(), ENVREAL(),
-        ENVSTR(), ENVYN()</CODE><BR>
-        <EM>I/O&nbsp;API-3.2 and later</EM>
+        ENVSTR(), ENVYN()</CODE>
         <P>
 
         <DT><CODE>INTEGER FUNCTION FINDKEY()</CODE>:
         <DD> <CODE>FINDC(), FIND1(), FIND2(), FIND3(), FIND4(),
         FINDL1(), FINDL2(), FINDL3(), FINDL4(), FINDR1(), FINDR2(),
-        FINDR3(), FINDR4()</CODE><BR>
-        <EM>I/O&nbsp;API-3.1 and later</EM>
+        FINDR3(), FINDR4()</CODE>
         <P>
 
         <DT><CODE>&lt;type&gt; FUNCTION GETVAL()</CODE>:
         <DD> <CODE>GETDBLE(), GETDBLE1(), GETMENU(),
         GETNUM(), GETNUM1(), GETREAL(), GETREAL1(),
-        GETYN()</CODE><BR>
-        <EM>I/O&nbsp;API-3.2 and later</EM>
+        GETYN()</CODE>
         <P>
 
         <DT><CODE>INTEGER FUNCTION LOCATE()</CODE>:
         <DD> <CODE>LOCAT1(), LOCAT2(), LOCAT3(), LOCAT4(), LOCATC(),
         LOCATL1(), LOCATL2(), LOCATL3(), LOCATL4()
-        LOCATR1(), LOCATR2(), LOCATR3(), LOCATR4()</CODE><BR>
-        <EM>I/O&nbsp;API-3.1 and later</EM>
+        LOCATR1(), LOCATR2(), LOCATR3(), LOCATR4()</CODE>
         <P>
 
         <DT><CODE>SUBROUTINE PMATVEC()</CODE>:
-        <DD> <CODE>PMATVEC11(), PMATVEC12(), PMATVEC21(), PMATVEC22()</CODE><BR>
-        <EM>I/O&nbsp;API-3.2 and later</EM>
+        <DD> <CODE>PMATVEC11(), PMATVEC12(), PMATVEC21(), PMATVEC22()</CODE>
         <P>
 
         <DT><CODE>SUBROUTINE SORTI()</CODE>:
         <DD> <CODE>SORTIC4(), SORTIC8(), SORTINC4(), SORTINC8(),
         SORTI1(), SORTI2(), SORTI3(), SORTI4(), SORTL1(), SORTL2(),
-        SORTL3(), SORTL4(), SORTR1(),SORTR2(), SORTR3(), SORTR4()</CODE><BR>
-        <EM>I/O&nbsp;API-3.1 and later</EM>
+        SORTL3(), SORTL4(), SORTR1(),SORTR2(), SORTR3(), SORTR4()</CODE>
         <P>
 
         <DT><CODE>SUBROUTINE UNGRIDB()</CODE>:
@@ -443,11 +641,10 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 
 <HR> <!- ------------------------------------------------------------- ->
 
-<H2><A NAME = "tools"><VAR>m3tools</VAR> Programs</A></H2>
+<H2><A NAME = "tools"><VAR>M3Tools</VAR> Programs</A></H2>
 
     <BLOCKQUOTE>
-    <STRONG>Date-and-Time Manipulation for Scripting</STRONG>:<BR>
-    <EM>I/O&nbsp;API-3.1 and later:</EM><P>
+    <STRONG>Date-and-Time Manipulation for Scripting</STRONG>:
     <VAR>datshift, greg2jul, jul2greg, juldiff, julshift, timeshift</VAR><BR>
     These echo the program's result (without any extraneous stuff). 
     Here are some sample uses (where note that &quot;enclose in
@@ -460,44 +657,29 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     set jdate = `greg2jul today`
     set kdate = `greg2jul 20150103`             # converts Jan. 3, 2015 to YYYYDDD format
     set idate = `julshift ${jdate} 7`           # Julian date for this day next week
-    set days  = `juldiff ${jdate} ${kdate}`     # is two less than today's day-number, assuming today in 2015005.
+    set days  = `juldiff ${kdate} ${jdate}`     # is the number of days from 2015003 to today
     timeshift 2014029.120000 183000             # echoes 2014030.063000
     set foo = `timeshift 2014029.120000 183000`
     echo $foo:r                                 # echoes 2014030
     echo $foo:e                                 # echoes 063000
+    echo `jul2greg 2015133`                     # echoes 20150513 (for May 13, 2015)
     </PRE>
     <P>
 
-    <STRONG>New Programs</STRONG>:
-    <BLOCKQUOTE>
-    <U>I/O&nbsp;API-3.1 and later:</U>
-        <BLOCKQUOTE>
-        <VAR>bcwndw, camxtom3, dayagg, vertimeproc, vertintegral</VAR><P>
-        </BLOCKQUOTE>
-    <U>I/O&nbsp;API-3.2:</U>
-        <BLOCKQUOTE>
-        <VAR>findwndw, gridprobe, insertgrid, m3mask, m3probe, m3totxt,
-        wrfgriddesc, wrftom3</VAR><P>
-        </BLOCKQUOTE>
-    </BLOCKQUOTE>
+    <STRONG>New <VAR>M3Tools</VAR> Programs</STRONG>:<BR>
+        <VAR>bcwndw, camxtom3, dayagg, <BR>vertimeproc, vertintegral,
+        findwndw, gridprobe, insertgrid, m3mask, m3probe, m3totxt,
+        wrfgriddesc, wrftom3</VAR>
     <P>
 
-    <STRONG>OpenMP-Parallel Programs</STRONG>:
-    <BLOCKQUOTE>
-    <U>I/O&nbsp;API-3.2:</U>
-        <BLOCKQUOTE>
+    <STRONG>OpenMP-Parallel <VAR>M3Tools</VAR> Programs</STRONG>:<BR>
         <VAR>bcwndw, dayagg, m3agmask, m3agmax, m3combo, m3cple, m3interp,
         m3mask, m3tproc, mtxcalc mtxcple, presz, vertimeproc, vertintegral,
         vertot
         </VAR>
-        </BLOCKQUOTE>
-    </BLOCKQUOTE>
     <P>
 
-    <STRONG>Fortran-90 &quot;Free&quot; (<VAR>.f90</VAR>) source format</STRONG>:
-        <BLOCKQUOTE>
-        <U>I/O&nbsp;API-3.2:</U>
-        <BLOCKQUOTE>
+    <STRONG>Fortran-90 &quot;Free&quot; (<VAR>.f90</VAR>) source format</STRONG>:<BR>
         <VAR>bcwndw.f90, camxtom3.f90, datshift.f90, dayagg.f90, factor.f90,
         fakestep.f90, fills.f90, greg2jul.f90, gregdate.f90, jul2greg.f90,
         juldate.f90, juldiff.f90, julshift.f90, latlon.f90, m3combo.f90,
@@ -505,20 +687,16 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
         m3tproc.f90, m3tshift.f90, m3wndw.f90, mtxcalc.f90, pairstep.f90,
         presz.f90, timeshift.f90, vertimeproc.f90, vertintegral.f90, vertot.f90
         </VAR>
-        </BLOCKQUOTE>
-    </BLOCKQUOTE>
     <P>
 
-    <STRONG>New <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/SAMPLE.html">SAMPLE PROGRAMS</A> page</STRONG>:
+    <STRONG>New <A HREF="SAMPLE.html">SAMPLE PROGRAMS</A> page</STRONG>:
     updated to demonstrate I/O&nbsp;API-3.x capabilities and <CODE>MODULE</CODE>s,
-    <VAR>.f90</VAR> source format and coding:
-    <U>I/O&nbsp;API-3.2</U>
+    <VAR>.f90</VAR> source format and coding.
     <P>
 
-    <STRONG>Removed program
-    <VAR>utmtool</VAR></STRONG> (deprecated in I/O&nbsp;API-3.0), in
-    favor of program <VAR>projtool</VAR> which has greatly extended
-    capabilities: <EM>I/O&nbsp;API-3.2</EM>
+    <STRONG>Removed <VAR>M3Tools</VAR> program <VAR>utmtool</VAR></STRONG> for
+    I/O&nbsp;API-3.2(deprecated in I/O&nbsp;API-3.0), in favor of
+    program <VAR>projtool</VAR> which has greatly extended capabilities.
     <P>
 
     </BLOCKQUOTE>
@@ -533,7 +711,7 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 
     <BLOCKQUOTE>
     <DL>
-        <DT><CODE>INTERFACE</CODE>-specific forms: <EM>I/O&nbsp;API-3.2</EM>
+        <DT><CODE>INTERFACE</CODE>-specific forms:
         <DD>needed for <CODE>MODULE&nbsp;M3UTILIO</CODE> to provide
         <CODE>INTERFACE</CODE>s for multiple argument-rank cases,
         as described in the section on Fortran-90 Generics, above.
@@ -546,28 +724,26 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
         timestep, or 8947 years with 1-hour timestep.  I've done 33-year
         runs with no problems, with I/O&nbsp;API-3.1 codes).
         <P>
-        <DT><CODE>GETNUM1(), GETREAL1(), GETDBLE1()</CODE>: <EM>I/O&nbsp;API-3.2</EM>
+        <DT><CODE>GETNUM1(), GETREAL1(), GETDBLE1()</CODE>:
         <DD>Have only arguments for <CODE>DEFAULT</CODE> and <CODE>PROMPT</CODE>,
         but not <CODE>LO, HI</CODE> as in <CODE>GETNUM(), GETREAL(), GETDBLE()</CODE>
         <P>
-        <DT><CODE>BENVINT(), BENVDBLE(), BENVREAL()</CODE>: <EM>I/O&nbsp;API-3.2</EM>
+        <DT><CODE>BENVINT(), BENVDBLE(), BENVREAL()</CODE>:
         <DD>accept bounded ranges of inputs:  <EM>do</EM> have
         <CODE>LO, HI</CODE> arguments
         <P>
         <DT><CODE>M3TOGTPZ(),XY2XY(),GRID2XY(), GRID2INDX(), PNTS2INDX(), INDXMULT()</CODE>: 
-        <EM>I/O&nbsp;API-3.2</EM>
         <DD> in <CODE>MODULE MODGCTP</CODE>
         <P>
         <DT><CODE>FINDL1(), FINDL2(), FINDL3(), FINDL4(), 
                   LOCATL1(), LOCATL2(), LOCATL3(), LOCATL4(),
                   SORTL1(), SORTL2(), SORTL3(), SORTL4()</CODE>:
-                  <EM>I/O&nbsp;API-3.1</EM>
         <DD>...for <CODE>INTEGER*8</CODE> key-tuples
         <P>
         <DT><CODE>SORTINC4(), SORTINC8()</CODE>: <EM>I/O&nbsp;API-3.1</EM>
         <DD>...only the first <CODE>N</CODE> characters are significant.
         <P>
-        <DT><CODE>SORTIC8(), SORTINC8()</CODE>: <EM>I/O&nbsp;API-3.1</EM>
+        <DT><CODE>SORTIC8(), SORTINC8()</CODE>:
         <DD>...use <CODE>INTEGER*8</CODE> table-subscripting, and require
         compilation for the Medium-64 memory model to be useful
         (<VAR>-mcmodel=medium</VAR> for <VAR>ifort</VAR>).  [SMOKE-CARB
@@ -585,7 +761,6 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "gfort"><VAR>gfortran</VAR> hacks</A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.1 and later:</EM><P>
     Recent versions of <VAR>gfortran</VAR> insist on breaking
     compatibility with all other compilers we use (and with earlier
     versions of <VAR>gfortran</VAR>), not accepting
@@ -614,7 +789,6 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "climo">Climatology-Year Versions</A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.2 and later:</EM><P>
     You can build the I/O&nbsp;API to use a 360-day or 365-day
     climatology year, using the following binary types and
     <CODE>Makeinclude</CODE> files:  
@@ -642,8 +816,7 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <H2><A NAME = "mcmodel">Memory-Model Issues</A></H2>
 
     <BLOCKQUOTE>
-    <EM>I/O&nbsp;API-3.2 and later:</EM><P>
-    See <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/AVAIL.html#medium">Notes on <CODE>Linux2_x86_64</CODE>
+    See <A HREF="AVAIL.html#medium">Notes on <CODE>Linux2_x86_64</CODE>
     memory models</A>
     <BR>
     There are three different memory-models for programs on 64-bit
@@ -908,7 +1081,7 @@ C ------ Diagnostics -----------------------------------
         some of the rules:
         <BLOCKQUOTE>
         <PRE>
-.SUFFIXES: .m4 .c .F .f ..f90 .mod
+.SUFFIXES: .m4 .c .F .f ..f90 .F90 .mod
 ...
 ##########  Rules:
 %.o : %.mod        #  Disable "gmake"s obnoxious implicit Modula-2 rule !!
@@ -969,7 +1142,7 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
         <LI> Define standard <VAR>SMOKE</VAR> metadata and
         the interface(s) by which it is provided.  Then finish the relevant
         routines in
-        <A HREF = "https://www.cmascenter.org/ioapi/documentation/all_versions/html/MODATTS3.html"><CODE>MODULE&nbsp;MODATTS3</CODE></A> accordingly.
+        <A HREF="MODATTS3.html"><CODE>MODULE&nbsp;MODATTS3</CODE></A> accordingly.
         <P>
 
         <LI> Add a  <CODE>MODULE</CODE> that supports routines for GIS-raster-format
@@ -984,7 +1157,7 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
              (<VAR>m3plot, mtxplot, ncfplot, gisplot</VAR>)?
         <P>
 
-        <LI> <VAR>m3tools</VAR> development&mdash;new codes with
+        <LI> <VAR>M3Tools</VAR> development&mdash;new codes with
         standardized, overflow-proof (starting date&amp;time; ending
         date&amp;time) interfaces, free-format F90, OpenMP-parallel where
         reasonable?
@@ -999,9 +1172,9 @@ Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
 <HR> <!- ------------------------------------------------------------- ->
 
 Send comments to
-<A HREF = "mailto:carlie@jyarborough.com"> <ADDRESS>
+<A HREF = "mailto:cjcoats@email.unc.edu"> <ADDRESS>
           Carlie J. Coats, Jr. <br>
-          carlie@jyarborough.com  </ADDRESS> </A><P>
+          cjcoats@email.unc.edu  </ADDRESS> </A><P>
 
 </BODY>
 </HTML>

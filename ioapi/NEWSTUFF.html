@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 121 2019-06-22 14:18:29Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 122 2019-08-14 16:09:25Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 121 2019-06-22 14:18:29Z coats $
+    $Id: NEWSTUFF.html 122 2019-08-14 16:09:25Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,10 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#aug142019"> 
+               Bug-fix for multi-layer operation for  <VAR>M3TOOLS</VAR>
+               program <VAR>mtxcple</VAR>;<BR>
+               <VAR>ioapi-3.2-large.tar.gz</VAR></A>
          <LI>  <A HREF = "#jun152019"> 
                Bugs for default <CODE>RUNLEN</CODE> in <VAR>M3TOOLS</VAR>
                programs <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
@@ -705,6 +709,35 @@
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
     <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "jun152019">
+    Bugfix for <VAR>M3TOOLS</VAR> program <VAR>mtxcple</VAR>;<BR>
+    <VAR>ioapi-3.2-large.tar.gz</VAR>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Subject says it for <VAR>mtxcple</VAR>.
+    <P>
+    For CMAQ-DDM and CMAQ-ISAM, <VAR>ioapi-3.2-large</VAR> has expanded
+    the maximum-number-of-files and maximum-variables-per-file
+    parameter-values to
+    <PRE>
+    MXFILE3 =  512
+    MXVARS3 =16384
+    </PRE>
+    <STRONG>This version should be kept carefully isolated from the regular
+    version of the I/O&nbsp;API, and should be used only for CMAQ-DDM
+    and CMAQ-ISAM.
+    </STRONG>It can be downloaded
+    from the CMAS web-site:<BR>
+    <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-large.tar.gz"><VAR>ioapi-3.2-large.tar.gz</VAR></A>
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7033,7 +7066,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 121 2019-06-22 14:18:29Z coats $
+    $Id: NEWSTUFF.html 122 2019-08-14 16:09:25Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
