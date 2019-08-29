@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 122 2019-08-14 16:09:25Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 123 2019-08-29 21:31:17Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 122 2019-08-14 16:09:25Z coats $
+    $Id: NEWSTUFF.html 123 2019-08-29 21:31:17Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,8 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#aug292019"> 
+               Bug-fix for <CODE>LIST:</CODE> file-lists</A>
          <LI>  <A HREF = "#aug142019"> 
                Bug-fix for multi-layer operation for  <VAR>M3TOOLS</VAR>
                program <VAR>mtxcple</VAR>;<BR>
@@ -717,7 +719,24 @@
 
 <HR> <!----------------------------------------------------------------->
 
-<H2> <A NAME = "jun152019">
+<H2> <A NAME = "aug292019">
+    Bugfix for <CODE>LIST:</CODE> file-lists</A>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Winston Hao (NY DEC) reported a bug  which caused errors with
+    <A HREF="BUFFERED.html#list">file-set file lists</A> (a bad
+    recursion in internal worker-routines <CODE>OPNLIST3()</CODE>
+    and <CODE>OPNLOG3()</CODE>).  This bug is now fixed.
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "aug142019">
     Bugfix for <VAR>M3TOOLS</VAR> program <VAR>mtxcple</VAR>;<BR>
     <VAR>ioapi-3.2-large.tar.gz</VAR>
 </A></H2>
@@ -753,7 +772,7 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    Winston Rao (NY DEC) reported an off-by-one bug in processing the
+    Winston Hao (NY DEC) reported an off-by-one bug in processing the
     default value for <CODE>RUNLEN</CODE> (which comes in from a
     user-prompt) for  <A HREF="AA.html#tools"><VAR>M3TOOLS</VAR>
     programs</A> <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
@@ -7066,7 +7085,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 122 2019-08-14 16:09:25Z coats $
+    $Id: NEWSTUFF.html 123 2019-08-29 21:31:17Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
