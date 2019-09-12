@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 114 2019-05-08 19:02:26Z coats $" -->
+<!-- "$Id: ERRORS.html 127 2019-09-12 14:58:59Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -49,7 +49,7 @@
                Problems</A>
          <LI>  <A HREF="#irix"  >IRIX 7.4 Problems</A>
          <LI>  <A HREF="#ncferr"> netCDF Error Troubleshooting </A>
-         <LI>  <A HREF="#ncf331"> netCDF 3.3.1 Error Numbers list </A>
+         <LI>  <A HREF="#ncf331"> netCDF Error Numbers list </A>
          <LI>  <A HREF="#other">  Other Problems </A>
     </UL>
     Back to the <STRONG><EM><A HREF = "AA.html">I/O&nbsp;API User Manual</A></EM></STRONG>
@@ -77,7 +77,7 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 114 2019-05-08 19:02:26Z coats $"
+    !! Version "$Id: ERRORS.html 127 2019-09-12 14:58:59Z coats $"
     </PRE>
     </BLOCKQUOTE>
 <P>
@@ -791,7 +791,7 @@ class `AREG'
                program is running in parallel, but a non-MP-enabled
                version of the I/O&nbsp;API library was linked in.
                <P>
-         <LI>  <A NAME="ncf331">List of netCDF 3.3.1 errors</A>,
+         <LI>  <A NAME="ncf331">List of netCDF errors</A>,
                with attempted annotations
                <UL>
                    <LI> <STRONG>ncnoerr = nf_noerr = 0: </STRONG>:
@@ -887,31 +887,41 @@ class `AREG'
                         a file; might indicate a bug in  I/O&nbsp;API
                         internals
                    <LI> <STRONG>nf_enorecvars = -55: </STRONG>
-                   attempting to time-step a time-independent file;
-                   would indicate a bug in  I/O&nbsp;API internals
+                        attempting to time-step a time-independent file;
+                        would indicate a bug in  I/O&nbsp;API internals
                    <LI> <STRONG>nf_echar = -56: </STRONG>
-                   Attempt to convert between text and numbers (would
-                   indicate a bug in I/O&nbsp;API internals)
+                        Attempt to convert between text and numbers
+                        (would indicate a bug in I/O&nbsp;API internals)
                    <LI> <STRONG>nf_eedge = -57: </STRONG>
-                   subscript out-of-bounds error  (would indicate
-                   a bug in I/O&nbsp;API internals)
+                        subscript out-of-bounds error  (would indicate a
+                        bug in I/O&nbsp;API internals)
                    <LI> <STRONG>nf_estride = -58: </STRONG>
-                   illegal stride (won't happen with I/O&nbsp;API)
+                        illegal stride (won't happen with I/O&nbsp;API)
                    <LI> <STRONG>nf_ebadname = -59: </STRONG>
-                   variable name contains illegal characters
+                        variable name contains illegal characters
                    <LI> <STRONG>nf_erange = -60: </STRONG>
-                   math result not representible (could not convert from
-                   native machine floating-point format to XDR/IEEE
-                   floating-point format; should be Cray PVP-only)
-                   <LI> <STRONG>NC_ENOMEM = -61: </STRONG>
-                   internal netCDF memory allocation failure
-                   <LI> <STRONG>ncfoobar = 32: </STRONG>
-                   Something is messed up, and netCDF doesn't have
-                   an error number for it, or doesn't understand how/why
-                   the messup happened
+                        math result not representible (could not convert
+                        from native machine floating-point format to
+                        XDR/IEEE floating-point format; should be Cray
+                        PVP-only)
+                   <LI> <STRONG>NF_ENOMEM = -61: </STRONG>
+                        internal netCDF memory allocation failure
+                   <LI> <STRONG>NF_EVARSIZE = -62: </STRONG>
+                        Illegal variable-size: one or more variable
+                        sizes violate format constraints (possibly
+                        negative or zero)
+                   <LI> <STRONG>NF_EDIMSIZE = -63: </STRONG>
+                        Invalid dimension-size (possibly negative or
+                        zero)
+                   <LI> <STRONG>NF_ETRUNC = -64: </STRONG>
+                        File likely truncated or possibly corrupted
+                   <LI> <STRONG>NCFOOBAR = 32</STRONG>
+                        NetCDF-3: Something is messed up, and netCDF doesn't have
+                        an error number for it, or doesn't understand
+                        how/why the messup happened
                    <LI> <STRONG>other errors: </STRONG> should be
-                   OS errors, as defined in the system's
-                   <CODE>/usr/include/sys/errno.h</CODE>
+                        OS errors, as defined in the system's
+                        <CODE>/usr/include/sys/errno.h</CODE>
                </UL>
                <P>
     </UL>
