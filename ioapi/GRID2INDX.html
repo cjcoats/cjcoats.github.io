@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRID2INDX.html 175 2015-02-27 12:57:33Z coats $" -->
+<!-- "$Id: GRID2INDX.html 129 2019-09-13 20:09:58Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> GRID2INDX </TITLE>
 </HEAD>
@@ -103,6 +103,11 @@
     determine the output value (i.e., the interpolation uses
     &quot;extend-by-constant&quot; outside GRID1.
     <P>
+
+    Use routine <CODE>INITSPHERES()</CODE> (controlled by environment
+    variable <VAR>IOAPI_ISPH</VAR>) to determine the spheroid used by
+    the map projections,
+    <P>
     
     NOTE:  The GRID1-vs-GRID2 issue for <CODE>GRID2INDX()</CODE> and
     <CODE>PNTS2INDX()</CODE> is &quot;backward&quot; to the naive
@@ -121,6 +126,9 @@
 <H2> Preconditions </H2>
 
     <CODE>USE MODGCTGP</CODE>
+    <P>
+    <CODE>CALL INITSPHERES()</CODE> or <CODE>CALL SETSPHERE()</CODE> 
+    before using.
     <P>
 
 

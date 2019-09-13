@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 123 2019-08-29 21:31:17Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 129 2019-09-13 20:09:58Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 123 2019-08-29 21:31:17Z coats $
+    $Id: NEWSTUFF.html 129 2019-09-13 20:09:58Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,11 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "sep132019"> 
+               Bug-fixes for <VAR><STRONG>m3tools</STRONG></VAR>
+               programs <VAR>findwndw, gridprobe, insertgrid, latlon,
+               m3cple, m3interp, projtool</VAR>, reported by
+               James&nbsp;Beidler, US EPA.
          <LI>  <A HREF = "#aug292019"> 
                Bug-fix for <CODE>LIST:</CODE> file-lists</A>
          <LI>  <A HREF = "#aug142019"> 
@@ -43,7 +48,7 @@
                Bugs for default <CODE>RUNLEN</CODE> in <VAR>M3TOOLS</VAR>
                programs <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
                <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, <VAR>vertot</VAR>,
-               reported by Winston Rao, NY DEC.  Now fixed.<BR>
+               reported by Winston Hao, NY DEC.  Now fixed.<BR>
                New <VAR>M3TOOLS</VAR> program
                <STRONG><VAR>wndwdesc</VAR></STRONG></A> computes the 
                corners for the windowed sub-grid of a specified grid
@@ -711,6 +716,27 @@
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
     <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "sep132019">
+    Bug-fixes for <VAR><STRONG>m3tools</STRONG></VAR>
+    programs <VAR>findwndw, gridprobe, insertgrid, latlon, m3cple,
+    m3interp, projtool</VAR>
+</A></H2>
+
+    <BLOCKQUOTE>
+    James Beidler, US EPA, reported a problem with the above:  since
+    they did not <CODE>CALL&nbsp;INITSPHERES()</CODE> before using
+    geospatial transforms from <CODE>MODULE&nbsp;MODGCTP</CODE>, they
+    always did their calculations assuming the GRS80 geodetic spheroid.
+    <P>
+    Fixed.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7085,7 +7111,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 123 2019-08-29 21:31:17Z coats $
+    $Id: NEWSTUFF.html 129 2019-09-13 20:09:58Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
