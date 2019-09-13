@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: MODGCTP.html 434 2016-11-22 17:55:35Z coats $" -->
+<!-- "$Id: MODGCTP.html 131 2019-09-13 20:44:13Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>MODULE MODGCTP</TITLE>
 </HEAD>
@@ -54,6 +54,18 @@
                      UTM to/from-LatLon coordinate-transform routines 
          </DL>
         </BLOCKQUOTE>
+
+        <STRONG>Note that</STRONG> for backwards-compatibility both
+        <CODE>MODULE M3UTILIO</CODE> and <CODE>MODULE MODGCTP</CODE> 
+        declare routines <CODE>SETSPHERE(), INITSPHERES(),
+        SPHEREDAT()</CODE>.  If you <CODE>USE</CODE> both of these
+        modules for these routines, you must re-name the
+        <CODE>M3UTILIO</CODE> version in the following fashion:
+        <PRE>
+    USE M3UTILIO, M3U_INITSPHERES => INITSPHERES,   &
+                  M3U_SETSPHERE   => SETSPHERE,     &
+                  M3U_SPHEREDAT   => SPHEREDAT
+        </PRE>
         <P>
 
         <STRONG><CODE>PARAMETER</CODE>s</STRONG> for GCTP spheroid names and indices
