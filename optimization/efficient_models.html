@@ -107,14 +107,14 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     two different models are equivalent in content but organized
     differently (performing exactly the same set of arithmetic
     operations but in different orders, with different data structure
-    layouts) <STRONG>in bad cases, code structure can make a factor
-    of 20-40 difference in a model's delivered computational
+    layouts) <STRONG>in bad cases, code structure can easily make a
+    factor of 20-40 difference in a model's delivered computational
     performance</STRONG>.  Smaller effects (factors of 2-5) are quite
     common unless care has been taken in the model design and coding.
-    Sometimes compilers are able to &quot;optimize around&quot; bad
-    code organization, but in many cases they can not.  Generally,
-    achieving 30% of peak processor performance with one's models is
-    quite good; achieving  5% or less is quite common.
+    Sometimes compilers are able to &quot;optimize around&quot; bad code
+    organization, but in many cases they can not.  Generally, achieving
+    30% of peak processor performance with one's models is quite good;
+    achieving  5% or less is quite common.
     <P>
 
     In this paper we will first examine the hardware characteristics
@@ -158,12 +158,14 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     the &quot;easy stuff&quot; which give most of the benefit, rather
     than looking at heroic measures.
     <P>
-    NOTE: Over the last few years, people have started using the
-    enormously powerful arithmetic capabilities developed for graphics
-    cards to do modeling (so-called <STRONG>GPU Computing</STRONG>).  We
-    will not discuss GPU computing here; however, it is worth noting
-    that its performance is hurt by many of the same issues as
-    &quot;normal&quot; microprocessors&mdash;but hundreds of times worse!
+    <STRONG>NOTE:</STRONG> Over the last few years, people have started
+    using the enormously powerful arithmetic capabilities developed for
+    graphics cards to do modeling (so-called <STRONG>GPU
+    Computing</STRONG>).  We will not discuss GPU computing here;
+    however, it is worth noting that it freequently requires a complete
+    re-write of the model; moreover, its performance is hurt by many of
+    the same issues as &quot;normal&quot; microprocessors&mdash;but
+    hundreds of times worse!
     <P>
 
 <P>
@@ -177,7 +179,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
 
     It is a commonplace observation (not always true, but suggestive)
     that typically 10-20% of the code takes up 80-90% of the execution
-    time:  but <EM>which</EM> 10-20%.  Here are a couple of tools that
+    time:  but <EM>which 10-20%</EM>?  Here are a couple of tools that
     can help to answer that question.
     <P>
 
@@ -195,7 +197,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     rm perf.data
     </CODE></BLOCKQUOTE>
     Here is what the &quot;guts&quot; of a <VAR>perf</VAR> report (from
-    last year's CMAQ-5.0.2 evaluation) looks like:
+    2015's CMAQ-5.0.2 evaluation) looks like:
 <PRE>
 ...
 # Samples: 41M of event 'cycles'
@@ -225,6 +227,21 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
      0.91%  CCTM.ftz.cksumm  CCTM.ftz.cksummer-AVX2  [.] expf.L  
      ...                                                      
 </PRE>
+    Note that <CODE>for_cpstr</CODE>, <CODE>_intel_fast_memcmp</CODE>, 
+    and <CODE>for_trim</CODE> are system run-time library routines used
+    for <CODE>CHARACTER</CODE>-string copies and comparisons.  These
+    take up slightly more than 30% of the model's run time&mdash;and in
+    what is supposed to be a <STRONG>numerical</STRONG> model!  This
+    points at an obvious way to obtain noticeable speedups...
+    <P>
+    Gas-phase chemistry (normally thought-of as the most expensive
+    process, and which uses <CODE>hrsolver_</CODE>, <CODE>hrrates_</CODE>,
+    <CODE>hrg2_</CODE>, <CODE>hrg1_</CODE>, and <CODE>hrcalcks_</CODE>)
+    takes up 14.93%, less than half as much as the
+    <CODE>CHARACTER</CODE>-string operations, and also less than
+    vertical diffusion (which uses <CODE>vdiff_</CODE> and
+    <CODE>matrix_</CODE>, which total 17.39%).
+    <P>
     The <VAR>perf</VAR> tool generates a report very easily, and with
     very little overhead (using operating-system level support built 
     into the Linux kernel).  It will give you information about calls to
@@ -267,13 +284,16 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
 
     <H3>Block Diagram</H3>
     Below is a simplified and generalized block diagram of a typical
-    microprocessor based computer system.  Details vary considerably,
-    but the essential characteristics are displayed. In particular,
-    there are often separate sets of registers and separate sets of
-    arithmetic units for integer/address values and for floating point
-    values; there are sometimes separate caches for instructions and
-    for data, the virtual-address/cache management unit may be placed
-    in the cache instead of within the processor chip itself.
+    microprocessor based computer system.  The various components are
+    described in sections below.
+    <P>
+    Details vary considerably, but the essential characteristics are
+    displayed. In particular, there are often separate sets of registers
+    and separate sets of arithmetic units for integer/address values and
+    for floating point values; there are sometimes separate caches for
+    instructions and for data, the virtual-address/cache management unit
+    may be placed in the cache instead of within the processor chip
+    itself.
     <P>
     <IMG SRC="processor.gif" HEIGHT="691" WIDTH="383" ALT="CPU-Cache-Memory">
 
@@ -288,7 +308,9 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     Needless to say, this has made terminology more confusing :-).
     <BR>
     Note that these multi-core chips naturally have the structure of a
-    shared-memory-parallel system.
+    shared-memory-parallel system.  Frequently, servers are built out
+    of &quot;multi-socket boards&quot;, for which several
+    processor-chips share the memory on each board.
     <BR>
     </EM>
     <P>
@@ -442,22 +464,35 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
              <STRONG>cache conflicts</STRONG> when programs are
              accessing multiple arrays that map to the same cache line.
              <P>
+             Note also that caches are read and written a full
+             cache-line at a time, so that read or write operations that
+             affect only one entry in that line encounter substantial
+             extra overhead (a write-operation has to do the following
+             (expensive!) sequence:
+             <OL>
+                <LI> Read the entire cache-line from memory, if necessary;
+                <LI> Modify the relevant cache-entry;
+                <LI> Write the entire cache-line back to memory
+                     (possibly at a later time, before re-using that
+                     cache-line for something else).
+             </OL>
+             <P>
              The typical organization is hierarchical, with a
              <STRONG>level-1 cache</STRONG> holding 8-32 KB of the
              <STRONG>most-recently-used variables</STRONG>, and
              requiring 2-5 processor cycles to access, a
              <STRONG>level-2</STRONG> cache of 256 KB to 1&nbsp;MB
              holding the next-most-recently used variables, and
-             requiring 8-12 processor cycles to access, and a larger
+             requiring 8-20 processor cycles to access, and a larger
              <STRONG>level-3</STRONG> cache holding more variables, and
-             requiring 18-25 processor cycles.<BR>
+             requiring 18-40 processor cycles.<BR>
              <EM>See <A HREF="#cache">Case Study&nbsp;1:  Typical
              Cache Behavior</A>.</EM>
              <P>
              <EM><U>2015 NOTE:</U>  For most current Intel x86 processors,
-             there are actually 4-18 processors (&quot;cores&quot;) per
+             there are actually 4-18 processor-coress (&quot;cores&quot;) per
              circuit-board socket; each of these has its own 16-32KB L1
-             cache and 256KB L2 cache; all the processors on a socket
+             cache and 256KB L2 cache; all the processor-cores on a socket
              share an additional L3 cache with 1-2MB per
              processor&mdash;a typical 4-core desktop processor having
              4-8MB of shared L3 cache, and a 16-core server processor
@@ -752,7 +787,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
                       &nbsp;END DO<BR>
                       &nbsp;END DO<BR>
                       &nbsp;END DO<BR>
-                      <CODE>
+                      </CODE>
                       </TD>
                       <TD ALIGN=LEFT>
                       <CODE>
@@ -805,8 +840,8 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               <P>
               <TABLE BORDER ALIGN=CENTER>
                   <THEAD>
-                      <TH>Good</TH>
-                      <TH>Bad</TH>
+                      <TD>Good</TD>
+                      <TD>Bad</TD>
                   </THEAD>
                   <TR ALIGN=LEFT>
                       <TD>
@@ -818,7 +853,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(I,J)=B(J,I)<BR>
                       &nbsp;END DO<BR>
                       &nbsp;END DO<BR>
-                      <CODE>
+                      </CODE>
                       </TD>
                       <TD>
                       <CODE>
@@ -829,7 +864,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A(I,J)=B(J,I)<BR>
                       &nbsp;END DO<BR>
                       &nbsp;END DO<BR>
-                      <CODE>
+                      </CODE>
                       </TD>
                   </TR>
               </TABLE>
@@ -1017,7 +1052,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               functions, and <STRONG>real-exponent powers</STRONG> and
               more expensive yet&mdash;as much as 1000 times as
               expensive.  For processors that have double-precision-only
-              floating point hardware (Intel x86 and IBM POWER  series),
+              floating point hardware (Intel x86/8087 and IBM POWER  series),
               the expensive floating point operations are <EM>much</EM>
               more expensive.
               <BR>
@@ -1178,18 +1213,19 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               translate between the <EM>logical addresses</EM> that
               programs use, and the <EM>physical addresses</EM> of the
               actual RAM.  Since the TLB is much smaller than the entire
-              page table, when the TLB doesn't have the needed
-              translation, the entire processor must be suspended while
-              the operating system causes the TLB goes out to main
-              memory to fetch the relevant part of the page table for
-              that translation.  Programs that traverse large regions of
-              memory over and over again may suffer frequent stalls from
-              this process.  The MM5v3 example above (with a dozen or so
-              processes that go over and over large regions of memory)
-              is also prone to TLB thrashing.  For most Intel Xeons, the
-              size of the TLB coverage is 4 MB per processor; bad loop
-              and array organization can cause extra flushing and
-              reloading of the TLB from (slow) main memory.
+              page table (typically covering 4 MB per processor), when
+              the TLB doesn't have the needed translation, the entire
+              processor must be suspended while the operating system
+              causes the TLB goes out to main memory to fetch the
+              relevant part of the page table for that translation. 
+              Programs that traverse large regions of memory over and
+              over again may suffer frequent stalls from this process. 
+              The MM5v3 example above (with a dozen or so processes that
+              go over and over large regions of memory) is also prone to
+              TLB thrashing.  For most Intel Xeons, the size of the TLB
+              coverage is 4 MB per processor; bad loop and array
+              organization can cause extra flushing and reloading of the
+              TLB from (slow) main memory.
               <P>
               In the above MM5 example, each <CODE>HADV(()</CODE> call
               would exhaust the TLB capacity; subsequent calls would 
@@ -1293,8 +1329,8 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
                        <BLOCKQUOTE><DL>
                           <DT><VAR>P1</VAR> gets <CODE>I=&nbsp;1,10</CODE>: 10 iterations
                           <DT><VAR>P2</VAR> gets <CODE>I=11,20</CODE>: 10 iterations
-                          <DT><VAR>P3</VAR> gets <CODE>I=21,30</CODE>:&nbsp; 9 iterations
-                          <DT><VAR>P4</VAR> gets <CODE>I=31,48</CODE>:&nbsp; 9 iterations
+                          <DT><VAR>P3</VAR> gets <CODE>I=21,29</CODE>:&nbsp; 9 iterations
+                          <DT><VAR>P4</VAR> gets <CODE>I=30,38</CODE>:&nbsp; 9 iterations
                           <DT>All the processors synchronize at the end
                           of the loop.
                        </DL></BLOCKQUOTE>
@@ -1532,18 +1568,23 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               the model time-step.
               <BLOCKQUOTE><CODE>
               <VAR>ADV3D</VAR>:<BR>
-              &nbsp;&nbsp;Extract advected species from CGRID<BR>
+              &nbsp;&nbsp;Extract advected species from CGRID, with
+              inverse-density related mass-adjustment<BR>
               &nbsp;&nbsp;Half-step of Z advection<BR>
               &nbsp;&nbsp;Full-step of X-Y advection<BR>
               &nbsp;&nbsp;Half-step of Z advection<BR>
               &nbsp;&nbsp;Copy-back advected species to CGRID, with
-              density-related mass-adjustment.<BR>
+              density related mass-adjustment.<BR>
               </CODE></BLOCKQUOTE>
-              is actually about three times faster than the separate
-              <VAR>HADV</VAR> and <VAR>VADV</VAR> calls that do, in
-              effect, the following, with two sets of gather-scatter
-              steps:
+              is actually has abaut one-fourth the memory operations
+              than the separate <VAR>HADV</VAR> and <VAR>VADV</VAR>
+              calls that do (and with better cache behavior), in effect,
+              the following, with four sets of gather-scatter steps:
               <BLOCKQUOTE><CODE>
+              <VAR>ADJ_CON</VAR>:<BR>
+              &nbsp;&nbsp;Extract advected species from CGRID<BR>
+              &nbsp;&nbsp;Perform inverse-density-related mass adjustments<BR>
+              &nbsp;&nbsp;Copy-back advected species to CGRID<BR>
               <VAR>HADV</VAR>:<BR>
               &nbsp;&nbsp;Extract advected species from CGRID<BR>
               &nbsp;&nbsp;Full-step of X-Y advection<BR>
@@ -1552,21 +1593,22 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               &nbsp;&nbsp;Extract advected species from CGRID<BR>
               &nbsp;&nbsp;Full-step of Z advection<BR>
               &nbsp;&nbsp;Copy-back advected species to CGRID<BR>
-              <VAR>ADJ_CON</VAR>:<BR>
+              <VAR>ADJ_INV</VAR>:<BR>
               &nbsp;&nbsp;Extract advected species from CGRID<BR>
               &nbsp;&nbsp;Perform density-related mass adjustments<BR>
               &nbsp;&nbsp;Copy-back advected species to CGRID<BR>
               </CODE></BLOCKQUOTE>
-              Note that the &quot;extract&quot;s at the start of
-              <VAR>VADV</VAR> and <VAR>ADJ_CON</VAR> exactly cancel out
-              the &quot;copy-back&quot;s at the end of <VAR>HADV</VAR>
-              and <VAR>VADV</VAR>, respectively.  This optimization has
-              only a moderate direct effect on model performance by
-              itself, but it also allows us to stretch the model time step,
-              with an indirect effect of substantially increasing the
-              computational efficiency of <VAR>GASCHEM</VAR> and
-              <VAR>VDIFF</VAR>, and speeding up the model as whole
-              by 30-40%.
+              Note that all the &quot;extract&quot;s at the start and
+              end of these routines exactly cancel out the
+              &quot;copy-back&quot;s at the end of them, respectively. 
+              This optimization has only a moderate direct effect on
+              model performance by itself, but since the model time-step
+              is typically limited by <VAR>VADV</VAR>, the doubled
+              &quot;Half-step of Z&quot; also allows us to stretch the
+              model time step, with an indirect effect of substantially
+              increasing the computational efficiency of
+              <VAR>GASCHEM</VAR> and <VAR>VDIFF</VAR>, and speeding up
+              the model as whole by 30-40%.
               <P>
               It is worthwhile, I think, to consider structuring AQMs
               so that the physics modules only see the physics species
@@ -1788,7 +1830,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               loop bounds may not match exactly, so that we have to
               introduce extra &quot;set-up&quot; or
               &quot;clean-up&quot; loops (an operation called
-              <EM>peeling</EM> to make the merger work, as in
+              <EM>peeling</EM>) to make the merger work, as in
               this example adapted from MM5's <VAR>MRFPBL</VAR> routine
               (using <CODE>DO-END DO</CODE> and Fortran-90 style
               continuations, for easier web layout).  Recall that in
@@ -2148,7 +2190,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               &nbsp;&nbsp;&nbsp;DADY(C,R)=A(C,R+1)-A(C,R)<BR>
               END DO<BR>
               END DO<BR>
-              </BLOCKQUOTE></CODE>
+              </CODE></BLOCKQUOTE>
               In the naive version, there are two loads and one
               arithmetic operation per result.  Loop jamming improves
               this performance by 50%, to three loads and two
@@ -2162,7 +2204,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               &nbsp;&nbsp;&nbsp;DADY(C,R)=A(C,R+1)-A(C,R)<BR>
               END DO<BR>
               END DO<BR>
-              </BLOCKQUOTE></CODE>
+              </CODE></BLOCKQUOTE>
               Compilers will generally unroll only innermost loops.
               This, therefore, is one case where programmer-coded loop
               unrolling can substantially improve performance (but at
@@ -2176,7 +2218,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               constitute only a small fraction of the computation, if
               <CODE>M</CODE> and <CODE>N</CODE> are large), we have the
               following.  <CODE>A(C+1,R+1)</CODE> is highlighted to show
-              repeated uses:
+              (6 times) repeated uses:
               <BLOCKQUOTE><CODE>
               DO R = 1, M, 3<BR>
               DO C = 1, N, 3<BR>
@@ -2200,7 +2242,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               &nbsp;&nbsp;&nbsp;DADY(C+2,R+2)=A(C+2,R+3)-A(C+1,R+2)<BR>
               END DO<BR>
               END DO<BR>
-              </BLOCKQUOTE></CODE>
+              </CODE></BLOCKQUOTE>
               In principle, one can unroll this system further and get
               even higher FLOP:LOAD ratios, but in practice the
               compiler will run out of registers into which to load
@@ -2453,7 +2495,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     schedule instructions for our superscalar deeply-pipelined
     processor, the scope of operation is the <STRONG>basic
     block</STRONG>, a chunk of machine-code between GOTOs (none going
-    into the middle of it, none leaving it except possibly at the end. 
+    into the middle of it, none leaving it except possibly at the end). 
     Since <CODE>IF</CODE>-statements involve the creation of basic
     blocks, and also since they involve data dependencies that break the
     pipelining, inner-loop <CODE>IF</CODE>-statements can be very
@@ -2569,7 +2611,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
                   <CODE>XTNP(I,K)=XTNP(I,K)*PSB(I,J))</CODE>
             <LI>  Loop on <CODE>I,K</CODE> adding the local tendency to the
                   output argument global tendency
-                  <CODE>X3DTEN(I,J,K)=X3DTEN(I,J,K)+XTNP(I,K)</CODE>
+                  <CODE>X3DTEN(I,K,J)=X3DTEN(I,K),J+XTNP(I,K)</CODE>
         </OL>
         </BLOCKQUOTE>
     </BLOCKQUOTE>
@@ -2577,6 +2619,16 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     this is a one-pass code</EM> that uses 6 loop traversals in order to
     compute the final <CODE>X3DTEN(I,J,K)</CODE>.  There are no internal
     <EM>(&quot;miter&quot;)</EM> time steps for <VAR>MRFPBL</VAR>.
+    <UL>
+        <LI> <CODE>X3D(I,K,J)</CODE> is read once
+        <LI> <CODE>XTNP(I,K)</CODE> is read 3 times and written 3 times
+        <LI> <CODE>AX(I,K)</CODE> is read once and written once
+        <LI> <CODE>AX(I,K)</CODE> is read once and written once
+        <LI> <CODE>PSB(I,J)</CODE> is read once
+        <LI> <CODE>X3DTEN(I,K,J)</CODE> is read once and written once
+    </UL>
+    for a total of 8 whole-grid reads and 6 whole-grid writes per
+    variable <CODE>X</CODE>.
     <P>
 
     <H3>Improved:</H3>
@@ -2591,11 +2643,19 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
         <BLOCKQUOTE>
         Loop on <CODE>I,K</CODE>
         <OL>
-            <LI>  Compute diffused value <CODE>AX</CODE>
+            <LI>  Compute diffused (scalar) value <CODE>AX</CODE> using
+                  <CODE>X3D(I,K,J)</CODE>
             <LI>  Increment the global tendency
                   <CODE>X3DTEN(I,J,K)=X3DTEN(I,J,K)+(AX-X3D(I,J,K))*PSB(I,J)</CODE>
         </OL>
+        <UL>
+            <LI> <CODE>X3D(I,K,J)</CODE> is read once
+            <LI> <CODE>PSB(I,J)</CODE> is read once
+            <LI> <CODE>X3DTEN(I,K,J)</CODE> is read once and written once
+        </UL>
         </BLOCKQUOTE>
+        for a total of 3 whole-grid reads and 1 whole-grid writes per 
+        variable <CODE>X</CODE>.
     </BLOCKQUOTE>
     One may further restructure the code as described in the section
     above, into the pattern
@@ -2610,21 +2670,21 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
        END DO
     ELSE IF...
        ...
-    END IF   !! if imphys>=6,5,3,2,1
+    END IF   !! if imphys&ge;6,5,3,2,1
     </PRE>
     which has the added virtue of reading <CODE>PSB(I,J)</CODE> only
-    once (reducing the ratio of loads per arithmetic operation below
-    1.0) and using it for all the relevant variables, and also of
-    increasing the amount of independent work being thrown at our deeply
-    pipelined, highly-superscalar processor (increasing its
-    computational efficiency thereby).
+    once and using it for all the variables (reducing the ratio of loads
+    per arithmetic operation below 1.0) and using it for all the
+    relevant variables, and also of increasing the amount of independent
+    work being thrown at our deeply pipelined, highly-superscalar
+    processor (increasing its computational efficiency thereby).
     <P>
 
     <H3>Result:</H3>
     As expected, the resulting code is more than twice as fast
     as the original.  The surprising thing is that (at least for the
     2002-vintage (SGI, IBM) machines and case we benchmarked),
-    <STRONG>optimizing <VAR>MRFPBL</VAR> in this way makes
+    <STRONG>optimizing <VAR>MRFPBL</VAR> in this way makes routines
     <VAR>SOLVE</VAR> and <VAR>SOUND</VAR> respectively 10% and 9% faster
     as well!</STRONG> The reason for this is that the elimination of 16
     <CODE>I,K</CODE> scratch arrays markedly reduces the impact of
@@ -2788,10 +2848,10 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     the new code are 1-D <CODE>K</CODE>-subscripted ones for the
     <CODE>SIGMA</CODE>-fractions and the vertical column variables
     passed in to the <CODE>N,K</CODE>-nest precipitation
-    computation--<STRONG>there are only 14 arrays in all</STRONG>.  All
-    the other working variables can be reduced to scalars, for a
+    computation--<STRONG>there are only 14 arrays in all</STRONG>.
+    All the other working variables can be reduced to scalars, for a
     <EM>local variable volume <STRONG>less than 2 kilobytes</STRONG>,
-    fitting into level-1 cache on every microprocessor I know!</EM>
+    fitting into level-1 cache on every post-1992 microprocessor I know!</EM>
     <PRE>
       DO 5 K = 2, KX
     5 CONTINUE
@@ -2835,7 +2895,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     <P>
     While the restructuring is taking place, there are numerous places
     where the strategies noted above (logic refactoring, avoiding
-    expensive operations, loop invariant lifting, etc.) can be employed
+    expensive operations, loop invariant lifting, etc.) were employed
     to improve the code quality still further, from the points of view
     of both numerical accuracy and computational efficiency.
     <P>
@@ -2948,7 +3008,7 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
     If you take a course in efficient GPU programming, the first thing
     the instructor will tell you is that the alternative code
     organization offer performance on GPUs thousands of times faster
-    than the  &quot;fine-grained objects&quot; code orgaaaanization.
+    than the  &quot;fine-grained objects&quot; code organization.
     </BLOCKQUOTE>
 
 <P>
