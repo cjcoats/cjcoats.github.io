@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 122 2019-08-14 16:09:25Z coats $" -->
+<!-- "$Id: AVAIL.html 132 2019-09-17 14:59:55Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -207,10 +207,9 @@ m3stat:
                        be customized for your particular installation.
                        Make sure you back them up when you do this.<BR>
                        For I/O&nbsp;API 3.2, these are no longer in the
-                       <CODE>tar</CODE>-file; for previous versions, the
-                       untar-operation above will undo your
-                       customization.
-                       <P>
+                       <CODE>tar</CODE>-file; for previous versions,
+                       note that  the untar-operation above will undo
+                       your customization. <P>
                        You will need to copy the relevant <CODE>Makefile.*</CODE>
                        templates to <CODE>Makefile</CODE> in the
                        <VAR>${BASEDIR}/ioapi</VAR> and
@@ -254,6 +253,26 @@ m3stat:
                                  <VAR>pnetCDF/MPI</VAR>
                                  distributed-output vs coupling-mlode
                        </UL>
+                       <STRONG>Intel-compiler Warning:</STRONG>  For
+                       whatever reason, Intel has chosen to change some
+                       flags from version to version, making it
+                       difficult to have generic
+                       <VAR>Makeinclude.*ifort*</VAR> files. In
+                       particular, you will need to edit those files
+                       so that <VAR>make</VAR>-variables
+                       <CODE>OMPFLAGS</CODE> AND <CODE>OMPLIBS</CODE>
+                       use the following:
+                       <UL>
+                        <LI> For compiler-versions 15  and earlier: 
+                             <CODE>-openmp</CODE>
+                        <LI> For compiler-versions 16-18 
+                             <CODE>-qopenmp</CODE> is preferred, but
+                             <CODE>-openmp</CODE> is accepted (with a
+                             warning-message)
+                        <LI> For compiler-version 19 and later: 
+                             <CODE>-qopenmp</CODE>
+                       </UL>
+                       <P>
                        Note that if you update the I/O&nbsp;API library, then
                        <VAR>cd ../m3tools; make relink</VAR> will
                        efficiently re-build the <VAR>m3tools</VAR>
@@ -1835,7 +1854,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 122 2019-08-14 16:09:25Z coats $
+    $Id: AVAIL.html 132 2019-09-17 14:59:55Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
