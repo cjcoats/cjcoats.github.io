@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 132 2019-09-17 14:59:55Z coats $" -->
+<!-- "$Id: AVAIL.html 134 2019-09-17 21:02:31Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -279,19 +279,20 @@ m3stat:
                        programs.
                        <P>
                        Additional definitions in <VAR>make</VAR>-variable
-                       <CODE>DEFINEFLAGS</CODE> turn on various optional
-                       capabilities:
+                       <CODE>DEFINEFLAGS</CODE> (in <VAR>Makefile</VAR>
+                       or<CODE>ARCHFLAGS</CODE> (in <VAR>Makeinclude.${BIN}</VAR>
+                       turn on various optional capabilities:
                        <BLOCKQUOTE>
                        <DL>
-                            <DT> <CODE>IOAPI_NO_STDOUT</CODE>
+                            <DT> <CODE>-DIOAPI_NO_STDOUT=1</CODE>
                             <DD> suppresses write-operations to the screen
                                  in routines <CODE>INIT3(), M3MSG2(), M3MESG(),
                                  M3ABORT()</CODE>.
-                            <DT> <CODE>IOAPICPL</CODE>
+                            <DT> <CODE>-DIOAPICPL=1</CODE>
                             <DD> turns on (PVM based) I/O&nbsp;
                                 <A HREF="BUFFERED.html#pvm"><U><VAR>coupling
                                  mode</VAR></U></A>.
-                            <DT> <CODE>IOAPI_SNOOP</CODE>
+                            <DT> <CODE>-DIOAPI_SNOOP=1</CODE>
                             <DD> turns on <A HREF="BUFFERED.html#snoop"><U><VAR>snoop
                                  mode</VAR></U></A> for read-operations:
                                  iff timestep-flag not available, sleep
@@ -299,20 +300,23 @@ m3stat:
                                  then re-try, for up to
                                  <CODE>SNOOPTRY3</CODE> attempts.<BR>
                                  <EM>for I/O&nbsp;API-3.2 and later only</EM>
-                            <DT> <CODE>IO_360, IO_365</CODE>
+                            <DT> <CODE>-DIO_360=1, -DIO_365=1</CODE>
                             <DD> create the 360-day or 365-day <U><VAR>global climate</VAR></U>
                                  versions of the library<BR>
                                  <EM>365-day version for I/O&nbsp;API-3.2 and later
                                  only</EM>
-                            <DT> <CODE>IOAPI_PNCF</CODE>
+                            <DT> <CODE>-DIOAPI_PNCF=1</CODE>
                             <DD> turns on <A HREF="BUFFERED.html#pncf"><U><VAR>PnetCDF/MPI
                                  distributed-file mode</VAR></U></A><BR>
                                  <EM>for I/O&nbsp;API-3.2 and later only</EM>
-                            <DT> <CODE>IOAPI_NCF4</CODE>
+                            <DT> <CODE>-DIOAPI_NCF4=1</CODE>
                             <DD> turns on netCDF-4 <CODE>INTEGER*8</CODE> operations,
                                  and requires HDF-enabled netCDF-4 libraries, instead of
                                  netCDF-3 (for the rest of your
-                                 <VAR>Makefile</VAR>s).
+                                 <VAR>Makefile</VAR>s).<BR>
+                                 <STRONG>Required if your netCDF library is
+                                 built without the recommended
+                                 <CODE>--disable-netcdf-4</CODE></STRONG>
                        </DL>
                        </BLOCKQUOTE>
                        <P>
@@ -1854,7 +1858,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 132 2019-09-17 14:59:55Z coats $
+    $Id: AVAIL.html 134 2019-09-17 21:02:31Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
