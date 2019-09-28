@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 127 2019-09-12 14:58:59Z coats $" -->
+<!-- "$Id: ERRORS.html 135 2019-09-28 14:20:05Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -34,6 +34,7 @@
          <LI>  <A HREF="#inst"><CODE>Instruction... not supported</CODE>
                or <CODE>Program Exception&mdash;illegal instruction</CODE>
                issues</A>
+         <LI>  <A HREF="#segs">Seg-faults</A>
          <LI>  <A HREF="#syms">Missing-symbol issues</A>
          <LI>  <A HREF="#ccfc">Compiler/system-library compatibility issues</A>
          <LI>  <A HREF="AVAIL.html#ncf4">netCDF Version&nbsp;4 issues</A>
@@ -77,7 +78,7 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 127 2019-09-12 14:58:59Z coats $"
+    !! Version "$Id: ERRORS.html 135 2019-09-28 14:20:05Z coats $"
     </PRE>
     </BLOCKQUOTE>
 <P>
@@ -282,6 +283,90 @@ Error: Symbol 'getnum' at (1) conflicts with symbol from module 'm3utilio', use-
     </BLOCKQUOTE>
     <P>
 
+    <A HREF="#contents">Back to &quot;Troubleshooting&quot; Contents</A>
+    <P>
+
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2><A NAME="segs">
+
+     &quot;Segmentation-Fault&quot; Issues with
+     <VAR><STRONG>m3tools</STRONG></VAR> programs
+
+</A></H2>
+
+    <BLOCKQUOTE>
+    Generally, you may need to run these programs with 
+    <PRE>
+    limit stacksize unlimited
+    </PRE>
+    since they allocate scratch-variables &quot;off the stack&quot;
+    (as is the usual/recommended practice in Fortran-90).  You may
+    possibly also need 
+    <PRE>
+    limit memoryuse unlimited
+    </PRE>
+    <P>
+    </BLOCKQUOTE>
+    
+    <A HREF="#contents">Back to &quot;Troubleshooting&quot; Contents</A>
+    <P>
+
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2><A NAME="syms">
+
+     &quot;Missing Symbol&quot; issues
+
+</A></H2>
+
+    <BLOCKQUOTE>
+    The system-utility <VAR>nm</VAR> is very useful for this category of
+    problems; it can be used to list all of the symbols in a library
+    <VAR>.a</VAR>, object <VAR>.o</VAR> or executable.  When they
+    contain machine-code for a routine, it will show up with its
+    linker-name (as opposed to source-code name), with a <CODE>U</CODE>
+    for each use and a <CODE>U</CODE> for the routine's definition.  For
+    example, to find out about <CODE>OPEN3</CODE> in
+    <CODE>libioapi.a</CODE>:
+    <PRE>
+    nm $io/../$BIN/libioapi.a | grep -i open3
+                 U open3_
+                 U open3_
+                 U open3_
+                 U open3_
+                 U open3_
+open3.o:
+0000000000000000 d open3.firstime_
+0000000000000000 T open3_
+open3c.o:
+                 U open3_
+0000000000000000 T open3c
+    </PRE>
+    says that  <CODE>OPEN3</CODE> is defined in <VAR>open3.o</VAR>
+    and used 6 other times (including in <VAR>open3c.o</VAR>)
+    <P>
+    
+    Generally, missing symbols with <VAR>omp</VAR> or
+    <VAR>openmp</VAR> as parts of their name indicate that you may
+    have compiled the I/O&nbsp;API with OpenMP parallelism enabled, but
+    are not linking your program accordinglly.  Look in the relevant
+    <VAR>ioapi/Makeinclude.$BIN</VAR> for the <VAR>make</VAR>-variables
+    <CODE>OMPFLAGS</CODE> and <CODE>OMPLIBS</CODE> to see what you
+    need to add to your program's <VAR>Makefile</VAR>.
+    <P>
+    
+    Many other missing symbols (especially with <VAR>nf_</VAR> or
+    <VAR>nc</VAR> in them) are related to netCDF-library issues (and to
+    the libraries which netCDF assumes); see the section on <A
+    HREF="AVAIL.html#ncf4">netCDF Version&nbsp;4 issues</A>.
+    <P>
+    </BLOCKQUOTE>
+    
     <A HREF="#contents">Back to &quot;Troubleshooting&quot; Contents</A>
     <P>
 

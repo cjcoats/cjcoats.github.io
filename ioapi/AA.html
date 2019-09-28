@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 116 2019-06-11 21:16:16Z coats $" -->
+<!-- "$Id: AA.html 135 2019-09-28 14:20:05Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -1259,6 +1259,14 @@ Contents
     being GUI X applications; consequently, they can be run either
     interactively or from relatively simple scripts.
     <P>
+    
+    Generally, you may need to run these programs with 
+    <PRE>
+    limit stacksize unlimited
+    </PRE>
+    since they allocate scratch-variables &quot;off the stack&quot;
+    (as is the usual/recommended practice in Fortran-90).
+    <P>
 
     With the exception of programs designed specifically for
     manipulating dates and times in scripts (<VAR>greg2jul, jul2greg,
@@ -1716,7 +1724,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 116 2019-06-11 21:16:16Z coats $
+$Id: AA.html 135 2019-09-28 14:20:05Z coats $
     </PRE>
 
 </BODY>
