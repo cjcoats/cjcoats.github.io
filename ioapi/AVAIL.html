@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 134 2019-09-17 21:02:31Z coats $" -->
+<!-- "$Id: AVAIL.html 138 2019-10-29 21:20:00Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -528,6 +528,26 @@ m3stat:
                         if you're building netCDF version 4.1 or later)
                         to the appropriate object
                         directory <CODE>$BASEDIR/$BIN</CODE>.
+                        <P>
+                        <STRONG>For I/O&nbsp;API-3.2 and
+                        netCDF-4:</STRONG>  Some configurations of
+                        netCDF-4 have <CODE>INTEGER*8</CODE> (64-bit
+                        integer) support, and some do not; the I/O&nbsp;API
+                        tries to make it possible to use this support if
+                        it is available, but needs to include
+                        &quot;hacks&quot; to cover for its absence when
+                        it isn't.  You can find out if it is included in
+                        netCDF using the command
+                        <PRE>
+        nm libnetcdff.a | grep nf_get_var_int64_
+                        </PRE>
+                        If present, you need to add the definition
+                        <CODE>-DIOAPI_NCF4=1</CODE> to the 
+                        <VAR>make</VAR>-variable <CODE>ARCHFLAGS</CODE> 
+                        in your <CODE>MAKEINCLUDE.${BIN}</CODE>. 
+                        Otherewise, you will get &quot;multiply defined
+                        symbol&quot; errors when you attempt to compile
+                        programs.
                         <P>
                         For I/O&nbsp;API-3.2, if you are building the
                         PnetCDF/MPI distributed-I/O version for CMAQ,
@@ -1858,7 +1878,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 134 2019-09-17 21:02:31Z coats $
+    $Id: AVAIL.html 138 2019-10-29 21:20:00Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

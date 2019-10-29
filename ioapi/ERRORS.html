@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 135 2019-09-28 14:20:05Z coats $" -->
+<!-- "$Id: ERRORS.html 138 2019-10-29 21:20:00Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -78,7 +78,7 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 135 2019-09-28 14:20:05Z coats $"
+    !! Version "$Id: ERRORS.html 138 2019-10-29 21:20:00Z coats $"
     </PRE>
     </BLOCKQUOTE>
 <P>
@@ -778,26 +778,37 @@ class `AREG'
 
     <BLOCKQUOTE>
     <UL>
-         <LI>  <STRONG>NetCDF and IRIX 7.4 and later compilers</STRONG>
-               Experience indicates that the IRIX&nbsp;7.4 compilers
-               will not correctly build the netCDF library used by the
-               I/O&nbsp;API.  Although the <VAR>make</VAR>
-               <EM>seems</EM> to succeed on that platform,
-               <VAR>make&nbsp;test</VAR> fails almost immediately;
-               attempts to use the <CODE>libnetcdf.a</CODE> that
-               was built will also lead to program crashes.
+         <LI>  <STRONG>Multiply defined symbol
+               <CODE>nf_get_var_int64_</CODE> (etc.) errors on program
+               builds:</STRONG><BR>
+               Some configurations of netCDF-4 support <CODE>INTEGER*8</CODE>
+               (64-bit integer) variables, and some don't.  I/O&nbsp;API-3.2
+               and later attempt to support these when they are available,
+               and have to provide &quot;hacks&quot; when they're not.
+               To detect netCDF-4 <CODE>INTEGER*8</CODE> support:
+               <BLOCKQUOTE><CODE>
+               nm libnetcdff.a | grep nf_get_var_int64_
+               </CODE></BLOCKQUOTE>
+               If this turns up a result, then you need to add the
+               definition <CODE>-DIOAPI_NCF4=1</CODE> to the 
+               <VAR>make</VAR>-variable <CODE>ARCHFLAGS</CODE> in your
+               <CODE>MAKEINCLUDE.${BIN}</CODE>.  Otherewise, you will
+               get &quot;multiply defined symbol&quot; errors when you
+               attempt to compile programs.
                <P>
          <LI>  NetCDF Error Troubleshooting <STRONG>Generalities:</STRONG>
                <P>
                All the netCDF &quot;magic numbers&quot; are defined
                in the I/O&nbsp;API <CODE>NETCDF.EXT</CODE> file (which
                is the I/O API name for the file netCDF calls
-               <CODE>src/fortran/netcdf.inc</CODE>. Errors defined
-               in netCDF 2.x have positive values in the range 1...32
-               (except for <CODE>NCSYSERR</CODE> which is -1); errors
-               newly defined for netCDF 3.x are in the range -60...-1.
-               General methodology:  find the error-number and then try
-               to figure out what's wrong from the name of the
+               <CODE>src/fortran/netcdf.inc</CODE> and also (for
+               I/O&nbsp;API-3.2) in the <CODE>modncfio.F90</CODE>:
+               look for parameters <CODE>nf_noerr</CODE>, etc.               
+               Errors defined in netCDF 2.x have positive values in the
+               range 1...32 (except for <CODE>NCSYSERR</CODE> which is
+               -1); errors newly defined for netCDF 3.x are in the range
+               -60...-1. General methodology:  find the error-number and
+               then try to figure out what's wrong from the name of the
                corresponding <CODE>PARAMETER</CODE>.
                <P>
                Note that UCAR re-defined some of these errors between
