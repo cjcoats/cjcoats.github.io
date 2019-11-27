@@ -2,9 +2,9 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: M3TOTXT.html 26 2017-10-13 17:30:06Z coats $" -->
+<!-- "$Id: M3TOTXT.html 140 2019-11-27 22:51:15Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
-<TITLE> Program M3PROBE </TITLE>
+<TITLE> Program M3TOTXT </TITLE>
 </HEAD>
 
 <BODY BGCOLOR="#FFFFFF" 
@@ -72,11 +72,11 @@
     echo "15            " &gt;&gt;  ${UI}     #  ending   row
     echo "1             " &gt;&gt;  ${UI}     #  layer
     
-    m3probe &lt; ${UI}
+    M3TOTXT &lt; ${UI}
     set foo = ${status}
     if ( ${foo} != 0 )  then
         rm ${UI}
-        echo "### ERROR ${foo} in program M3PROBE"
+        echo "### ERROR ${foo} in program M3TOTXT"
     endif
     exit ( ${foo} )
 </PRE>

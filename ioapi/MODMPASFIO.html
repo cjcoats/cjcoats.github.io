@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: MODMPASFIO.html 63 2017-11-21 14:36:45Z coats $" -->
+<!-- "$Id: MODMPASFIO.html 140 2019-11-27 22:51:15Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>MODULE MODMPASFIO</TITLE>
 </HEAD>
@@ -309,6 +309,12 @@
         <DT><CODE>INTEGER, PUBLIC, PARAMETER :: NMPASVARS = 36</CODE>
         <DD> Number of &quot;standard&quot; MPAS-file variables for
              this module.
+        <P>
+        <DT><CODE>INTEGER, PUBLIC, PARAMETER :: MXMPASVARS = 2048</CODE>
+        <DD> Maximum number of MPAS-file variables for this module.
+        <P>
+        <DT><CODE>INTEGER, PUBLIC, PARAMETER :: MXMPASFILE = 64</CODE>
+        <DD> Maximum number of MPAS-files for this module.
         <P>
 
         <DT><CODE>CHARACTER(LEN=16), PUBLIC, PARAMETER :: MPASDIMNAMES( NMPASDIMS )</CODE>

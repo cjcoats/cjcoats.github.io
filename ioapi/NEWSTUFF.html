@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 137 2019-10-16 14:12:13Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 140 2019-11-27 22:51:15Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 137 2019-10-16 14:12:13Z coats $
+    $Id: NEWSTUFF.html 140 2019-11-27 22:51:15Z coats $
     </EM>
     <HR>
 
@@ -33,14 +33,20 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#nov272019"> 
+               Mods to <CODE>MODMPASFIO</CODE> for
+               I/O&nbsp;API-3.2-large compatibility
+               </A>
          <LI>  <A HREF = "#oct162019"> 
-               Increase <CODE>MXFILE3</CODE to 256;
-               <CODE>PARMS3-LARGE.EXT</A> for CMAQ-DDM
+               Increase <CODE>MXFILE3</CODE> to 256;
+               new <CODE>PARMS3-LARGE.EXT</CODE> for CMAQ-DDM
+               </A>
          <LI>  <A HREF = "sep132019"> 
                Bug-fixes for <VAR><STRONG>m3tools</STRONG></VAR>
                programs <VAR>findwndw, gridprobe, insertgrid, latlon,
                m3cple, m3interp, projtool</VAR>, reported by
                James&nbsp;Beidler, US EPA.
+               </A>
          <LI>  <A HREF = "#aug292019">
                Bug-fix for <CODE>LIST:</CODE> file-lists</A>
          <LI>  <A HREF = "#aug142019"> 
@@ -727,15 +733,47 @@
 
 <HR> <!----------------------------------------------------------------->
 
+<H2> <A NAME = "nov272019">
+    Mods to <CODE>MODULE MODMPASFIO</CODE> for
+    I/O&nbsp;API-3.2-large compatibility
+</A></H2>
+
+    <BLOCKQUOTE>
+    As originally dimensioned, the set of <CODE>MODULE</CODE> variables
+    for <CODE>MODULE MODMPASFIO</CODE> exceeded 8 GB in the
+    I/O&nbsp;API-3.2-large case, which causes link errors with
+    <A HREF="AVAIL.html#medium">Linux x86_64 small-memory-module</A>
+    compilation.
+    <P>
+    New dimensioning <CODE>PARAMETERS</CODE> are defined as follows,
+    reducing the size of the state variables to about 300 MB:
+    <BLOCKQUOTE>
+    <DL>
+        <DT><CODE>INTEGER, PUBLIC, PARAMETER :: MXMPASVARS = 2048</CODE>
+        <DD> Maximum number of MPAS-file variables for this module.
+        <P>
+        <DT><CODE>INTEGER, PUBLIC, PARAMETER :: MXMPASFILE = 64</CODE>
+        <DD> Maximum number of MPAS-files for this module.
+        <P>
+    </DL>    
+    </BLOCKQUOTE>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
 <H2> <A NAME = "oct162019">
-    Increase <CODE>MXFILE3</CODE to 256;<BR>
-    <CODE>PARMS3-LARGE.EXT</A> for CMAQ-DDM
+    Increase <CODE>MXFILE3</CODE> to 256;<BR>
+    New <CODE>PARMS3-LARGE.EXT</CODE> for CMAQ-DDM
 </A></H2>
 
     <BLOCKQUOTE>
     Subject says it.
     <P>
-    <CODE>PARMS3-LARGE.EXT</A> has
+    <CODE>PARMS3-LARGE.EXT</CODE> has
     <BLOCKQUOTE>
         <CODE>MXFILE3 = 512</CODE><BR>
         <CODE>MXVARS3 = 16384</CODE>
@@ -743,9 +781,9 @@
     for use in CMAQ-DDM and CMAQ-ISAM.  It will have somewhat lower
     performance than the &quot;normal&quot; I/O&nbsp;API and will
     require substantially more memory and disk space.<BR>
-    <STROMG><EM>Note that the I/O&nbsp;API built with
-    <CODE>PARMS3-LARGE.EXT</A> must be kept carefully segregated from
-    the normal I/O&nbsp;API.
+    <STRONG><EM>Note that the I/O&nbsp;API built with
+    <CODE>PARMS3-LARGE.EXT</CODE> must be kept carefully segregated
+    from the normal I/O&nbsp;API.</EM></STRONG>
     <P>
     Subversion-ID in <CODE>INIT3()</CODE> is updated for this release...
     </BLOCKQUOTE>
@@ -7143,7 +7181,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 137 2019-10-16 14:12:13Z coats $
+    $Id: NEWSTUFF.html 140 2019-11-27 22:51:15Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
