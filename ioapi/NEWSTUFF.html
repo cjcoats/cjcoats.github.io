@@ -1,8 +1,8 @@
-
+weblint 
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 140 2019-11-27 22:51:15Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 141 2019-12-04 20:43:48Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 140 2019-11-27 22:51:15Z coats $
+    $Id: NEWSTUFF.html 141 2019-12-04 20:43:48Z coats $
     </EM>
     <HR>
 
@@ -785,6 +785,15 @@
     <CODE>PARMS3-LARGE.EXT</CODE> must be kept carefully segregated
     from the normal I/O&nbsp;API.</EM></STRONG>
     <P>
+    At the same time, the &quot;normal&quot;-I/O&nbsp;API parameter
+    <CODE>MXFILE3</CODE> was increased to 256.  This should not affect
+    any application that does not access the internal I/O&nbsp;API
+    <CODE>STATE3</CODE> data structures (as applications are forbidden 
+    to do).  Note that CMAQ's <VAR>pario</VAR> routines violate this
+    restriction and thus are subject to hard-to-diagnose problems;
+    therefore, <STRONG>any CMAQ versions that use this library should be
+    completely re-compiled from scratch.</STRONG>
+    <P>
     Subversion-ID in <CODE>INIT3()</CODE> is updated for this release...
     </BLOCKQUOTE>
 
@@ -816,7 +825,7 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "aug292019">
-    Bugfix for <CODE>LIST:</CODE> file-lists</A>
+    Bugfix for <CODE>LIST:</CODE> file-lists
 </A></H2>
 
     <BLOCKQUOTE>
@@ -7181,7 +7190,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 140 2019-11-27 22:51:15Z coats $
+    $Id: NEWSTUFF.html 141 2019-12-04 20:43:48Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
