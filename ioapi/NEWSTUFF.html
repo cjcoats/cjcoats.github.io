@@ -2,7 +2,7 @@ weblint
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 141 2019-12-04 20:43:48Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 143 2020-02-14 16:40:32Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@ weblint
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 141 2019-12-04 20:43:48Z coats $
+    $Id: NEWSTUFF.html 143 2020-02-14 16:40:32Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,10 @@ weblint
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#feb142020"> 
+               Enhancement to M3Tools program <CODE>GRIDPROBE</CODE> for
+               optional M3IO-file output.
+               </A>
          <LI>  <A HREF = "#nov272019"> 
                Mods to <CODE>MODMPASFIO</CODE> for
                I/O&nbsp;API-3.2-large compatibility
@@ -725,6 +729,40 @@ weblint
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
     <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "feb142020">
+    Enhancement to M3Tools program <CODE>GRIDPROBE</CODE>
+</A></H2>
+
+    <BLOCKQUOTE>
+    M3Tools program <A HREF="GRIDPROBE.html"><CODE>GRIDPROBE</CODE></A>
+    now supports either M3IO file output, ASCII output, or both (instead
+    of only ASCII output).
+    <P>
+    
+    To turn on M3IO output
+    <PRE>
+    setenv  OUTFILE    &lt;path name for output ASCII   file&gt; or &quot;NONE&quot;
+    </PRE>
+    or to turn it off
+    <PRE>
+    setenv  OUTFILE    NONE
+    </PRE>
+    Likewise, to turn on ASCII output,
+    <PRE>
+    setenv  REPORT    &lt;path name for output ASCII   file&gt; or &quot;NONE&quot;
+    </PRE>
+    or to turn it off
+    <PRE>
+    setenv  REPORT    NONE
+    </PRE>
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7190,7 +7228,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 141 2019-12-04 20:43:48Z coats $
+    $Id: NEWSTUFF.html 143 2020-02-14 16:40:32Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRIDPROBE.html 116 2019-06-11 21:16:16Z coats $" -->
+<!-- "$Id: GRIDPROBE.html 143 2020-02-14 16:40:32Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> Program GRIDPROBE </TITLE>
 </HEAD>
@@ -20,14 +20,15 @@
 
     The <VAR>gridprobe</VAR> program <STRONG>interpolates/extracts the
     time series</STRONG> for a specified variable for a specified set of
-    points from a GRIDDED input file <CODE>INFILE</CODE>, and writes the
-    resulting time series as columns to a (human-readable) ASCII
-    <CODE>REPORT</CODE>-file. Points to be extracted are specified in
-    terms of Lat-Lon coordinates taken from an ASCII <CODE>POINTS</CODE>
-    file.
+    points from a <CODE>GRIDDED3</CODE> input file <CODE>INFILE</CODE>,
+    and writes the resulting time series as an M3IO file of type
+    <CODE>CUSTOM3</CODE> or as columns to a (human-readable) ASCII
+    <CODE>REPORT</CODE>-file with optional header, or both. Points to be
+    extracted are specified in terms of Lat-Lon coordinates taken from
+    an ASCII <CODE>POINTS</CODE> file.
     <P>
 
-    Source code for program <CODE>m3probe</CODE> is available
+    Source code for program <CODE>gridprobe</CODE> is available
     <A HREF = "gpl.txt">under the GNU GPL License, Version 2</A>, and
     can be downloaded from the CMAS web site as part of the I/O&nbsp;API
     distribution tar-ball <A HREF = "AVAIL.html">from this page</A>.
@@ -38,9 +39,10 @@
 <BLOCKQUOTE>
 
     <PRE>
-    setenv  INFILE    &lt;path name&gt;
-    setenv  POINTS    &lt;path name&gt;
-    setenv  REPORT    &lt;path name&gt;
+    setenv  INFILE    &lt;path name for  input gridded file&gt;
+    setenv  POINTS    &lt;path name for  input points  file&gt;
+    setenv  REPORT    &lt;path name for output ASCII   file&gt; or &quot;NONE&quot;
+    setenv  OUTFILE   &lt;path name for output M3IO    file&gt; or &quot;NONE&quot;
     setenv  HEADER    &lt;ASCII header on ${REPORT}? (Y/N) [N]&gt;
     m3probe [and answer the prompts]
     </PRE>
@@ -66,7 +68,7 @@
     Y<SUB>grid</SUB> = ( Y - YORIG ) / YCELL
     </CODE></BLOCKQUOTE>
     of the input points, and also write that information to the 
-    <CODE>REPORT</CODE>-file.
+    <CODE>REPORT</CODE>-file, if it is produced.
     <P> 
 
     If you want to run this program in <STRONG>batch mode</STRONG> 
