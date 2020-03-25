@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: index.html 112 2019-05-02 13:36:49Z coats $" -->
+<!-- "$Id: index.html 146 2020-03-25 18:03:32Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     The EDSS/Models-3 I/O&nbsp;API
@@ -21,7 +21,8 @@
 
     <UL>
         <LI> <A HREF = "#abstract"        >Abstract</A>
-        <LI> <A HREF = "AA.html"          >User (Programming) Manual</A>
+        <LI> <A HREF = "AVAIL.html"       ><STRONG>Availability/Download/Installation</STRONG></A>
+        <LI> <A HREF = "AA.html"          ><STRONG>User (Programming) Manual</STRONG></A>
         <LI> <A HREF = "TUTORIAL.html"    >Tutorial</A>
         <LI> <A HREF = "STANDARDS.html"   >Coding Standards used for the I/O&nbsp;API</A>
         <LI> <A HREF = "REQUIREMENTS.html">Requirements Document
@@ -32,13 +33,12 @@
         <LI> <A HREF = "NEWSTUFF.html"    >Change-Log; &quot;What's New&quot&mdash;
                                            New Research and Development
                                            with the I/O&nbsp;API</A>
-        <LI> <A HREF = "AVAIL.html"       >Availability/Download/Installation</A>
         <LI> <A HREF = "ERRORS.html"      >Trouble-Shooting</A>
         <LI> <A HREF = "MCPL.html"        >MCPL: an I/O&nbsp;API
                                            output module for MM5</A>
         <LI> <A HREF = "NOTICES.html"     >Notices:  Copyright,
                                            Acknowledgements</A>
-        <LI> <A HREF = "WRF_IOAPI.html"   >Layering the WRF I/O&nbsp;API
+        <LI> <A HREF = "WRF_IOAPI.html"   >Document:  Layering the WRF I/O&nbsp;API
                                            on Top of the Models-3/EDSS
                                            I/O&nbsp;API</A>
      </UL>
@@ -114,7 +114,9 @@
         <DT>  <STRONG>I/O&nbsp;API-3.1 to I/O&nbsp;API-3.2:</STRONG>
         <DD>  <EM>Minor source code changes required:</EM>
         <P>
-        <EM>Respond to netCDF-4 API backwards incompatibility:</EM><BR>
+        More <CODE>INTERFACE</CODE>s in <CODE>MODULE&nbsp;M3UTILIO</CODE>
+        <P>
+        <EM>Respond to failure in netCDF-4 API backwards compatibility:</EM><BR>
         Replace netCDF-2 <CODE>CALL&nbsp;NC*()</CODE> statements
         throughout with the corresponding netCDF-3
         <CODE>IERR&nbsp;=&nbsp;NF_*()</CODE>, to accommodate the fact
@@ -123,7 +125,14 @@
         I/O&nbsp;API-3.2 works with both netCDF-3 and netCDF-4 (but
         netCDF-4 breaks I/O&nbsp;API-3.1)
         <P>
-        More <CODE>INTERFACE</CODE>s in <CODE>MODULE&nbsp;M3UTILIO</CODE>
+        More <STRONG><VAR>m3tools</VAR></STRONG> programs:<BR>
+        <VAR>findwndw</VAR>,  <VAR>gridprobe</VAR>, 
+        <VAR>insertgrid</VAR>,  <VAR>m3probe</VAR>, 
+        <VAR>mpasdiff</VAR>, <VAR>mpasstat</VAR>, <VAR>mpastom3</VAR>,
+        <VAR>datshift</VAR>,  <VAR>greg2jul</VAR>,  <VAR></VAR>, 
+        <VAR>jul2greg</VAR>,  <VAR>juldiff</VAR>,  <VAR>julshift</VAR>, 
+        <VAR>timeshift</VAR>,  <VAR>wrfgriddesc</VAR>, 
+        <VAR>wrftom3</VAR>
         <P>
         Experimental <CODE>MODULE&nbsp;MATXATTS</CODE> becomes
         <CODE>MODULE&nbsp;MODATTS3</CODE>, with additional support for
@@ -139,17 +148,21 @@
         and PnetCDF declarations, replacing include-file
         <CODE>NETCDF.EXT</CODE> (and <CODE>pnetcdf.inc</CODE>)
         <P>
-        PnetCDF/MPI distributed I/O support for CMAQ.
+        PnetCDF/MPI distributed I/O support for CMAQ. New
         <CODE>MODULE&nbsp;MODPDATA</CODE>  encapsulates data structures
         and routines for distributed CMAQ I/O.
         <P>
-        New <CODE>MODULE&nbsp;MODWRFIO</CODE> for WRF-netCDF-format I/O.
+        New <CODE>MODULE&nbsp;MODWRFIO</CODE> for WRF-netCDF-format I/O,
+        and related <VAR>m3tools</VAR> programs <VAR>wrfgriddesc</VAR> and
+        <VAR>wrftom3</VAR>.
         <P>
-        New <CODE>MODULE&nbsp;MODMPASFIO</CODE> for MPAS-format-netCDF I/O
-        and MPAS (unstructured Voronoi-complex) grid-geometry utilities.
+        New <CODE>MODULE&nbsp;MODMPASFIO</CODE> for MPAS-format-netCDF
+        I/O and MPAS (unstructured Voronoi-complex) grid-geometry
+        utilities. and related <VAR>m3tools</VAR> programs
+        <VAR>mpasdiff</VAR>, <VAR>mpasstat</VAR>, <VAR>mpastom3</VAR>
         <P>
-        Remove previously-deprecated <VAR>m3tools/utmtool</VAR>
-        (superseded by <VAR>m3tools/projtool</VAR>).
+        Remove previously-deprecated <VAR>m3tools</VAR> program <VAR>utmtool</VAR>
+        (superseded by program <VAR>projtool</VAR>).
      </DL>
      <P>
      </BLOCKQUOTE>
@@ -338,7 +351,7 @@
     </BLOCKQUOTE>
 
     <PRE>
-    $Id: index.html 112 2019-05-02 13:36:49Z coats $
+    $Id: index.html 146 2020-03-25 18:03:32Z coats $
     </PRE>
 
  </BODY>

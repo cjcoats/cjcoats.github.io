@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 138 2019-10-29 21:20:00Z coats $" -->
+<!-- "$Id: AVAIL.html 147 2020-03-25 18:10:49Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -58,10 +58,11 @@
               <P>
         <LI>  <STRONG><A HREF = "#warn">Other Notes and Warnings</A></STRONG>
               <P>
-         <LI>  Release Notes&nbsp;/ Change Log are
-              <A HREF="NEWSTUFF.html">available here.</A>
+        <LI>  <A HREF="NEWSTUFF.html"><STRONG>Release Notes&nbsp;/ Change Log</STRONG>
+              document</A>
               <P>
-         <LI> <A HREF="ERRORS.html">I/O API Troubleshooting</A> Document
+        <LI>  <STRONG> <A HREF="ERRORS.html">I/O API Troubleshooting</A></STRONG>
+              document
               <P>
         <LI>  <A HREF = "#note">NOTE on File Types</A>
         <LI>  <A HREF = "#disc">DISCLAIMER</A>
@@ -117,7 +118,7 @@ Foreword
     keywords in the various components of source, object, library, or
     executable files. For example:
     <PRE>
-% cd $HOME/apps/$BIN
+% cd $HOME/apps/${BIN}
 % ident init3.o
 init3.o:
      &#36;Id:: init3.F 1 2014-03-14 20:22:54Z coats                  &#36;
@@ -156,9 +157,16 @@ m3stat:
                   <LI> Download the <EM>gzip</EM>ped tar-file
                        of the source code for the version you want
                        from the CMAS web-site:<BR>
+                       For the &quot;rolling release&quot; version
+                       <BLOCKQUOTE>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz"><VAR>ioapi-3.2.tar.gz</VAR></A><BR>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A><BR>, or
-                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.<BR>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.
+                       </BLOCKQUOTE>
+                       or for the March&25, 2020 version
+                       <BLOCKQUOTE>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz"><VAR>ioapi-3.2-2020085.tar.gz</VAR></A>
+                       </BLOCKQUOTE>
                        It contains directories <CODE>ioapi</CODE> for
                        the I/O&nbsp;API library source code,
                        <CODE>HTML</CODE> for the documentation,
@@ -253,11 +261,13 @@ m3stat:
                                  <VAR>pnetCDF/MPI</VAR>
                                  distributed-output vs coupling-mlode
                        </UL>
+                       <P>
                        <STRONG>Intel-compiler Warning:</STRONG>  For
                        whatever reason, Intel has chosen to change some
                        flags from version to version, making it
                        difficult to have generic
-                       <VAR>Makeinclude.*ifort*</VAR> files. In
+                       <VAR>Makeinclude.*ifort*</VAR> files. 
+                       For versions before March&nbsp;25, 2020, in
                        particular, you will need to edit those files
                        so that <VAR>make</VAR>-variables
                        <CODE>OMPFLAGS</CODE> AND <CODE>OMPLIBS</CODE>
@@ -270,8 +280,13 @@ m3stat:
                              <CODE>-openmp</CODE> is accepted (with a
                              warning-message)
                         <LI> For compiler-version 19 and later: 
-                             <CODE>-qopenmp</CODE>
+                             <CODE>-qopenmp</CODE> required
                        </UL>
+                       After that date, the
+                       <VAR>Makeinclude.*ifort*</VAR> files contain both
+                       forms of the flags, and work although they
+                       generate &quot;compile flag not recognized&quot;
+                       warnings for the unused form.
                        <P>
                        Note that if you update the I/O&nbsp;API library, then
                        <VAR>cd ../m3tools; make relink</VAR> will
@@ -429,17 +444,20 @@ m3stat:
                         </OL>
                   <P>
                   <LI> If you want to enable the <STRONG>360-day or
-                        365-day (no-leap-year) climatology year
-                        configuration</STRONG> (365-day for
-                        <EM>I/O&nbsp;API 3.2 only</EM>), customize your
-                        <VAR>ioapi/Makefile</VAR> by adding
-                        <CODE>-DIO_360=1</CODE> or
-                        <CODE>-DIO_365=1</CODE> respectively to the
-                        <CODE>DEFINEFLAGS</CODE>
-                        <VAR>make</VAR>-variable. <BR>
-                        <EM>Note that you need to keep the resulting
-                        libraries separate from the normal (leap-year
-                        enabled) libraries.</EM>
+                       365-day (no-leap-year) climatology year
+                       configuration</STRONG> (365-day for
+                       <EM>I/O&nbsp;API 3.2 only</EM>), use one of the
+                       various <CODE>Makeinclude.*_360</CODE> or
+                       <CODE>Makeinclude.*_365</CODE> (and its
+                       corresponding <CODE>${BIN}</CODE>), or else customize
+                       your <VAR>ioapi/Makefile</VAR> by adding
+                       <CODE>-DIO_360=1</CODE> or
+                       <CODE>-DIO_365=1</CODE> respectively to the
+                       <CODE>DEFINEFLAGS</CODE>
+                       <VAR>make</VAR>-variable. <BR>
+                       <EM>Note that you need to keep the resulting
+                       libraries separate from the normal (leap-year
+                       enabled) libraries.</EM>
                  <P>
                   <LI>  For each desired configuration of machine,
                         compiler-set, and other options,
@@ -491,7 +509,7 @@ m3stat:
                                 platform, and both   <VAR>efc</VAR> and
                                 <VAR>ifc</VAR> become <VAR>ifort</VAR>; you
                                 may need to edit v3.0 and earlier
-                                <CODE>Makeinclude.$BIN</CODE>
+                                <CODE>Makeinclude.${BIN}</CODE>
                                 accordingly.
                            <LI> There are problems with the Fortran
                                 pre-processing for some versions of the
@@ -509,7 +527,7 @@ m3stat:
                            <LI> There are command line incompatibilities
                                 between SGI <VAR>f90</VAR> Version&nbsp;7.3.x
                                 and 7.4.1; for 7.3.x, you need to edit the
-                                <CODE>MAKEINCLUDE.$BIN</CODE> to replace
+                                <CODE>MAKEINCLUDE.${BIN}</CODE> to replace
                                 <CODE>-TARG:platform=ip27 -TARG:processor=r12000</CODE>
                                 by <CODE>-TARG:platform=ip27,processor=r12000</CODE>,
                                 (etc.)
@@ -527,7 +545,10 @@ m3stat:
                         <VAR>libnetcdf.a</VAR> (and <VAR>libnetcdff.a</VAR>,
                         if you're building netCDF version 4.1 or later)
                         to the appropriate object
-                        directory <CODE>$BASEDIR/$BIN</CODE>.
+                        directory <CODE>$BASEDIR/${BIN}</CODE>.
+                        <BR>
+                        See <A HREF="#ncf4">NOTES on <VAR>netCDF</VAR>-4</A>
+                        for configuring netCDF-4.
                         <P>
                         <STRONG>For I/O&nbsp;API-3.2 and
                         netCDF-4:</STRONG>  Some configurations of
@@ -575,7 +596,7 @@ m3stat:
                         are used.)
                   <P>
                   <LI>  Edit the relevant files
-                        <VAR>ioapi/Makeinclude.$BIN</VAR> for your
+                        <VAR>ioapi/Makeinclude.${BIN}</VAR> for your
                         system specific compiler options, PVM
                         installation location, etc., or create new ones,
                         as appropriate.
@@ -610,7 +631,16 @@ m3stat:
                         Alternatively, <STRONG><VAR>make&nbsp;BIN=&lt;machinetype&gt;</VAR></STRONG>
                         (where note that a command-line
                         variable-definition overrides the environement
-                        variable definition).
+                        variable definition).<BR>
+                        <EM><STRONG>Intel compiler note:</STRONG> After
+                        version 16, Intel changed the OpenMP
+                        compile-flags.  After March&nbsp;25, 2020, the 
+                        <CODE>Makeinclude</CODE> files for Intel 
+                        compile-types contain
+                        both forms of the flags, so that all versions of
+                        the compile will succeed, at the cost of a
+                        warning for not recognizing the other-version
+                        copy of the flag.</EM>
                   <P>
                   <LI>  Note that a top-level <VAR>make</VAR> will
                         generate messages about installing the
@@ -627,11 +657,20 @@ m3stat:
                   <DT><STRONG><CODE>make dir</CODE></STRONG>
                   <DD>  Construct the build-directory <CODE>$OBJDIR</CODE>
                         You only need to do this once for each
-                        configuration <CODE>$BIN</CODE>
+                        configuration <CODE>${BIN}</CODE>
                   <DT><STRONG><CODE>make all</CODE></STRONG>
                   <DD>  Build all libraries and executables (assumes
                         the Fortran compiler is Fortran-90 compliant)
                         for the default mode.
+                  <DT> <STRONG><CODE>make test</CODE></STRONG> (for
+                       I/O&nbsp;API 3.2 post-March 25)
+                  <DD>  Subsequent to <CODE>make all</CODE>, the
+                        command  <CODE>make tests</CODE> from the
+                        installations <CODE>${BASEDIR}</CODE> runs a
+                        series of tests that ensures the I/O&nbsp;API
+                        and <VAR>m3tools</VAR> programs are correctly
+                        installed,  and demonstrate various I/O&nbsp;API
+                        capabilities.
                   <DT><STRONG><CODE>make cpl</CODE></STRONG>
                   <DD>  Build all libraries and executables for
                         PVM-enabled  coupling mode.
@@ -642,10 +681,11 @@ m3stat:
                   <DT><STRONG><CODE>make relink</CODE></STRONG>
                   <DD>  Rebuild all the <CODE>M3TOOLS</CODE> executables,
                         using the existing <CODE>M3TOOLS</CODE> object
-                        files (e.g.,if you have changed the libraries).
+                        files (e.g.,if you have changed/updated the libraries).
                   <DT><STRONG><CODE>make clean</CODE></STRONG>
                   <DD>  removes all executable, object (<CODE>.o</CODE>),
-                        and library (<CODE>.a</CODE>) files.
+                        module (<CODE>.mod</CODE>), and library (<CODE>.a</CODE>)
+                        files.
                   <DT><STRONG><CODE>make configure</CODE></STRONG>
                   <DD>  allows you to set up <VAR>make</VAR>-parameters
                         in the top-level <CODE>Makefile</CODE> and
@@ -666,7 +706,7 @@ m3stat:
                         of architectures and compilers.
                   <DT><STRONG><CODE>make fix</CODE></STRONG> or<BR>
                         <STRONG><CODE>cd ioapi; make fixed_src</CODE></STRONG>
-                  <DD>  builds pre-version-5.0-CMAQ and SMOKE &quot;fixed-132&quot;
+                  <DD>  builds SMOKE and pre-version-5.0-CMAQ &quot;fixed-132&quot;
                         non-ISO-Standard Fortran source form <CODE>INCLUDE</CODE>-files
                         and places them in directory
                         <CODE>${BASEDIR}/ioapi/fixed_src/</CODE>.
@@ -704,24 +744,24 @@ m3stat:
 	containing &quot;module files&quot; such as the I/O&nbsp;API's
 	<VAR>m3utilio.mod</VAR>.
 	Suppose the I/O API's <CODE>OBJDIR</CODE> is something like
-	<VAR>/foo/bar/$BIN</VAR>.  Then for most F90 compilers, the way
+	<VAR>/foo/bar/${BIN}</VAR>.  Then for most F90 compilers, the way
 	to tell the compiler to search that directory for module files
 	is to use the following as a compiler-flag:
 	<BLOCKQUOTE><CODE>
-	-I/foo/bar/$BIN
+	-I/foo/bar/${BIN}
 	</CODE></BLOCKQUOTE>.
 	Some other compilers (e.g., Sun, Absoft, older versions of
 	<VAR>gfortran</VAR>) use
 	<BLOCKQUOTE><CODE>
-	-M/foo/bar/$BIN
+	-M/foo/bar/${BIN}
 	</CODE></BLOCKQUOTE>
 or (PGI)
 	<BLOCKQUOTE><CODE>
-	-module /foo/bar/$BIN
+	-module /foo/bar/${BIN}
 	</CODE></BLOCKQUOTE>.
 	Recent versions of <VAR>gfortran</VAR> use
 	<BLOCKQUOTE><CODE>
-	-J /foo/bar/$BIN
+	-J /foo/bar/${BIN}
 	</CODE></BLOCKQUOTE>.
 	Needless to say, this makes it more difficult to write <VAR>Makefile</VAR>s ;-(
 	<P>
@@ -758,6 +798,24 @@ or (PGI)
 	<VAR>Makeinclude</VAR> file.
 	<P>
 
+	<DT><STRONG>List-directed <CODE>READ( DEV,*, ...)</CODE>s</STRONG>
+	<DD>
+    Basically, the Fortran standard says that for something like
+    the following example
+    <PRE>
+    ...
+    READ( DEV,*,IOSTAT=ISTAT) ITEM1, ITEM2, ITEM3, ITEM4, ITEM5
+    </PRE>
+    the program should read the list <CODE>ITEM1</CODE> through <CODE>ITEM5</CODE>
+    from the file at unit <CODE>DEV</CODE>, using as many lines as
+    necessary to find all these values, and treating commas and
+    whitespace&mdash;<EM>including blank lines</EM>&mdash; as
+    item-separators; then discard the remainder (if any) of the last
+    line read.
+    <P>
+    <STRONG><EM>gfortran</EM> has its own idiosyncratic interpretation
+    that says blank lines within such a list should be treated as a
+    list-terminator, leading to an I/O error.</STRONG>
     </DL>
 
     </BLOCKQUOTE>
@@ -1340,7 +1398,7 @@ or (PGI)
     <BLOCKQUOTE>
     <STRONG>Version&nbsp;3.0 (or earlier) of the I/O&nbsp;API library
     source code should be considered obsolete, and used only if
-    necessary.</STRONG>
+    absolutely necessary.</STRONG>
     <P>
 
     Version&nbsp;3.0 of the I/O&nbsp;API library source code is
@@ -1447,7 +1505,7 @@ or (PGI)
                                 platform, and both   <VAR>efc</VAR> and
                                 <VAR>ifc</VAR> become <VAR>ifort</VAR>; you
                                 may need to edit the
-                                <CODE>MAKEINCLUDE.$BIN</CODE>
+                                <CODE>MAKEINCLUDE.${BIN}</CODE>
                                 accordingly.
                            <LI> There are problems with the Fortran
                                 pre-processing for some versions of the
@@ -1465,7 +1523,7 @@ or (PGI)
                            <LI> There are command line incompatibilities
                                 between SGI <VAR>f90</VAR> Version&nbsp;7.3.x
                                 and 7.4.1; for 7.3.x, you need to edit the
-                                <CODE>MAKEINCLUDE.$BIN</CODE> to replace
+                                <CODE>MAKEINCLUDE.${BIN}</CODE> to replace
                                 <CODE>-TARG:platform=ip27 -TARG:processor=r12000</CODE>
                                 by <CODE>-TARG:platform=ip27,processor=r12000</CODE>,
                                 (etc.)
@@ -1496,7 +1554,7 @@ or (PGI)
                         are used.)
                   <P>
                   <LI>  Edit the relevant files
-                        <CODE>ioapi/Makeinclude.$BIN</CODE> for your
+                        <CODE>ioapi/Makeinclude.${BIN}</CODE> for your
                         system specific compiler options and PVM
                         installation location, as appropriate.
                   <P>
@@ -1537,7 +1595,7 @@ or (PGI)
 <H3> <A NAME="v22">I/O&nbsp;API Version&nbsp;2.2 Availability</A></H3>
 
     <STRONG>Version&nbsp;2.2 (and all older versions) of the
-    I/O&nbsp;API library source code should be considered
+    I/O&nbsp;API library source code should be considered badly
     obsolete.</STRONG>
     <P>
 
@@ -1681,11 +1739,11 @@ or (PGI)
               </EM>
               <P>
         <LI>  The default directory for both executables and object
-              libraries is in directory <CODE>../$BIN</CODE> relative
+              libraries is in directory <CODE>../${BIN}</CODE> relative
               to the source code directories for the I/O&nbsp;API and
               tools. Edit the Makefile to put OBJDIR wherever you want it
               (if you want somewhere other than the default
-              <CODE>../$BIN</CODE> location).
+              <CODE>../${BIN}</CODE> location).
               <BR><EM>
               <STRONG>NOTE 1:</STRONG>  Different compilers generate
               linker-visible object names in different ways (some with
@@ -1694,11 +1752,11 @@ or (PGI)
               compiles for netCDF, PVM, and other libraries) use the
               same scheme; this is controlled by various parts of the
               <CODE>ARCHFLAGS</CODE> variable in the (compiler-system
-              dependent) <CODE>Makeinclude.$BIN</CODE> files.
+              dependent) <CODE>Makeinclude.${BIN}</CODE> files.
               <BR>
               <STRONG>NOTE 2:</STRONG>  By default on most systems,
               OpenMP parallelism is enabled; see the <CODE>OMPFLAGS</CODE>
-              variable in <CODE>Makeinclude.$BIN</CODE>.  The
+              variable in <CODE>Makeinclude.${BIN}</CODE>.  The
               I/O&nbsp;API does not have parallel sections of its own;
               however, enabling OpenMP does allow the activation of
               critical sections allowing the I/O&nbsp;API to be
@@ -1762,20 +1820,6 @@ or (PGI)
     <H3><A NAME="note">NOTE on File Types</A></H3>
 
     <BLOCKQUOTE>
-    Files with extension &quot;.gz&quot; or &quot;.tgz&quot; are
-    compressed with the GNU <VAR>gzip</VAR> utility.  Source for
-    <VAR>gzip</VAR> is available from
-    <A HREF = "http://www.gnu.org/order/ftp.html">a number of FTP
-    sites</A>; executables for a variety of platforms are available
-    from several sources, including
-    <A HREF = "ftp://ftp.netscape.com/pub/unsupported/gnu/">
-    ftp://ftp.netscape.com/pub/unsupported/gnu/</A>.  On windows
-    platforms, either <A HREF = "http://www.winzip.com">winzip</A>
-    or the <A HREF = "http://www.cygnus.com">Cygnus</A> windows port
-    of <VAR>gzip</VAR> can deal  with &quot;.gz&quot; and
-    &quot;.tgz&quot; files.
-    <P>
-
     The &quot;industry standard&quot; for Fortran source-file naming is
     that the extensions for file names should be as follows:
     <UL>
@@ -1796,7 +1840,7 @@ or (PGI)
     <P>
     The <VAR>findent</VAR> program is an excellent resource for
     converting code back and forth between the two forms (and even the
-    non-Standard one); see 
+    non-Standard CMAQ/SMOKE &quot;fixed-132&quot; one); see 
     <A HREF="https://sourceforge.net/projects/findent/">
     https://sourceforge.net/projects/findent/</A>.
     <P>
@@ -1808,6 +1852,21 @@ or (PGI)
     <VAR>modfoo.f</VAR> or  <VAR>modfoo.f90</VAR>, as appropriate
     (depending upon source-form).
     <P>
+
+    Files with extension &quot;.gz&quot; or &quot;.tgz&quot; are
+    compressed with the GNU <VAR>gzip</VAR> utility.  Source for
+    <VAR>gzip</VAR> is available from
+    <A HREF = "http://www.gnu.org/order/ftp.html">a number of FTP
+    sites</A>; executables for a variety of platforms are available
+    from several sources, including
+    <A HREF = "ftp://ftp.netscape.com/pub/unsupported/gnu/">
+    ftp://ftp.netscape.com/pub/unsupported/gnu/</A>.  On windows
+    platforms, either <A HREF = "http://www.winzip.com">winzip</A>
+    or the <A HREF = "http://www.cygnus.com">Cygnus</A> windows port
+    of <VAR>gzip</VAR> can deal  with &quot;.gz&quot; and
+    &quot;.tgz&quot; files.
+    <P>
+
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -1847,11 +1906,11 @@ or (PGI)
     Documentation for the EDSS/Models-3 I/O&nbsp;API is copyright
     &copy; 1992-2002 MCNC, &copy; 1995-2017 Carlie J.&nbsp;Coats Jr,
     &copy; 2003-2011 Baron Advanced Meteorological Systems, and
-    &copy; 2014-2017 UNC Institute for the Environment.
+    &copy; 2014- UNC Institute for the Environment.
     <P>
     A <VAR>gzip</VAR>ped
     <VAR>tar</VAR>-file snapshot for I/O&nbsp;API Version&nbsp;2.1
-    and its documentation is
+    source code and its documentation is
     <A HREF = "https://www.cmascenter.org/ioapi/download/ioapi-2.1.tar.gz">available here.</A>;
     <P>
     </BLOCKQUOTE>
@@ -1878,7 +1937,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 138 2019-10-29 21:20:00Z coats $
+    $Id: AVAIL.html 147 2020-03-25 18:10:49Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

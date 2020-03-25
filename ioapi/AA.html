@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 135 2019-09-28 14:20:05Z coats $" -->
+<!-- "$Id: AA.html 146 2020-03-25 18:03:32Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -715,10 +715,16 @@ Contents
              </A>
              get description of <VAR>&lt;named grid&gt;</VAR>
              <P>
+        <DT> <A HREF = "FILCHK3.html" >
+             <STRONG>FILCHK3</STRONG>:
+             </A>
+             check a file's file-type and dimensions for consistency
+             with values supplied by the caller.
+             <P>
         <DT> <A HREF = "GRDCHK3.html" >
              <STRONG>GRDCHK3</STRONG>:
              </A>
-             check a file's map projection, horizontal and vertical
+             check a file's map projection, horizontal, and vertical
              grid definition parameters for  consistency with values
              supplied by the caller.
              <P>
@@ -784,6 +790,14 @@ Contents
                    compute 2-D and 3-D weights for arc-segment between
                    points  <CODE>(LAT1,LON1[,HGT1])</CODE> and 
                    <CODE>(LAT2,LON2[,HGT2])</CODE> (e.g., for SMOKE)
+             <DT> <A HREF = "MODMPASFIO.html#interp" >
+                  <STRONG>MPINTERP</STRONG>:
+                  </A>
+                  Interpolate an MPAS-grid variable to a point, set of
+                  points, or 2-D grid of points, using
+                  barycentric-linear interpolation for <CODE>REAL</CODE>
+                  variables, or cell-based interpolation for
+                  <CODE>INTEGER</CODE> variables.
         </DL>
     </DL></BLOCKQUOTE>
 
@@ -795,14 +809,16 @@ Contents
 
 <H2> <A NAME = "datestuff"> Date-Time Manipulation Routines </A> </H2>
 
-    See also programs <A HREF = "DATSHIFT.html"><STRONG><VAR>datshift</VAR></STRONG></A>,
+    See also <VAR>M<STRONG>m3tools</STRONG></VAR>programs
+    <A HREF = "DATSHIFT.html"><STRONG><VAR>datshift</VAR></STRONG></A>,
     <A HREF = "GREGDATE.html"><STRONG><VAR>gregdate</VAR></STRONG></A>, 
     <A HREF = "GREG2JUL.html"><STRONG><VAR>greg2jul</VAR></STRONG></A>, 
     <A HREF = "JUL2GREG.html"><STRONG><VAR>jul2greg</VAR></STRONG></A>,
     <A HREF = "JULDATE.html"><STRONG><VAR>juldate</VAR></STRONG></A>,
     <A HREF = "JULDIFF.html"><STRONG><VAR>juldiff</VAR></STRONG></A>,
-    <A HREF = "JULSHIFT.html"><STRONG><VAR>julshift</VAR></STRONG></A>, and
-    <A HREF = "TIMESHIFT.html"><STRONG><VAR>timeshift</VAR></STRONG></A> for date-related
+    <A HREF = "JULSHIFT.html"><STRONG><VAR>julshift</VAR></STRONG></A>,
+    <A HREF = "TIMEDIFF.html"><STRONG><VAR>timeshift</VAR></STRONG></A> and
+    <A HREF = "TIMESHIFT.html"><STRONG><VAR>timediff</VAR></STRONG></A> for date-related
     calculations, and <A HREF = "M3TPROC.html"><STRONG><VAR>m3tproc</VAR></STRONG></A> and
     <A HREF = "M3TSHIFT"><STRONG><VAR>m3tshift</VAR></STRONG></A> for time-related file
     operations.
@@ -1594,6 +1610,9 @@ Contents
         <DT> <A HREF = "JULSHIFT.html"><STRONG>julshift</STRONG></A>:
              Shift a Julian date <CODE>YYYYDDD</CODE> by a specified number of days and
              echo the result.
+        <DT> <A HREF = "TIMEDIFF.html"><STRONG>timediff</STRONG></A>:
+             Compute the number of days between two dates&times
+             formatted <CODE>YYYYDDD.HHMMSS</CODE> and echo the result.
         <DT> <A HREF = "TIMESHIFT.html"><STRONG>timeshift</STRONG></A>:
              Shift a Julian date&amp;time
              <CODE>YYYYDDD.HHMMSS</CODE> by a specified time step
@@ -1641,20 +1660,23 @@ Contents
      Python <VAR>ioapiTools</VAR>
      </A> </H2>
 
-    Alex&nbsp;Zubrow of the University of Chicago just announced
-    release of a beta version of his <VAR>ioapiTools</VAR>.  For those
-    of you who didn't get a chance to hear his talk at the last CMAS
-    conference, <VAR>ioapiTools</VAR> is a python interface to
+    Alex&nbsp;Zubrow, then of the University of Chicago (now US EPA),
+    has announced release of his <VAR>ioapiTools</VAR>. For those of you
+    who didn't get a chance to hear his talk at the 2005 CMAS
+    conference,  see
+    <A HREF="https://www.cmascenter.org/conference/2005/ppt/6_8.pdf">https://www.cmascenter.org/conference/2005/ppt/6_8.pdf</A>
+    <P>
+    <VAR>ioapiTools</VAR> is a python interface to
     I/O&nbsp;API data.  It allows you to easily import the data into
     python, have full access to the I/O&nbsp;API metadata, use the full
     breadth of python's scientific libraries, create plots, and write
     out your data to new I/O&nbsp;API or netCDF files.
     <P>
 
-    See the <VAR>ioapiTools</VAR> site:
+    See the <VAR>ioapiTools</VAR> on its GitHub site:
     <BLOCKQUOTE>
-    <A HREF="http://www-pcmdi.llnl.gov/software-portal/Members/azubrow/ioapiTools/index_html">
-    http://www-pcmdi.llnl.gov/software-portal/Members/azubrow/ioapiTools/index_html</A>
+    <A HREF="https://github.com/CDAT/cdat/tree/master/contrib/ioapiTools">
+    https://github.com/CDAT/cdat/tree/master/contrib/ioapiTools</A>
     </BLOCKQUOTE>
      <P>
 
@@ -1724,7 +1746,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 135 2019-09-28 14:20:05Z coats $
+$Id: AA.html 146 2020-03-25 18:03:32Z coats $
     </PRE>
 
 </BODY>
