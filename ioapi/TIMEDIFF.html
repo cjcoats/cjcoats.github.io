@@ -1,0 +1,135 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: TIMEDIFF.html 146 2020-03-25 18:03:32Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> Program JULDATE </TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" 
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+<H1>    Program JULDATE </H1>
+
+<H2> Usage </H2>
+<PRE>
+    TIMEDIFF &lt;YYYYDDD&gt;.&lt;HHMMSS&gt; &lt;HHMMSS&gt;
+</PRE>
+or
+<PRE>
+    timediff --help
+</PRE>
+ 
+<H2> Summary </H2>
+
+    Compute the difference of two date&time values formatted
+    <CODE>YYYYDDD.HHMMSS</CODE> inj seconds, and echo the result to
+    standard output (e.g., for use in scripting).
+    <P>
+    If <CODE>--help</CODE> is the first argument, writes the
+    &quot;USAGE&quot; screen and exits.
+    <P>
+
+<H2> Examples </H2>
+
+Some sample executions of this program are as indicated below.
+<P>
+Note that in shell-scripting, the back-quote character means &quot;the
+result of evaluating the enclosed command&quot; so that the third
+example below sets shell variable <CODE>foo</CODE> to the result of
+executing the indicated <CODE>TIMEDIFF</CODE> command.
+<PRE>
+     % timediff 2014029.120000 2014030.063000
+     183000
+    
+
+     % timediff 2014031.120000 2014029.120000
+     -480000
+     
+
+     % @ nhours = 365 * 240000
+     % set foo  = `timediff 2014029 $nhours`
+     % echo $foo
+     2015029
+
+     % timediff --help
+        DESCRIPTION:  difference two datetime values in seconds.       
+
+        USAGE: TIMEDIFF <YYYYDDD.HHMMSS> <YYYYDDD.HHMMSS>                
+               TIMEDIFF --help                                           
+        or (using back-quotes)                                           
+        %  set <var> = `timediff <juldate1.hhmmss> <juldate2.hhmmss>`    
+
+        EXAMPLE:                                                         
+           % set foo  = `TIMEDIFF 2019123.120000 2019124.130000          
+             [${foo}  will be    9000 (= 25 hours*3600 sec/hour)]        
+
+</PRE>
+<P>
+
+<H2> See Also </H2>
+<BLOCKQUOTE>
+<A HREF = "AA.html#datestuff"> 
+EDSS/ Models-3 date-time manipulation routines </a>
+<BR> 
+
+<A HREF = "DATSHIFT.html" >
+<STRONG>datshift</STRONG></A>
+<BR>
+
+<A HREF = "GREGDATE.html" >
+<STRONG>gregdate</STRONG></A>
+<BR>
+
+<A HREF = "GREG2JUL.html" >
+<STRONG>greg2jul</STRONG></A>
+<BR>
+
+<A HREF = "JULDATE.html" >
+<STRONG>juldate</STRONG></A>
+<BR>
+
+<A HREF = "JUL2GREG.html" >
+<STRONG>jul2greg</STRONG></A>
+<BR>
+
+<A HREF = "JULDIFF.html" >
+<STRONG>juldiff</STRONG></A>
+<BR>
+
+<A HREF = "JULSHIFT.html" >
+<STRONG>julshift</STRONG></A>
+<BR>
+
+<A HREF = "TIMESHIFT.html" >
+<STRONG>timeshift</STRONG></A>
+<BR>
+</BLOCKQUOTE>
+
+
+
+<HR> <!----------------------------------------------------------------->
+
+<A HREF = "GREGDATE.html" >
+Previous:  <STRONG>GREGDATE</STRONG>
+</A><BR> 
+
+<A HREF = "UTMTOOL.html" >
+Next:  <STRONG>UTMTOOL</STRONG>
+</A><BR> 
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>Related Programs</STRONG> 
+</A><BR>
+
+<A HREF = "AA.html"> 
+To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+</A><BR>
+
+    
+</BODY>
+</HTML>
+
