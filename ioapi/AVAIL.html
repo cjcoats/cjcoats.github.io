@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 149 2020-03-30 17:06:48Z coats $" -->
+<!-- "$Id: AVAIL.html 155 2020-04-13 19:51:09Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -165,7 +165,7 @@ m3stat:
                        </BLOCKQUOTE>
                        or for the March&25, 2020 version
                        <BLOCKQUOTE>
-                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020085.tar.gz"><VAR>ioapi-3.2-2020085.tar.gz</VAR></A>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020104.tar.gz"><VAR>ioapi-3.2-2020104.tar.gz</VAR></A>
                        </BLOCKQUOTE>
                        It contains directories <CODE>ioapi</CODE> for
                        the I/O&nbsp;API library source code,
@@ -201,7 +201,7 @@ m3stat:
     </PRE>
     or, for the March&25, 2020 version
     <PRE>
-    git clone --branch 2020085 https://github.com/cjcoats/ioapi-3.2
+    git clone --branch 2020104 https://github.com/cjcoats/ioapi-3.2
     </PRE>
                   <P>
                   <LI> <STRONG>If you downoaded a
@@ -708,9 +708,11 @@ m3stat:
                   <DT><STRONG><CODE>make binclean</CODE></STRONG>
                   <DD>  cleans everything for several choices
                         of architectures and compilers.
-                  <DT><STRONG><CODE>make fix</CODE></STRONG> or<BR>
+                  <DT>  <STRONG><CODE>make fix</CODE></STRONG> or<BR>
                         <STRONG><CODE>cd ioapi; make fixed_src</CODE></STRONG>
-                  <DD>  builds SMOKE and pre-version-5.0-CMAQ &quot;fixed-132&quot;
+                  <DD>  <STRONG><A HREF="#cmaq">For CMAQ and SMOKE
+                        Users:</A></STRONG><BR>
+                        builds SMOKE and CMAQ &quot;fixed-132&quot;
                         non-ISO-Standard Fortran source form <CODE>INCLUDE</CODE>-files
                         and places them in directory
                         <CODE>${BASEDIR}/ioapi/fixed_src/</CODE>.
@@ -1941,7 +1943,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 149 2020-03-30 17:06:48Z coats $
+    $Id: AVAIL.html 155 2020-04-13 19:51:09Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

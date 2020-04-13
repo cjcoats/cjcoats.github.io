@@ -2,7 +2,7 @@ weblint
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 146 2020-03-25 18:03:32Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 155 2020-04-13 19:51:09Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@ weblint
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 146 2020-03-25 18:03:32Z coats $
+    $Id: NEWSTUFF.html 155 2020-04-13 19:51:09Z coats $
     </EM>
     <HR>
 
@@ -33,8 +33,8 @@ weblint
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
-         <LI>  <A HREF = "#mar252020"> 
-               I/O API&nbsp;3.2 release 2020085.
+         <LI>  <A HREF = "apr132020"> 
+               I/O API&nbsp;3.2 release 2020104.
                </A>
          <LI>  <A HREF = "#feb142020"> 
                Enhancement to M3Tools program <CODE>GRIDPROBE</CODE> for
@@ -740,13 +740,14 @@ weblint
 
 <HR> <!----------------------------------------------------------------->
 
-<H2> <A NAME = "mar252020">
-    I/O&nbsp;API-3.2 Release 2020085
+<H2> <A NAME = "apr132020">
+    I/O&nbsp;API-3.2 Release 2020104
 </A></H2>
 
     <BLOCKQUOTE>
-    This version established for CMAQ (etc.) tracking purposes.  New
-    changes include the following:
+    This version established for CMAQ (etc.) tracking purposes, with
+    enhancements and bug-fixes for WRF-CMAQ.  New changes include the
+    following:
     <DL>
         <DT> New test suite
         <DD> Subsequent to <CODE>make all</CODE>, the command
@@ -765,9 +766,11 @@ weblint
         <DT> <VAR>M3Tools program <STRONG>m3tproc</STRONG></VAR> 
         <DD> changes for better handling of default responses.
              <P>
-        <DT> <VAR>New M3Tools program <STRONG>timediff</STRONG></VAR>
-        <DD> for command-line differencing of date&time pairs formatted
-             <CODE>YYYYDDD:HHMMSS</CODE>
+        <DT> Bug-fixes for <CODE>BUFFERED3</CODE> virtual file type
+        <DD> from Fahim Sidi, US EPA
+             <P>
+        <DT> <VAR>gfortran</VAR> ddebug <CODE>Makeinclude</CODE>
+        <DD> enhancements and clean-up
              <P>
         <DT> Documentation enhancements
     </DL>
@@ -7270,7 +7273,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 146 2020-03-25 18:03:32Z coats $
+    $Id: NEWSTUFF.html 155 2020-04-13 19:51:09Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
