@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: BUFFERED.html 75 2018-01-12 15:48:16Z coats $" -->
+<!-- "$Id: BUFFERED.html 157 2020-04-14 21:55:17Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
 REAL FILES, PARALLEL FILES,  AND &quot;VIRTUAL FILES&quot;
@@ -302,7 +302,28 @@ REAL FILES AND &quot;VIRTUAL FILES&quot;
     is exchanged via Fortran  <CODE>COMMON</CODE>s  - we've detected
     some obscure use-before-calculate bugs by replacing
     <CODE>COMMON</CODE>s with BUFFERED virtual files.)
-
+    <P>
+    
+    <STRONG>Restrictions</STRONG>
+    <UL>
+        <LI> For I/O&nbsp;API-3.2, <CODE>XTRACT3()</CODE>,
+             <CODE>READ3()</CODE> and <CODE>WRITE3()</CODE>, variables 
+             may be of types <CODE>M3REAL</CODE>, <CODE>M3INT</CODE>,
+             <CODE>M3DBLE</CODE>, or <CODE>M3INT8</CODE>.
+             Prior to the release of April&nbsp;13, 2020 
+             there are troubles for non-<CODE>M3REAL</CODE>
+             All-Variables (<CODE>VNAME=ALLVARS3</CODE>) calls.
+        <LI> For I/O&nbsp;API-3.1, <CODE>/XTRACT3()</CODE>,
+             <CODE>READ3()</CODE> and <CODE>WRITE3()</CODE>, variables 
+             may be of types <CODE>M3REAL</CODE>, <CODE>M3INT</CODE>, or
+             <CODE>M3DBLE</CODE>; there are troubles for
+             non-<CODE>M3REAL</CODE> All-Variables
+             (<CODE>VNAME=ALLVARS3</CODE>) calls.
+        <LI> For <CODE>INTERP3()</CODE> and <CODE>INTERPX()</CODE>, the
+             variables must be of type  <CODE>M3REAL</CODE> or
+             <CODE>M3DBLE</CODE>.  All-Variables
+             (<CODE>VNAME=ALLVARS3</CODE> calls are not supported.
+    </UL>
     <P>
 
     To set up a buffered virtual file, <VAR>setenv</VAR> the value of
