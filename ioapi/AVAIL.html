@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 155 2020-04-13 19:51:09Z coats $" -->
+<!-- "$Id: AVAIL.html 160 2020-04-20 15:19:53Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -151,6 +151,13 @@ m3stat:
     New&quot;&nbsp;/&nbsp;Research Directions</A> page for further
     information.
     <P>
+    Basically, the I/O API is developed as a &quot;rolling release&quot;
+    software system, with bug-fixes available as soon as they are made.
+    This is most easily accessed by way of the GitHub version of the
+    release, since <VAR>git</VAR> will automatically update exactly
+    what needs to be updated, allowing you to do an as-simple-as-possible
+    <VAR>make</VAR> to install the update.
+    <P>
     <DL>
         <DT>  <STRONG>To set up the installation:</STRONG>
         <DD>  <OL>
@@ -163,9 +170,9 @@ m3stat:
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A><BR>, or
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.
                        </BLOCKQUOTE>
-                       or for the March&25, 2020 version
+                       or for the April 20, 2020 version
                        <BLOCKQUOTE>
-                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020104.tar.gz"><VAR>ioapi-3.2-2020104.tar.gz</VAR></A>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020111.tar.gz"><VAR>ioapi-3.2-2020104.tar.gz</VAR></A>
                        </BLOCKQUOTE>
                        It contains directories <CODE>ioapi</CODE> for
                        the I/O&nbsp;API library source code,
@@ -199,10 +206,13 @@ m3stat:
     <PRE>
     git clone https://github.com/cjcoats/ioapi-3.2
     </PRE>
-    or, for the March&25, 2020 version
+    or, for the April 20, 2020 version
     <PRE>
-    git clone --branch 2020104 https://github.com/cjcoats/ioapi-3.2
+    git clone --branch 2020111 https://github.com/cjcoats/ioapi-3.2
     </PRE>
+    Note that this latter gives you a fixed-release version, for which
+    the &quot;rolling release&quot; bug-fixes are <U>not</U> easily
+    available.
                   <P>
                   <LI> <STRONG>If you downoaded a
                        <VAR>ioapi-*.tar.gz</VAR></STRONG>:<BR>
@@ -669,7 +679,7 @@ m3stat:
                   <DT> <STRONG><CODE>make test</CODE></STRONG> (for
                        I/O&nbsp;API 3.2 post-March 25)
                   <DD>  Subsequent to <CODE>make all</CODE>, the
-                        command  <CODE>make tests</CODE> from the
+                        command  <CODE>make test</CODE> from the
                         installations <CODE>${BASEDIR}</CODE> runs a
                         series of tests that ensures the I/O&nbsp;API
                         and <VAR>m3tools</VAR> programs are correctly
@@ -1943,7 +1953,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 155 2020-04-13 19:51:09Z coats $
+    $Id: AVAIL.html 160 2020-04-20 15:19:53Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
