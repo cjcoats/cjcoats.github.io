@@ -1,0 +1,265 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML> 
+<HEAD>
+<!-- @(#)$Header$ -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> 
+    MCPL:  Future Plans and Ongoing Extensions
+</TITLE>
+</HEAD>
+   
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+<!--#include virtual="/INCLUDES/header.html" -->
+
+<H1>
+    MCPL:  Future Plans and Ongoing Extensions
+</H1>
+
+    <EM> &lt;Under Construction !!&gt; </EM><BR>
+    <A HREF = "mailto:carlie.coats@baronams.com">Feedback</A> appreciated -- CJC
+    <P>
+    All of the following have been implemented and/or are currently 
+    undergoing beta-test.
+    <P>
+
+    <DL>
+        <DT> Add <STRONG><CODE>PVOR</CODE></STRONG> for <CODE>MC3</CODE>,
+             cross-point 3-D potential vorticity.
+        <DD> For nonhydrostatic versions of MM5, only.
+             <P>
+             Design in progress for MCPL v29.
+             <P>
+
+        <DT> Straighten out
+             <STRONG><CODE>ALB</CODE>-vs-<CODE>ALBEDO</CODE></STRONG>
+             mess, where the meaning of these variables within MM5
+             itself is dependent upon the model version and the soil
+             options chosen:
+             <DL COMPACT>
+                    <DT>  <CODE>GC2 ALB</CODE>
+                    <DD>  is always time-independent background
+                          albedo fraction
+                    <DT>  MM5V3, <CODE>ISOIL=2</CODE>:
+                    <DD>  <CODE>MC2 ALB</CODE> is current
+                          time-dependent albedo fraction<BR>
+                          <CODE>MC2 ALBEDO</CODE> is background
+                          time-independent albedo fraction
+                    <DT>  MM5V3, <CODE>ISOIL=3</CODE>:
+                    <DD>  <CODE>MC2 ALBEDO</CODE> is current
+                          time-dependent albedo fraction<BR>
+                          <CODE>MC2 ALB</CODE> is background
+                          time-independent albedo fraction<BR>
+                    <DT>  Otherwise (MM5V2 or <CODE>ISOIL=1</CODE>)
+                    <DD>  <CODE>MC2 ALB</CODE> is background
+                          time-independent albedo fraction
+              </DL>
+        <DD> For nonhydrostatic versions of MM5, only.
+             <P>
+             Coding and alpha-test in progress for MCPL v29.
+             <P>
+
+        <DT> Add <STRONG><CODE>UE, VN, UE10, VN10</CODE></STRONG>,
+             3-D and 10-meter &quot;true&quot; (i.e., relative to
+             Lat-Lon) Easting and Northing wind components.
+        <DD> For nonhydrostatic versions of MM5, only.
+             <P>
+             Coding and alpha-test in progress for MCPL v29.
+             <P>
+
+        <DT> Add <STRONG>extra EPA CMAQ output variables</STRONG>,
+             as required for the <A HREF =
+             "http://www.epa.gov/asmdnerl/models3/CMAQ/index.html">CMAQ
+             air quality model</A>:  these include surface and 3-D dot
+             point Jacobians (redundantly, in both the time-independent
+             (<CODE>GRID_[CRO|BDY]_[2|3]D</CODE> and the time-stepped
+             <CODE>MET_[CRO|BDY]_[2|3]D</CODE> files), and
+             Jacobian-coupled air and water-vapor densities,
+             Jacobian-coupled entropy and Jacobian-coupled
+             contravariant wind components in the 
+             <CODE>MET_[CRO|BDY]_[2|3]D</CODE> and
+             <CODE>MET_DOT_3D</CODE> files, respectively.
+        <DD> For nonhydrostatic versions of MM5, only.
+             <P>
+             COMPLETED.  Released.
+             <P>
+
+        <DT> Add <STRONG>CCM2 RTTEN</STRONG> temperature tendency due to
+             radiation (requires <CODE>IFRAD&nbsp;=&nbsp;3</CODE>).
+        <DD> COMPLETED.  Released.
+             <P>
+
+         <DT> Add <STRONG>Ohio State LSM</STRONG>
+             (<CODE>ISOIL&nbsp;=&nbsp;2</CODE>)
+             and <STRONG>Pleim-Xiu LSM/PBL</STRONG>
+             (<CODE>ISOIL&nbsp;=&nbsp;3,
+             IBLTYP(&lt;nest&gt;&nbsp;=&nbsp;7)</CODE>) related variables
+             in <A HREF = "mcpl.files.html#mc2">MET_CRO_2D</A>.
+        <DD> For MM5V3 only, and turned on only if OSU or P-X is active.
+             <P>
+             COMPLETED.  Released.
+             <P>
+
+       <DT> Add observation height variables <STRONG>TA2</STRONG>,
+             <STRONG>QV2</STRONG>, <STRONG>UX10</STRONG>, 
+             <STRONG>VX10</STRONG>, and <STRONG>WSPD10</STRONG>,
+             in <A HREF = "mcpl.files.html#mc2">MET_CRO_2D</A>.
+        <DD> For MM5V3 only, and turned on only for MRF PBL:
+             It turns out that these are very useful for comparing with
+             observational meteorology, as well as for coupling with
+             models normally driven by observations.  It is also best
+             done within MM5 PBL schemes, where it can be done
+             consistently with the rest of the physics. Implementing
+             this, however, involves PBL-scheme modifications for the
+             user who wishes to take advantage of it.
+             <P>
+             COMPLETED.  Released.  Contact <A HREF =
+             "mailto:carlie.coats@baronams.com,john.mchenry@baronams.com">the
+             authors</A> for information about modifications to
+             <CODE>HIRPBL</CODE> and <CODE>GSPBL</CODE> that generate
+             these variables within those PBL schemes.
+             <P>
+
+        <DT> Remove variable <STRONG>RLD</STRONG> from
+             <A HREF = "mcpl.files.html#mc2">MET_CRO_2D</A>.
+        <DD> It turns out that the situation for longwave radiation in 
+             MM5 is more complex than originally thought, including the
+             fact that the meaning of <STRONG>GLW</STRONG> depends upon
+             the physics options chosen.  RLD is not what we thought it
+             was, and it looks quite complex to decide just what it
+             should be, and then to implement that.
+             <P>
+             COMPLETED (i.e., RLD deleted as an output variable).
+             <P>
+
+        <DT> <STRONG>SLPRES option</STRONG> in file
+             <A HREF = "mcpl.files.html#mc2">MET_CRO_2D</A>.
+        <DD> Benjamin-Miller (1990) algorithm for calculating sea level
+             pressure option, activated by defining preprocessor symbol
+             <STRONG><CODE>MCPL_BMP</CODE></STRONG>, which then uses new
+             routine <STRONG><CODE>MM2BMP</CODE></STRONG> for the
+             calculation.
+             <P>
+             Coding COMPLETED.  Undergoing test at this time.
+             <P>
+             <EM>NOTE as of January 2001:  Results from it do not
+             look as good as we'd like, at least running over the
+             Eastern US at 15KM resolution.  BM will be an option but
+             not one that we recommend nor use as our default.
+             </EM>
+             <P>
+
+        <DT> <STRONG>UX, VX</STRONG>
+        <DD> Wind component variables UX, VX at cross points in files
+             <A HREF = "mcpl.files.html#mc2">MET_CRO_2D</A> (layer-1
+             extraction for that file) and
+             <A HREF = "mcpl.files.html#mc3">MET_CRO_3D</A> (fully 3-D),
+             using new routine <STRONG><CODE>MMXUSDV</CODE></STRONG>.
+             <P>
+             Coding COMPLETED.  Undergoing test at this time.
+             <P>
+
+        <DT> <STRONG>More Detailed KF output</STRONG>
+        <DD> Since precipitation and updraft/downdraft behavior turn
+             out to be exceedingly sensitive to the numerics used, the
+             KF event files now export the KFPARA-internal versions of 
+             layer thickness DZQ and pressure thickness DP0 for the 
+             model layers at cloud inception.
+             <P>
+             Coding COMPLETED and VALIDATED.
+             <P>
+
+        <DT> <STRONG>Task-Parallel MCPL() </STRONG>
+        <DD> For MM5V2.11 and later (which implement 
+             <A HREF="http://www.openmp.org/">OpenMP parallelism</A>)
+             make separate OpenMP tasks for each output file 
+             in MCPL_OUT().  This will allow greater efficiency
+             on moderately-parallel platforms.
+             <P>
+             Coding COMPLETED and VALIDATED.  On SGI's, requires
+             obscure run-time flags that set the per-thread stack-size
+             and memory limits or else it will seg-fault.
+             <P>
+
+        <DT> New Variables <STRONG>SLPRS, DZ1000_850, DZ1000_500,
+             DZ850_700</STRONG> in file
+             <A HREF = "mcpl.files.html#mc2">MET_CRO_2D</A>.
+        <DD> Compute sea level pressure and thicknesses between the
+             1000mB and 850mB, 1000mB and 500mB, and 850mB and 700mB
+             pressure surfaces, and put them out as new variables in
+             file <A HREF = "#mc2">MET_CRO_2D</A>.  
+             <P>
+             COMPLETED and VALIDATED.
+             <P>
+
+        <DT> New file <STRONG><A HREF = "#pc3">PRES_CRO_3D</A></STRONG>
+        <DD> contains 3D decoupled cross-point variables, interpolated
+             to the standard pressure surfaces.  Note that this file
+             uses a pressure vertical coordinate instead of a sigma
+             coordinate.
+             <P>
+             Output variables for this file are controlled by PC3_VARS
+             <P>
+             COMPLETED and VALIDATED.
+             <P>
+
+        <DT> New file <STRONG><A HREF = "#pd3">PRES_DOT_3D</A></STRONG>
+        <DD> contains 3D decoupled dot-point variables,  interpolated
+             to the standard pressure surfaces.  Note that this file
+             uses a pressure vertical coordinate instead of a sigma
+             coordinate; decoupling of the winds requires that the
+             output window is a proper window of the MM5 domain (e.g., 
+             there is no value for PSTAR available at MM5 dot-point (1,1) ). 
+             <P>
+             Output variables for this file are controlled by PD3_VARS.
+             <P>
+             COMPLETED and VALIDATED.
+             <P>
+
+        <DT> More general <STRONG> output-window structure </STRONG> 
+        <DD> supporting multiple output windows per M5 domain.  This
+             will make MM5 more useful to the environmental modeling
+             community in general (for coupled models work) at the cost
+             of some additional complexity for run script
+             configuration.<BR> <STRONG>COMPLETED</STRONG> in version
+             &quot;C&quot;  and later, of <CODE>MCPL</CODE>, controlled
+             by environment  variable <CODE>EM_OUTGRIDS</CODE> which is
+             a list of how many output grids there are per MM5 domain,
+             so that <VAR>setenv EM_OUTGRIDS 1,2,2,2,3,3,3,3,3,3</VAR>
+             says that  MM5 domain 1  has 1 output grid, MM5 domain 2 has
+             3 output grids, and MM5 domain 3 has 6 output grids;
+             <CODE>EM_I0</CODE> (etc.) will then be expected to be a
+             list with 1+3+7=10 entries.
+             <P>
+             COMPLETED and VALIDATED.
+             <P>
+
+        <DT> Support for <STRONG> KF cloud event files </STRONG> 
+        <DD> via new <CODE>ENTRY MCPL_KF</CODE> to be called from
+             MM5 module <CODE>KFPARA</CODE>.<BR>
+             <STRONG>COMPLETED</STRONG> in version &quot;KF&quot; 
+             and later, of <CODE>MCPL</CODE>.  Requires MM5V2.11
+             or later if MM5 is to be run in parallel (in order for
+             &quot;critical sections&quot; protecting the (serial)
+             I/O to the KF-files.
+             <P>
+             COMPLETED and VALIDATED.
+             <P>
+
+    </DL>
+
+<P> 
+Back to <A HREF = "mcpl.html#contents"><STRONG>MCPL() Contents
+</STRONG></A>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<!--#include virtual="/INCLUDES/footer.html" -->
+</BODY>      <!--end body  -->
+</HTML>      <!--end html  -->
+

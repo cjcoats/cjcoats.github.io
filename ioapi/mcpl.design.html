@@ -1,0 +1,832 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML> 
+<HEAD>
+<!-- @(#)$Header$ -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> 
+    MCPL Module Internals
+</TITLE>
+</HEAD>
+   
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+<!--#include virtual="/INCLUDES/header.html" -->
+
+<H2> 
+MCPL Module Internals:  Design 
+</H2>
+    
+    The following is a list of worker-routines, and their descriptions:
+    <UL>  
+        <LI>  <STRONG><CODE>CKVBLE</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  VNAME, VFLAG, VTYPE, VUNIT, 
+              VDESC, NLIST, VLIST(NLIST)
+              <P> 
+              <STRONG>Function:</STRONG>  If variable-name VNAME is in
+              VLIST, increment file-header variables-count NVARS3D and 
+              put the indicated name, type, units, and description into 
+              FDESC3.EXT file header data structures.<BR>  
+              Sets VFLAG true iff VNAME is in VLIST.
+              <P>
+
+        <LI>  <STRONG><CODE>FMTOPTS</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG> N, LINES   
+              <P> 
+              <STRONG>Function:</STRONG>  Puts values of the MM5 
+              configuration flags from <VAR>param2.incl</VAR> into 
+              namelist format (<CODE>"NAME=&lt;value&gt;;"</CODE>) 
+              in the array of strings <CODE>LINES( N )</CODE>.  
+              Note that "=" and ";" are always present as delimiters
+              for the value stored. Checks against N for overflow.
+              <P>
+
+        <LI>  <STRONG><CODE>GETVBLE</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  VFILE, NLIST, 
+              VLIST(NLIST)<BR> 
+              <STRONG>Output Argument:</STRONG>NVARS, VNAMES(MXVAR3), 
+              VFLAG
+              <P> 
+              <STRONG>Function:</STRONG>  Open file VFILE (MB2_VARS, etc.) 
+              containing an input list of variable-names, read it, check 
+              the names it contains against VLIST, save the matches in 
+              VNAMES and count them in NVARS.  Set VFLAG true iff there 
+              are matches between the file and VLIST (i.e., iff NVARS is
+              positive.
+              Log warning message for each mis-match.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2BDY</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), 
+              NCOLS, NROWS, NLAYS, NTHIK, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              BOUT(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/convert the 
+              boundary data structure BOUT for the AQM grid starting at 
+              offset  &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt; and perimeter thickness
+              NTHIK.  Apply units-conversion FACTOR.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2BMP</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              TA(IM,JM,KM), QV(IM,JM,KM), PP(IM,JM,KM), PM(IM,JM),
+              SIGF(KM+1), SIGH(KM), PTOP, HT(IM,JM),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              SLP(NCOLS,NROWS)
+              <P> 
+              <STRONG>Function:</STRONG> 
+              Extract/reorder/decouple/compute  the cross-point sea
+              level pressure, using the Benjamin-Miller (1990)
+              algorithm, for  the window specified in terms of given
+              grid-window bounds  and put it in I/O&nbsp;API order in
+              SLP,  in terms of temperature array TA, specific humidity
+              array QV, pressure perturbation array PP, PSTAR-array PM,
+              and geopotential height array HT, found in standard MM5
+              subscript order. <P>
+
+        <LI>  <STRONG><CODE>MM2DP2</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, TA(IM,JM,KM),
+              QV(IM,JM,KM), PPRIME(IM,JM,KM), PSTAR(IM,JM), HFX(IM,JM), 
+              QFX(IM,JM), SIGH(KM), NCOLS, NROWS, COL0, ROW0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              PRES(NCOLS,NROWS,NLAYS), 
+              DENS(NCOLS,NROWS,NLAYS),
+              TV(NCOLS,NROWS,NLAYS),
+              RH(NCOLS,NROWS,NLAYS),
+              QFLX(NCOLS,NROWS), 
+              HFLX(NCOLS,NROWS)
+              <P> 
+              <STRONG>Function:</STRONG> Extract/reorder/decouple/compute 
+              the cross point 2D density, pressure, virtual temperature
+              and relative humidity  for the window specified in terms 
+              of the given grid-window bounds.  Also transforms surface
+              fluxes to kinematic units.  Put the result into
+              I/O&nbsp;API order, using the specified TA, QV, Pprime,
+              Pstar, SIGH, and Ptop from MM5.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2DP3</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, TA(IM,JM,KM),
+              QV(IM,JM,KM), PPRIME(IM,JM,KM), PSTAR(IM,JM), SIGH(KM),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              PRES(NCOLS,NROWS,NLAYS), 
+              DENS(NCOLS,NROWS,NLAYS),
+              TV(NCOLS,NROWS,NLAYS),
+              RH(NCOLS,NROWS,NLAYS),
+              THETA(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG> Extract/reorder/decouple/compute 
+              the cross point 3D density, pressure, virtual temperature,
+              potential temperature and relative humidity  for the window 
+              specified in terms of the given grid-window bounds.  Put the 
+              result into I/O&nbsp;API order, using the specified TA, QV, 
+              Pprime, Pstar, SIGH, and Ptop from MM5.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2INT</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              IAM(IM,JM,KM), NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              IAOUT(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/convert the 
+              INTEGER array IAM for the AQM grid starting at offset
+              &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;.  Apply units-conversion
+              FACTOR, and round to INTEGER and put the result into
+              INTEGER array IAOUT.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2IO</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              AOUT(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/convert the 
+              array AOUT for the AQM grid starting at offset
+              &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;.  Apply units-conversion
+              FACTOR.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2MOL</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, HOL(IM,JM,KM),
+              PBL(IM,JM,KM), NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              MOLI(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute the 
+              inverse Monin-Obukhov length for the AQM grid 
+              starting at offset &lt;COL0,ROW0,LAY0&gt; and having 
+              dimensions &lt;NCOLS,NROWS,NLAYS&gt;.  Works in terms of 
+              MM5 variables HOL = PBL height/MOL and PBL
+              <P>
+
+        <LI>  <STRONG><CODE>MM2MSQ</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, MSF(IM,JM),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              MSF2(2*NTHIK*(NCOLS+NROWS+2*NTHIK))
+              <P>                    
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              the gridded map scale factor squared  for the AQM grid
+              starting at offset &lt;COL0,ROW0,LAY0&gt; and having
+              dimensions &lt;NCOLS,NROWS,NLAYS&gt; from the MM5
+              array MSF(D|X) of (dot|cross-point) inverse map scale 
+              factors.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2RAD</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, RAD(IM,JM),
+              ALB(IM,JM), NCOLS, NROWS, COL0, ROW0, ROUT(NCOLS,NROWS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              net (albedo-corrected) ground radiation for the 
+              AQM grid starting at offset &lt;COL0,ROW0,LAY0&gt; and 
+              having dimensions &lt;NCOLS,NROWS,NLAYS&gt;.  
+              Works in terms of MM5 variables for gross ground radiation
+              and albedo, according to the formula 
+              R<SUB>out</SUB>&nbsp;=&nbsp;RAD/(1-ALB)
+              <P>
+
+        <LI>  <STRONG><CODE>MM2REF</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, PSTAR(IM,JM),
+              SIGH(KM), SIGF(KM+1), PTOP, P0, TLP, TS0, ROVG, RDRY,
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              TSFC(NCOLS,NROWS), 
+              PRSFC(NCOLS,NROWS), 
+              DENS0(NCOLS,NROWS,NLAYS), 
+              ZH(NCOLS,NROWS,NLAYS), 
+              ZF(NCOLS,NROWS,NLAYS), 
+              DZF(NCOLS,NROWS,NLAYS), 
+              TH0(NCOLS,NROWS,NLAYS), 
+              TF0(NCOLS,NROWS,NLAYS), 
+              PRH0(NCOLS,NROWS,NLAYS), 
+              PRF0(NCOLS,NROWS,NLAYS), 
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              reference atmosphere:  surface temperature and pressure,
+              3D half-level density and half and full level temperature
+              and pressure, for the AQM grid starting at offset 
+              &lt;COL0,ROW0,LAY0&gt; and having dimensions 
+              &lt;NCOLS,NROWS,NLAYS&gt;.  
+              <P>
+
+        <LI>  <STRONG><CODE>MM2SDV</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              UM(IM,JM,KM), VM(IM,JM,KM), PM(IM,JM),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              WSPD(NCOLS,NROWS,NLAYS), 
+              DIV(NCOLS,NROWS,NLAYS), 
+              VOR(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG> 
+              Extract/reorder/decouple/compute  the cross-point
+              wind-speed, divergence, and relative vorticity for  the
+              window specified in terms of given grid-window bounds 
+              and put it in I/O&nbsp;API order in WSPD, DIV, and VOR, 
+              in terms of wind component arrays UM and VM, and 
+              PSTAR-array PM found in standard MM5 subscript order.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2SDVV</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              UM(IM,JM,KM), VM(IM,JM,KM), PM(IM,JM),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              WSPD(NCOLS,NROWS,NLAYS), 
+              DIV(NCOLS,NROWS,NLAYS), 
+              VOR(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG> 
+              Extract/reorder/decouple/compute  the cross-point
+              wind-speed, divergence, and both relative  and absolute
+              vorticity for  the window specified in terms of given
+              grid-window bounds  and put it in I/O&nbsp;API order in
+              WSPD, DIV, and VOR,  in terms of wind component arrays UM
+              and VM, and  PSTAR-array PM found in standard MM5
+              subscript order.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2SLP</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              TA(IM,JM,KM), PP(IM,JM,KM), PM(IM,JM),
+              SIGH(KM), PTOP, HT(IM,JM),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              SLP(NCOLS,NROWS)
+              <P> 
+              <STRONG>Function:</STRONG> 
+              Extract/reorder/decouple/compute  the cross-point sea
+              level pressure, using the INTERP algorithm, for  the
+              window specified in terms of given grid-window bounds 
+              and put it in I/O&nbsp;API order in SLP, 
+              in terms of temperature array TA, pressure perturbation
+              array PP, PSTAR-array PM, and geopotential height array
+              HT, found in standard MM5 subscript order. <P>
+
+        <LI>  <STRONG><CODE>MM2THERM2</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              TA(IM,JM,KM), QV(IM,JM,KM), PP(IM,JM,KM), PM(IM,JM),
+              HFX(IM,JM), QFX(IM,JM), SIGH(KM), PTOP, 
+              NCOLS, NROWS, COL0, ROW0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              DENS(NCOLS,NROWS), PRES(NCOLS,NROWS), TV(NCOLS,NROWS), 
+              RHWI(NCOLS,NROWS), RHLW(NCOLS,NROWS), RHKF(NCOLS,NROWS), 
+              QFLX(NCOLS,NROWS), HFLX(NCOLS,NROWS)              
+              <P> 
+              <STRONG>Function:</STRONG> 
+              Extract/reorder/decouple/compute the cross-point
+              layer&nbsp;1  density, pressure, virtual temperature,
+              relative humidity (three versions), potential
+              temperature, and sensible and latent heat fluxes for the
+              window specified in terms of given grid-window bounds 
+              and put it in I/O&nbsp;API order in  in terms of
+              temperature array TA, specific humidity array QV,
+              pressure perturbation array PP, PSTAR-array PM, sensible
+              and latent heat flux arrays HFX and QFX, found in
+              standard MM5 subscript order.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2THERM3</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              TA(IM,JM,KM), QV(IM,JM,KM), PP(IM,JM,KM), PM(IM,JM),
+              SIGH(KM), PTOP, NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              DENS(NCOLS,NROWS), PRES(NCOLS,NROWS), TV(NCOLS,NROWS), 
+              RHWI(NCOLS,NROWS), RHLW(NCOLS,NROWS), RHKF(NCOLS,NROWS), 
+              QFLX(NCOLS,NROWS), HFLX(NCOLS,NROWS)              
+              <P> 
+              <STRONG>Function:</STRONG> 
+              Extract/reorder/decouple/compute the cross-point
+              layer&nbsp;1  density, pressure, virtual temperature,
+              relative humidity (three versions), and potential
+              temperature for the window specified in terms of given
+              grid-window bounds  and put it in I/O&nbsp;API order in 
+              in terms of temperature array TA, specific humidity array
+              QV, pressure perturbation array PP, PSTAR-array PM, found
+              in standard MM5 subscript order.
+              <P>
+
+        <LI>  <STRONG><CODE>MM2WST</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, UST(IM,JM),
+              HOL(IM,JM), NCOLS, NROWS, COL0, ROW0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              WST(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              vertical friction velocity WSTAR from MM5 UST and HOL,
+              for the window specified in terms of grid-window bounds.
+              <P>
+
+        <LI>  <STRONG><CODE>MMBDCPL</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), PSTAR(IM,JM,KM),
+              NCOLS, NROWS, NLAYS, NTHIK, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              BOUT(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute/decouple 
+              the boundary data structure BOUT for the
+              cross-point variable AM for the AQM grid starting at
+              offset &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling and applying FACTOR for units
+              conversion.
+              <P>
+
+        <LI>  <STRONG><CODE>MMBDPT</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, TA(IM,JM,KM),
+              QV(IM,JM,KM), PPRIME(IM,JM,KM), PSTAR(IM,JM), SIGMAH(KM),
+              PTOP, NCOLS, NROWS, NLAYS, NTHIK, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              DENS(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS), 
+              PRES(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS),
+                TV(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+                RH(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+              <P>                    
+              <STRONG>Function:</STRONG>  Extract/reorder/compute/decouple 
+              the boundary density, pressure, virtual temperature and
+              relative humidity arrays for the AQM grid
+              starting at offset &lt;COL0,ROW0,LAY0&gt; and having
+              dimensions &lt;NCOLS,NROWS,NLAYS&gt; from the MM5
+              cross-point arrays TA, QV, PPRIME, using MM5
+              cross point array PSTAR for the decoupling, and SIGMAH
+              and PTOP for vertical layer structure.
+              <P>
+
+        <LI>  <STRONG><CODE>MMBMSQ</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, MSFX(IM,JM),
+              NCOLS, NROWS, NLAYS, NTHIK, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              MSFX2(2*NTHIK*(NCOLS+NROWS+2*NTHIK))
+              <P>                    
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              the boundary map scale factor squared  for the AQM grid
+              starting at offset &lt;COL0,ROW0,LAY0&gt; and having
+              dimensions &lt;NCOLS,NROWS,NLAYS&gt; from the MM5
+              cross-point array MSFX of inverse map scale factors.
+              <P>
+
+        <LI>  <STRONG><CODE>MMBREF</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, PSTAR(IM,JM),
+              SIGH(KM), SIGF(KM+1), PTOP, P0, TLP, TS0, ROVG, RDRY,
+              NCOLS, NROWS, NLAYS, NTHIK, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              TSFC(NCOLS,NROWS), 
+              PRSFC(NCOLS,NROWS), 
+              DENS0(NCOLS,NROWS,NLAYS), 
+              ZH(NCOLS,NROWS,NLAYS), 
+              ZF(NCOLS,NROWS,NLAYS), 
+              DZF(NCOLS,NROWS,NLAYS), 
+              TH0(NCOLS,NROWS,NLAYS), 
+              TF0(NCOLS,NROWS,NLAYS), 
+              PRH0(NCOLS,NROWS,NLAYS), 
+              PRF0(NCOLS,NROWS,NLAYS), 
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              reference atmosphere:  surface temperature and pressure,
+              3D half-level density and half and full level temperature
+              and pressure, for the boundary of the AQM grid  starting 
+              at offset &lt;COL0,ROW0,LAY0&gt; and having dimensions 
+              &lt;NCOLS,NROWS,NLAYS&gt; and boundary thickness NTHIK.  
+              <P>
+
+        <LI>  <STRONG><CODE>MMBTHERMO</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, TA(IM,JM,KM),
+              QV(IM,JM,KM), PPRIME(IM,JM,KM), PSTAR(IM,JM), SIGMAH(KM),
+              PTOP, NCOLS, NROWS, NLAYS, NTHIK, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              DENS(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS), 
+              PRES(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS),
+                TV(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+                RHWI(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+                RHLW(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+                RHKF(2*NTHIK*(NCOLS+NROWS+2*NTHIK),NLAYS)
+              <P>                    
+              <STRONG>Function:</STRONG>  Extract/reorder/compute/decouple 
+              the boundary density, pressure, virtual temperature and
+              relative humidity (three versions:  water/ice, liquid
+              water, and mixed-phase as used in KF cloud package)
+              arrays for the AQM grid starting at offset
+              &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt; from the MM5 cross-point arrays
+              TA, QV, PPRIME, using MM5 cross point array PSTAR for the
+              decoupling, and SIGMAH and PTOP for vertical layer
+              structure.
+              <P>
+
+        <LI>  <STRONG><CODE>MMD2P</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              PPRIME(IM,JM,KM), PSTAR(IM,JM), SIGH(KM), PTOP, PLEV(NLAYS),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              LEVS(NCOLS,NROWS,NLAYS), CLIN(NCOLS,NROWS,NLAYS), 
+              CLOG(NCOLS,NROWS,NLAYS), CPOW(NCOLS,NROWS,NLAYS), 
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              the dot point linear, log, and power pressure-surface 
+              interpolation coefficients for the specified window
+              and put the result into standard I/O&nbsp;API order.
+              <P>
+              <STRONG>NOTE: </STRONG>
+              Interpolation to pressure level <CODE>L</CODE> at column 
+              and row <CODE>C,R</CODE> is performed as follows, where
+              <CODE>COEF</CODE> is one of <CODE>CLIN</CODE>, <CODE>CLOG</CODE>, 
+              or <CODE>CPOW</CODE>):
+                      <PRE>
+        K  = PDEX( C,R,L )
+        PP = COEF( C,R,L )
+        QQ = 1.0 - PP
+        FOOP( C,R,L ) = PP*FOO( C,R,K ) + QQ*( C,R,K+1 )
+                      </PRE> 
+              <STRONG>Internals: </STRONG>  Internally, at each dot point
+              <CODE>C,R</CODE>,
+              <CODE>MMD2P</CODE> interpolates <CODE>PPRIME</CODE>
+              and computes pressure values <CODE>PRES</CODE> for each
+              sigma-level <CODE>1, ..., KM</CODE> (with subscripts ascending
+              vertically as in I/O&nbsp;API conventions), and then for each
+              standard pressure level <CODE>PVAL(L)</CODE> searches to find
+              subscripts <CODE>M-1</CODE> and <CODE>M</CODE> such that
+              <CODE>PRES(M-1)&lt;=PVAL(L)&lt;PRES(M)</CODE>.  Then 
+              <CODE>MMD2P</CODE> computes linear-interpolation coefficients
+              for each of <CODE>PVAL(L)</CODE>, 
+              <CODE>PVAL(L)<SUP>R/CP</SUP></CODE>, and 
+              <CODE>log(PVAL(L))</CODE>, relative to the 
+              <CODE>PRES(M)</CODE>, 
+              <CODE>PRES(M)<SUP>R/CP</SUP></CODE>, and 
+              <CODE>log(PRES(M))</CODE>, as indicated in the 
+              <A HREF=" presterp.gif">attached diagram</A>, also 
+              available <A HREF=" presterp.ps">in PostScript</A>.
+              <P>
+
+        <LI>  <STRONG><CODE>MMDDCPL</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), PSTAR(IM-1,JM-1), 
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              AOUT(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute/decouple 
+              the dot-point variable AM for the AQM grid starting at offset
+              &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling, and applying FACTOR for
+              units conversion.
+              <P>
+
+        <LI>  <STRONG><CODE>MMPDDCPL</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), PSTAR(IM,JM), 
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0, 
+              LEVS(NCOLS,NROWS,NLAYS), COEF(NCOLS,NROWS,NLAYS)<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              AOUT(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/interpolate/decouple 
+              the dot-point variable AM to pressure level vertical grid
+              and the AQM horizontal grid starting at
+              offset &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling, and applying FACTOR for units
+              conversion.
+              <P>
+              <STRONG>NOTES: </STRONG>  
+              <OL>
+                  <LI>  <VAR>MISSING</VAR> values (i.e., for below-terrain
+                        pressure levels) stored as 0
+                  <LI>  LEVS and COEF should be  interpolation indices 
+                        and coefficients returned from worker routine 
+                        <CODE>MMD2P</CODE><BR>
+              </OL>
+              <P>
+
+        <LI>  <STRONG><CODE>MMPDTRH</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              TA(IM,JM,KM), QV(IM,JM,KM), PPRIME(IM,JM,KM), PSTAR(IM,JM), 
+              SIGH(KM), PTOP, P00, PLEVH(NLAYS), 
+              PDEX(NCOLS,NROWS,NLAYS), 
+              CLIN(NCOLS,NROWS,NLAYS), 
+              CLOG(NCOLS,NROWS,NLAYS), 
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              DENS(NCOLS,NROWS,NLAYS),
+              T(NCOLS,NROWS,NLAYS)
+              TV(NCOLS,NROWS,NLAYS)
+              RH(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG> Extract/reorder/decouple/compute 
+              the pressure-level cross point 3D density, temperature, 
+              virtual temperature and relative humidity for the specified
+              pressure levels and the window specified in terms 
+              of the given grid-window bounds.  Put the result into
+              I/O&nbsp;API order, using the specified TA, QV, Pprime,
+              Pstar, SIGH, and Ptop from MM5 and the interpolation index
+              and linear and log interpolation coefficients from MMX2P.
+              <P>
+              <STRONG>NOTES: </STRONG>  
+              <OL>
+                  <LI>  <VAR>MISSING</VAR> values (i.e., for below-terrain
+                        pressure levels) stored as -9.999
+                  <LI>  LEVS, CLIN, and CLOG should be  interpolation indices 
+                        and coefficients returned from worker routine 
+                        <CODE>MMX2P</CODE>
+              </OL>
+              <P>
+
+        <LI>  <STRONG><CODE>MMPSDV</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  DX, IM, JM, KM, 
+              UM(IM,JM,KM), VM(IM,JM,KM), PM(IM,JM),
+              LEVS(NCOLS,NROWS,NLAYS), CLIN(NCOLS,NROWS,NLAYS),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              WSPD(NCOLS,NROWS,NLAYS, DIV(NCOLS,NROWS,NLAYS), 
+              RVOR(NCOLS,NROWS,NLAYS), AVOR(NCOLS,NROWS,NLAYS)
+              UWIND(NCOLS,NROWS,NLAYS, 
+              VWIND(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Interpolate/reorder/decouple/compute 
+              the cross-point pressure-level wind-speed, divergence, 
+              absolute and relative vorticity, and wind components for the window specified in 
+              terms of given grid-window bounds and for the specified
+              pressure level, in terms of wind component arrays UM and
+              VM, and PSTAR-array PM found in standard MM5 subscript
+              order.  Put the results in I/O&nbsp;API order in 
+              WSPD, DIV, RVOR, AVOR, UWIND, VWIND.
+              <P>
+              <STRONG>NOTES: </STRONG>  
+              <OL>
+                  <LI>  <VAR>MISSING</VAR> values (i.e., for below-terrain
+                        pressure levels) stored as 0
+                  <LI>  LEVS and COEF should be  interpolation indices 
+                        and coefficients returned from worker routine 
+                        <CODE>MMD2P</CODE><BR>
+              </OL>
+              <P>
+
+        <LI>  <STRONG><CODE>MMPSDV</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  DX, IM, JM, KM, 
+              UM(IM,JM,KM), VM(IM,JM,KM), PM(IM,JM),
+              LEVS(NCOLS,NROWS,NLAYS), CLIN(NCOLS,NROWS,NLAYS),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              WSPD(NCOLS,NROWS,NLAYS, DIV(NCOLS,NROWS,NLAYS), 
+              VOR(NCOLS,NROWS,NLAYS)
+              UWIND(NCOLS,NROWS,NLAYS, 
+              VWIND(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Interpolate/reorder/decouple/compute 
+              the cross-point pressure-level wind-speed, divergence, 
+              vorticity, and wind components for the window specified in 
+              terms of given grid-window bounds and for the specified
+              pressure level, in terms of wind component arrays UM and
+              VM, and PSTAR-array PM found in standard MM5 subscript
+              order.  Put the results in I/O&nbsp;API order in 
+              WSPD, DIV, VOR, UWIND, VWIND.
+              <P>
+              <STRONG>NOTES: </STRONG>  
+              <OL>
+                  <LI>  <VAR>MISSING</VAR> values (i.e., for below-terrain
+                        pressure levels) stored as 0
+                  <LI>  LEVS and COEF should be  interpolation indices 
+                        and coefficients returned from worker routine 
+                        <CODE>MMD2P</CODE><BR>
+              </OL>
+              <P>
+
+        <LI>  <STRONG><CODE>MMPTHETA</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  NCOLS, NROWS, PLAYS,
+              PLEV(PLAYS), T(NCOLS,NROWS,PLAYS) <BR> 
+              <STRONG>Output Argument:</STRONG>  
+              THETA(NCOLS,NROWS,PLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Compute 3-D cross-point 
+              pressure-level potential temperature from pressure levels
+              PLEV (given in Pascals), and pressure level temerature
+              T from subroutine <CODE>MMPDTRH</CODE>.  Assumes that all
+              inputs are already in I/O&nbsp;API.
+              <P>
+              <STRONG>NOTE: </STRONG><VAR>MISSING</VAR> values (i.e., 
+              for below-terrain pressure levels) stored as -9.999<P>
+
+        <LI>  <STRONG><CODE>MMPUV</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              PPRIME(IM,JM,KM), WA(IM,JM,KM), PSTAR(IM,JM), SIGF(KM), PTOP, 
+              PLEV(NLAYS), NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0, 
+              LEVS(NCOLS,NROWS,NLAYS), COEF(NCOLS,NROWS,NLAYS)<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              UWIND(NCOLS,NROWS,NLAYS), VWIND(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/interpolate/decouple 
+              the cross-point horizontal U and V cross point wind
+              component to pressure level vertical  grid specified by
+              PLEV, and the AQM horizontal grid starting  at offset
+              &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling.
+              <P>
+              <STRONG>NOTES: </STRONG>  
+              <OL>
+                  <LI>  Requires that the output window be a proper
+                        window of the MM5 domain
+                  <LI>  <VAR>MISSING</VAR> values (i.e., below-terrain
+                        pressure levels) stored as 0
+                  <LI>  LEVS and COEF should be  interpolation indices 
+                        and coefficients returned from worker routine 
+                        <CODE>MMD2P</CODE>
+              </OL>
+              <P>
+
+        <LI>  <STRONG><CODE>MMPW</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              PPRIME(IM,JM,KM), WA(IM,JM,KM), PSTAR(IM,JM), SIGF(KM), PTOP, 
+              PLEV(NLAYS), NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0, 
+              LEVS(NCOLS,NROWS,NLAYS), COEF(NCOLS,NROWS,NLAYS)<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              WWIND(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/interpolate/decouple 
+              the cross-point vertical  W wind component to pressure level vertical 
+              grid specified by PLEV, and the AQM horizontal grid starting 
+              at offset &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling.
+              <P>
+              <STRONG>NOTES: </STRONG>  
+              <OL>
+                  <LI>  <VAR>MISSING</VAR> values (i.e., below-terrain
+                        pressure levels) stored as 0
+                  <LI>  LEVS and COEF should be  interpolation indices 
+                        and coefficients returned from worker routine 
+                        <CODE>MMD2P</CODE>
+              </OL>
+              <P>
+
+        <LI>  <STRONG><CODE>MMPXDCPL</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), PSTAR(IM,JM), 
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0, 
+              LEVS(NCOLS,NROWS,NLAYS), COEF(NCOLS,NROWS,NLAYS)<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              AOUT(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/interpolate/decouple 
+              the cross-point variable AM to pressure level vertical grid
+              and the AQM horizontal grid starting at
+              offset &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling, and applying FACTOR for units
+              conversion.
+              <P>
+              <STRONG>NOTES: </STRONG>  
+              <OL>
+                  <LI>  <VAR>MISSING</VAR> values (i.e., for below-terrain
+                        pressure levels) stored as -9.999
+                  <LI>  LEVS and COEF should be  interpolation indices 
+                        and coefficients returned from worker routine 
+                        <CODE>MMX2P</CODE>
+              </OL>
+              <P>
+
+        <LI>  <STRONG><CODE>MMPZ</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              PPRIME(IM,JM,KM), PSTAR(IM,JM), SIGH(KM), PTOP, P00, TLP, 
+              TS0, ROVG, PVALH(NLAYS), SLPRES(NCOLS,NROWS), 
+              LEVS(NCOLS,NROWS,NLAYS), CLIN(NCOLS,NROWS,NLAYS),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              Z(NCOLS,NROWS,NLAYS), DZ1000_850(NCOLS,NROWS), 
+              DZ1000_500(NCOLS,NROWS), DZ850_500(NCOLS,NROWS)
+              <P> 
+              <STRONG>Function:</STRONG>  Compute the cross point 
+              pressure-level Z (height above mean sea level) and
+              pressure thicknesses DZ1000_850, DZ1000_500, DZ850_500
+              for the specified window and specified pressure levels,
+              and put the result into standard I/O&nbsp;API order.
+              <P>
+              <STRONG>NOTE: </STRONG> LEVS and COEF should be  
+              interpolation indices and coefficients returned from 
+              worker routine <CODE>MMX2P</CODE>
+              <P>
+
+        <LI>  <STRONG><CODE>MMX2D</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              AOUT(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/linear-interpolate
+              AM from the specified dot point array to the specified
+              window of the cross point grid, or vice versa, and put
+              the result into standard I/O&nbsp;API order, scaling the
+              result by FACTOR
+              <P>
+
+        <LI>  <STRONG><CODE>MMX2P</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  IM, JM, KM, 
+              PPRIME(IM,JM,KM), PSTAR(IM,JM), SIGH(KM), PTOP, PLEV(NLAYS),
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Arguments:</STRONG>  
+              LEVS(NCOLS,NROWS,NLAYS), CLIN(NCOLS,NROWS,NLAYS), 
+              CLOG(NCOLS,NROWS,NLAYS), CPOW(NCOLS,NROWS,NLAYS), 
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute
+              the cross point linear, log, and power pressure-surface 
+              interpolation coefficients for the specified window
+              and put the result into standard I/O&nbsp;API order.
+              <P>
+              <STRONG>NOTE: </STRONG>
+              Interpolation to pressure level <CODE>L</CODE> at column 
+              and row <CODE>C,R</CODE> is performed as follows, where
+              <CODE>COEF</CODE> is one of <CODE>CLIN</CODE>, <CODE>CLOG</CODE>, 
+              or <CODE>CPOW</CODE>):
+                      <PRE>
+        K  = PDEX( C,R,L )
+        PP = COEF( C,R,L )
+        QQ = 1.0 - PP
+        FOOP( C,R,L ) = PP*FOO( C,R,K ) + QQ*( C,R,K+1 )
+                      </PRE> 
+              <STRONG>Internals: </STRONG>  Internally, at each cross 
+              point <CODE>MMX2P</CODE>
+              first computes pressure values <CODE>PRES</CODE> for each
+              sigma-level <CODE>1, ..., KM</CODE> (with subscripts ascending
+              vertically as in I/O&nbsp;API conventions), and then for each
+              standard pressure level <CODE>PVAL(L)</CODE> searches to find
+              subscripts <CODE>M-1</CODE> and <CODE>M</CODE> such that
+              <CODE>PRES(M-1)&lt;=PVAL(L)&lt;PRES(M)</CODE>.  Then 
+              <CODE>MMX2P</CODE> computes linear-interpolation coefficients
+              for each of <CODE>PVAL(L)</CODE>, 
+              <CODE>PVAL(L)<SUP>R/CP</SUP></CODE>, and 
+              <CODE>log(PVAL(L))</CODE>, relative to the 
+              <CODE>PRES(M)</CODE>, 
+              <CODE>PRES(M)<SUP>R/CP</SUP></CODE>, and 
+              <CODE>log(PRES(M))</CODE>, as indicated in the 
+              <A HREF=" presterp.gif"> attached diagram</A>, also 
+              available <A HREF=" presterp.ps">in PostScript</A>.
+              <P>
+
+        <LI>  <STRONG><CODE>MMXDCPL</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, IM, JM, KM, 
+              AM(IM,JM,KM), PSTAR(IM,JM), 
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              AOUT(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute/decouple 
+              the cross-point variable AM for the AQM grid starting at
+              offset &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling, and applying FACTOR for units
+              conversion.
+              <P>
+
+        <LI>  <STRONG><CODE>MMXUSDVV</CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>  FACTOR, DX, IM, JM, KM, 
+              UM(IM,JM,KM), VM(IM,JM,KM), PSTAR(IM,JM), 
+              NCOLS, NROWS, NLAYS, COL0, ROW0, LAY0<BR> 
+              <STRONG>Output Argument:</STRONG>  
+              UX(NCOLS,NROWS,NLAYS), VX(NCOLS,NROWS,NLAYS),
+              SPD(NCOLS,NROWS,NLAYS), DIV(NCOLS,NROWS,NLAYS),
+              AVOR(NCOLS,NROWS,NLAYS), RVOR(NCOLS,NROWS,NLAYS)
+              <P> 
+              <STRONG>Function:</STRONG>  Extract/reorder/compute/decouple 
+              the cross-point wind components UX, VX, horizontal
+              divergence DIV, absolute and relative vorticity AVOR and
+              RVOR for the AQM grid starting at offset
+              &lt;COL0,ROW0,LAY0&gt; and having dimensions
+              &lt;NCOLS,NROWS,NLAYS&gt;, using MM5 cross point array
+              PSTAR for the decoupling, and applying FACTOR for units
+              conversion.
+              <P>
+
+
+ <!-- 
+        <LI>  <STRONG><CODE><VAR>dummy</VAR></CODE></STRONG><BR>
+              <STRONG>Input Arguments:</STRONG>
+              <BR> 
+              <STRONG>Output Argument:</STRONG>
+              <P> 
+              <STRONG>Function:</STRONG>
+              <P>
+ --> 
+
+    </UL>		 <!--end list of worker routines  -->
+
+Back to <A HREF = "mcpl.html#contents"><STRONG>MCPL Contents</STRONG></A>
+
+<HR> <!----------------------------------------------------------------->
+
+</BODY>      <!--end body  -->
+</HTML>      <!--end html  -->

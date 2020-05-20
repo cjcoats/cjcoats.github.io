@@ -1,0 +1,373 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML> 
+<HEAD>
+<!-- @(#)$Header$ -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> 
+    MCPL():  Run-Script Control of the Module
+</TITLE>
+</HEAD>
+   
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+<!--#include virtual="/INCLUDES/header.html" -->
+
+<H1>
+    MCPL():  Run-Script Control of the Module
+</H1>
+
+    This module is principally controlled by environment variables and
+    by ASCII tables found in files under standard 
+    <A HREF = "/products/ioapi/H.LOGICALS.html">logical names</A>,
+    according to EDSS/Models-3 conventions.  A <STRONG>template</STRONG> 
+    for scripts that set these environment variables <A HREF="env_vars.txt">is 
+    available <STRONG>here</STRONG></A>.  The script must deal with
+    <STRONG>three important points</STRONG>:  
+    <UL>
+        <LI>  Description of the MCPL output grids relative to the 
+              grids in the MM5 nested-domain system.  For a particular 
+              output grid and the MM5 nest domain from which it is extracted,
+              <A HREF = "nest.gif">this diagram</A> (also available
+              <A HREF = "nest.gif">in PostScript</A>) shows how the 
+              output grids are described in terms of specification 
+              parameters <CODE>EM_I0</CODE> and <CODE>EM_J0</CODE>
+              for the grid offsets, and <CODE>EM_NCOLS</CODE>,
+              <CODE>EM_NROWS</CODE>, and <CODE>EM_NTHIK</CODE> for
+              output grid dimensioning.<P>
+              NOTE that 
+              <UL>
+                   <LI> Air quality modelers tend to think in terms of
+                        cell-volume values rather than point-values.
+                        The diagram is drawn from that point of view.
+                   <LI> For variables which require decoupling of dot
+                        point values (e.g., wind components, or wind
+                        speed), the output grid  must be strictly
+                        smaller than the MM5 grid--it must not contain
+                        the first or last horizontal column nor row of
+                        the MM5 grid.  MCPL will decide on a domain-by-domain
+                        basis whether this condition is satisfied,
+                   <LI> If you want to output air quality model grid-boundary
+                        data structures, the output grid  must be strictly
+                        smaller than the MM5 grid, also.
+              </UL><P>
+        <LI>  Specification of output file characteristics, particularly
+              which files are produced, which subsets of the set of all
+              possible variables for each file are actually output, and
+              what are the starting date, time, and timestep for each file.
+        <LI>  Specification of the output files themselves (i.e., what
+              directory path and what actual file name to use, associated
+              with a <A HREF = "#logicals">standard set of &quot;logical
+              names&quot;</A> which are independent of the particular
+              directory structure and run being executed), and whether
+              the files are &quot;volatile&quot; (i.e., can be analyzed 
+              while MM5 is still running or not).  This takes the form
+              <STRONG><PRE>
+      setenv &lt;standard logical name&gt; &lt;full file name&gt; [-V]
+              </PRE></STRONG>
+              where the optional <CODE>&quot;-V&quot;</CODE> indicates
+              that the file is volatile.  <EM><STRONG>Note that if you
+              want to analyze the output while MM5 is still running,
+              <A HREF = "mcpl.script.html">your script</A> must declare
+              the output files to be volatile.</STRONG>
+    </UL>
+    Environment variables that control these file characteristics are
+    in the form of comma-delimited lists, with one value per output 
+    grid, and are set (if you use <CODE>csh</CODE>) in the following 
+    fashion (where we assume 4 output grids, FOO is an arbitrary
+    integer-list-valued environment variable, and BAR is an arbitrary
+    strign-list-valued environment variable):
+    <PRE>
+    setenv FOO '1,2,7,8'
+    setenv BAR 'QUX,ZOP,GAK,MUD'
+    </PRE>
+
+    The <STRONG>list of these <A NAME = "env"> environment 
+    variables</A></STRONG>, together with their meanings, is given below.
+
+    <UL>  	 <!-- list of environment variables  -->
+
+        <LI> <STRONG> MCPL_SDATE </STRONG> contains a comma-delimited
+             list of the starting Julian dates for all output grids,
+             formatted <VAR>YYYYDDD</VAR>, for MCPL() I/O&nbsp;API output 
+             files (with default value taken from the current wall-clock 
+             century and MM5's input variable MDATE (which is formatted
+             YYMMDDHH);  if only one date entry is specified, it is used 
+             for all output grids.
+             Note that MM5v2 suffers from the Year-2000 problem (or more
+             generally, a century-problem):  
+             it only stores the 2-digit <VAR>year mod 100</VAR> 
+             internally).  MCPL attempts to fill in the century digits
+             from the current wall clock.  <STRONG>With MM5V2, the default 
+             behavior leads to errors when the simulation century and the 
+             wall-clock century are not the same.</STRONG>
+             <P>
+        <LI> <STRONG> MCPL_STIME </STRONG> contains a comma-delimited
+             list of the the starting times for all output grids, formatted
+             <VAR>HHMMSS</VAR>, for MCPL() I/O&nbsp;API output files
+             (with default value determined by MM5's MDATE, which has 
+             an hours field only).  If only one time entry is specified, 
+             it is used for all output grids.
+             <P>
+        <LI> <STRONG> MCPL_TSTEP </STRONG> contains a comma-delimited
+             list of the time steps for all output grids, formatted
+             <VAR>HHMMSS</VAR>, for MCPL() I/O&nbsp;API output files 
+             (with default value determined by MM5's TAPFRQ).  If only 
+             one time step entry is specified, it is used for all 
+             output grids.
+             <P>
+        <LI> <STRONG> GRIDDESC </STRONG> logical name for the 
+             <A HREF = "/products/ioapi/H.GRIDDESC.html">Grid Description 
+             File</A>. (Its value is the path-name for this file).
+             <P>
+        <LI> <STRONG> CRDNAM </STRONG> contains the coordinate system name
+             for the coordinate system used by the model, as found in the 
+             GRIDDESC file.  
+             Needed only if MCPL will create GRIDDESC.
+             <P>
+        <LI> <STRONG> EM_OUTGRIDS </STRONG> contains a list of MM5 domains
+             into which the output grids fit.  <BR>
+             <STRONG>These need to
+             be in increasing order, e.g..&quot;1,1,2,2,2,3,3&quot;
+             to denote that the first two output windows are from MM5
+             domain 1, three more are from MM5 domain 2, and the last
+             two are from MM5 domain 3.  <P>
+             <EM>All other list-style
+             environment variables use the same subscripting as
+             EM_OUTGRIDS.</EM></STRONG>
+             There may be more than
+             one output grid per MM5 domain.  <EM>If this environment
+             variable is not present, MCPL() assumes one output grid
+             per MM5 domain</EM>
+             <P>
+        <LI> <STRONG> OUTGNAMES </STRONG> contains a comma-delimited list
+             of root grid-names, used to construct the corresponding grid 
+             names in GRIDDESC.  Each root name <VAR>X</VAR> will generate
+             two GRIDDESC records, for the grids <VAR>X_CRO</VAR> and
+             <VAR>X_DOT</VAR>, respectively the cross-point and dot-point 
+             output grids for that grid.  Note that these root names
+             can be <STRONG>at most 12 characters</STRONG> because of the
+             necessity for adding tails <CODE>_CRO</CODE> or <CODE>_DOT</CODE>
+             for the respective cross-point and dot-point grid names in
+             <CODE>GRIDDESC</CODE>.
+             <P>
+        <LI> <STRONG> CRONAMES </STRONG> contains a comma-delimited list
+             of cross-point grid-names, used to construct the corresponding 
+             grid names in GRIDDESC.  CRONAMES is optional; these names 
+             override the names generated from OUTGNAMES (above), if
+             CRONAMES is present
+             <P>
+        <LI> <STRONG> DOTNAMES </STRONG> contains a comma-delimited list
+             of cross-point grid-names, used to construct the corresponding 
+             grid names in GRIDDESC.  CRONAMES is optional; these names 
+             override the names generated from OUTGNAMES (above), if
+             CRONAMES is present
+             <P>
+        <LI> <STRONG> EM_I0 </STRONG> contains a list of MM5-domain (I)
+             row-offsets for the output grids relative to the domain from 
+             which they are taken.  Offset 0 means that the output grid
+             has the same starting row as its MM5 domain.<BR>
+             Entries in the list should be separated by commas, and
+             the list should be quoted in the <VAR>setenv</VAR> statement
+             that defines it.<BR>
+             Needed only if MCPL will create GRIDDESC.
+             <P>
+        <LI> <STRONG> EM_J0 </STRONG> contains a list of MM5-domain (J)
+             column-offsets for the output grids relative to the domain 
+             from which they are taken.  Offset 0 means that the output
+             grid has the same starting row as its MM5 domain.<BR>
+             Needed only if MCPL will create GRIDDESC.  Must have the
+             same format and number of entries as EM_I0.
+             <P>
+        <LI> <STRONG> EM_NROWS </STRONG> contains a list of row 
+             dimensions for the output grids.<BR>
+             Needed only if MCPL will create GRIDDESC.  Must have the
+             same format and number of entries as EM_I0.
+             <P>
+        <LI> <STRONG> EM_NCOLS </STRONG> contains a list of column 
+             dimensions for the output grids.<BR>
+             Needed only if MCPL will create GRIDDESC.  Must have the
+             same format and number of entries as EM_I0.
+             <P>
+        <LI> <STRONG> EM_NTHIK </STRONG> contains a list of boundary
+             thickness dimensions for the output grid.<BR>
+             Needed only if MCPL will create GRIDDESC.  Must have the
+             same format and number of entries as EM_I0.  Needed (but
+             unused) if not creating AQM-style boundary-files.
+             <P>
+        <LI> <STRONG> MCPL_KFTHIK </STRONG> contains a list of maximum
+             number of KF-cloud events per cell.<BR>
+             Needed only if MCPL will create KF cloud-event files.  If
+             there are fewer entries in this list than there are output
+             windows&nbsp;-&nbsp;particularly if there is only one entry,
+             will use the last list-entry for all subsequent output
+             windows.
+             <P>
+        <LI> <STRONG> MCPL_PRESF </STRONG> contains a comma-delimited
+             list of the pressure full-levels for the PRES_CRO_3D and 
+             PRES_DOT_3D output files, if these are produced.  
+             If this variable is not set but the files are being
+             produced, there are 18 default levels with values going from 
+             1025.0E2 down to 175.0E2 Pascals, in intervals of 50.0E2
+             Pascals (so that the half-levels run 1000.0E2, 950.0E2, ...,
+             200.0E2 Pascals).
+             <P>
+        <LI> <STRONG> <A NAME = "gb2v">GB2_VARS</A> </STRONG> 
+             contains either <CODE>NONE</CODE> if no GRID_BDY_2D file 
+             is desired, or the logical name for an input file 
+             containing an ASCII table of names of output variables 
+             requested in this MM5 run for file GRID_BDY_2D, listed
+             one name per line.  A master version of this file, which 
+             assumes that the user wants to output the entire set of
+             potentially available variables, is available 
+             <A HREF = "GB2_VARS.txt">here.</A>  You may want to use
+             your browser's &quot;save link as&quot; capability 
+             (Shift-MouseButton1 for Netscape&reg;) to save a copy of it.
+             <P>
+        <LI> <STRONG>  <A NAME = "gb3v">GB3_VARS</A> </STRONG>
+             file of output variables requested for GRID_BDY_3D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "GB3_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "gc2v">GC2_VARS</A> </STRONG>
+             file of output variables requested for GRID_CRO_2D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "GC2_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "gc3v">GC3_VARS</A> </STRONG>
+             file of output variables requested for GRID_CRO_3D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "GC3_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "gd2v">GB2_VARS</A> </STRONG>
+             file of output variables requested for GRID_DOT_2D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "GD2_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "mb2v">MB2_VARS</A> </STRONG> 
+             file of output variables requested for MET_BDY_2D, 
+             or <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "MB2_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "mb3v">MB3_VARS</A> </STRONG>
+             file of output variables requested for MET_BDY_3D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "MB3_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "mc2v">MC2_VARS</A> </STRONG>
+             file of output variables requested for MET_CRO_2D, or
+             <CODE>NONE</CODE> .  Master version available 
+             <A HREF = "MC2_VARS.txt">here.</A>          
+             <P>
+        <LI> <STRONG>  <A NAME = "mc3v">MC3_VARS</A> </STRONG>
+             file of output variables requested for MET_CRO_3D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "MC3_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "md3v">MD3_VARS</A> </STRONG>
+             file of output variables requested for MET_DOT_3D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "MD3_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "pc3v">PC3_VARS</A> </STRONG>
+             file of output variables requested for PRES_CRO_3D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "PC3_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG>  <A NAME = "pd3v">PD3_VARS</A> </STRONG>
+             file of output variables requested for PRES_DOT_3D, or
+             <CODE>NONE</CODE>.  Master version available 
+             <A HREF = "PD3_VARS.txt">here.</A>
+             <P>
+        <LI> <STRONG> SCENFILE </STRONG> the &quot;scenario description
+             file,&quot; which contains an up-to-60-line ASCII text
+             scenario description with 80 characters per line.  The 
+             contents of this file will be copied into all the output
+             file headers for tracking/auditing purposes.
+             <P>
+        <LI> <STRONG> LOGFILE </STRONG> the log file, to which is
+             written the working log of the current program. If LOGFILE
+             is not available as specified above, the working log
+             defaults to "stdout" (UNIT 6).
+             
+             <P>
+             <STRONG>
+             The following are the set of standard
+             <A NAME="logicals">logical-file-name templates</A></STRONG> 
+             for <CODE>MCPL</CODE>'s output files.  Actual file names 
+             take the form <CODE>
+             &lt;base-file-name&gt;_G&lt;output-grid-number&gt;</CODE>, 
+             where the grid number runs 0,1,2,... through the output grids 
+             for MCPL, e.g., for the 2-D cross-point time-independent
+             output file on the first output grid, your script might 
+             have:
+             <STRONG><PRE>
+     setenv GRID_CRO_2D_G0  /data/my-name/my-run-date/gc2_g0.ncf -V
+             </PRE></STRONG>  
+             (The <CODE>&quot;-v&quot;</CODE> indicates that this file is 
+             &quot;volatile,&quot i.e., that it may be 
+             accessed/analyzed/visualized while the MM5 run is still in
+             progress.<P>
+             For any file on any grid, you may <STRONG>turn that file 
+             off</STRONG> by <STRONG><CODE>setenv &lt;logical-name&gt; 
+             NONE</CODE></STRONG>.
+ 
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#gb2">GRID_BDY_2D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#gb3">GRID_BDY_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#gc2">GRID_CRO_2D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#gc3">GRID_CRO_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#gd2">GRID_DOT_2D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#mb2">MET_BDY_2D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#">MET_BDY_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#mc2">MET_CRO_2D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#mc3">MET_CRO_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#md3">MET_DOT_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#pc3">PRES_CRO_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#pd3">PRES_DOT_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#mk1">MET_KF_1D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+        <LI> <STRONG> <A HREF = "mcpl.files.html#mk3">MET_KF_3D_G&lt;grid&gt;</A> </STRONG> 
+             logical name for output file, or <CODE>NONE</CODE>
+             <P>
+
+    </UL>	 <!-- end list of environment variables  -->
+
+
+<HR> <!----------------------------------------------------------------->
+
+Back to <A HREF = "mcpl.html#contents"><STRONG>MCPL Contents</STRONG></A>
+
+
+<!--#include virtual="/INCLUDES/footer.html" -->
+</BODY>      <!--end body  -->
+</HTML>      <!--end html  -->
+
