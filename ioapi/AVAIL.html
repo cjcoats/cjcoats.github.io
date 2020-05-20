@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 161 2020-04-20 15:34:09Z coats $" -->
+<!-- "$Id: AVAIL.html 162 2020-05-20 21:26:35Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -560,6 +560,18 @@ m3stat:
                         if you're building netCDF version 4.1 or later)
                         to the appropriate object
                         directory <CODE>$BASEDIR/${BIN}</CODE>.
+                        <BR>
+                        Vendor supplied <I>netCDF</I> libraries
+                        frequently cause problems, in part because they
+                        are compiled with compilers that are not
+                        link-compatible with the Fortran compilers used
+                        by the I/O&nbsp;API and the various models
+                        (CMAQ, SMOKE, etc.) that use it.  In particular,
+                        Deeksha Rastogi reported very-obscure errors caused
+                        by a vendor supplied <VAR>netcdf/4.6.1</VAR>
+                        (and fixed by compiling and using his own 
+                        <VAR>netcdf-c-4.7.4</VAR> and
+                        <VAR>netcdf-fortran-4.5.2</VAR>
                         <BR>
                         See <A HREF="#ncf4">NOTES on <VAR>netCDF</VAR>-4</A>
                         for configuring netCDF-4.
@@ -1210,8 +1222,13 @@ or (PGI)
               <VAR>libioapi.a</VAR>, and your model(s)  <VAR>CMAQ</VAR>,
               <VAR>SMOKE</VAR>, etc. with a common compiler set and
               common set of compile-flags.  In particular,
-              Linux-distribution-vendor supplied <VAR>libnetcdf.a</VAR>
+              Linux-distribution-vendor supplied <VAR>libnetcdf.a</VAR> 
+              (and <VAR>libnetcdff.a</VAR>, for netCDF-4)
               rarely works with CMAS-supported compiler sets.
+              Deeksha Rastogi points out some extremely-obscure
+              errors caused by using vendor-supplied netCDF-4.6.1,
+              probably related to (very technical and obscure)
+              differences in the compiler's <VAR>struct</VAR>-padding.
               <P>
         <DT>  <STRONG>Note&nbsp;3</STRONG>
         <DD>  For 64-bit platforms, it turns out that many compilers by
@@ -1953,7 +1970,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 161 2020-04-20 15:34:09Z coats $
+    $Id: AVAIL.html 162 2020-05-20 21:26:35Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
