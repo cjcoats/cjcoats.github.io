@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: LOGICALS.html 6 2017-05-04 18:54:56Z coats $" -->
+<!-- "$Id: LOGICALS.html 164 2020-05-27 16:02:34Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> FILES, LOGICAL NAMES AND PHYSICAL NAMES  </TITLE>
 </HEAD>
@@ -87,6 +87,17 @@ works correctly:
     <DD> <CODE>setenv  BAR  BUFFERED</CODE><BR>
          where <CODE>BUFFERED</CODE> indicates the status of a 
          &quot;virtual&quot; file that never is part of the file system.
+         <P>
+    <DT> <A HREF = "BUFFERED.html#list">File-Set File Lists</A>
+    <DD> <BLOCKQUOTE><CODE>
+         setenv  BAR  &quot;LiST:F1,F2,...,Fn&quot;<BR>
+         setenv  F1   &lt;path&gt;<BR>
+         setenv  F2   &lt;path&gt;<BR>
+         ...
+         setenv  Fn   &lt;path&gt;<BR>
+         </CODE></BLOCKQUOTE>
+         where <CODE>F1, F2, ..., Fn</CODE> are a sequence of files
+         having the same structure and covering an extended time-period.
          <P>
     <DT> <A HREF = "BUFFERED.html#pvm">&quot;PVM coupling-mode&quot;</A>
     <DD> either add a prefix <CODE>&nbsp;virtual</CODE>(and use quotes),
