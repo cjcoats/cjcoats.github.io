@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: M3CPLE.html 77 2018-01-18 15:29:37Z coats $" -->
+<!-- "$Id: M3CPLE.html 166 2020-05-29 15:55:46Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> Programs M3CPLE and M3INTERP</TITLE>
 </HEAD>
@@ -41,7 +41,9 @@ interpolates them bilinearly to a new grid, and writes them to a different
 I/O&nbsp;API file,  <VAR>outfile</VAR>, under the optional control of a
 <VAR>synchfile</VAR>.  Any combination of <A HREF="BUFFERED.html">physical
 or virtual files</A> is supported.  The output time step sequence must
-be a subsequence of the input file's time step sequence.
+be a subsequence of the input file's time step sequence.<BR>
+Note that <VAR>synchfile</VAR> should be <CODE>NONE</CODE> except in the
+case of coupled (cooperating-process-parallel) modeling systems.
 <P>
 
 Note that <STRONG>repeated copy-operations may be used to concatenate
@@ -56,10 +58,12 @@ month-, year-, or even decade-long files from a (large) set of
 single-day files.
 <P>
  
-Program <VAR>M3INTERP</VAR> acts like <VAR>M3CPLE</VAR> 
-except that it uses <A HREF="INTERP3.html"><CODE>INTERP3()</CODE></A>
-to extract a possibly-nonaligned time step sequence from the file,
-rather than only a subsequence of time steps found in the file.
+Program <VAR>M3INTERP</VAR> acts like <VAR>M3CPLE</VAR>  except that it
+uses <A HREF="INTERP3.html"><CODE>INTERP3()</CODE></A> to extract a
+possibly-nonaligned time step sequence from the file, rather than only a
+subsequence of time steps found in the file.<BR> Note that for
+<VAR>M3INTERP</VAR>, almost always the <VAR>synchfile</VAR> should be
+<CODE>NONE</CODE>.
 <P>
  
 The normal use of <VAR>M3CPLE</VAR> with a <VAR>synchfile</VAR> is 
