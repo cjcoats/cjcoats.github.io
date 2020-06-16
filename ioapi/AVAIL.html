@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 162 2020-05-20 21:26:35Z coats $" -->
+<!-- "$Id: AVAIL.html 170 2020-06-16 14:58:19Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -191,8 +191,9 @@ m3stat:
                        <STRONG>This version should be kept carefully
                        isolated from the regular version of the
                        I/O&nbsp;API, and should be used only for
-                       CMAQ-DDM and CMAQ-ISAM.  It can be downloaded
-                       from the CMAS web-site:<BR>
+                       CMAQ-DDM and CMAQ-ISAM.  The frozen-for-CMAQ
+                       April 20, 2020 version of I/O&nbsp;API-large can
+                       be downloaded from the CMAS web-site:<BR>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-large.tar.gz"><VAR>ioapi-3.2-large.tar.gz</VAR></A><BR>
                        </STRONG>
                        <P>
@@ -210,9 +211,16 @@ m3stat:
     <PRE>
     git clone --branch 2020111 https://github.com/cjcoats/ioapi-3.2
     </PRE>
-    Note that this latter gives you a fixed-release version, for which
-    the &quot;rolling release&quot; bug-fixes are <U>not</U> easily
-    available.
+                  Note that this latter gives you a fixed-release
+                  version, for which the &quot;rolling release&quot;
+                  bug-fixes are <U>not</U> easily available.
+                  <P>
+                  <STRONG>To build <VAR>ioapi-3.2-large</VAR> from
+                  GitHub</STRONG> (using the GitHub rolling-release
+                  version), copy <CODE>PARMS3-LARGE.EXT</CODE> to
+                  <CODE>PARMS3.EXT</CODE>, and then proceed as normal,
+                  making sure that you keep  <VAR>ioapi-3.2-large</VAR>
+                  strictly sequestered from normal <VAR>ioapi-3.2</VAR>.
                   <P>
                   <LI> <STRONG>If you downoaded a
                        <VAR>ioapi-*.tar.gz</VAR></STRONG>:<BR>
@@ -1970,7 +1978,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 162 2020-05-20 21:26:35Z coats $
+    $Id: AVAIL.html 170 2020-06-16 14:58:19Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
