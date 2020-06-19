@@ -2,7 +2,7 @@ weblint
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 166 2020-05-29 15:55:46Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 172 2020-06-19 13:59:37Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@ weblint
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 166 2020-05-29 15:55:46Z coats $
+    $Id: NEWSTUFF.html 172 2020-06-19 13:59:37Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,10 @@ weblint
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "june1920"> 
+               Increased message-buffer length in <CODE>STR2DBLE, STR2INT,
+               STR2REAL</CODE> routines
+               </A>
          <LI>  <A HREF = "may2920"> 
                Bug-fix in M3Tools program <VAR>m3interp</VAR>
                </A>
@@ -735,6 +739,27 @@ weblint
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
     <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "june1920">
+    Increased message-buffer length in <CODE>STR2DBLE, STR2INT,
+    STR2REAL</CODE> routines
+</A></H2>
+
+    <BLOCKQUOTE>
+    Subject says it.  This came from a situation where badly-formatted
+    input was so bad that it caused the error-message buffer to
+    overflow, preventing the calling program from diagnosing just what
+    input was so badly-formatted...
+    <P>
+    Buffer-length is now 256.  This should be adequate for all but the
+    most egregious badly-formed inputs.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7296,7 +7321,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 166 2020-05-29 15:55:46Z coats $
+    $Id: NEWSTUFF.html 172 2020-06-19 13:59:37Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
