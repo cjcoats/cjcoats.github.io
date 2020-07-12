@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 138 2019-10-29 21:20:00Z coats $" -->
+<!-- "$Id: ERRORS.html 176 2020-07-12 18:40:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -26,6 +26,8 @@
 </A></H2>
 
     <UL>
+         <LI>  <A HREF="#gfort10"><VAR>gfortran</VAR> version&nbsp;10
+                and lots of spurious warning messages</A>
          <LI>  <A HREF="AVAIL.html#cmaq"><VAR>CMAQ</VAR>,
                 <VAR>SMOKE</VAR>, and <CODE>INCLUDE</CODE>
                 files.</A>
@@ -78,10 +80,43 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 138 2019-10-29 21:20:00Z coats $"
+    !! Version "$Id: ERRORS.html 176 2020-07-12 18:40:47Z coats $"
     </PRE>
     </BLOCKQUOTE>
 <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2><A NAME="gfort10">
+
+     <VAR>gfortran</VAR> version&nbsp;10 and lots of spurious warning messages
+
+</A></H2>
+
+    <BLOCKQUOTE>
+    This version of <VAR>gfortran</VAR>  takes a particularly
+    idiosyncratic interpretation of the (latest) Fortran-2018
+    Standard.
+    <P>
+    AS of July 12, 2020, the relevant
+    <VAR>ioapi/Makeinclude.${BIN}</VAR> files have been modified to add
+    Fortran compile-flag
+        <BLOCKQUOTE><CODE>
+        -fstd=legacy
+        </CODE></BLOCKQUOTE>
+    so that this interpretation does not cause a compile-error.
+    <P>
+    <STRONG>However, using this compiler version will cause the
+    generation of a huge number of spurious warning-messages</STRONG>,
+    as the compiler is still trying to enforce its version of the
+    Fortran-2018 (not Fortran-90, not Fortran-95, not Fortran-2008)
+    Standard.
+    <P>
+    </BLOCKQUOTE>
+
+    <A HREF="#contents">Back to &quot;Troubleshooting&quot; Contents</A>
+    <P>
 
 
 <HR> <!----------------------------------------------------------------->

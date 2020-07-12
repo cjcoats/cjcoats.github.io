@@ -2,7 +2,7 @@ weblint
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 175 2020-07-08 18:23:25Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 176 2020-07-12 18:40:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@ weblint
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 175 2020-07-08 18:23:25Z coats $
+    $Id: NEWSTUFF.html 176 2020-07-12 18:40:47Z coats $
     </EM>
     <HR>
 
@@ -33,8 +33,11 @@ weblint
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#july122020"> 
+               Additional compile-flag for <VAR>gfortran</VAR></A>
+               version 10; bug-fixes in pnetcdf create-file routine.
          <LI>  <A HREF = "#july072020"> 
-               Bug-fix in <VAR>m3tools/gridpreobe</VAR></A>
+               Bug-fix in <VAR>m3tools/gridprobe</VAR></A>
          <LI>  <A HREF = "#june1920"> 
                Increased message-buffer length in <CODE>STR2DBLE, STR2INT,
                STR2REAL</CODE> routines
@@ -740,6 +743,42 @@ weblint
         % nm libnetcdff.a | grep ncclos<BR>
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "july122020">
+    Additional compile-flag for <VAR>gfortran</VAR></A> version 10;<BR>
+    Bug-fixes in pnetcdf create-file routine.
+</A></H2>
+
+    <BLOCKQUOTE>
+    Version 10 of <VAR>gfortran</VAR>  takes a particularly
+    idiosyncratic interpretation of the (latest) Fortran-2018
+    Standard.
+    <P>
+    AS of July 12, 2020, the relevant
+    <VAR>ioapi/Makeinclude.${BIN}</VAR> files have been modified to add
+    Fortran compile-flag
+        <BLOCKQUOTE><CODE>
+        -fstd=legacy
+        </CODE></BLOCKQUOTE>
+    so that this interpretation does not cause a compile-error.
+    <P>
+    <STRONG>However, using this compiler version will cause the
+    generation of a huge number of spurious warning-messages</STRONG>,
+    as the compiler is still trying to enforce its version of the
+    Fortran-2018 (not Fortran-90, not Fortran-95, not Fortran-2008)
+    Standard.
+    <P>
+    
+    Additionally, there was an argument-list error in PnetCDF/MPI
+    enabled routine <VAR>pn_crtfil3.f</VAR>, now fixed.
     <P>
     </BLOCKQUOTE>
 
@@ -7337,7 +7376,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 175 2020-07-08 18:23:25Z coats $
+    $Id: NEWSTUFF.html 176 2020-07-12 18:40:47Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
