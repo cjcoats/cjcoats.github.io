@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 170 2020-06-16 14:58:19Z coats $" -->
+<!-- "$Id: AVAIL.html 180 2020-07-14 17:56:48Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -1039,6 +1039,15 @@ or (PGI)
     <BLOCKQUOTE><CODE>
     --disable-netcdf-4 --disable-dap
     </CODE></BLOCKQUOTE>
+    <STRONG>If you build netCDF-4 without the
+    <CODE>--disable-netcdf4</CODE>,
+    you will also need to add <CODE>-DIOAPI_NCF4=1</CODE> either to the
+    <CODE>ARCHFLAGS</CODE> in your <VAR>Makeinclude.${BIN}</VAR> or to
+    the <CODE>DEFINEFLAGS</CODE> in your <VAR>Makefile</VAR></STRONG>,
+    since defining netCDF-<U>4</U> causes netCDF to change parts of the
+    netCDF-<U>3</U> interface.
+    <P>
+    
     NetCDF Version&nbsp;4.1 and later also split the Fortran
     interfaces into a separate library <VAR>libnetcdff.a</VAR>
     As a result, much compatiblity with the infrastructure
@@ -1978,7 +1987,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 170 2020-06-16 14:58:19Z coats $
+    $Id: AVAIL.html 180 2020-07-14 17:56:48Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
