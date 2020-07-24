@@ -1,0 +1,1758 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id$" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
+<TITLE>
+    Singularity CMAQ Container
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15"
+      MARGINHEIGHT="15"
+      LEFTMARGIN="15"
+      MARGINWIDTH="15">
+
+<H1> The Singularity CMAQ Container </H1>
+
+    <H2><A NAME="contents">Contents</A></H2>
+
+    <UL>
+        <LI>  <A HREF = "#intro"   >Introduction</A>
+        <LI>  <A HREF = "#deps"    >Host Dependencies: Requirements for your Host Machine</A>
+        <LI>  <A HREF = "#dirs"    >Directories, Environment Variables, and the Container</A>
+        <LI>  <A HREF = "#script"  >Script generalities</A>
+        <LI>  <A HREF = "#cctm"    >CMAQ CCTM Re-Structuring</A>
+        <LI>  <A HREF = "#prep"    >CMAQ Pre-Processing</A>
+        <LI>  <A HREF = "#post"    >CMAQ Post-Processing</A>
+        <LI>  <A HREF = "#util"    >CMAQ Utilities</A>
+        <LI>  <A HREF = "#smoke"   >SMOKE</A>
+        <LI>  <A HREF = "#tools"   >Interactive Tool Use</A>
+    </UL>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="intro">Introduction</A></H2>
+
+<BLOCKQUOTE>
+
+    You will be running a virtualized system (&quot;the container&quot;)
+    for this package on your own server or workstation (the &quot;host
+    machine&quot;).  The container has a complete CMAQ working
+    environment for you to use on that virtualized system, without
+    needing to build anything, and not needing to worry about
+    installation of prerequisite software (compilers, libraries, etc.)
+    except for <VAR>singularity</VAR> itself.
+    <P>
+    This package has two components:
+    <UL>
+        <LI> A Singularity container <STRONG><VAR>cmaq.simg</VAR></STRONG>
+             that contains a virtualized Linux OS, the CMAQ model, its
+             pre-processors and post-processors, the SMOKE emissions
+             model, as well as various &quot;tool&quot;, utility and
+             analysis-&amp;-visualization programs (with all
+             <VAR>PATH</VAR>s and <VAR>alias</VAR>es already set up for
+             you on the container); and
+        <LI> A &quot;local&quot; directory
+             <STRONG><VAR>singularity-cmaq/</VAR></STRONG> for your
+             host-machine, that contains various sample scripts for
+             interacting with CMAQ and SMOKE submodels, tools, and other
+             programs on that container, as well as this documentation.
+    </UL>
+    This singularity container acts as a virtual machine with its own
+    operating system (CentOS-7, in this case), and with compilers,
+    libraries, and applications installed on it.  Because of that
+    virtualized set-up, all the necessary dependencies are managed
+    within that environment and you do not have to worry about
+    installing the pre-requisites, building the models, etc.&mdash;you
+    can just use Singularity commands to run the models on that virtual
+    machine, (almost) no matter what machine and operating system you're
+    using as the host for it.
+    <P>
+
+    All modeling components are compiled for the &quot;64-bit medium
+    memory model&quot; (see
+    <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#medium">
+    https://cjcoats.github.io/ioapi/AVAIL.html#medium</A>) so that runs
+    even on very-large grids are supported.  Only the tools
+    <VAR>VERDI</VAR> and <VAR>Panoply</VAR> should be problematic in
+    this regard.
+    <P>
+
+    Installed in this container are:
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG>CMAQ-git</STRONG> of June&nbsp;10, 2020
+             (version <CODE>5.3.1</CODE>)
+        <DD> including <VAR>CCTM</VAR>, <BR>
+             preprocessors <VAR>bcon</VAR>,
+             <VAR>create_omi</VAR>, <VAR>icon</VAR>, and
+             <VAR>mcip</VAR>, <BR>
+             postprocessors <VAR>appendwrf</VAR>,
+             <VAR>block_extract</VAR>, <VAR>combine</VAR>,
+             <VAR>sitecmp_dailyo3</VAR>, <VAR>bldoverlay</VAR>,
+             <VAR>calc_tmetric</VAR>, <VAR>hr2day</VAR>,
+             <VAR>sitecmp</VAR>,  and <VAR>writesite</VAR>, and <BR>
+             utility programs <VAR>chemmech</VAR>,
+             <VAR>create_ebi</VAR>, <VAR>inline_phot_preproc</VAR>, and
+             <VAR>jproc</VAR>;
+        <DT> <STRONG>SMOKE-git</STRONG> of June&nbsp;10, 2020
+             (version <CODE>4.7</CODE>)
+        <DD> including run-scripts and programs <VAR>aggwndw, beld3to2
+             bluesky2inv, cemscan, cntlmat, elevpoint,  extractida,
+             gcntl4carb, gentpro, geofac, grdmat, grwinven,  inlineto2d,
+             invsplit, layalloc, laypoint, met4moves, metcombine, 
+             metscan, movesmrg, mrgelev, mrggrid, mrgpt, pktreduc,
+             saregroup,  smk2emis, smkinven, smkmerge, smkreport,
+             spcmat, surgtool,  temporal, tmpbeis3, uam2ncf</VAR>.
+        <DT> <STRONG><VAR>verdi</VAR></STRONG> version
+        <CODE>2.0_beta</CODE>
+        <DD> visualization tool
+        <P>
+        <DT> <STRONG><VAR>pave</VAR></STRONG> version <CODE>3.0-beta</CODE>
+        <DD> I/O&nbsp;API / UAM / CAMX data visualization tool,
+             from MCNC and Carlie J. Coats, Jr., Ph.D.
+        <DT> <STRONG><VAR>ncview</VAR></STRONG> version 2.1.2
+        <DD> netCDF-file visualization tool, from UCSD
+        <DT> <STRONG><VAR>panoply</VAR></STRONG>
+        <DD> netCDF, HDF and GRIB Data Viewer tool,
+             from NASA
+        <DT> <STRONG><VAR>GrADS</VAR></STRONG> version 2.0.2
+        <DD> Grid Analysis and Display System, from GMU
+        <DT> <STRONG>NCAR Graphics</STRONG> and <VAR>NCO</VAR>-4.7.5
+        <DD> from the University Corporation for Atmospheric Research
+             (who run NCAR for NSF)
+        <DT> <STRONG><VAR>gnuplot</VAR></STRONG>-4.6.2
+        <DD> command-line driven graphing utility
+             <P>
+        <DT> <STRONG>I/O&nbsp;API-3.2</STRONG> version <VAR>2020-04-11 17:51:44Z</VAR>
+        <DT> <STRONG>M3Tools</STRONG> version <VAR>2020-04-18 16:10:51Z</VAR>
+        <DT> <STRONG>NetCDF-C</STRONG> 4.3.3.1,
+        <DD> and also NetCDF-Fortran 4.2-16, and NetCDF-C++ 4.2-8
+        <DT> <STRONG><VAR>gcc</VAR></STRONG>-4.8.5 and <STRONG><VAR>gfortran</VAR></STRONG>-4.8.5
+        <DD> compilers
+        <DT> <STRONG>MPICH-3</STRONG>, <STRONG>MVAPICH-2</STRONG>, and <STRONG>OpenMPI-3</STRONG>
+        <DD> MPI libraries, compilers, and utility programs, for <VAR>gcc/gfortran</VAR>
+        <DT> <STRONG><VAR>ddd</VAR></STRONG> and <STRONG><VAR>gdb</VAR></STRONG>
+        <DD> GUI and command-line debuggers
+        <DT> <STRONG><VAR>nedit</VAR></STRONG>-5.7
+        <DD> GUI programming editor, aliased to <VAR>xx</VAR>
+        <DT> <STRONG><VAR>xxdiff</VAR></STRONG>
+        <DD> GUI difference tool, aliased to <VAR>xd</VAR>
+        <DT> <STRONG><VAR>findent</VAR></STRONG>
+        <DD> Fortran indentation/code-transformation tool
+    </DL></BLOCKQUOTE>
+    Note that two-way WRF-CMAQ is not supported on this container.
+    <P>
+
+    Because the Singularity container itself is an &quot;immutable
+    image&quot;, any new data files (etc.) that you create can not
+    &quot;live&quot; in the container but instead must be in directories
+    that you mount from your host-machine onto the container as part of
+    the use of <VAR>singularity</VAR> to run commands on the container.
+    The supplied scripts give examples of how this works; more
+    information
+    <A HREF = "#dirs">is given in a section below.</A>
+    <P>
+
+    <STRONG>On this container</STRONG> are directories
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><VAR>/opt/CMAQ_REPO/scripts/</VAR></STRONG>
+        <DD> scripts designed to run CMAQ modeling components
+        <DT> <STRONG><VAR>/opt/CMAQ_REPO/bin/</VAR></STRONG>
+        <DD> optimized executables for the CMAQ modeling components
+        <DT> <STRONG><VAR>/opt/CMAQ_REPO/CCTM/scripts/BLD_CCTM_v531_gcc[dbg]-*/</VAR></STRONG>
+        <DD> optimized and debug CMAQ CCTM executables for various MPI versions.
+        <DT> <STRONG><VAR>/opt/SMOKE/scripts/run/</VAR></STRONG>
+        <DD> scripts to run SMOKE
+        <DT> <STRONG><VAR>/opt/SMOKE/Linux2_x86_64gfort_medium/</VAR></STRONG>, <BR>
+             <STRONG><VAR>/opt/SMOKE/Linux2_x86_64gfort_mediumdbg/</VAR></STRONG>,
+        <DD> optimized and debug SMOKE executables
+    </DL></BLOCKQUOTE>
+    <P>
+
+    <STRONG>Accompanying this container</STRONG> and installed on your
+    host-machine will be a directory <STRONG><VAR>singularity-cmaq/</VAR></STRONG>
+    with five subdirectories:
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><VAR>Docs/</VAR></STRONG>
+        <DD> with this document <VAR>singularity-cmaq.html</VAR>, and
+             with configuration-files indicating how this singularity
+             container was configured;
+             <P>
+        <DT> <STRONG><VAR>Logs</VAR></STRONG>
+        <DD> for log-files;
+             <P>
+        <DT> <STRONG><VAR>Scripts-CMAQ/</VAR></STRONG>
+        <DD> sample host-scripts to run <VAR>CMAQ</VAR> modeling components
+             or interactive shell <VAR>tcsh</VAR> on the container.<BR>
+             <EM>Requires command-line <STRONG>singularity</STRONG></EM>
+             installation: therefore, not for queue/batch usage on the UNC
+             servers <VAR>longleaf</VAR> or <VAR>dogwood</VAR>, where
+             <VAR>singularity</VAR> is only available on the compute-nodes.
+             <PRE>
+    singularity-shell.csh
+
+    singularity-cctm.csh
+    singularity-appendwrf.csh
+    singularity-bcon.csh
+    singularity-bldoverlay.csh
+    singularity-block_extract.csh
+    singularity-calc_tmetric.csh
+    singularity-combine.csh
+    singularity-hr2day.csh
+    singularity-icon.csh
+    singularity-mcip.csh
+    singularity-writesite.csh
+             </PRE>
+             <P>
+        <DT> <STRONG><VAR>Scripts-SMOKE/</VAR></STRONG>
+        <DD> sample host-scripts to run
+             <VAR>SMOKE</VAR> applications on the container.<BR>
+             <EM>Requires</EM> command-line <VAR>singularity</VAR> installation:
+             not for queue/batch usage on the UNC
+             servers <VAR>longleaf</VAR> or <VAR>dogwood</VAR>
+             <PRE>
+    smk_area_nctox.csh
+    smk_bg_nctox.csh
+    smk_edgar_HEMI108k.csh
+    smk_met4moves.nctox.csh
+    smk_mrgall_nctox.csh
+    smk_nonroad_nctox.csh
+    smk_point_nctox.csh
+    smk_rateperdistance_nctox.csh
+    smk_rateperhour_nctox.csh
+    smk_rateperprofile_nctox.csh
+    smk_ratepervehicle_nctox.csh
+
+             </PRE>
+             <P>
+        <DT> <STRONG><VAR>Scripts-BATCH/</VAR></STRONG>
+        <DD> sample host-scripts for queue/batch usage (e.g., on the UNC
+             servers <VAR>longleaf</VAR> or <VAR>dogwood</VAR> that
+             do not allow login-node access to <VAR>singularity</VAR>)
+             to run <VAR>CMAQ</VAR> or <VAR>SMOKE</VAR>
+             modeling components on the container.<BR>
+             These are adapted from scripts in <VAR>Scripts-CMAQ</VAR>
+             and <VAR>Scripts-SMOKE</VAR><BR>
+             Note that for debugging, these scripts need to go to an
+             &quot;interactive&quot; queue...
+             <PRE>
+    singularity-cctm.batch.csh
+    singularity-appendwrf.batch.csh
+    singularity-bcon.batch.csh
+    singularity-bldoverlay.batch.csh
+    singularity-block_extract.batch.csh
+    singularity-calc_tmetric.batch.csh
+    singularity-combine.batch.csh
+    singularity-icon.batch.csh
+    singularity-mcip.batch.csh
+    singularity-writesite.batch.csh
+    
+    smk_area_nctox.batch.csh
+    smk_bg_nctox.batch.csh
+    smk_edgar_HEMI108k.batch.csh
+    smk_met4moves.nctox.batch.csh
+    smk_mrgall_nctox.batch.csh
+    smk_nonroad_nctox.batch.csh
+    smk_point_nctox.batch.csh
+    smk_rateperdistance_nctox.batch.csh
+    smk_rateperhour_nctox.batch.csh
+    smk_rateperprofile_nctox.batch.csh
+    smk_ratepervehicle_nctox.batch.csh
+
+             </PRE>
+    </DL></BLOCKQUOTE>
+
+    For more about Singularity see the <U>Singularity User Guide</U>
+    at <A HREF="https://sylabs.io/guides/3.5/user-guide/index.html">
+    https://sylabs.io/guides/3.5/user-guide/index.html</A>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="deps">Host Dependencies:</A><BR>
+Requirements for your Host Machine
+</H2>
+
+<BLOCKQUOTE>
+
+    Your host machine needs to have <VAR>Singularity</VAR> installed on it.
+    Frequently, Linux vendors will have native Singularity packages
+    available for you to use, so that Singularity installation is easy
+    and painless (<VAR>su root; yum install singularity</VAR> or <VAR>su
+    root; apt-get install singularity</VAR>).  If not, the
+    <A HREF="https://sylabs.io/guides/3.5/user-guide/index.html">
+    Singularity User Guide</A> gives instructions on how to install it
+    on your own system.
+    <P>
+
+    <STRONG>Note:</STRONG> on the compute clusters at UNC (and possibly
+    other sites), Singularity is configured to run on the compute nodes
+    only, but not on the login nodes.  The
+    <VAR>singularity-cmaq/Scripts-BATCH/</VAR> versions of the scripts
+    are intended for this usage, e.g., on the UNC cluster <VAR>dogwood</VAR>. 
+    For other such situations, consult your cluster's systems
+    administrator for instructions on how to run Singularity
+    applications and (for the CCTM) how to select the appropriate
+    MPI implementation.
+    <P>
+
+    <STRONG>CMAQ CCTM NOTE:  MPI implementation</STRONG> is the sticky
+    point.  Because the different MPI implementations are not compatible
+    with each other (<VAR>mpirun</VAR> from MPICH-3 will not work with a
+    program built with OpenMPI, for example) your host machine needs to
+    be running the same MPI implementation as the CCTM executable on
+    this Singularity container.  There are CCTM builds for 
+    <STRONG>three different MPI implementations: MPICH-3, MVAPICH-2, and
+    OPENMPI-3</STRONG>; script-variable <CODE>MPIVERSION</CODE> in the
+    <VAR>singularity_cctm*.csh</VAR> scripts selects which of these will
+    be used.  Note that you must use a matching  <VAR>mpirun</VAR>,
+    as given by the <VAR>module load</VAR> in the scripts<VAR>cmaq.simg</VAR>...
+    <P>
+    
+    In this container, the only MPI application affected by this is the
+    CMAQ CCTM; all of the other applications in this container are
+    either &quot;serial&quot; or (shared-memory) OpenMP-parallel (some
+    <STRONG>m3tools</STRONG> and <STRONG>SMOKE</STRONG> programs) and
+    don't need to use <VAR>mpirun</VAR> at all.
+    <P>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="dirs">Directories, Environment Variables, and the Container</A></H2>
+
+<BLOCKQUOTE>
+
+    There are three (and a half) parts of this issue:
+    <EM><UL>
+        <LI> Where is modeling software installed?
+        <LI> What directories are mounted from the container's host
+             (and how do you mount additional data directories)?
+        <LI> How do you establish environment variables on the container?
+    </UL></EM>
+
+    <STRONG>On the container, modeling software is installed</STRONG>
+    under directory <VAR>/opt/</VAR> (following UNIX tradition for
+    software that has its own directory-hierarchy) in a fashion
+    generally similar to the usual CMAQ, SMOKE, and I/O&nbsp;API
+    directory hierarchies but adapted to the specifics of this
+    container.  Here is a selection of relevant parts the top few levels
+    of that installation hierarchy.  Note that all the CMAQ related
+    optimized executables are sym-linked to
+    <CODE>/opt/CMAQ_REPO/bin/</CODE>; all the extra analysis tools, etc.,
+    are in <CODE>/opt/bin/</CODE> or
+    <CODE>/opt/ioapi-3.2/Linux2_x86_64gfort_medium/</CODE>, which are
+    already in  your <CODE>PATH</CODE> on the container; the container's
+    run-CMAQ-component scripts are in
+    <CODE>/opt/CMAQ_REPO/scripts/</CODE>, and data in your host machine
+    data-directory <CODE>${HOSTDATA}</CODE> is generally mounted on
+    your container's <CODE>/opt/CMAQ_REPO/data/</CODE>; the container's
+    SMOKE scripts are in <CODE>/opt/SMOKE/scripts/run/</CODE>, and
+    <CODE>${HOSTDATA}</CODE> is mounted on
+    <CODE>/opt/SMOKE/data/</CODE>, as indicated below.
+    <P>
+    <STRONG><A NAME="files">Selected CMAQ-container directories and
+    Files:</A></STRONG>
+    <PRE>
+    /data                               #  extra mount-point, if needed
+
+    /opt/CMAQ_REPO/
+    /opt/CMAQ_REPO/bin/                 #  optimized Linux2_x86_64gfort_medium executables
+        appendwrf_v531.exe
+        BCON_v531.exe
+        bldmake_gcc.exe
+        bldoverlay_v531.exe
+        block_extract_v531.exe
+        calc_tmetric_v531.exe
+        CCTM_v531.exe
+        combine_v531.exe
+        hr2day_v531.exe
+        ICON_v531.exe
+        mcip.exe
+        sitecmp_dailyo3_v531.exe
+        sitecmp_v531.exe
+        writesite_v531.exe
+    /opt/CMAQ_REPO/data/
+    /opt/CMAQ_REPO/scripts/             #  run_&lt;something&gt;.csh model-component scripts
+        run_appendwrf.csh
+        run_bcon.csh
+        run_bldoverlay.csh
+        run_block_extract.csh
+        run_calc_tmetric.csh
+        run_cctm.csh
+        run_combine.csh
+        run_hr2day.csh
+        run_icon.csh
+        run_mcip.csh
+        run_writesite.csh
+    /opt/CMAQ_REPO/tables/              #  time independent ASCII files and tables
+    /opt/CMAQ_REPO/CCTM/
+    /opt/CMAQ_REPO/CCTM/scripts/        #  various bldit, run-cctm, etc. scripts, and CCTM build-directories
+        BLD_CCTM_v531_gcc-mpich3/
+        BLD_CCTM_v531_gcc-mvapich2/
+        BLD_CCTM_v531_gcc-openmpi/
+        BLD_CCTM_v531_gccdbg-mpich3/
+        BLD_CCTM_v531_gccdbg-mvapich2/
+        BLD_CCTM_v531_gccdbg-openmpi/
+    /opt/CMAQ_REPO/CCTM/src/
+    /opt/CMAQ_REPO/CCTM/src/MECHS/      # namelists and chemical-mechanism files
+    /opt/CMAQ_REPO/DOCS/
+    /opt/CMAQ_REPO/POST/
+    /opt/CMAQ_REPO/PREP/
+    /opt/CMAQ_REPO/UTIL/
+
+    /opt/SMOKE/
+    /opt/SMOKE/assigns/
+        ASSIGNS.EDGAR.cmaq.cb05_soa.HEMI_108k
+        ASSIGNS.nctox.cmaq.cb05_soa.us12-nc
+    /opt/SMOKE/data/
+    /opt/SMOKE/scripts/
+    /opt/SMOKE/scripts/run/
+        cntl_run.csh
+        qa_run.csh
+        smk_run.csh
+    /opt/SMOKE/src/
+    /opt/SMOKE/Linux2_x86_64gfort_medium/
+    /opt/SMOKE/Linux2_x86_64gfort_mediumdbg/
+
+    /opt/ioapi-3.2/
+    /opt/ioapi-3.2/ioapi/
+    /opt/ioapi-3.2/m3tools/
+    /opt/ioapi-3.2/Linux2_x86_64gfort_medium/
+    /opt/ioapi-3.2/Linux2_x86_64gfort_mediumdbg/
+
+    /opt/bin/
+        findent
+        panoply
+        pave
+        verdi.sh
+        wfindent
+    </PRE>
+    <P>
+
+
+    <STRONG><A NAME="host">Selected Host-machine Firectories and
+    Files:</A></STRONG>
+    <P>
+    <VAR>Singularity</VAR> <STRONG>mounts various directories from
+    the host-machine</STRONG>; it is in these directories that you will
+    wish to have the container &quot;do its work&quot;.  Because the
+    container itself is &quot;immutable&quot; (i.e., read-only),
+    <STRONG>any outputs you create must be in those directories mounted
+    from the host-machine.</STRONG>
+    <P>
+
+    The assumption in the current &quot;execute a CMAQ model component
+    on the container&quot; scripts is that a single master
+    data-directory <CODE>${HOSTDATA}</CODE> on the host should be mounted
+    onto the container's <VAR>/opt/CMAQ_REPO/data/</VAR>:  that
+    <STRONG>master data-directory will have sub-directories</STRONG> for
+    all of the input data <STRONG>and for the CCTM output data and
+    logs</STRONG>.  The expected sub-directory structure for the master
+    directory is given below. 
+    <BR>
+    Note that this is a unified-and-simplified directory structure used
+    by all of the CMAQ modeling components.  The top level
+    subdirectories of  <CODE>${HOSTDATA}</CODE> are grid or case
+    specific subdirectories named for environment variable
+    <CODE>${APPL}</CODE> (or possibly more than one of these, e.g., for 
+    programs <VAR>ICON</VAR> and <VAR>BCON</VAR> that are used with
+    nested-grid applications). For consistency's
+    same among all the scripts, and to avoid
+    <A HREF="http://www.catb.org/jargon/html/B/brittle.html">&quot;brittleness&quot;</A>
+    (failure to work correctly from version to version without having to
+    make detailed script-changes), component names do not have program-version
+    numbers in them&mdash;<VAR>met/mcip</VAR> for example, instead of
+    <VAR>met/mcipv5.0</VAR>.
+    <PRE>
+    ${APPL}
+    ${APPL}/GRIDDESC
+    ${APPL}/WRF-CMAQ/
+    ${APPL}/WRF-CMAQ/wrf_inputs/
+    ${APPL}/cctm/
+    ${APPL}/emis/
+    ${APPL}/emis/inln_point/
+    ${APPL}/emis/inln_point/othpt/
+    ${APPL}/emis/inln_point/pt_oilgas/
+    ${APPL}/emis/inln_point/ptegu/
+    ${APPL}/emis/inln_point/ptagfire/
+    ${APPL}/emis/inln_point/ptnonipm/
+    ${APPL}/emis/inln_point/ptfire/
+    ${APPL}/emis/inln_point/ptfire_othna/
+    ${APPL}/emis/inln_point/cmv_c3/
+    ${APPL}/emis/inln_point/stack_groups/
+    ${APPL}/emis/gridded_area/
+    ${APPL}/emis/gridded_area/rwc/
+    ${APPL}/emis/gridded_area/gridded/
+    ${APPL}/icbc/
+    ${APPL}/land/
+    ${APPL}/logs/
+    ${APPL}/met/
+    ${APPL}/met/wrf/
+    ${APPL}/met/mcip/
+    ${APPL}/POST/
+    </PRE>
+    where in fact for multi-part or multi-grid studies (and
+    particularly for program <VAR>ICON</VAR>) there may be
+    several sets of these sub-directories, each having its own
+    distinguishing <CODE>${APPL}</CODE>.
+    <P>
+
+    A number of additional directories are automatically mounted by a
+    <VAR>singularity ...</VAR> command:
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>${HOME}</CODE></STRONG>, your home directory
+        <DT> <STRONG><CODE>${PWD}</CODE></STRONG>, the directory from which
+             <VAR>singularity</VAR> was invoked
+        <DT> <STRONG><CODE>/tmp</CODE></STRONG>, and various system directories
+    </DL></BLOCKQUOTE>
+    You can also use the
+    <PRE>
+    --bind &lt;host-machine-directory&gt;:&lt;container-directory&gt;
+    </PRE>
+    command-line option for the <VAR>singularity</VAR> commands to
+    specify what additional host-machine directories are mounted on the
+    container, and at what locations. This is how we will normally deal
+    with input and output directories for model-data. For example, if
+    the container is <VAR>${CONTAINER}=/work/cmaq.simg</VAR>, and the 
+    host-directory is <VAR>${HOSTDATA}=/work/SCRATCH/CMAQv5.3.1_Benchmark_2Day</VAR>,
+    the following command mounts that directory on
+    container-directory <VAR>/opt/CMAQ_REPO/data</VAR> before invoking
+    container-script <VAR>/opt/CMAQ_REPO/scripts/run_cctm.csh</VAR>:
+    <PRE>
+    singularity exec \
+     --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+     ${CONTAINER} /opt/CMAQ_REPO/scripts/run_cctm.csh
+    </PRE>
+
+    Subdirectories of host data-directory <VAR>${HOSTDATA}</VAR> will be seen
+    on the container as matching subdirectories of the container
+    data-directory  <VAR>/opt/CMAQ_REPO/data</VAR>. Here in this
+    example,
+    <VAR>/work/SCRATCH/CMAQv5.3.1_Benchmark_2Day/2016_12SE1/met/</VAR>
+    on the host corresponds to
+    <VAR>/opt/CMAQ_REPO/data/2016_12SE1/met/</VAR>
+    on the container, etc.  The full subdirectory structure of the data
+    directory is given above.
+    <P>
+
+    Note that each <VAR>--bind</VAR>  command-line option does only one
+    mount-operation; if you wish to mount multiple directories from the
+    host-machine,  you need multiple <VAR>--bind</VAR>s.<BR>
+    Note also that these mounts do not follow symbolic links, so you can't
+    use <VAR>ln&nbsp;-s&nbsp;...</VAR>to add sub-directories to them...
+    <P>
+
+    <STRONG>To set environment variables in the container</STRONG>,
+    there is a special <VAR>setenv</VAR> form that is used in the host
+    environment before invoking a <VAR>singularity</VAR>
+    command&mdash;you prefix the desired environment-variable name with
+    <CODE>SINGULARITYENV_</CODE>. For example, the following sequence
+    in host-script <VAR>Scripts-CMAQ/singularity-cctm.csh</VAR>
+    <PRE>
+    setenv SINGULARITYENV_START_DATE    "2016-07-01"
+    setenv SINGULARITYENV_START_TIME    0000000
+    setenv SINGULARITYENV_RUN_LENGTH    2400000
+    setenv SINGULARITYENV_TIME_STEP      100000
+    setenv SINGULARITYENV_END_DATE      "2016-07-02"
+    setenv SINGULARITYENV_APPL          2016_12SE1
+    setenv SINGULARITYENV_EMIS          2016ff
+    setenv SINGULARITYENV_PROC          mpi
+    setenv SINGULARITYENV_NPCOL         1
+    setenv SINGULARITYENV_NPROW         3
+    setenv SINGULARITYENV_CTM_DIAG_LVL  1
+    </PRE>
+    will set the following environment variables on the container, where
+    they are used to control the container script
+    <VAR>run_cctm.csh</VAR> (in the above example):
+    <BLOCKQUOTE><DL>
+        <DT> <CODE>START_DATE</CODE>
+        <DT> <CODE>START_TIME</CODE>
+        <DT> <CODE>RUN_LENGTH</CODE>
+        <DT> <CODE>TIME_STEP</CODE>
+        <DT> <CODE>END_DATE</CODE>
+        <DT> <CODE>APPL</CODE>
+        <DT> <CODE>EMIS </CODE>
+        <DT> <CODE>PROC</CODE>
+        <DT> <CODE>NPCOL</CODE>
+        <DT> <CODE>NPROW</CODE>
+        <DT> <CODE>CTM_DIAG_LVL</CODE>
+    </DL></BLOCKQUOTE>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="script">Script Generalities</A></H2>
+
+<BLOCKQUOTE>
+    All of the scripts have been modified not only to fit with the
+    environment of the container, but also for consistency among
+    themselves, for full control via environment variables, to support
+    correct return of execution status, to support a common set of
+    &quot;verbose&quot; options, and to support debugging.
+    <P>
+
+    The <STRONG>sample scripts</STRONG> from directory
+    <VAR>singularity-cmaq/Scripts-CMAQ/</VAR> and
+    <VAR>singularity-cmaq/Scripts-SMOKE/</VAR>
+    are of two types:
+    <OL>
+        <LI> Scripts that use <VAR>singularity&nbsp;exec</VAR> to run
+             on-container modeling scripts (found in directory/files
+             <VAR>/opt/CMAQ_REPO/scripts/*csh</VAR> for CMAQ
+             components or <VAR>/opt/SMOKE/scripts/run/*csh</VAR>),
+             after setting up data directories mounted from
+             your host machine, and after setting up environment
+             variables used to control those scripts;
+        <LI> A script  <STRONG><VAR>singularity-shell.csh</VAR></STRONG>
+             that  (after setting up environment and mounted
+             directories), uses the <VAR>singularity&nbsp;shell</VAR>
+             command that gives you a <VAR>tcsh</VAR> session on the
+             container, to allow you to run interactive programs such as
+             <VAR>ncdump</VAR>, <VAR>ncview</VAR>, <VAR>m3stat</VAR> (etc.),
+             <VAR>VERDI</VAR>, or <VAR>pave</VAR> that are installed in
+             the container, e.g., for <A HREF = "#tools">Interactive Tool Use</A>.
+    </OL>
+
+    <STRONG>For SMOKE scripts</STRONG> using
+    <VAR>singularity&nbsp;exec</VAR> to run SMOKE applications; 
+    <A HREF = "#smoke">see the section below.</A>  Note that the
+    standard SMOKE script-structure runs a (potentially large) set
+    of time-independent SMOKE programs, followed by a sequence of 
+    per-day runs of a set of time stepped SMOKE programs, and can
+    be quite complex :-)
+    <P>
+
+    <STRONG>CMAQ-component scripts</STRONG> using
+    <VAR>singularity&nbsp;exec</VAR> to run a CMAQ modeling component,
+    say <VAR>foo</VAR>, need to mount a data-directory
+    <CODE>${HOSTDATA}</CODE> on your host machine to the expected
+    data-directory <CODE>/opt/CMAQ_REPO/data</CODE> on the container
+    (using <CODE>--bind</CODE>), and to establish environment variables
+    (of the form <CODE>SINGULARITYENV_&lt;name&gt;</CODE>) on the host
+    that <VAR>singularity</VAR>  maps into environment variables on the
+    container, as shown below, to run on-container modeling script
+    <VAR>run _foo.csh</VAR> for that modeling component:
+    <PRE>
+    ...
+    set HOSTDATA  = &lt;path for data directory on your host machine&gt;
+    set CONTAINER = &lt;path for CMAQ container on your host machine&gt;
+    ...
+    setenv SINGULARITYENV_&lt;name&gt;   &lt;value&gt;
+    ...
+    singularity exec \
+      --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+      ${CONTAINER} /opt/CMAQ_REPO/scripts/run_foo.csh
+    set err_status = ${status}
+
+    if ( ${err_status} != 0 ) then
+        echo ""
+        echo "********************************************************"
+        echo "** Error for /opt/CMAQ_REPO/scripts/run_foo.csh       **"
+        echo "**    STATUS=${err_status}                            **"
+        echo "********************************************************"
+    endif
+
+    exit( ${err_status} )
+    </PRE>
+
+    Note that the on-container modeling scripts always return the exit
+    status (whether from <CODE>M3EXIT()</CODE> or <CODE>SEGFAULT</CODE>,
+    or...) of the program being executed, with an error-message to the
+    log if the status indicates failure.  This status is further passed
+    back to the <VAR>singularity&nbsp;exec</VAR> scripts, which also write
+    appropriate error-messages and return the status to their callers.
+    <P>
+
+    Generally, the <VAR>singularity&nbsp;exec</VAR> scripts will echo
+    all output to the screen; to capture it in a log, you will need to
+    re-direct it.  For a modeling-component <VAR>foo</VAR>, if the
+    package is installed under your home directory, that might look like
+    <PRE>
+    [ cd ${HOME}/singularity-cmaq/Scripts-CMAQ ]
+    singularity-foo.csh &gt;&amp; ../Logs/singularity-foo.log &amp;
+    </PRE>
+    <P>
+
+    <STRONG>For every such <VAR>singularity&nbsp;exec</VAR>
+    script</STRONG> on your host machine, you will need to
+    <STRONG>customize</STRONG> the following shell variables:
+    <BLOCKQUOTE><DL>
+        <DT> <CODE>${HOSTDATA}</CODE>
+        <DD> path for data-directory on your your host-machine
+        <DT> <CODE>${CONTAINER}</CODE>
+        <DD> path name for the CMAQ container on your host-machine
+    </DL></BLOCKQUOTE>
+
+    <STRONG>For batch-oriented scripts</STRONG> (in 
+    <VAR>singularity-cmaq/Scripts-BATCH/</VAR>) you will also need to
+    customize the batch-queue parameters and possibly the <VAR>module
+    load</VAR> statements.
+    <P>
+
+    <STRONG>For the CCTM scripts</STRONG>, you will also need to
+    customize the MPI-version parameter to match the MPI version
+    on your host system
+    <BLOCKQUOTE><DL>
+        <DT> <CODE>MPIVERSION</CODE>
+        <DD> <CODE>mpich</CODE>, <CODE>mvapich</CODE>, or <CODE>openmpi</CODE>, 
+    </DL></BLOCKQUOTE>
+    <PRE>
+    setenv  SINGULARITYENV_MPIVERSION  &lt;value&gt;
+    </PRE>
+    <P>
+
+    <STRONG>If you want verbose script operation</STRONG>, you can
+    control it with environment variable <CODE>CTM_DIAG_LVL</CODE> on
+    the container:
+    <UL>
+        <LI> <CODE>CTM_DIAG_LVL = 0</CODE>: no extra diagnostics [default]
+        <LI> <CODE>CTM_DIAG_LVL = 1</CODE>: log the sorted environment,
+             size of executable, and process limits
+        <LI> <CODE>CTM_DIAG_LVL = 2</CODE>: full script <VAR>echo</VAR>
+    </UL>
+    In order to change values of this environment variable on the
+    container, edit the <CODE>value</CODE> in following line in your
+    <VAR>singularity&nbsp;exec</VAR> script:
+    <PRE>
+    setenv  SINGULARITYENV_CTM_DIAG_LVL  &lt;value&gt;
+    </PRE>
+
+
+    <STRONG>If you want a debug-run for a modeling component</STRONG>,
+    the scripts are also set up to support debugging, if requested. You
+    will need to do the following:  First, build a debug-executable for
+    that modeling component (except for the CTM, for which a
+    debug-executable already exists on the container), and make sure it
+    is in a directory mounted on  the container.  Then customize on
+    environment variables <CODE>${DEBUG}</CODE>  and
+    <CODE>${EXEC}</CODE>, as follows:  In the
+    <VAR>singularity&nbsp;exec</VAR> script, uncomment the two following
+    statements, and fill in the container-side path to that executable:
+    <PRE>
+    setenv SINGULARITYENV_DEBUG   1
+    setenv SINGULARITYENV_EXEC    &lt;path to debug-executable&gt;
+    </PRE>
+
+    <EM>Note that environment variable <CODE>SINGULARITYENV_EXEC</CODE>
+    can also be used to override the executable</EM> for the modeling
+    component that you are running.  The value should be the
+    <STRONG>path on the container</STRONG> to the executable (after any
+    host-directory mount-operations).  Be aware that this facility
+    may well have problems due to shared-library incompatibilities
+    between your host machine and the container's CentOS-7 virtual OS.
+    <P>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="cctm">CMAQ CCTM Restructuring</A></H2>
+
+<BLOCKQUOTE>
+
+    There are optimized and debug <STRONG>CMAQ executables</STRONG> for
+    each of three MPI implementations:  MPICH-3, OPENMPI-3, and (work in
+    progress, not yet complete:) MVAPICH-2.  The executables can be
+    found as <CODE>CCTM_v531.exe</CODE> in the following CMAQ-container directories:
+    <PRE>
+    /opt/CMAQ_REPO/CCTM/scripts/
+        BLD_CCTM_v531_gcc-mpich3/
+        BLD_CCTM_v531_gcc-openmpi/
+        BLD_CCTM_v531_gcc-mvapich2/
+        BLD_CCTM_v531_gccdbg-mpich3/
+        BLD_CCTM_v531_gccdbg-openmpi/
+        BLD_CCTM_v531_gccdbg-mvapich2/
+    </PRE>
+    respectively (<EM>with <CODE>mvapich2</CODE> not currently
+    supported</EM>; there are shared-library issues not yet resolved
+    as of this writing).  In all cases, they are compiled for &quot;64-bit
+    medium memory model&quot; (see
+    <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#medium">
+    https://cjcoats.github.io/ioapi/AVAIL.html#medium</A>) so that even
+    runs on very-large grids are supported.
+    <P>
+
+    Note that since these are the only CCTM executables (matching
+    exactly the compilers and MPI implementations on the container),
+    other compiler-choices (Intel, PGI, ...) are not supported.  The
+    choice of which executable to use (and whether to invoke the
+    debugger on that executable) is controlled by container-environment
+    variable <STRONG><CODE>DEBUG</CODE></STRONG>.
+    <P>
+
+    The attempt has been made to <STRONG>re-structure</STRONG> the CMAQ
+    CCTM run-script and the CMAQ directories for use with the container.
+    The reasons for this are two-fold:  first, for consistency among the
+    CMAQ CCTM, its pre-processors, post-processors, and utility
+    programs; secondly,  so that there might be a single
+    &quot;generic&quot; CCTM run-script on the container,
+    <STRONG>controlled by the following list of environment
+    variables</STRONG> (each of which has a default, indicated in square
+    brackets [LIKE THIS]):
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>MPIVERSION</CODE></STRONG>
+        <DD> <CODE>mpich</CODE>, <CODE>openmpi</CODE>, or
+             <CODE>mvapich</CODE>, to select MPI version compatible with
+             that of the host-server  [mpich]
+        <DT> <STRONG><CODE>PROC</CODE></STRONG>
+        <DD> processing-mode:  <CODE>mpi</CODE> or <CODE>serial</CODE> [mpi]
+        <DT> <STRONG><CODE>DEBUG</CODE></STRONG>
+        <DD> <EM>if this environment variable is defined:</EM> run the
+             model under debug using <VAR>ddd</VAR>, in which case the
+             run is confined to the first day of the modeling-period.
+             <BR>
+             Note that <CODE>PROC=mpi</CODE> debugging has not been tested;
+             frequently the interaction between <VAR>mpirun</VAR> and
+             debugging is flaky.  But one may hope :-)
+        <P>
+        <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
+        <DD> Run starting-date, formatted <CODE>YYYY-MM-DD</CODE> [2016-07-01]
+        <DT> <STRONG><CODE>END_DATE</CODE></STRONG>
+        <DD> Run ending-date, formatted <CODE>YYYY-MM-DD</CODE>
+            [2016-07-02]
+        <DT> <STRONG><CODE>START_TIME</CODE></STRONG>
+        <DD> Run starting-date, formatted <CODE>HHMMSS</CODE> [0000000]
+        <DT> <STRONG><CODE>RUN_LENGTH</CODE></STRONG>
+        <DD> Run duration, formatted <CODE>H*MMSS</CODE> [240000
+        <DT> <STRONG><CODE>TIME_STEP</CODE></STRONG>
+        <DD> Output time step, formatted <CODE>HHMMSS</CODE> [10000]
+        <DT> <STRONG><CODE>APPL</CODE></STRONG>
+        <DD> Application name (e.g. gridname) [2016_12SE1]
+        <DT> <STRONG><CODE>EMIS </CODE></STRONG>
+        <DD> emissions case [2016ff]
+        <DT> <STRONG><CODE>NPCOL</CODE></STRONG>
+        <DD> number of processor-columns in the horizontal domain
+             decomposition [8]
+        <DT> <STRONG><CODE>NPROW</CODE></STRONG>
+        <DD> number of processor-rows in the horizontal domain
+             decomposition [4]
+        <DT> <STRONG><CODE>CTM_DIAG_LVL</CODE></STRONG>
+        <DD> script-diagnostics/logging level:
+             <DL>
+                <DT> 0: no extra diagnostics
+                <DT> 1: environment, file, and directory based diagnostics
+                <DT> 2; full scripting-<VAR>echo</VAR>
+             </DL>
+        <DT> <STRONG><CODE>RUNID</CODE></STRONG>
+        <DD> any no-whitespace combination of parameters to identify the run
+             [${VRSN}_gcc_${APPL}]
+        <P>
+        <DT> Optionally, <STRONG><CODE>GRIDDESC</CODE></STRONG>
+        <DD> path for <CODE>GRIDDESC</CODE> file on the container
+             [<VAR>${HOSTDATA}/${APPL}/GRIDDESC</VAR> on your host
+             machine; this binds to container-file
+             <VAR>/opt/CMAQ_REPO/data/${APPL}/GRIDDESC</VAR>]
+    </DL></BLOCKQUOTE>
+    <P>
+    In the <VAR>run_cctm.csh</VAR> script on the container, 
+    <STRONG>additional CCTM-control environment variables</STRONG>,
+     e.g.,  <CODE>GRID_NAME, CONC_SPCS, CTM_MAXSYNC,
+    CTM_OCEAN_CHEM, </CODE> etc., are
+    not hard-coded (changeable only by editing the script), but are
+    established, with their default values, after the pattern
+    <PRE>
+    if ( ! $?FOO )  setenv  FOO  BAR
+    </PRE>
+    which potentially sets the default value of container-environment
+    variable <CODE>FOO</CODE> to <CODE>BAR</CODE>; i.e., if
+    <CODE>FOO</CODE> exists in the container environment, then use its
+    existing value; else use the default <CODE>BAR</CODE>. Consequently,
+    one can  change  all the <STRONG>other CCTM control
+    variables</STRONG> in the <VAR>singularity-cctm.csh</VAR> script, as
+    follows:  To put a different value <CODE>QUX</CODE> for environment
+    variable <CODE>FOO</CODE> to override these defaults, you need to do
+    a <VAR>setenv</VAR> of the following form in the
+    <VAR>singularity-cctm.csh</VAR> script, prefixing the
+    environment-variable name <CODE>FOO</CODE> by
+    <CODE>SINGULARITYENV_</CODE>)
+    <PRE>
+    setenv  SINGULARITYENV_FOO  QUX
+    </PRE>
+
+    The <VAR>run_cctm.csh</VAR> script makes potentially <STRONG>multiple
+    single-day CCTM runs</STRONG>, one for each day from <CODE>START_DATE</CODE>
+    through <CODE>END_DATE</CODE>, inclusive.
+    <P>
+
+    Note that both the <VAR>run_cctm.csh</VAR> script and the
+    <VAR>singularity-cctm.csh</VAR> script have been re-structured to
+    capture exit-status (from <CODE>M3EXIT()</CODE> or from other causes
+    of failure, e.g., <CODE>SEGFAULT</CODE>) correctly; and in case of
+    such a failure,  <VAR>run_cctm.csh</VAR> terminates the current run
+    with a descriptive message immediately if that status indicates
+    error, rather than to go ahead blindly ahead with more runs after a
+    failure.
+    <P>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="prep">CMAQ Pre-processing</A></H2>
+
+<BLOCKQUOTE>
+
+    <H3><VAR>bcon</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-bcon.csh</VAR> sets up control
+    variables
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>FIN_APPL</CODE></STRONG>
+        <DD> <VAR>ICON</VAR> case, usually the (fine-grid) output-grid name.
+        <DT> <STRONG><CODE>CRS_APPL</CODE></STRONG>
+        <DD> input <VAR>CCTM</VAR> case, usually the (coarse-grid) CONC-file input-grid name.
+        <DT> <STRONG><CODE>BCTYPE</CODE></STRONG>
+        <DD> <STRONG><CODE>regrid</CODE></STRONG> for regridding CMAQ
+             CTM concentration files; or<BR>
+             <STRONG><CODE>profile</CODE></STRONG> for using default
+             profile inputs
+        <DT> <STRONG><CODE>GRID_NAME</CODE></STRONG>
+        <DD> <VAR>GRIDDESC</VAR>-name for the output grid
+        <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
+        <DD> Gregorian-style starting date, formatted <CODE>YYYY-MM-DD</CODE>
+        <DT> <STRONG><CODE>START_TIME</CODE></STRONG>
+        <DD> Starting-time, formatted <CODE>HHMMSS</CODE>
+        <DT> <STRONG><CODE>RUN_LENGTH</CODE></STRONG>
+        <DD> Run duration, formatted <CODE>HHMMSS</CODE>
+        <P>
+        <DT> Optionally, <STRONG><CODE>GRIDDESC</CODE></STRONG>
+        <DD> path for <CODE>GRIDDESC</CODE> file on the container
+             [<VAR>/opt/CMAQ_REPO/data/${CRS_APPL}/GRIDDESC</VAR>]
+    </DL></BLOCKQUOTE>
+    mounts a data-directory (which should contain subdirectories for
+    both the input and output grids, and then executes the
+    container-script <VAR>/opt/CMAQ_REPO/scripts/run_bcon.csh</VAR>
+    which runs program <VAR>ICON</VAR> on the container.
+    <P>
+    </BLOCKQUOTE>
+
+    <H3><VAR>create_omi</VAR></H3>
+
+    <BLOCKQUOTE>
+    deferred to a later date...
+    <P>
+    If you want to do it yourself, look at the script
+    <VAR>/opt/CMAQ_REPO/PREP/create_omi/scripts/cmaq_omi_run.csh</VAR>
+    on the  container, copy it out to a host-machine directory that will
+    be mounted on the container (<VAR>${HOME}</VAR>?), edit it there,
+    using 
+        <BLOCKQUOTE><VAR>
+        setenv SINGULARITYENV_...</VAR> 
+        </BLOCKQUOTE>
+    for the environment variables),  and then using
+        <BLOCKQUOTE>
+        <VAR>singularity exec /opt/CMAQ_REPO/bin/create_omi</VAR>
+        </BLOCKQUOTE>
+     to execute the program.
+    </BLOCKQUOTE>
+
+    <H3><VAR>icon</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-icon.csh</VAR> sets up control
+    variables
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>FIN_APPL</CODE></STRONG>
+        <DD> <VAR>ICON</VAR> case, usually the (fine-grid) output-grid name.
+        <DT> <STRONG><CODE>CRS_APPL</CODE></STRONG>
+        <DD> input <VAR>CCTM</VAR> case, usually the (coarse-grid) CONC-file input-grid name.
+        <DT> <STRONG><CODE>BCTYPE</CODE></STRONG>
+        <DD> <STRONG><CODE>regrid</CODE></STRONG> for regridding CMAQ
+             CTM concentration files; or<BR>
+             <STRONG><CODE>profile</CODE></STRONG> for using default
+             profile inputs
+        <DT> <STRONG><CODE>GRID_NAME</CODE></STRONG>
+        <DD> <VAR>GRIDDESC</VAR>-name for the output grid
+        <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
+        <DD> Gregorian-style starting date, formatted <CODE>YYYY-MM-DD</CODE>
+        <DT> <STRONG><CODE>START_TIME</CODE></STRONG>
+        <DD> Starting-time, formatted <CODE>HHMMSS</CODE>
+        <DT> <STRONG><CODE>RUN_LENGTH</CODE></STRONG>
+        <DD> Run duration, formatted <CODE>HHMMSS</CODE>
+        <P>
+        <DT> Optionally, <STRONG><CODE>GRIDDESC</CODE></STRONG>
+        <DD> path for <CODE>GRIDDESC</CODE> file on the container
+             [<VAR>/opt/CMAQ_REPO/data/${CRS_APPL}/GRIDDESC</VAR>]
+    </DL></BLOCKQUOTE>
+    mounts a data-directory (which should contain subdirectories for
+    both the input and output grids), and then executes the
+    container-script <VAR>/opt/CMAQ_REPO/scripts/run_icon.csh</VAR>
+    which runs program <VAR>ICON</VAR> on the container.
+    <P>
+    </BLOCKQUOTE>
+
+    <H3><VAR>mcip</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-mcip.csh</VAR> sets up the following control
+    variables (using different conventions than the other CMAQ modeling
+    components):
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>APPL</CODE></STRONG>
+        <DD> run identifier [160702]
+        <DT> <STRONG><CODE>CoordName</CODE></STRONG>
+        <DD> 16-character-max coordinate system name, for <CODE>GRIDDESC</CODE> [LamCon_40N_97W]
+        <DT> <STRONG><CODE>GridName</CODE></STRONG>
+        <DD> 16-character-max grid name, for <CODE>GRIDDESC</CODE> [2016_12SE1]
+        <DT> <STRONG><CODE>EXECUTION_ID</CODE></STRONG>
+        <DD> 80-character-max run-identification string
+        [&quot;mcip.exe&nbsp;$APPL&nbsp;$GridName&quot;]
+        <DT> <STRONG><CODE>IfGeo</CODE></STRONG>
+        <DD> Use <CODE>InGeoFile</CODE> input? [F]
+        <DT> <STRONG><CODE>LPV</CODE></STRONG>
+        <DD> 0: Do not compute and output potential vorticity<BR>
+             1:  Compute and output potential vorticity
+        <DT> <STRONG><CODE>LWOUT</CODE></STRONG>
+        <DD> 0: Do not output vertical velocity<BR>
+             1: Output vertical velocity
+        <DT> <STRONG><CODE>LUVBOUT</CODE></STRONG>
+        <DD> 0: Do not output <VAR>u</VAR>- and <VAR>v</VAR>-component winds on B-grid<BR>
+             1: Output <VAR>u</VAR>- and <VAR>v</VAR>-component winds on both
+                B-grid and C-grid
+        <DT> <STRONG><CODE>MCIP_START</CODE></STRONG>
+        <DD> UTC starting date&amp;time, formatted <CODE>YYYY-MM-DD-HH:MM:SS.SSSS</CODE>
+             [2016-07-02-00:00:00.0000]
+        <DT> <STRONG><CODE>MCIP_END</CODE></STRONG>
+        <DD> UTC final date&amp;time, formatted <CODE>YYYY-MM-DD-HH:MM:SS.SSSS</CODE>
+             [2016-07-02-00:00:00.0000]
+        <DT> <STRONG><CODE>INTVL</CODE></STRONG>
+        <DD> Output time step (minutes) [60]
+        <DT> <STRONG><CODE>IOFORM</CODE></STRONG>
+        <DD> 1:  Models-3 I/O&nbsp;API<BR>
+             2:  WRF-format &quot;raw&quot; netCDF
+        <DT> <STRONG><CODE>BTRIM</CODE></STRONG>
+        <DD>  number of meteorology &quot;boundary&quot; points to remove
+              on each of four horizontal sides of MCIP domain, or <BR>
+              <STRONG>-1</STRONG> to use explicit window information
+              <CODE>X0, Y0, NCOLS, NROWS</CODE>, as below.
+        <DT> <STRONG><CODE>X0</CODE></STRONG>
+        <DD> output-grid starting column, if <CODE>BTRIM=-1</CODE> [13]
+        <DT> <STRONG><CODE>Y0</CODE></STRONG>
+        <DD> output-grid starting row, if <CODE>BTRIM=-1</CODE> [94]
+        <DT> <STRONG><CODE>NCOLS</CODE></STRONG>
+        <DD> output-grid column-dimension, if <CODE>BTRIM=-1</CODE> [89]
+        <DT> <STRONG><CODE>NROWS</CODE></STRONG>
+        <DD> output-grid row-dimension, if <CODE>BTRIM=-1</CODE> [104]
+        <DT> <STRONG><CODE>LPRT_COL</CODE></STRONG>
+        <DD> column for diagnostic prints on output domain<BR>
+             If <CODE>LPRT_COL=0</CODE> use domain-center column
+        <DT> <STRONG><CODE>LPRT_ROW</CODE></STRONG>
+        <DD> row for diagnostic prints on output domain<BR>
+             If <CODE>LPRT_ROW=0</CODE> use domain-center row
+        <DT> <STRONG><CODE>WRF_LC_REF_LAT</CODE></STRONG>
+        <DD> Lambert conformal reference latitude [40]<BR>
+             If -999.0, MCIP will use average of the two true latitudes.
+    </DL></BLOCKQUOTE>
+    for the container, and mounts the data-directory (which should
+    contain subdirectories for both WRF input data and MCIP output data)
+    on the container, and then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_mcip.csh</VAR> which runs program
+    <VAR>MCIP</VAR> on the container.
+    <P>
+    </BLOCKQUOTE>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="post">CMAQ Post-Processing</A></H2>
+
+<BLOCKQUOTE>
+
+    <H3><VAR>appendwrf</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-appendwrf.csh</VAR> sets up the data
+    directory <CODE>${HOSTDIR}</CODE>, optionally the
+    container-subdirectories <CODE>INDIR</CODE> and <CODE>OUTDIR</CODE>
+    and the  basenames  <CODE>INFILE1, INFILE2, INFILE3</CODE> for the
+    three input files and the one output file for <VAR>appendwrf</VAR>,
+    and then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_appendwrf.csh</VAR> which runs
+    program <VAR>appendwrf</VAR> on the container.
+    <P>
+    </BLOCKQUOTE>
+
+    <H3><VAR>bldoverlay</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-bldoverlay.csh</VAR> sets up
+    environment variables  <CODE>START_DATE, END_DATE, APPL,
+    HOURS_8HRMAX</CODE> and optionally <CODE>MISS_CHECK, SPECIES,
+    UNITS</CODE>, mounts the indicated data-directory
+    <CODE>${HOSTDIR}</CODE>, and then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_bldoverlay.csh</VAR> which runs
+    program <VAR>bldoverlay</VAR> on the container.
+    <P>
+    </BLOCKQUOTE>
+
+    <H3><VAR>block_extract</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-block_extract.csh</VAR> sets up the data
+    directory <CODE>${HOSTDIR}</CODE>, environment variables
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>APPL</CODE></STRONG>
+        <DD> run identifier name (e.g., grid-name) [2016_12SE1]
+        <DT> <STRONG><CODE>SPECLIST</CODE></STRONG>
+        <DD> Array of species to extract.  <BR>
+             <CODE>ALL</CODE> is supported also. [<CODE>&quot;( O3 NO2 )&quot;</CODE>]
+        <DT> <STRONG><CODE>TIME_ZONE</CODE></STRONG>
+        <DD> Time Zone (<CODE>GMT</CODE> or <CODE>EST</CODE> [<CODE>GMT</CODE>]
+        <DT> <STRONG><CODE>OUTFORMAT</CODE></STRONG>
+        <DD> Format of input files (SAS or IOAPI) [IOAPI]
+        <DT> <STRONG><CODE>LOCOL</CODE></STRONG>
+        <DD> starting column for the extraction region [44]
+        <DT> <STRONG><CODE>HICOL</CODE></STRONG>
+        <DD> ending column for the extraction region [46]
+        <DT> <STRONG><CODE>LOROW</CODE></STRONG>
+        <DD> starting row for the extraction region [55]
+        <DT> <STRONG><CODE>HIROW</CODE></STRONG>
+        <DD> ending row for the extraction region [57]
+        <DT> <STRONG><CODE>LOLEV</CODE></STRONG>
+        <DD> starting lvel for the extraction region [1]
+        <DT> <STRONG><CODE>HILEV</CODE></STRONG>
+        <DD> ending level for the extraction region [1]
+        <DT> <STRONG><CODE>RUNID</CODE></STRONG>
+        <DD> Run identifier for the input files [<CODE>gcc_${VRSN}_${APPL}</CODE>]
+        <DT> <STRONG><CODE>INFILES</CODE></STRONG>
+        <DD> array of basenames for the input files
+             [<CODE>&quot;(&nbsp;COMBINE_ACONC_${RUNID}_201607.nc&nbsp;)&quot;</CODE>]<BR>
+             Note that all these files should be in directory
+             <CODE>${HOSTDIR}/${APPL}/POST</CODE>
+    </DL></BLOCKQUOTE>
+    for the container, and mounts the data-directory on the container,
+    then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_block_extract.csh</VAR> which runs
+    program <VAR>block_extract</VAR> on the container.
+    </BLOCKQUOTE>
+
+    <H3><VAR>calc_tmetric</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-calc_tmetric.csh</VAR> sets up the data
+    directory <CODE>${HOSTDIR}</CODE>, environment variables
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>APPL</CODE></STRONG>
+        <DD> run identifier name (e.g., grid-name) [2016_12SE1]
+        <DT> <STRONG><CODE>RUNID</CODE></STRONG>
+        <DD> Run identifier for the input files [<CODE>${VRSN}_gcc_${APPL}</CODE>]
+        <DT> <STRONG><CODE>OPERATION</CODE></STRONG>
+        <DD> operation to perform - <CODE>SUM</CODE> or <CODE>AVG</CODE> [<CODE>AVG</CODE>]
+        <DT> <STRONG><CODE>SPECIES</CODE></STRONG>
+        <DD> Array of species to extract.  <BR>
+             <CODE>ALL</CODE> is supported also. [<CODE>&quot;( O3 CO PM25_TOT )&quot;</CODE>]
+        <DT> <STRONG><CODE>INFILES</CODE></STRONG>
+        <DD> array of basenames for the input files
+             [<CODE>&quot;(&nbsp;COMBINE_ACONC_${RUNID}_201607.nc&nbsp;)&quot;</CODE>]<BR>
+             Note that all these files should be in directory
+             <CODE>${HOSTDIR}/${APPL}/POST</CODE>
+    </DL></BLOCKQUOTE>
+    for the container, mounts the data-directory on the container,
+    and then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_calc_tmetric.csh</VAR> which runs
+    program <VAR>calc_tmetric</VAR> on the container.
+    </BLOCKQUOTE>
+
+    <H3><VAR>combine</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-combine.csh</VAR> sets up the data
+    directory <CODE>${HOSTDIR}</CODE>, environment variables
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>MECH</CODE></STRONG>
+        <DD> Chemical mechanism name [cb6r3_ae6_aq]
+        <DT> <STRONG><CODE>APPL</CODE></STRONG>
+        <DD> run identifier name (e.g., grid-name) [2016_12SE1]
+        <DT> <STRONG><CODE>RUNID</CODE></STRONG>
+        <DD> Run identifier for the input files [<CODE>gcc_${VRSN}_${APPL}</CODE>]
+        <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
+        <DD> Gregorian-style starting date, formatted <CODE>YYYY-MM-DD</CODE>
+        <DT> <STRONG><CODE>END_DATE</CODE></STRONG>
+        <DD> Gregorian-style final date, formatted <CODE>YYYY-MM-DD</CODE>
+    </DL></BLOCKQUOTE>
+    for the container, mounts the data-directory on the container,
+    and then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_combine.csh</VAR> which runs
+    program <VAR>combine</VAR> on the container, with one execution
+    for (3-D) concentration files and one execution for (2-D) deposition files
+    for each day from <VAR>START_DATE</VAR> through <VAR>END_DATE</VAR>, inclusive.
+    </BLOCKQUOTE>
+
+    <H3><VAR>hr2day</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-hr2day.csh</VAR> sets up the data
+    directory <CODE>${HOSTDIR}</CODE>, environment variables
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>APPL</CODE></STRONG>
+        <DD> run identifier name (e.g., grid-name) [2016_12SE1]
+        <DT> <STRONG><CODE>RUNID</CODE></STRONG>
+        <DD> Run identifier for the input files [<CODE>gcc_${VRSN}_${APPL}</CODE>]
+        <DT> <STRONG><CODE>USELOCAL</CODE></STRONG>
+        <DD> Use local time? [N]
+        <DT> <STRONG><CODE>USEDST</CODE></STRONG>
+        <DD> Use daylight savings time? [N]
+        <DT> <STRONG><CODE>PARTIAL_DAY</CODE></STRONG>
+        <DD> Partial day calculation (computes value for last day)? [Y]
+        <DT> <STRONG><CODE>HROFFSET</CODE></STRONG>
+        <DD> constant hour offset between desired time zone and GMT [0]
+        <DT> <STRONG><CODE>START_HOUR</CODE></STRONG>
+        <DD> starting hour for daily metrics [0]
+        <DT> <STRONG><CODE>END_HOUR</CODE></STRONG>
+        <DD> ending hour for daily metrics [23]
+        <DT> <STRONG><CODE>HOURS_8HRMAX</CODE></STRONG>
+        <DD> Number of 8hr values to use when computing daily maximum
+             8hr ozone (17 or 24) [24]
+        <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
+        <DD> Gregorian-style starting date, formatted <CODE>YYYY-MM-DD</CODE> [2016-07-01]
+        <DT> <STRONG><CODE>END_DATE</CODE></STRONG>
+        <DD> Gregorian-style final date, formatted <CODE>YYYY-MM-DD</CODE> [2016-07-02]
+        <DT> <STRONG><CODE>SPECIES_1</CODE></STRONG>
+        <DD> define species&operations<BR>
+             format: comma-list <CODE>&quot;Name,Units,From_species,Operation&quot;</CODE>
+             operations:  <CODE>{SUM, AVG, MIN, MAX, @MAXT, MAXDIF, 8HRMAX, SUM06}</CODE><BR>
+             [<CODE>&quot;O3,ppbV,O3,8HRMAX&quot;</CODE>]
+        <DT> <STRONG><CODE>INFILES</CODE></STRONG>
+        <DD> array of basenames for the input files
+             [<CODE>&quot;( COMBINE_ACONC_${RUNID}_201607.nc)&quot;</CODE>]<BR>
+             Note that all these files should be in directory
+             <CODE>${HOSTDIR}/${APPL}/POST</CODE>
+    </DL></BLOCKQUOTE>
+    for the container, mounts the data-directory on the container,
+    and then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_hr2day.csh</VAR> which runs
+    program <VAR>hr2day</VAR> on the container.
+    </BLOCKQUOTE>
+
+    <H3><VAR>sitecmp</VAR></H3>
+
+    <BLOCKQUOTE>
+    tbd... <BR>
+    Look at the following scripts on the container and the suggestions for
+    scripting <VAR>create_omi</VAR>, above (or use the
+    <VAR>singuilarity-shell.csh</VAR> script to run <VAR>/opt/CMAQ_REPO/bin/sitecmp</VAR>
+    interactively):
+    <PRE>
+    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_AQS_Daily.csh
+    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_AQS_Hourly.csh
+    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_CSN.csh
+    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_IMPROVE.csh
+    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_NADP.csh
+    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_SEARCH_Hourly.csh
+    </PRE>
+    </BLOCKQUOTE>
+
+    <H3><VAR>sitecmp_dailyo3</VAR></H3>
+
+    <BLOCKQUOTE>
+    tbd... look at the following scripts on the container:
+    <PRE>
+    /opt/CMAQ_REPO//POST/sitecmp_dailyo3/scripts/run_sitecmp_dailyo3_AQS.csh
+    /opt/CMAQ_REPO//POST/sitecmp_dailyo3/scripts/run_sitecmp_dailyo3_CASTNET.csh
+
+    </PRE>
+    </BLOCKQUOTE>
+
+    <H3><VAR>writesite</VAR></H3>
+
+    <BLOCKQUOTE>
+    Host-script <VAR>singularity-writesite.csh</VAR> sets up the data
+    directory <CODE>${HOSTDIR}</CODE>, environment variables
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><CODE>APPL</CODE></STRONG>
+        <DD> run identifier name (e.g., grid-name) [2016_12SE1]
+        <DT> <STRONG><CODE>RUNID</CODE></STRONG>
+        <DD> Run identifier for the input files [<CODE>gcc_${VRSN}_${APPL}</CODE>]
+        <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
+        <DD> Gregorian-style starting date, formatted <CODE>YYYY-MM-DD</CODE>
+        <DT> <STRONG><CODE>END_DATE</CODE></STRONG>
+        <DD> Gregorian-style ending date, formatted <CODE>YYYY-MM-DD</CODE>
+        <DT> <STRONG><CODE>SITE_FILE</CODE></STRONG>
+        <DD> Name of input file containing sites to process, or
+             <CODE>ALL</CODE> (i.e., process all cells) [ALL]
+        <DT> <STRONG><CODE>USELOCAL</CODE></STRONG>
+        <DD> Use local time? [N]
+        <DT> <STRONG><CODE>TIME_SHIFT</CODE></STRONG>
+        <DD> constant hour offset between desired time zone and GMT [0]
+        <DT> <STRONG><CODE>TIME_SHIFT</CODE></STRONG>
+        <DD> Shifts time of data from GMT [0]
+        <DT> <STRONG><CODE>USECOLROW</CODE></STRONG>
+        <DD> Site file contains column/row values? (else Lat-Lon values) [N]
+        <DT> <STRONG><CODE>LAYER</CODE></STRONG>
+        <DD>  grid layer to output [1]
+        <DT> <STRONG><CODE>PRTHEAD</CODE></STRONG>
+        <DD> Output header records? [Y]
+        <DT> <STRONG><CODE>PRT_XY</CODE></STRONG>
+        <DD>  Output map projection coordinates <VAR>X</VAR> and <VAR>Y</VAR>? [Y]
+        <DT> <STRONG><CODE>SPECIES_1</CODE></STRONG>
+        <DD> Name of species to process [<CODE>O3</CODE>]
+        <DT> <STRONG><CODE>IN_FILE</CODE></STRONG>
+        <DD> Base-name for input file [<CODE>COMBINE_ACONC_${RUNID}_201607.nc</CODE>]
+    </DL></BLOCKQUOTE>
+    for the container, mounts the data-directory on the container,
+    and then executes the  container-script
+    <VAR>/opt/CMAQ_REPO/scripts/run_writesite.csh</VAR> which runs
+    program <VAR>writesite</VAR> on the container.
+    </BLOCKQUOTE>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="util">CMAQ Utilities</A></H2>
+
+<BLOCKQUOTE>
+
+    <H3><VAR>chemmech</VAR></H3>
+
+    <BLOCKQUOTE>
+    pending...<BR>
+    Or use the <VAR>singularity-shell.csh</VAR> script to run it interactively...
+    </BLOCKQUOTE>
+
+    <H3><VAR>create_ebi</VAR></H3>
+
+    <BLOCKQUOTE>
+    pending...
+    </BLOCKQUOTE>
+
+    <H3><VAR>inline_phot_preproc</VAR></H3>
+
+    <BLOCKQUOTE>
+    pending...
+    </BLOCKQUOTE>
+
+    <H3><VAR>jproc</VAR></H3>
+
+    <BLOCKQUOTE>
+    pending...
+    </BLOCKQUOTE>
+
+
+</BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="smoke">SMOKE Modeling</A></H2>
+
+<BLOCKQUOTE>
+
+    The SMOKE programs have all been built for both optimized and debug
+    on the container, using the <VAR>gfortran/gcc</VAR> compiler set
+    for &quot;medium&quot; memory model (so that even very large data
+    sets are supported); the executables can be found in directories
+    <VAR>/opt/SMOKE/Linux2_x86_64gfort_medium/</VAR> and
+    <VAR>opt/SMOKE/Linux2_x86_64gfort_mediumdbg/</VAR>.
+    <P>
+
+    The SMOKE scripts have all been re-structured to make correct use of
+    program exit-status (stopping the sequence of execution when there
+    is a failure), and pass that status back through to the caller. They
+    have also been re-structured so that if debugging is requested by
+    means of environment variable <CODE>DEBUGMODE</CODE>, it will
+    &quot;just work&quot; (using the <VAR>ddd</VAR> GUI debugger on the
+    container) without requiring extensive and deep hacking of multiple
+    scripts to make it work.  In that case, they will only run for the
+    first day of the episode, rather than running the debugger
+    repeatedly for each separate day of a multi-day run-sequence
+    <P>
+
+    There are three relevant sets of SMOKE scripts for use with SMOKE on
+    this container:
+    <P>
+
+    <STRONG>On-container <VAR>ASSIGNS</VAR>-scripts</STRONG> in container
+    directory <VAR>/opt/SMOKE/assigns/</VAR> have been modified to set
+    environment variable <CODE>SMK_HOME</CODE> correctly for this
+    container, and to look at environment variable
+    <CODE>DEBUGMODE</CODE> and set environment variable
+    <CODE>BIN</CODE> appropriately for this container:  either
+    <CODE>Linux2_x86_64gfort_medium</CODE> for optimized, or
+    <CODE>Linux2_x86_64gfort_mediumdbg</CODE> for debug.
+    <P>
+
+    <STRONG>On-container runscripts  <VAR>smk_run.csh, qa_run.csh,
+    cntl_run.csh</VAR></STRONG> in container directory
+    <VAR>/opt/SMOKE/scripts/run/</VAR> have been re-structured  so that
+    if an error occurs (whether reported by <CODE>M3EXIT()</CODE>, or
+    because of <CODE>SEGFAULT</CODE>, or ...), they will terminate
+    execution the current set of runs immediately  and return the
+    exit-status to the invoking script, rather than blindly going ahead
+    and trying to execute everything that follows, irrespective of the
+    failure.  They also properly support running SMOKE component
+    programs under the <VAR>ddd</VAR> debugger without needing the
+    detailed &quot;script-hacking&quot; needed by their  predecessors.
+    <BR>
+    These scripts source the relevant <VAR>ASSIGNS</VAR>-script (passed
+    in from the on-host runscripts as environment variable
+    <CODE>ASSIGNS_FILE</CODE>) as needed for their execution.
+    <P>
+
+    <STRONG>On-host runscripts</STRONG> such as
+    <VAR>smk_ratepervehicle_nctox.csh</VAR> in host-machine directory
+    <VAR>singularity-cmaq/Scripts-SMOKE/</VAR> pass the basename of
+    the appropriate <VAR>ASSIGNS</VAR>-script in environment variable
+    <CODE>ASSIGNS_FILE</CODE> to the container, and  invoke the
+    appropriate sequence of <VAR>smk_run.csh</VAR> and
+    <VAR>qa_run.csh</VAR> there, making use of the returned exit-status
+    from these scripts to further control the run-sequence:  it will
+    stop and log an error message for the first program-run that exits
+    with a failing (non-zero) exit status (or else it will run to
+    completion, if everything succeeds).
+    <P>
+
+    <STRONG>For debugging</STRONG>, in the appropriate on-host run-script,
+    replace the statement
+    <PRE>
+    unsetenv SINGULARITYENV_DEBUGMODE
+    </PRE>
+    by
+    <PRE>
+    setenv SINGULARITYENV_DEBUGMODE Y
+    </PRE>
+    and set the other environment variables to ensure that only the
+    one requested modeling-component is run, and that only for the date
+    of interest.
+    <P>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="tools">Interactive Tool Use</A></H2>
+
+<BLOCKQUOTE>
+
+    See the annotated copy of <VAR>Scripts-CMAQ/singularity-shell.csh</VAR>
+    at the bottom of this section, below, which sets up an interactive
+    shell-session on the container for you...
+    <P>
+
+    Many of the modeling tasks you wish to do are best done
+    interactively, not from &quot;batch&quot;.  The
+    <BLOCKQUOTE><VAR>
+    singularity shell ...
+    </VAR></BLOCKQUOTE>
+    command allows you to run an interactive shell (e.g.,
+    <VAR>tcsh</VAR>) in the container, frequently by acting on data in a
+    directory mounted from the host-machine, and generating outputs in
+    a(nother) directory mounted from the host-machine (recalling that
+    attempts to write data into the container's file-system itself will
+    fail, with a &quot;permission denied&quot; nasty-gram); you may 
+    recall that your <VAR>${HOSTDATA}</VAR>, your <VAR>${HOME}</VAR>,
+    and <VAR>/tmp/</VAR> are examples of such directories mounted on the
+    container from your host-machine...
+    <P>
+
+    Note that <VAR>PATH</VAR>s and <VAR>alias</VAR>es, etc., have
+    already been set up for you on the container; that set-up can
+    be found in the container's <VAR>/etc/profile.d/local.csh</VAR>.
+    <P>
+
+    Examples of commands you might want to run interactively include the
+    following applications installed in the container. For the most
+    part, they are installed under <VAR>/opt/bin/</VAR>; they are all on
+    the default path for <VAR>singularity&nbsp;shell</VAR>.  A few of
+    these tools also have  <VAR>singularity&nbsp;exec</VAR> scripts to
+    run them directly on your host machine; these last scripts need to
+    be customized in the same way that the CMAQ host-machine scripts
+    are.
+    <BLOCKQUOTE><DL>
+        <DT> <A HREF="https://cjcoats.github.io/ioapi/AA.html#tools"><STRONG><VAR>M3Tools</VAR></STRONG></A>
+             programs version <CODE>3.2 2020-04-18 16:10:51Z</CODE>
+        <DD> such as <VAR>m3cple</VAR>, <VAR>m3diff</VAR>,
+             <VAR>m3probe</VAR>, <VAR>m3stat</VAR>, and a variety of
+             others.<BR>
+             These are probably best run interactively after you invoke
+             <VAR>singularity-shell.csh</VAR> (or script them in a
+             directory mounted from your host machine, using the
+             principles described above, and invoke the script
+             on the container after doling <VAR>singularity-shell.csh</VAR>).
+             <P>
+        <DT> <STRONG><VAR>verdi.sh</VAR></STRONG> version <CODE>2.0_beta</CODE>
+        <DD> a gridded Java based netCDF data visualization tool from EPA:
+             see <A HREF="https://www.cmascenter.org/verdi/">
+             https://www.cmascenter.org/verdi/</A><BR>
+             Host script:  <VAR>singularity-cmaq/Scripts-CMAQ/singularity-verdi.csh</VAR>
+             will directly invoke <VAR>verdi</VAR> on the container.
+             Edit this script as indicated above, to suit your host
+             machine and data directory  situation.<BR>
+             <VAR>verdi</VAR> may also be run interactively on the
+             container, after you invoke <VAR>singularity-shell.csh</VAR>
+             <P>
+             Note that any output from <VAR>verdi</VAR> (e.g., any image-files 
+             you created, or output from <CODE>save project</CODE> must
+             be in a directory mounted from your host-machine; you may 
+             recall that your <VAR>${HOME</VAR> is one such directory...
+             <P>
+        <DT> <STRONG><VAR>pave</VAR></STRONG> version <CODE>3.0 beta</CODE>
+        <DD> a visualization tool for I/O API / UAM / CAMX data, from MCNC
+             and Carlie J. Coats, Jr., Ph.D.; see
+             <A HREF="https://cjcoats.github.io/pave/PaveManual.html">
+             https://cjcoats.github.io/pave/PaveManual.html</A>: this
+             version has been re-structured to offer vastly improved
+             performance for large data sets.  (It is so much faster
+             that for animations you will probably need to use environment
+             variable <CODE>TENTHS_SECS_BETWEEN_FRAMES</CODE> to slow down
+             the animations enough that you can interpret them.)
+             <BR>
+             <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#medium">
+             <STRONG>Built for 64-bit-medium memory model</STRONG></A>,
+             so that usable data set sizes are limited only by available
+             memory (unlike the other vis tools, which tend to have 2GB
+             limits)
+             <BR>
+             <EM>Note also that the <STRONG>file-selection GUI</STRONG> fails,
+             due to software versioning problems (&quot;library rot&quot;)</EM>;
+             however, 
+             <BLOCKQUOTE><VAR>
+             pave [&lt;config&gt;] -f &lt;path to file&gt; ...
+             </VAR></BLOCKQUOTE>
+             does work, where <VAR>${config} = 2, 3, 3a, 3b, 3d, 3g,
+             5, 6, 51, frac, lu, o3, soil, strm, tk</VAR>
+             identifies one of the on-container PAVE configuration-files 
+             <VAR>pave.${config}.config</VAR> found in container directory
+             <VAR>/opt/pave-3.0/Config/</VAR>
+             <BR>
+             A number of these use &quot;zebra&quot; color palettes:
+             <VAR>pave.3.config</VAR>, for example, uses a 5-hue/50-color
+             palette, where the first ten colors are blues with varying
+             saturation ranging from near-white to fully-saturated.<BR>
+             <VAR>${config} = frac, lu, o3, soil, strm, tk</VAR> are for
+             the relevant specific variable, e.g., <VAR>tk</VAR> for 
+             <CODE>TK</CODE>, Temperature (Kelvin).<BR>
+             <VAR>pave</VAR> is probably best run interactively
+             after you invoke <VAR>singularity-shell.csh</VAR>
+             <P>
+        <DT> <STRONG><VAR>ncview</VAR></STRONG> version 2.1.2
+        <DD> a netcdf-file visualization tool from UCSD; see
+             <A HREF="http://meteora.ucsd.edu/~pierce/ncview_home_page.html">
+              http://meteora.ucsd.edu/~pierce/ncview_home_page.html</A><BR>
+             Host script:  <VAR>singularity-cmaq/Scripts-CMAQ/singularity-ncview.csh</VAR><BR>
+             Edit this script as indicated above, to suit your host
+             machine and data directory  situation, or run <VAR>ncview</VAR>
+             interactively after you invoke <VAR>singularity-shell.csh</VAR>
+             <P>
+        <DT> <STRONG><VAR>panoply</VAR></STRONG>
+        <DD> a netCDF, HDF and GRIB data viewer tool from NASA:
+             see <A HREF="https://www.giss.nasa.gov/tools/panoply/">
+             https://www.giss.nasa.gov/tools/panoply/</A><BR>
+             Host script:  <VAR>singularity-cmaq/Scripts-CMAQ/singularity-panoply.csh</VAR><BR>
+             Edit this script as indicated above, to suit your host
+             machine and data directory  situation, or run <VAR>panoply</VAR>
+             interactively after you invoke <VAR>singularity-shell.csh</VAR>.
+             <P>
+        <DT> <STRONG><VAR>GrADS</VAR></STRONG>
+        <DD> the Grid Analysis and Display System from
+             GMU:  see <A HREF="http://cola.gmu.edu/grads/">http://cola.gmu.edu/grads/</A><BR>
+             <VAR>GrADS</VAR> is probably best run interactively
+             after you invoke <VAR>singularity-shell.csh</VAR>
+             <P>
+        <DT> <STRONG>NCAR Graphics</STRONG>
+        <DD> see <A HREF="http://ngwww.ucar.edu/">http://ngwww.ucar.edu/</A><BR>
+             NCAR Graphics is probably best run interactively
+             after you invoke <VAR>singularity-shell.csh</VAR>
+             <P>
+        <DT> <STRONG><VAR>gnuplot</VAR></STRONG>
+        <DD> graphics/plotting tool:  see <A HREF="http://www.gnuplot.info/">http://www.gnuplot.info/</A><BR>
+             <VAR>gnuplot</VAR> is probably best run interactively
+             after you invoke <VAR>singularity-shell.csh</VAR>
+             <P>
+        <DT> <STRONG><VAR>ddd</VAR></STRONG> and <STRONG><VAR>gdb</VAR></STRONG>
+        <DD> debuggers:  <VAR>ddd</VAR> is a GUI &quot;wrapper&quot; for
+             <VAR>gdb</VAR><BR>
+             These are invoked automatically when requested by the
+             modeling-component scripts; or you can run them
+             interactively after you invoke
+             <VAR>singularity-shell.csh</VAR>
+             <P>
+        <DT> <STRONG><VAR>nedit</VAR></STRONG>
+        <DD> GUI text editor for interactive use,  after you invoke
+             <VAR>singularity-shell.csh</VAR><BR>
+             There is an alias <VAR>xx</VAR> that runs
+             it in the background:  e.g., to bring up edit-windows on
+             files <VAR>foo</VAR>, <VAR>bar</VAR>, and <VAR>qux</VAR>,
+             issue the command
+             <BLOCKQUOTE><VAR>
+             xx foo bar qux
+             </VAR></BLOCKQUOTE>
+             <P>
+        <DT> <STRONG><VAR>xxdiff</VAR></STRONG>
+        <DD> GUI file-differencing tool for interactive use,  after you invoke
+             <VAR>singularity-shell.csh</VAR><BR>
+             There is an alias <VAR>xd</VAR> that runs it in the
+             background with &quot;ignore-whitespace&quot; command-line
+             options; to see the differences in files <VAR>foo</VAR> and
+             <VAR>bar</VAR>, issue the command
+             <BLOCKQUOTE><VAR>
+             xd foo bar
+             </VAR></BLOCKQUOTE>
+             <P>
+        <DT> <STRONG><VAR>findent</VAR></STRONG>
+        <DD> see <A HREF="https://github.com/wvermin/findent">https://github.com/wvermin/findent</A><BR>
+             Fortran source indentation and beautification program for
+             both fixed (&quot;f77-style&quot) and free 
+             (&quot;f90-style&quot) format;  also converts Fortran fixed
+             format to Fortran free format (and vice-versa). It will
+             accept CMAQ and SMOKE's non-Standard &quot;fixed-132&quot;
+             source format.<BR> There is an alias <VAR>tof90</VAR> that
+             converts fixed-format Fortran source to free format, using
+             the I/O&nbsp;API's indentation conventions, as in the
+             following:
+             <BLOCKQUOTE><VAR>
+             tof90 &nbsp; &lt; prog.f &nbsp; &gt; prog.f90
+             </VAR></BLOCKQUOTE>
+             <P>
+    </DL></BLOCKQUOTE>
+    <P>
+
+    <STRONG><VAR>singularity-cmaq/Scripts-CMAQ/singularity-shell.csh</VAR></STRONG>
+    is an example of a host-system script that
+    <UL>
+        <LI> sets up some environment variables;
+        <LI> mounts host-machine directories on the container
+             <A HREF="#dirs">as described above</A>; and
+        <LI> then runs  <VAR>tcsh</VAR> on the container,
+             giving you an interactive prompt,
+    </UL><P>
+    for you to use tools (such as those listed above) on the container.
+    The essential content of it  is the following, which establishes
+    various container-environment variables <CODE>APPL , EMIS</CODE>,
+    etc., and then mounts the host directory <CODE>${HOSTDATA}</CODE> on
+    container-directory <CODE>/opt/CMAQ_REPO/data</CODE>, and then
+    invokes an interactive <VAR>tcsh</VAR> session on the container
+    <VAR>${CONTAINER}</VAR>, and starting from directory
+    <CODE>/opt/CMAQ_REPO/data</CODE> on the container:
+    <PRE>
+
+    #!/bin/csh -f
+    #
+    # Script to Invoke "singularity shell" for cmaq container
+    #   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
+
+    set HOSTDATA  = &lt;path for data directory on your host machine&gt;
+    set CONTAINER = &lt;path for CMAQ container on your host machine&gt;
+
+    # Examples of setting up environment variables such as APPL and EMIS
+    # for the container:
+
+    setenv SINGULARITYENV_APPL          2016_12SE1
+    setenv SINGULARITYENV_EMIS          2016ff
+
+    #  invoke "singularity shell" using bindings of host-directories to
+    #  container-directories, and starting <VAR>tcsh</VAR> at mount-point of ${HOSTDATA}
+
+    cd ${HOSTDATA}
+
+    singularity shell -s /usr/bin/tcsh \
+     --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+     ${CONTAINER}
+
+    </PRE>
+    You will then probably want to do something like the following
+    (at the <VAR>tcsh</VAR> prompt within the container):
+    <PRE>
+    verdi.sh
+    </PRE>
+    or
+    <PRE>
+    pave -f /opt/CMAQ_REPO/data/${APPL}/met/mcip/METCRO2D_160701.nc \
+         -f /opt/CMAQ_REPO/data/${APPL}/cctm/CCTM_ACONC_v531_gcc_2016_12SE1_20160701.nc
+    </PRE>
+    or something like the following <VAR>m3stat</VAR> run (noting that
+    the report-file created by <VAR>m3stat</VAR> below must be in a
+    host-machine-mounted directory such as <CODE>$HOME</CODE>; if it's
+    not a directory mounted from the host-system, the system will give
+    you a nasty-gram indicating &quot;permission denied&quot;):
+    <PRE>
+    cd /opt/CMAQ_REPO/data/${APPL}/met/mcip
+    ls
+    setenv AFILE   $cwd/METCRO2D_160701.nc
+    setenv REPORT  $HOME/METCRO2D_160701.stats
+    m3stat AFILE REPORT DEFAULT
+    </PRE>
+
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+Copyright &copy; 2020 Carlie J. Coats, Jr., and 
+University of North Carolina Institute for the Environment
+<P>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+<br>
+This work is licensed under a 
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative 
+Commons Attribution-ShareAlike 4.0 International License</a>.
+<P>
+
+Send comments to
+<BLOCKQUOTE>
+<A HREF = "mailto:cjcoats@email.unc.edu"> <ADDRESS>
+          Carlie J. Coats, Jr. <BR>
+          cjcoats@email.unc.edu</ADDRESS> </A><P>
+</BLOCKQUOTE>
+
+</BODY>      <!--end body  -->
+</HTML>      <!--end html  -->
+

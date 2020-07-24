@@ -1,0 +1,100 @@
+
+As "root" on the bootstrap host machine:
+
+ singularity create -s 8192 cmaq.img
+ singularity build --sandbox /work/cmaq.sif library://library/default/centos
+
+ Use the following command to do installations
+ singularity shell --writable  /work/cmaq.sif
+ and then:
+
+     yum -y install epel-release
+
+     yum install bc
+     yum install bison
+     yum install bzip2
+     yum install curl
+     yum install cvs
+     yum install ddd
+     yum install dos2unix
+     yum install file
+     yum install firefox
+     yum install flex
+     yum install gcc
+     yum install gcc-gfortran
+     yum install gcc-c++
+     yum install gd-devel
+     yum install git
+     yum install glibc-devel
+     yum install gnuplot
+     yum install hwloc hwloc-devel
+     yum install ImageMagick
+     yum install jre
+     yum install ksh
+     yum install kate
+     yum install libmad libmad-devel
+     yum install lzma lzma-devel
+     yum install man
+     yum install motif
+     yum install mpich mpich-devel
+     yum install mvapich2 mvapich2-devel
+     yum install openmpi3 openmpi3-devel
+     yum install qmake
+     yum install qt-devel
+     yum install rcs
+     yum install subversion
+     yum install tcsh
+     yum install time
+     yum install unix2dos
+     yum install wget
+     yum install xguest
+     yum install xlib-static
+     yum install zlib zlib-devel
+
+     yum install grads
+     yum install meld
+     yum install ncarg
+     yum install ncview
+     yum install nco
+     yum install nedit
+     yum install netcdf
+     yum install netcdf-devel
+     yum install netcdf-static
+     yum install netcdf-cxx
+     yum install netcdf-cxx-devel
+     yum install netcdf-cxx-static
+     yum install netcdf-fortran
+     yum install netcdf-fortran-devel
+     yum install netcdf-fortran-static
+     yum install netcdf-mpich
+     yum install netcdf-mpich-devel
+     yum install netcdf-mpich-static
+     yum install netcdf4-python
+
+     rpm -i -vv http://www.city-fan.org/ftp/contrib/yum-repo/rhel7/x86_64/xxdiff-4.0.1-1.0.cf.rhel7.x86_64.rpm
+
+     cd /opt and then download and build the following (moving the
+     sources to the indicated directories):
+         git clone https://github.com/cjcoats/ioapi-3.2.git ~~> /opt/ioapi-3.2
+         git clone https://github.com/USEPA/CMAQ.git        ~~> /opt/CMAQ_REPO/
+         git clone https://github.com/CEMPD/SMOKE.git       ~~> /opt/SMOKE/
+         git clone https://github.com/cjcoats/pave-3.0.git  ~~> /opt/pave-3.0/
+
+     download and install the following under directory /opt: 
+
+        VERDI   from https://www.cmascenter.org/verdi/
+        ncview  from http://meteora.ucsd.edu/~pierce/ncview_home_page.html
+        panoply from https://www.giss.nasa.gov/tools/panoply/
+        GrADS   from http://cola.gmu.edu/grads/
+        NCAR Graphics from http://ngwww.ucar.edu/
+        findent from https://github.com/wvermin/findent and build...
+
+    Make symbolic links to /opt/bin for the following executables created above:
+        findent
+        panoply
+        pave
+        verdi.sh
+        
+    Copy nedit-resource files from initial host machine to /opt/share/nedit
+
+singularity shell --writable -s /usr/bin/tcsh /work/cmaq.sif
