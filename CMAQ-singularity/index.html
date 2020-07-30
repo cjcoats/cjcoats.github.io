@@ -5,7 +5,7 @@
 <!-- "$Id: index.html 165 2020-05-27 16:13:18Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
-    The CMAQ singularity container
+    INDEX:  The CMAQ singularity container
 </TITLE>
 </HEAD>
 
@@ -15,18 +15,26 @@
       LEFTMARGIN="15"
       MARGINWIDTH="15">
 
-<H1>  The The CMAQ Singularity Container </H1>
+<H1>  INDEX:  The CMAQ Singularity Container </H1>
 
 
     This has a virtualized machine based on CentOS-7/x86_64 in
-    which are installed the CMAQ model (see
-    <A HREF="https://www.cmascenter.org/cmaq/">https://www.cmascenter.org/cmaq/</A>)
-    SMOKE (see
-    <A HREF="https://www.cmascenter.org/smoke/">https://www.cmascenter.org/smoke/</A>),
-    VERDI (see
-    <A HREF="https://www.cmascenter.org/verdi/">https://www.cmascenter.org/verdi/</A>),
-    The Models-3 I/O&nbsp;API and associated M3Tools (see
-    <A HREF="https://cjcoats.github.io/ioapi/index.html">https://cjcoats.github.io/ioapi/index.html</A>)
+    which are installed the CMAQ model (together with its
+    pre-processors,post-processors, and utility programs; see
+
+    <UL>
+        <LI> CMAQ: <A HREF="https://www.cmascenter.org/cmaq/"
+             >https://www.cmascenter.org/cmaq/</A>)
+        <LI> SMOKE: (see <A HREF="https://www.cmascenter.org/smoke/"
+             >https://www.cmascenter.org/smoke/</A>),
+        <LI> VERDI: (see <A HREF="https://www.cmascenter.org/verdi/"
+             >https://www.cmascenter.org/verdi/</A>),
+        <LI> The Models-3 I/O&nbsp;API and associated M3Tools (see
+             <A HREF="https://www.cmascenter.org/ioapi/documentation/all_versions/html/AA.html"
+             >https://www.cmascenter.org/ioapi/documentation/all_versions/html/index.html</A>
+             or <A HREF="https://cjcoats.github.io/ioapi/index.html"
+             >https://cjcoats.github.io/ioapi/index.html</A>)
+    </UL>
     and various other modeling related programs such as PAVE,
     ncview, panoply, GrADS, NCAR graphics and gnuplot, so as
     to create a full environmental modeling set-up in one
@@ -36,10 +44,42 @@
     <UL>
         <LI> <A HREF = "singularity-cmaq.html"
              >Singularity-CMAQ Manual (HTML)</A>
+            <P>
 
         <LI> <A HREF = "singularity-cmaq.pdf"       
              >Singularity-CMAQ Manual (PDF)</A>
+            <P>
 
+        <LI> <STRONG>Reference Host-Machine Scripts</STRONG>
+            <DL>
+                <DT><A HREF="singularity-shell.csh" ><VAR>singularity-shell.csh</VAR></A>
+                <DT><A HREF="singularity-term.csh"  ><VAR>singularity-term.csh</VAR></A>
+                <P>
+                <DT><A HREF="cmaq_appendwrf.csh"    ><VAR>cmaq_appendwrf.csh</VAR></A>
+                <DT><A HREF="cmaq_bcon.csh"         ><VAR>cmaq_bcon.csh</VAR></A>
+                <DT><A HREF="cmaq_bldoverlay.csh"   ><VAR>cmaq_bldoverlay.csh</VAR></A>
+                <DT><A HREF="cmaq_block_extract.csh"><VAR>cmaq_block_extract.csh</VAR></A>
+                <DT><A HREF="cmaq_calc_tmetric.csh" ><VAR>cmaq_calc_tmetric.csh</VAR></A>
+                <DT><A HREF="cmaq_cctm.csh"         ><VAR>cmaq_cctm.csh</VAR></A>
+                <DT><A HREF="cmaq_combine.csh"      ><VAR>cmaq_combine.csh</VAR></A>
+                <DT><A HREF="cmaq_icon.csh"         ><VAR>cmaq_icon.csh</VAR></A>
+                <DT><A HREF="cmaq_mcip.csh"         ><VAR>cmaq_mcip.csh</VAR></A>
+                <DT><A HREF="cmaq_writesite.csh"    ><VAR>cmaq_writesite.csh</VAR></A>
+                <P>
+                <DT><A HREF="smk_area_nctox.csh"        ><VAR>smk_area_nctox.csh</VAR></A>
+                <DT><A HREF="smk_bg_nctox.csh"          ><VAR>smk_bg_nctox.csh</VAR></A>
+                <DT><A HREF="smk_edgar_HEMI108k.csh"    ><VAR>smk_edgar_HEMI108k.csh</VAR></A>
+                <DT><A HREF="smk_met4moves.nctox.csh"   ><VAR>smk_met4moves.nctox.csh</VAR></A>
+                <DT><A HREF="smk_mrgall_nctox.csh"      ><VAR>smk_mrgall_nctox.csh</VAR></A>
+                <DT><A HREF="smk_nonroad_nctox.csh"     ><VAR>smk_nonroad_nctox.csh</VAR></A>
+                <DT><A HREF="smk_point_nctox.csh"       ><VAR>smk_point_nctox.csh</VAR></A>
+                <DT><A HREF="smk_rateperdistance_nctox.csh"><VAR>smk_rateperdistance_nctox.csh</VAR></A>
+                <DT><A HREF="smk_rateperhour_nctox.csh"><VAR>smk_rateperhour_nctox.csh</VAR></A>
+                <DT><A HREF="smk_rateperprofile_nctox.csh"><VAR>smk_rateperprofile_nctox.csh</VAR></A>
+                <DT><A HREF="smk_ratepervehicle_nctox.csh"><VAR>smk_ratepervehicle_nctox.csh</VAR></A>
+            </DL>
+
+        <P>
         <LI> <A HREF = "singularity-cmaq-build.txt" 
              >Steps used to construct the CMAQ singularity container</A>
 

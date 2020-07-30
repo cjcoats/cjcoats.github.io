@@ -33,6 +33,10 @@
     </UL>
 
 
+    Back to <STRONG><EM><A HREF = "index.html">Web-site Index</A></EM></STRONG>
+    <P>
+
+
 <HR> <!- ------------------------------------------------------------- ->
 
 <H2><A NAME="intro">Introduction</A></H2>
@@ -57,7 +61,7 @@
              <VAR>PATH</VAR>s and <VAR>alias</VAR>es already set up for
              you on the container); and
         <LI> A &quot;local&quot; directory
-             <STRONG><VAR>singularity-cmaq/</VAR></STRONG> for your
+             <STRONG><VAR>cmaq_cmaq/</VAR></STRONG> for your
              host-machine, that contains various sample scripts for
              interacting with CMAQ and SMOKE submodels, tools, and other
              programs on that container, as well as this documentation.
@@ -174,96 +178,75 @@
     <P>
 
     <STRONG>Accompanying this container</STRONG> and installed on your
-    host-machine will be a directory <STRONG><VAR>singularity-cmaq/</VAR></STRONG>
+    host-machine will be a directory <STRONG><VAR>cmaq_cmaq/</VAR></STRONG>
     with five subdirectories:
     <BLOCKQUOTE><DL>
         <DT> <STRONG><VAR>Docs/</VAR></STRONG>
-        <DD> with this document <VAR>singularity-cmaq.html</VAR>, and
+        <DD> with this document <VAR>cmaq_cmaq.html</VAR>, and
              with configuration-files indicating how this singularity
              container was configured;
              <P>
         <DT> <STRONG><VAR>Logs</VAR></STRONG>
         <DD> for log-files;
              <P>
-        <DT> <STRONG><VAR>Scripts-CMAQ/</VAR></STRONG>
-        <DD> sample host-scripts to run <VAR>CMAQ</VAR> modeling components
-             or interactive shell <VAR>tcsh</VAR> on the container.<BR>
-             <EM>Requires command-line <STRONG>singularity</STRONG></EM>
-             installation: therefore, not for queue/batch usage on the UNC
-             servers <VAR>longleaf</VAR> or <VAR>dogwood</VAR>, where
-             <VAR>singularity</VAR> is only available on the compute-nodes.
-             <PRE>
-    singularity-shell.csh
-
-    singularity-cctm.csh
-    singularity-appendwrf.csh
-    singularity-bcon.csh
-    singularity-bldoverlay.csh
-    singularity-block_extract.csh
-    singularity-calc_tmetric.csh
-    singularity-combine.csh
-    singularity-hr2day.csh
-    singularity-icon.csh
-    singularity-mcip.csh
-    singularity-writesite.csh
-             </PRE>
+        <DT> <STRONG><VAR>Scripts/</VAR></STRONG>
+        <DD> sample host-scripts to run <VAR>CMAQ</VAR> modeling
+             components, SMOKE,  or interactive shell <VAR>tcsh</VAR> on
+             the container.  The paradigm is that these scripts set up
+             environment variables (etc.) on the container, then do
+             <VAR>singularity&nbsp;exec</VAR> of &quot;worker
+             scripts&quot; that actually run the modeling programs.
+             <BR>
+             <STRONG>Note</STRONG> that <VAR>cmaq_</VAR> and <VAR>smk_</VAR> 
+             and <VAR>singularity-term.csh</VAR> scripts 
+             also contain batch-queue directives, e.g.,  for
+             queue/batch usage on the UNC servers <VAR>longleaf</VAR> or
+             <VAR>dogwood</VAR>, where <VAR>singularity</VAR> is only
+             available on the compute-nodes.
              <P>
-        <DT> <STRONG><VAR>Scripts-SMOKE/</VAR></STRONG>
-        <DD> sample host-scripts to run
-             <VAR>SMOKE</VAR> applications on the container.<BR>
-             <EM>Requires</EM> command-line <VAR>singularity</VAR> installation:
-             not for queue/batch usage on the UNC
-             servers <VAR>longleaf</VAR> or <VAR>dogwood</VAR>
-             <PRE>
-    smk_area_nctox.csh
-    smk_bg_nctox.csh
-    smk_edgar_HEMI108k.csh
-    smk_met4moves.nctox.csh
-    smk_mrgall_nctox.csh
-    smk_nonroad_nctox.csh
-    smk_point_nctox.csh
-    smk_rateperdistance_nctox.csh
-    smk_rateperhour_nctox.csh
-    smk_rateperprofile_nctox.csh
-    smk_ratepervehicle_nctox.csh
-
-             </PRE>
-             <P>
-        <DT> <STRONG><VAR>Scripts-BATCH/</VAR></STRONG>
-        <DD> sample host-scripts for queue/batch usage (e.g., on the UNC
-             servers <VAR>longleaf</VAR> or <VAR>dogwood</VAR> that
-             do not allow login-node access to <VAR>singularity</VAR>)
-             to run <VAR>CMAQ</VAR> or <VAR>SMOKE</VAR>
-             modeling components on the container.<BR>
-             These are adapted from scripts in <VAR>Scripts-CMAQ</VAR>
-             and <VAR>Scripts-SMOKE</VAR><BR>
-             Note that for debugging, these scripts need to go to an
-             &quot;interactive&quot; queue...
-             <PRE>
-    singularity-cctm.batch.csh
-    singularity-appendwrf.batch.csh
-    singularity-bcon.batch.csh
-    singularity-bldoverlay.batch.csh
-    singularity-block_extract.batch.csh
-    singularity-calc_tmetric.batch.csh
-    singularity-combine.batch.csh
-    singularity-icon.batch.csh
-    singularity-mcip.batch.csh
-    singularity-writesite.batch.csh
-    
-    smk_area_nctox.batch.csh
-    smk_bg_nctox.batch.csh
-    smk_edgar_HEMI108k.batch.csh
-    smk_met4moves.nctox.batch.csh
-    smk_mrgall_nctox.batch.csh
-    smk_nonroad_nctox.batch.csh
-    smk_point_nctox.batch.csh
-    smk_rateperdistance_nctox.batch.csh
-    smk_rateperhour_nctox.batch.csh
-    smk_rateperprofile_nctox.batch.csh
-    smk_ratepervehicle_nctox.batch.csh
-
-             </PRE>
+             Reference copies of these scripts are available in the list
+             below, for you to view or download:
+             <BLOCKQUOTE>
+             <DL>
+                 <DT><A HREF="singularity-shell.csh" ><VAR>singularity-shell.csh</VAR></A>
+                 <DD> Log on to the container from the host command-line
+                      (non-batch!).
+                 <DT><A HREF="singularity-term.csh"  ><VAR>singularity-term.csh</VAR></A>
+                 <DD> Launch an interactive <VAR>rxvt</VAR> terminal
+                      from the container (e.g., from a debug batch-queue)
+                 <P>
+                 <DT><A HREF="cmaq_cctm.csh"         ><VAR>cmaq_cctm.csh</VAR></A>
+                 <DD> Set up environment on the container for a
+                      (multi-day) CMAQ CCTM run and then use the
+                      container's <VAR>run_cctm.csh</VAR> to execute
+                      that run.
+                 <DT><A HREF="cmaq_appendwrf.csh"    ><VAR>cmaq_appendwrf.csh</VAR></A>
+                 <DD> etc...
+                 <DT><A HREF="cmaq_bcon.csh"         ><VAR>cmaq_bcon.csh</VAR></A>
+                 <DT><A HREF="cmaq_bldoverlay.csh"   ><VAR>cmaq_bldoverlay.csh</VAR></A>
+                 <DT><A HREF="cmaq_block_extract.csh"><VAR>cmaq_block_extract.csh</VAR></A>
+                 <DT><A HREF="cmaq_calc_tmetric.csh" ><VAR>cmaq_calc_tmetric.csh</VAR></A>
+                 <DT><A HREF="cmaq_combine.csh"      ><VAR>cmaq_combine.csh</VAR></A>
+                 <DT><A HREF="cmaq_icon.csh"         ><VAR>cmaq_icon.csh</VAR></A>
+                 <DT><A HREF="cmaq_mcip.csh"         ><VAR>cmaq_mcip.csh</VAR></A>
+                 <DT><A HREF="cmaq_writesite.csh"    ><VAR>cmaq_writesite.csh</VAR></A>
+                 <P>
+                 <DT><A HREF="smk_area_nctox.csh"        ><VAR>smk_area_nctox.csh</VAR></A>
+                 <DD> Set up the environment to run a (multi-day_ SMOKE area source run
+                      on the container.
+                 <DT><A HREF="smk_bg_nctox.csh"          ><VAR>smk_bg_nctox.csh</VAR></A>
+                 <DD> etc...
+                 <DT><A HREF="smk_edgar_HEMI108k.csh"    ><VAR>smk_edgar_HEMI108k.csh</VAR></A>
+                 <DT><A HREF="smk_met4moves.nctox.csh"   ><VAR>smk_met4moves.nctox.csh</VAR></A>
+                 <DT><A HREF="smk_mrgall_nctox.csh"      ><VAR>smk_mrgall_nctox.csh</VAR></A>
+                 <DT><A HREF="smk_nonroad_nctox.csh"     ><VAR>smk_nonroad_nctox.csh</VAR></A>
+                 <DT><A HREF="smk_point_nctox.csh"       ><VAR>smk_point_nctox.csh</VAR></A>
+                 <DT><A HREF="smk_rateperdistance_nctox.csh" ><VAR>smk_rateperdistance_nctox.csh</VAR></A>
+                 <DT><A HREF="smk_rateperhour_nctox.csh"     ><VAR>smk_rateperhour_nctox.csh</VAR></A>
+                 <DT><A HREF="smk_rateperprofile_nctox.csh"  ><VAR>smk_rateperprofile_nctox.csh</VAR></A>
+                 <DT><A HREF="smk_ratepervehicle_nctox.csh"  ><VAR>smk_ratepervehicle_nctox.csh</VAR></A>
+             </DL>
+             </BLOCKQUOTE>
     </DL></BLOCKQUOTE>
 
     For more about Singularity see the <U>Singularity User Guide</U>
@@ -298,7 +281,7 @@ Requirements for your Host Machine
     <STRONG>Note:</STRONG> on the compute clusters at UNC (and possibly
     other sites), Singularity is configured to run on the compute nodes
     only, but not on the login nodes.  The
-    <VAR>singularity-cmaq/Scripts-BATCH/</VAR> versions of the scripts
+    <VAR>cmaq_cmaq/Scripts-BATCH/</VAR> versions of the scripts
     are intended for this usage, e.g., on the UNC cluster <VAR>dogwood</VAR>. 
     For other such situations, consult your cluster's systems
     administrator for instructions on how to run Singularity
@@ -314,9 +297,8 @@ Requirements for your Host Machine
     this Singularity container.  There are CCTM builds for 
     <STRONG>three different MPI implementations: MPICH-3, MVAPICH-2, and
     OPENMPI-3</STRONG>; script-variable <CODE>MPIVERSION</CODE> in the
-    <VAR>singularity_cctm*.csh</VAR> scripts selects which of these will
-    be used.  Note that you must use a matching  <VAR>mpirun</VAR>,
-    as given by the <VAR>module load</VAR> in the scripts<VAR>cmaq.simg</VAR>...
+    <VAR>cmaq_cctm*.csh</VAR> script selects which of these will
+    be used.
     <P>
     
     In this container, the only MPI application affected by this is the
@@ -447,7 +429,7 @@ Requirements for your Host Machine
     <P>
 
 
-    <STRONG><A NAME="host">Selected Host-machine Firectories and
+    <STRONG><A NAME="host">Selected Host-machine Directories and
     Files:</A></STRONG>
     <P>
     <VAR>Singularity</VAR> <STRONG>mounts various directories from
@@ -459,13 +441,13 @@ Requirements for your Host Machine
     <P>
 
     The assumption in the current &quot;execute a CMAQ model component
-    on the container&quot; scripts is that a single master
-    data-directory <CODE>${HOSTDATA}</CODE> on the host should be mounted
-    onto the container's <VAR>/opt/CMAQ_REPO/data/</VAR>:  that
-    <STRONG>master data-directory will have sub-directories</STRONG> for
-    all of the input data <STRONG>and for the CCTM output data and
-    logs</STRONG>.  The expected sub-directory structure for the master
-    directory is given below. 
+    on the container&quot; scripts is that <STRONG>a single master
+    data-directory <CODE>${HOSTDATA}</CODE></STRONG> on the host should
+    be mounted onto the container's <VAR>/opt/CMAQ_REPO/data/</VAR>: 
+    that <STRONG>master data-directory will have
+    sub-directories</STRONG> for all of the input data <STRONG>and for
+    the CCTM output data and logs</STRONG>.  The expected sub-directory
+    structure for the master directory is given below. 
     <BR>
     Note that this is a unified-and-simplified directory structure used
     by all of the CMAQ modeling components.  The top level
@@ -564,7 +546,7 @@ Requirements for your Host Machine
     environment before invoking a <VAR>singularity</VAR>
     command&mdash;you prefix the desired environment-variable name with
     <CODE>SINGULARITYENV_</CODE>. For example, the following sequence
-    in host-script <VAR>Scripts-CMAQ/singularity-cctm.csh</VAR>
+    in host-script <VAR>Scripts-CMAQ/cmaq_cctm.csh</VAR>
     <PRE>
     setenv SINGULARITYENV_START_DATE    "2016-07-01"
     setenv SINGULARITYENV_START_TIME    0000000
@@ -615,8 +597,8 @@ Requirements for your Host Machine
     <P>
 
     The <STRONG>sample scripts</STRONG> from directory
-    <VAR>singularity-cmaq/Scripts-CMAQ/</VAR> and
-    <VAR>singularity-cmaq/Scripts-SMOKE/</VAR>
+    <VAR>cmaq_cmaq/Scripts-CMAQ/</VAR> and
+    <VAR>cmaq_cmaq/Scripts-SMOKE/</VAR>
     are of two types:
     <OL>
         <LI> Scripts that use <VAR>singularity&nbsp;exec</VAR> to run
@@ -630,10 +612,19 @@ Requirements for your Host Machine
              that  (after setting up environment and mounted
              directories), uses the <VAR>singularity&nbsp;shell</VAR>
              command that gives you a <VAR>tcsh</VAR> session on the
-             container, to allow you to run interactive programs such as
-             <VAR>ncdump</VAR>, <VAR>ncview</VAR>, <VAR>m3stat</VAR> (etc.),
+             container from your host-machine command-line, to allow you
+             to run interactive programs such as <VAR>ncdump</VAR>,
+             <VAR>ncview</VAR>, <VAR>m3stat</VAR> (etc.),
              <VAR>VERDI</VAR>, or <VAR>pave</VAR> that are installed in
-             the container, e.g., for <A HREF = "#tools">Interactive Tool Use</A>.
+             the container, e.g., for <A HREF = "#tools">Interactive
+             Tool Use</A>.
+             <BR>
+             <EM>NOTE that for the UNC servers, <VAR>singularity</VAR>
+             is not available from login-node command-lines; the
+             <STRONG>singularity-term.csh</STRONG> can be launched into
+             a debug-queue, where it will launch an X-based terminal
+             from the container, to give you that sort of command-line
+             access there.</EM>
     </OL>
 
     <STRONG>For SMOKE scripts</STRONG> using
@@ -691,8 +682,8 @@ Requirements for your Host Machine
     re-direct it.  For a modeling-component <VAR>foo</VAR>, if the
     package is installed under your home directory, that might look like
     <PRE>
-    [ cd ${HOME}/singularity-cmaq/Scripts-CMAQ ]
-    singularity-foo.csh &gt;&amp; ../Logs/singularity-foo.log &amp;
+    [ cd ${HOME}/cmaq_cmaq/Scripts-CMAQ ]
+    cmaq_foo.csh &gt;&amp; ../Logs/cmaq_foo.log &amp;
     </PRE>
     <P>
 
@@ -706,10 +697,8 @@ Requirements for your Host Machine
         <DD> path name for the CMAQ container on your host-machine
     </DL></BLOCKQUOTE>
 
-    <STRONG>For batch-oriented scripts</STRONG> (in 
-    <VAR>singularity-cmaq/Scripts-BATCH/</VAR>) you will also need to
-    customize the batch-queue parameters and possibly the <VAR>module
-    load</VAR> statements.
+    <STRONG>For batch-queue use of the scripts</STRONG> you may also 
+    need to customize the batch-queue parameters.
     <P>
 
     <STRONG>For the CCTM scripts</STRONG>, you will also need to
@@ -779,9 +768,9 @@ Requirements for your Host Machine
 <BLOCKQUOTE>
 
     There are optimized and debug <STRONG>CMAQ executables</STRONG> for
-    each of three MPI implementations:  MPICH-3, OPENMPI-3, and (work in
-    progress, not yet complete:) MVAPICH-2.  The executables can be
-    found as <CODE>CCTM_v531.exe</CODE> in the following CMAQ-container directories:
+    each of three MPI implementations:  MPICH-3, OPENMPI-3, and MVAPICH-2.
+    The executables can be found as <CODE>CCTM_v531.exe</CODE> in the
+    following CMAQ-container directories:
     <PRE>
     /opt/CMAQ_REPO/CCTM/scripts/
         BLD_CCTM_v531_gcc-mpich3/
@@ -791,9 +780,7 @@ Requirements for your Host Machine
         BLD_CCTM_v531_gccdbg-openmpi/
         BLD_CCTM_v531_gccdbg-mvapich2/
     </PRE>
-    respectively (<EM>with <CODE>mvapich2</CODE> not currently
-    supported</EM>; there are shared-library issues not yet resolved
-    as of this writing).  In all cases, they are compiled for &quot;64-bit
+    respectively.  In all cases, they are compiled for &quot;64-bit
     medium memory model&quot; (see
     <A HREF="https://cjcoats.github.io/ioapi/AVAIL.html#medium">
     https://cjcoats.github.io/ioapi/AVAIL.html#medium</A>) so that even
@@ -805,11 +792,12 @@ Requirements for your Host Machine
     other compiler-choices (Intel, PGI, ...) are not supported.  The
     choice of which executable to use (and whether to invoke the
     debugger on that executable) is controlled by container-environment
-    variable <STRONG><CODE>DEBUG</CODE></STRONG>.
+    variables <STRONG><CODE>MPIVERSION</CODE></STRONG> and 
+    <STRONG><CODE>DEBUG</CODE></STRONG>.
     <P>
 
     The attempt has been made to <STRONG>re-structure</STRONG> the CMAQ
-    CCTM run-script and the CMAQ directories for use with the container.
+    run-scripts and the CMAQ directories for use with the container.
     The reasons for this are two-fold:  first, for consistency among the
     CMAQ CCTM, its pre-processors, post-processors, and utility
     programs; secondly,  so that there might be a single
@@ -886,11 +874,11 @@ Requirements for your Host Machine
     <CODE>FOO</CODE> exists in the container environment, then use its
     existing value; else use the default <CODE>BAR</CODE>. Consequently,
     one can  change  all the <STRONG>other CCTM control
-    variables</STRONG> in the <VAR>singularity-cctm.csh</VAR> script, as
+    variables</STRONG> in the <VAR>cmaq_cctm.csh</VAR> script, as
     follows:  To put a different value <CODE>QUX</CODE> for environment
     variable <CODE>FOO</CODE> to override these defaults, you need to do
     a <VAR>setenv</VAR> of the following form in the
-    <VAR>singularity-cctm.csh</VAR> script, prefixing the
+    <VAR>cmaq_cctm.csh</VAR> script, prefixing the
     environment-variable name <CODE>FOO</CODE> by
     <CODE>SINGULARITYENV_</CODE>)
     <PRE>
@@ -903,7 +891,7 @@ Requirements for your Host Machine
     <P>
 
     Note that both the <VAR>run_cctm.csh</VAR> script and the
-    <VAR>singularity-cctm.csh</VAR> script have been re-structured to
+    <VAR>cmaq_cctm.csh</VAR> script have been re-structured to
     capture exit-status (from <CODE>M3EXIT()</CODE> or from other causes
     of failure, e.g., <CODE>SEGFAULT</CODE>) correctly; and in case of
     such a failure,  <VAR>run_cctm.csh</VAR> terminates the current run
@@ -928,7 +916,7 @@ Requirements for your Host Machine
     <H3><VAR>bcon</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-bcon.csh</VAR> sets up control
+    Host-script <VAR>cmaq_bcon.csh</VAR> sets up control
     variables
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>FIN_APPL</CODE></STRONG>
@@ -983,7 +971,7 @@ Requirements for your Host Machine
     <H3><VAR>icon</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-icon.csh</VAR> sets up control
+    Host-script <VAR>cmaq_icon.csh</VAR> sets up control
     variables
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>FIN_APPL</CODE></STRONG>
@@ -1018,7 +1006,7 @@ Requirements for your Host Machine
     <H3><VAR>mcip</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-mcip.csh</VAR> sets up the following control
+    Host-script <VAR>cmaq_mcip.csh</VAR> sets up the following control
     variables (using different conventions than the other CMAQ modeling
     components):
     <BLOCKQUOTE><DL>
@@ -1101,7 +1089,7 @@ Requirements for your Host Machine
     <H3><VAR>appendwrf</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-appendwrf.csh</VAR> sets up the data
+    Host-script <VAR>cmaq_appendwrf.csh</VAR> sets up the data
     directory <CODE>${HOSTDIR}</CODE>, optionally the
     container-subdirectories <CODE>INDIR</CODE> and <CODE>OUTDIR</CODE>
     and the  basenames  <CODE>INFILE1, INFILE2, INFILE3</CODE> for the
@@ -1115,7 +1103,7 @@ Requirements for your Host Machine
     <H3><VAR>bldoverlay</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-bldoverlay.csh</VAR> sets up
+    Host-script <VAR>cmaq_bldoverlay.csh</VAR> sets up
     environment variables  <CODE>START_DATE, END_DATE, APPL,
     HOURS_8HRMAX</CODE> and optionally <CODE>MISS_CHECK, SPECIES,
     UNITS</CODE>, mounts the indicated data-directory
@@ -1128,7 +1116,7 @@ Requirements for your Host Machine
     <H3><VAR>block_extract</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-block_extract.csh</VAR> sets up the data
+    Host-script <VAR>cmaq_block_extract.csh</VAR> sets up the data
     directory <CODE>${HOSTDIR}</CODE>, environment variables
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>APPL</CODE></STRONG>
@@ -1169,7 +1157,7 @@ Requirements for your Host Machine
     <H3><VAR>calc_tmetric</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-calc_tmetric.csh</VAR> sets up the data
+    Host-script <VAR>cmaq_calc_tmetric.csh</VAR> sets up the data
     directory <CODE>${HOSTDIR}</CODE>, environment variables
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>APPL</CODE></STRONG>
@@ -1196,7 +1184,7 @@ Requirements for your Host Machine
     <H3><VAR>combine</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-combine.csh</VAR> sets up the data
+    Host-script <VAR>cmaq_combine.csh</VAR> sets up the data
     directory <CODE>${HOSTDIR}</CODE>, environment variables
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>MECH</CODE></STRONG>
@@ -1221,7 +1209,7 @@ Requirements for your Host Machine
     <H3><VAR>hr2day</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-hr2day.csh</VAR> sets up the data
+    Host-script <VAR>cmaq_hr2day.csh</VAR> sets up the data
     directory <CODE>${HOSTDIR}</CODE>, environment variables
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>APPL</CODE></STRONG>
@@ -1296,7 +1284,7 @@ Requirements for your Host Machine
     <H3><VAR>writesite</VAR></H3>
 
     <BLOCKQUOTE>
-    Host-script <VAR>singularity-writesite.csh</VAR> sets up the data
+    Host-script <VAR>cmaq_writesite.csh</VAR> sets up the data
     directory <CODE>${HOSTDIR}</CODE>, environment variables
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>APPL</CODE></STRONG>
@@ -1439,7 +1427,7 @@ Requirements for your Host Machine
 
     <STRONG>On-host runscripts</STRONG> such as
     <VAR>smk_ratepervehicle_nctox.csh</VAR> in host-machine directory
-    <VAR>singularity-cmaq/Scripts-SMOKE/</VAR> pass the basename of
+    <VAR>cmaq_cmaq/Scripts-SMOKE/</VAR> pass the basename of
     the appropriate <VAR>ASSIGNS</VAR>-script in environment variable
     <CODE>ASSIGNS_FILE</CODE> to the container, and  invoke the
     appropriate sequence of <VAR>smk_run.csh</VAR> and
@@ -1521,18 +1509,22 @@ Requirements for your Host Machine
              <VAR>singularity-shell.csh</VAR> (or script them in a
              directory mounted from your host machine, using the
              principles described above, and invoke the script
-             on the container after doling <VAR>singularity-shell.csh</VAR>).
+             on the container after doing <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue).
              <P>
         <DT> <STRONG><VAR>verdi.sh</VAR></STRONG> version <CODE>2.0_beta</CODE>
         <DD> a gridded Java based netCDF data visualization tool from EPA:
              see <A HREF="https://www.cmascenter.org/verdi/">
              https://www.cmascenter.org/verdi/</A><BR>
-             Host script:  <VAR>singularity-cmaq/Scripts-CMAQ/singularity-verdi.csh</VAR>
+             Host script:  <VAR>cmaq_cmaq/Scripts-CMAQ/cmaq_verdi.csh</VAR>
              will directly invoke <VAR>verdi</VAR> on the container.
              Edit this script as indicated above, to suit your host
              machine and data directory  situation.<BR>
              <VAR>verdi</VAR> may also be run interactively on the
              container, after you invoke <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue
              <P>
              Note that any output from <VAR>verdi</VAR> (e.g., any image-files 
              you created, or output from <CODE>save project</CODE> must
@@ -1577,40 +1569,52 @@ Requirements for your Host Machine
              <CODE>TK</CODE>, Temperature (Kelvin).<BR>
              <VAR>pave</VAR> is probably best run interactively
              after you invoke <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue
              <P>
         <DT> <STRONG><VAR>ncview</VAR></STRONG> version 2.1.2
         <DD> a netcdf-file visualization tool from UCSD; see
              <A HREF="http://meteora.ucsd.edu/~pierce/ncview_home_page.html">
               http://meteora.ucsd.edu/~pierce/ncview_home_page.html</A><BR>
-             Host script:  <VAR>singularity-cmaq/Scripts-CMAQ/singularity-ncview.csh</VAR><BR>
+             Host script:  <VAR>cmaq_cmaq/Scripts-CMAQ/cmaq_ncview.csh</VAR><BR>
              Edit this script as indicated above, to suit your host
              machine and data directory  situation, or run <VAR>ncview</VAR>
              interactively after you invoke <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue
              <P>
         <DT> <STRONG><VAR>panoply</VAR></STRONG>
         <DD> a netCDF, HDF and GRIB data viewer tool from NASA:
              see <A HREF="https://www.giss.nasa.gov/tools/panoply/">
              https://www.giss.nasa.gov/tools/panoply/</A><BR>
-             Host script:  <VAR>singularity-cmaq/Scripts-CMAQ/singularity-panoply.csh</VAR><BR>
+             Host script:  <VAR>cmaq_cmaq/Scripts-CMAQ/cmaq_panoply.csh</VAR><BR>
              Edit this script as indicated above, to suit your host
              machine and data directory  situation, or run <VAR>panoply</VAR>
-             interactively after you invoke <VAR>singularity-shell.csh</VAR>.
+             interactively after you invoke <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue.
              <P>
         <DT> <STRONG><VAR>GrADS</VAR></STRONG>
         <DD> the Grid Analysis and Display System from
              GMU:  see <A HREF="http://cola.gmu.edu/grads/">http://cola.gmu.edu/grads/</A><BR>
              <VAR>GrADS</VAR> is probably best run interactively
              after you invoke <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue
              <P>
         <DT> <STRONG>NCAR Graphics</STRONG>
         <DD> see <A HREF="http://ngwww.ucar.edu/">http://ngwww.ucar.edu/</A><BR>
              NCAR Graphics is probably best run interactively
              after you invoke <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue
              <P>
         <DT> <STRONG><VAR>gnuplot</VAR></STRONG>
         <DD> graphics/plotting tool:  see <A HREF="http://www.gnuplot.info/">http://www.gnuplot.info/</A><BR>
              <VAR>gnuplot</VAR> is probably best run interactively
              after you invoke <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue
              <P>
         <DT> <STRONG><VAR>ddd</VAR></STRONG> and <STRONG><VAR>gdb</VAR></STRONG>
         <DD> debuggers:  <VAR>ddd</VAR> is a GUI &quot;wrapper&quot; for
@@ -1619,6 +1623,8 @@ Requirements for your Host Machine
              modeling-component scripts; or you can run them
              interactively after you invoke
              <VAR>singularity-shell.csh</VAR>
+             or  launching <VAR>singularity-term.csh</VAR> to a
+             debug-queue
              <P>
         <DT> <STRONG><VAR>nedit</VAR></STRONG>
         <DD> GUI text editor for interactive use,  after you invoke
@@ -1660,7 +1666,7 @@ Requirements for your Host Machine
     </DL></BLOCKQUOTE>
     <P>
 
-    <STRONG><VAR>singularity-cmaq/Scripts-CMAQ/singularity-shell.csh</VAR></STRONG>
+    <STRONG><VAR>cmaq_cmaq/Scripts-CMAQ/singularity-shell.csh</VAR></STRONG>
     is an example of a host-system script that
     <UL>
         <LI> sets up some environment variables;
