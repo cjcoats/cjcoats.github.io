@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 180 2020-07-14 17:56:48Z coats $" -->
+<!-- "$Id: AVAIL.html 182 2020-08-07 19:22:30Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -170,9 +170,11 @@ m3stat:
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A><BR>, or
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.
                        </BLOCKQUOTE>
-                       or for the April 20, 2020 version
+                       or for the April 20, 2020 or August 7, 2020
+                       versions
                        <BLOCKQUOTE>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020111.tar.gz"><VAR>ioapi-3.2-2020111.tar.gz</VAR></A>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020220.tar.gz"><VAR>ioapi-3.2-2020220.tar.gz</VAR></A>
                        </BLOCKQUOTE>
                        It contains directories <CODE>ioapi</CODE> for
                        the I/O&nbsp;API library source code,
@@ -191,10 +193,11 @@ m3stat:
                        <STRONG>This version should be kept carefully
                        isolated from the regular version of the
                        I/O&nbsp;API, and should be used only for
-                       CMAQ-DDM and CMAQ-ISAM.  The frozen-for-CMAQ
-                       April 20, 2020 version of I/O&nbsp;API-large can
-                       be downloaded from the CMAS web-site:<BR>
+                       CMAQ-DDM and CMAQ-ISAM:  <BR>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-large.tar.gz"><VAR>ioapi-3.2-large.tar.gz</VAR></A><BR>
+                       The frozen-for-CMAQ August 7, 2020 version of I/O&nbsp;API-large can
+                       be downloaded from the CMAS web-site:<BR>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-large.tar.gz"><VAR>ioapi-3.2-large-2020220.tar.gz</VAR></A><BR>
                        </STRONG>
                        <P>
                        Version&nbsp;3.2 is also available on GitHub from
@@ -207,9 +210,13 @@ m3stat:
     <PRE>
     git clone https://github.com/cjcoats/ioapi-3.2
     </PRE>
-    or, for the April 20, 2020 version
+    or, for the April 20, 2020 or August 7, 2020 versions
     <PRE>
     git clone --branch 2020111 https://github.com/cjcoats/ioapi-3.2
+    </PRE>
+    or
+    <PRE>
+    git clone --branch 2020220 https://github.com/cjcoats/ioapi-3.2
     </PRE>
                   Note that this latter gives you a fixed-release
                   version, for which the &quot;rolling release&quot;
@@ -1987,7 +1994,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 180 2020-07-14 17:56:48Z coats $
+    $Id: AVAIL.html 182 2020-08-07 19:22:30Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
