@@ -61,7 +61,7 @@
              <VAR>PATH</VAR>s and <VAR>alias</VAR>es already set up for
              you on the container); and
         <LI> A &quot;local&quot; directory
-             <STRONG><VAR>cmaq_cmaq/</VAR></STRONG> for your
+             <STRONG><VAR>singularity-cmaq/</VAR></STRONG> for your
              host-machine, that contains various sample scripts for
              interacting with CMAQ and SMOKE submodels, tools, and other
              programs on that container, as well as this documentation.
@@ -111,6 +111,8 @@
              metscan, movesmrg, mrgelev, mrggrid, mrgpt, pktreduc,
              saregroup,  smk2emis, smkinven, smkmerge, smkreport,
              spcmat, surgtool,  temporal, tmpbeis3, uam2ncf</VAR>.
+        <DT> <STRONG><VAR>AMET</VAR></STRONG> version <CODE>1.4</CODE>
+        <DD> model evaluation tool
         <DT> <STRONG><VAR>verdi</VAR></STRONG> version
         <CODE>2.0_beta</CODE>
         <DD> visualization tool
@@ -164,13 +166,18 @@
     <STRONG>On this container</STRONG> are directories
     <BLOCKQUOTE><DL>
         <DT> <STRONG><VAR>/opt/CMAQ_REPO/scripts/</VAR></STRONG>
-        <DD> scripts designed to run CMAQ modeling components
+        <DD> worker-scripts designed to run CMAQ modeling components.
+             These are invoked by host-machine scripts such as 
+             <VAR>cmaq_cctm.csh</VAR> or <VAR>cmaq_icon.csh</VAR>
+             (below)
         <DT> <STRONG><VAR>/opt/CMAQ_REPO/bin/</VAR></STRONG>
         <DD> optimized executables for the CMAQ modeling components
         <DT> <STRONG><VAR>/opt/CMAQ_REPO/CCTM/scripts/BLD_CCTM_v531_gcc[dbg]-*/</VAR></STRONG>
         <DD> optimized and debug CMAQ CCTM executables for various MPI versions.
         <DT> <STRONG><VAR>/opt/SMOKE/scripts/run/</VAR></STRONG>
-        <DD> scripts to run SMOKE
+        <DD> worker-scripts to run SMOKE.
+             These are invoked by host-machine scripts such as 
+             <VAR>smk_point_nctox.csh</VAR> (below)
         <DT> <STRONG><VAR>/opt/SMOKE/Linux2_x86_64gfort_medium/</VAR></STRONG>, <BR>
              <STRONG><VAR>/opt/SMOKE/Linux2_x86_64gfort_mediumdbg/</VAR></STRONG>,
         <DD> optimized and debug SMOKE executables
@@ -218,8 +225,8 @@
                  <DT><A HREF="cmaq_cctm.csh"         ><VAR>cmaq_cctm.csh</VAR></A>
                  <DD> Set up environment on the container for a
                       (multi-day) CMAQ CCTM run and then use the
-                      container's <VAR>run_cctm.csh</VAR> to execute
-                      that run.
+                      container's <VAR>run_cctm.csh</VAR> worker-script
+                      to execute that run.
                  <DT><A HREF="cmaq_appendwrf.csh"    ><VAR>cmaq_appendwrf.csh</VAR></A>
                  <DD> etc...
                  <DT><A HREF="cmaq_bcon.csh"         ><VAR>cmaq_bcon.csh</VAR></A>
@@ -232,7 +239,7 @@
                  <DT><A HREF="cmaq_writesite.csh"    ><VAR>cmaq_writesite.csh</VAR></A>
                  <P>
                  <DT><A HREF="smk_area_nctox.csh"        ><VAR>smk_area_nctox.csh</VAR></A>
-                 <DD> Set up the environment to run a (multi-day_ SMOKE area source run
+                 <DD> Set up the environment and run a (multi-day) SMOKE area source run
                       on the container.
                  <DT><A HREF="smk_bg_nctox.csh"          ><VAR>smk_bg_nctox.csh</VAR></A>
                  <DD> etc...
@@ -354,6 +361,7 @@ Requirements for your Host Machine
     <PRE>
     /data                               #  extra mount-point, if needed
 
+    /opt/AMET_14/
     /opt/CMAQ_REPO/
     /opt/CMAQ_REPO/bin/                 #  optimized Linux2_x86_64gfort_medium executables
         appendwrf_v531.exe
@@ -595,6 +603,13 @@ Requirements for your Host Machine
     correct return of execution status, to support a common set of
     &quot;verbose&quot; options, and to support debugging.
     <P>
+
+    <EM>Unfortunately, a number of CMAQ pre-processing, post-processing,
+    and utility programs do not follow the modeling standard of
+    returning the program's exit status using I/O&nbsp;API routine
+    <CODE>M3EXIT()</CODE> to terminate execution, thus making proper
+    process management  difficult for them.  
+    </EM><P>
 
     The <STRONG>sample scripts</STRONG> from directory
     <VAR>cmaq_cmaq/Scripts-CMAQ/</VAR> and
@@ -1530,6 +1545,15 @@ Requirements for your Host Machine
              you created, or output from <CODE>save project</CODE> must
              be in a directory mounted from your host-machine; you may 
              recall that your <VAR>${HOME</VAR> is one such directory...
+             <P>
+        <DT> <STRONG><VAR>AMET</VAR></STRONG> version <CODE>1.4</CODE>
+        <DD> software for the analysis and evaluation of predictions
+             from meteorological and air quality models. See
+             <A HREF="https://www.cmascenter.org/amet/">https://www.cmascenter.org/amet/</A>
+             <BR>
+             AMET matches the model output for particular locations to
+             the corresponding observed values from one or more networks
+             of monitors. 
              <P>
         <DT> <STRONG><VAR>pave</VAR></STRONG> version <CODE>3.0 beta</CODE>
         <DD> a visualization tool for I/O API / UAM / CAMX data, from MCNC

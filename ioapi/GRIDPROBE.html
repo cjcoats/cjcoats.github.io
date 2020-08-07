@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRIDPROBE.html 143 2020-02-14 16:40:32Z coats $" -->
+<!-- "$Id: GRIDPROBE.html 181 2020-08-07 18:44:46Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> Program GRIDPROBE </TITLE>
 </HEAD>
@@ -44,7 +44,7 @@
     setenv  REPORT    &lt;path name for output ASCII   file&gt; or &quot;NONE&quot;
     setenv  OUTFILE   &lt;path name for output M3IO    file&gt; or &quot;NONE&quot;
     setenv  HEADER    &lt;ASCII header on ${REPORT}? (Y/N) [N]&gt;
-    m3probe [and answer the prompts]
+    gridprobe [and answer the prompts]
     </PRE>
     where <VAR>INFILE</VAR> is the <A HREF = "LOGICALS.html"> logical
     name </A>  of the input data file,  <VAR>POINTS</VAR> is the logical
@@ -53,16 +53,19 @@
     printed.    <VAR>INFILE</VAR> must be of type <CODE>GRDDED3</CODE>.
     <VAR>POINTS</VAR> is a list-formatted (blank or comma delimited)
     ASCII file with up to 256 lines giving the latitude and longitude
-    for the interpolation-points, with one point per line. <STRONG>The
-    program will prompt you</STRONG> for the starting and ending date
-    and time and the time step for the report period, the variable to be
-    reported.  Default values for the time period are computed from the
-    metadata in the <VAR>INFILE</VAR> header, and may be accepted by
-    hitting the <CODE>RETURN</CODE> key.
+    for the interpolation-points, with one point per line.
+    <BR>
+    <STRONG>The program will prompt you</STRONG> for the starting and
+    ending date and time and the time step for the report period, and
+    the name of the variable to be reported.  Default values for the
+    time period are computed from the metadata in the <VAR>INFILE</VAR>
+    header, and may be accepted by hitting the <CODE>RETURN</CODE> key.
     <P> 
 
     The program will log both the input Lat-Lon coordinates and the
-    grid-normal coordinates
+    corresponding grid-normal coordinates (i.e.,
+    <CODE>1&nbsp;+&nbsp;INT(X)&nbsp;=&nbsp;grid-column</CODE> and
+    <CODE>1&nbsp;+&nbsp;INT(Y)&nbsp;=&nbsp;grid-row</CODE>):
     <BLOCKQUOTE><CODE>
     X<SUB>grid</SUB> = ( X - XORIG ) / XCELL<BR>
     Y<SUB>grid</SUB> = ( Y - YORIG ) / YCELL
