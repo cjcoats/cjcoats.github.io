@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: TUTORIAL.html 181 2020-08-07 18:44:46Z coats $" -->
+<!-- "$Id: TUTORIAL.html 183 2020-08-13 16:42:20Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> TUTORIAL:  Using the I/O&nbsp;API </TITLE>
 </HEAD>
@@ -1404,20 +1404,25 @@ How to Manipulate Them
              <P>
         <DT> <A HREF = "MODNCFIO.html">
              <STRONG><VAR>MODULE MODNCFIO</VAR></STRONG></A> provides
-             parameters and function-declarations for netCDF,
-             and for PnetCDF, <A HREF="BUFFERED.html#pncf">if
-             PnetCDF/MPI distributed-I/O</A> is enabled.<BR>
-             Can be used to replace <CODE>INCLUDE</CODE>-file
-             <VAR>NETCDF.EXT</VAR> or <VAR>netcdf.inc</VAR>,
-             Also includes new routines for inquiring about,
-             reading, and writing variables from &quot;raw&quot;
-             netCDF files.
+             parameters and function-declarations for netCDF, and for
+             PnetCDF, <A HREF="BUFFERED.html#pncf">if PnetCDF/MPI
+             distributed-I/O</A> is enabled.<BR> Can be used to replace
+             <CODE>INCLUDE</CODE>-file <VAR>NETCDF.EXT</VAR> or
+             <VAR>netcdf.inc</VAR>, Also includes new high-level
+             routines for inquiring about, reading, and writing
+             variables from &quot;raw&quot; netCDF files.
+             <P>
+        <DT> <A HREF = "MODWRFIO.html">
+             <STRONG><VAR>MODULE MODWRFIO</VAR></STRONG></A> provides
+             high level I/O routines for opening, creating, reading, and
+             writing WRF-format-netCDF files.
              <P>
         <DT> <A HREF = "MODMPASFIO.html">
              <STRONG><VAR>MODULE MODMPASFIO</VAR></STRONG></A> provides
-             Unstructured-grid description for MPAS domains, related
-             parameters and state variables,  MPAS-format-netCDF I/O
-             routines, and various utility routines
+             high level  MPAS-format-netCDF I/O routines, together with
+             unstructured-MPAS-grid description for MPAS domains,
+             related parameters and state variables, and various
+             MPAS-grid geometry and utility routines
              <P>
         <DT> <A HREF = "AA.html#utility"><STRONG>There are utility
              routines</STRONG></A> for a wide variety of modeling
@@ -1431,7 +1436,7 @@ How to Manipulate Them
              manipulation tasks.  Source code for all of these programs
              is available for you to examine and use as part of the 
              I/O&nbsp;API download; <A HREF = "SAMPLE.html">certain of
-             these are annotated and available for you to view in web
+             these</A> are annotated and available for you to view in web
              form.
              <P>
     </DL>
@@ -1555,6 +1560,7 @@ BAR, ''
     ...
 
     !!........  <I>Open output file(s).  First, fill in FDESC...</I>
+    !!........  <I>(borrowing parts of the FDESC from METCRO2D)</I>
     ...
     NVARS3D = ...
     NLAYS3D = 1
@@ -1641,7 +1647,7 @@ To: <STRONG>Models-3/EDSS I/O&nbsp;API:   The Help Pages</STRONG>
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: TUTORIAL.html 181 2020-08-07 18:44:46Z coats $
+$Id: TUTORIAL.html 183 2020-08-13 16:42:20Z coats $
     </PRE>
 
 </BODY>
