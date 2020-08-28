@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 182 2020-08-07 19:22:30Z coats $" -->
+<!-- "$Id: AVAIL.html 186 2020-08-28 17:40:06Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -170,11 +170,12 @@ m3stat:
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A><BR>, or
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.
                        </BLOCKQUOTE>
-                       or for the April 20, 2020 or August 7, 2020
+                       or for the April&nbsp;20, 2020,  August&nbsp;7, 2020, or August&nbsp;28, 2020
                        versions
                        <BLOCKQUOTE>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020111.tar.gz"><VAR>ioapi-3.2-2020111.tar.gz</VAR></A>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020220.tar.gz"><VAR>ioapi-3.2-2020220.tar.gz</VAR></A>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020220.tar.gz"><VAR>ioapi-3.2-20200828.tar.gz</VAR></A>
                        </BLOCKQUOTE>
                        It contains directories <CODE>ioapi</CODE> for
                        the I/O&nbsp;API library source code,
@@ -217,6 +218,10 @@ m3stat:
     or
     <PRE>
     git clone --branch 2020220 https://github.com/cjcoats/ioapi-3.2
+    </PRE>
+    or
+    <PRE>
+    git clone --branch 20200828 https://github.com/cjcoats/ioapi-3.2
     </PRE>
                   Note that this latter gives you a fixed-release
                   version, for which the &quot;rolling release&quot;
@@ -290,6 +295,24 @@ m3stat:
                                  <VAR>pnetCDF/MPI</VAR>
                                  distributed-output vs coupling-mlode
                        </UL>
+                       <P>
+                       <STRONG><VAR>gfortran</VAR> Warning:</STRONG> 
+                       Starting with version 10, <VAR>gfortran</VAR> is
+                       taking a particular indiosyncraticinterpretation
+                       of the Fortran-2018 Standard.  In order to build
+                       <U>any</U> of the modeling codes, starting with
+                       netCDF-Fortran, you will need to include the compile-flag
+                       <PRE>
+                       -fallow-argument-mismatch
+                       </PRE>
+                       in all compiles (for netCDF-Fortran,
+                       I/O&nbsp;API, M3Tools, SMOKE, CMAQ, and all their
+                       pre- and post-processors and utility programs).
+                       As of Aug.&nbsp;28, 2020, there are now new
+                       <CODE>BIN=Linux*gfort10*</CODE> types and corresponding
+                       <VAR>Makeinclude.Linux*gfort10*</VAR> that
+                       incorporate this flag for the  I/O&nbsp;API and
+                       M3Tools.
                        <P>
                        <STRONG>Intel-compiler Warning:</STRONG>  For
                        whatever reason, Intel has chosen to change some
@@ -1994,7 +2017,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 182 2020-08-07 19:22:30Z coats $
+    $Id: AVAIL.html 186 2020-08-28 17:40:06Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

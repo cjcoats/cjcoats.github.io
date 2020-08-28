@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 183 2020-08-13 16:42:20Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 186 2020-08-28 17:40:06Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 183 2020-08-13 16:42:20Z coats $
+    $Id: NEWSTUFF.html 186 2020-08-28 17:40:06Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,9 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#aug282020"> 
+               New <VAR>Makeinclude.*gfort10*</VAR> files for <VAR>gfortran</VAR></A>
+               version 10; new 20200828 tagged version.
          <LI>  <A HREF = "#july122020"> 
                Additional compile-flag for <VAR>gfortran</VAR></A>
                version 10; bug-fixes in pnetcdf create-file routine.
@@ -748,6 +751,38 @@
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "aug282020">
+    New <VAR>Makeinclude.*gfort10*</VAR> files for <VAR>gfortran</VAR>
+    version 10; new 20200828 tagged version.
+</A></H2>
+
+    <BLOCKQUOTE>
+    Version 10 of <VAR>gfortran</VAR>  takes a particularly
+    idiosyncratic interpretation of the (latest) Fortran-2018 Standard. 
+    Starting with netCDF and going through the I/O&nbsp;API, M3Tools,
+    CMAQ. SMOKE, and all other programs, program-builds that use this
+    version of <VAR>gfortran</VAR> need to include the  compile-flag
+    <PRE>
+    -fallow-argument-mismatch
+    </PRE>
+    <P>
+    In order to get rid of the enormous number of spurious warning
+    messages with most versions of <VAR>gfortran</VAR>, there are now
+    new <VAR>Makeinclude</VAR> files specific to 
+    <VAR>gfortran-10</VAR>; the other  <VAR>gfortran Makeinclude</VAR>
+    files have reverted to the pre-July&nbsp;2020 behavior.
+    <P>
+
+    This version of the I/O API has been tagged 20200828 n GitHub.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
 
 
 <HR> <!----------------------------------------------------------------->
@@ -7380,7 +7415,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 183 2020-08-13 16:42:20Z coats $
+    $Id: NEWSTUFF.html 186 2020-08-28 17:40:06Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

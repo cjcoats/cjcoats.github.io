@@ -5,16 +5,16 @@
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=8
 #SBATCH -J CMAQ8
-##SBATCH -p debug_queue
-#SBATCH -p 528_queue
+#SBATCH -p debug_queue
+##SBATCH -p 528_queue
 #SBATCH --exclusive
 #SBATCH -o /proj/ie/apps/dogwood/singularity/LOGS/singularity-cctm.batch.Benchmark_2Day.8pe.log
-#SBATCH -e /proj/ie/apps/dogwood/singularity/LOGS/singularity-cctm.batch.Benchmark_2Day.8pe.log
+#SBATCH -e /proj/ie/apps/dogwood/singularity/LOGS/singularity-cctm.batch.Benchmark_2Day.8pe.err
 
 # ===================== Singularity "Run CCTM" Script ========================= 
-# Script 6/2020  by C. COATS, UNC IE, for using Singularity to run on the 
-#   CMAQ Singularity container on "longleaf" or "dogwood", which do not
-#   allow Singularity on login-nodes
+# Script 6/2020  by C. COATS, UNC IE, for using Singularity to run
+#   the CMAQ Singularity container on dogwood", which does not allow
+#   Singularity on login-nodes
 #*********************************************************************
 #  HOST-CUSTOMIZATION VARIABLES:
 #   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
