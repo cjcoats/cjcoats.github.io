@@ -21,7 +21,7 @@ set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
 
 set extradirs = ''
-# set extradirs = '=B /foo'
+# set extradirs = '-B /foo'
 
 setenv SINGULARITYENV_NMLDIR        /tmp/CMAQ_nmldir
 mkdir -p ${SINGULARITYENV_NMLDIR}
