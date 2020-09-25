@@ -12,9 +12,9 @@
 #SBATCH -e /proj/ie/apps/dogwood/singularity/LOGS/singularity-cctm.batch.Benchmark_2Day.8pe.err
 
 # ===================== Singularity "Run CCTM" Script ========================= 
-# Script 6/2020  by C. COATS, UNC IE, for using Singularity to run
-#   the CMAQ Singularity container on dogwood", which does not allow
-#   Singularity on login-nodes
+# Script 6/2020  by C. COATS, UNC IE, for using Singularity to run on the 
+#   CMAQ Singularity container on "longleaf" or "dogwood", which do not
+#   allow Singularity on login-nodes
 #*********************************************************************
 #  HOST-CUSTOMIZATION VARIABLES:
 #   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
@@ -22,8 +22,8 @@
 #       ${CRS_APPL} for conc-file and gridded met inputs
 #       ${FIN_APPL} for bdy met-file inputs and BCON outputs
 
-set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
-set CONTAINER = /work/cmaq.simg
+set HOSTDATA  = /proj/ie/proj/staff/cjcoats/CMAQv5.3.1_Benchmark_2Day
+set CONTAINER = /proj/ie/apps/dogwood/singularity/cmaq.sif
 
 #*********************************************************************
 #   For CMAQ-option control-variables such as CONC_SPCS, CTM_MAXSYNC, KZMIN, etc.,
@@ -78,7 +78,7 @@ setenv SINGULARITYENV_CTM_DIAG_LVL  0
 #    setenv SINGULARITYENV_AVG_CONC_SPCS "ALL"
 #    setenv SINGULARITYENV_ACONC_BLEV_ELEV " 1 1" #> ACONC file layer range; comment to write all layers to ACONC
 #    setenv SINGULARITYENV_AVG_FILE_ENDTIME N     #> override default beginning ACONC timestamp [ default: N ]
-#
+# 
 ##########> Synchronization Time Step and Tolerance Options
 # setenv SINGULARITYENV_CTM_MAXSYNC 300       #> max sync time step (sec) [ default: 720 ]
 # setenv SINGULARITYENV_CTM_MINSYNC  60       #> min sync time step (sec) [ default: 60 ]

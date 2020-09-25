@@ -16,11 +16,14 @@ set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set SMOKEDATA = /work/SCRATCH/SMOKE.git/data
 set CONTAINER = /work/cmaq.simg
 
+set extradirs = ''
+# set extradirs = '=B /foo'
+
 # setenv SINGULARITYENV_GEOM 80x80
 
 setenv 
 
-singularity exec \
+singularity exec  ${extradirs} \
  --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
  --bind ${SMOKEDATA}:/opt/SMOKE/data \
  ${CONTAINER} /opt/bin/open_terminal.csh

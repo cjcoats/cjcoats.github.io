@@ -23,6 +23,9 @@ set CONTAINER = /work/cmaq.simg
 
 unsetenv SINGULARITYENV_DEBUGMODE
 
+set extradirs = ''
+# set extradirs = '=B /foo'
+
 ## Set Assigns file basename
 setenv SINGULARITYENV_SINGULARITYENV_ASSIGNS_FILE ASSIGNS.nctox.cmaq.cb05_soa.us12-nc
 
@@ -123,7 +126,7 @@ setenv SINGULARITYENV_NHAPEXCLUDE nhapexclude.all.txt
 
 
 singularity exec \
-   --bind ${HOSTDATA}:/opt/SMOKE/data \
+   --bind ${HOSTDATA}:/opt/SMOKE/data ${extradirs} \
    ${CONTAINER}  /opt/SMOKE/scripts/run/smk_run.csh     # Run programs
 set exitstat = $status
 'if ( $exitstat != 0 ) then
@@ -134,7 +137,7 @@ endif
 if ( $?DEBUGMODE )  exit( 999 )
 
 singularity exec \
-   --bind ${HOSTDATA}:/opt/SMOKE/data \
+   --bind ${HOSTDATA}:/opt/SMOKE/data ${extradirs} \
    ${CONTAINER}  /opt/SMOKE/scripts/run/qa_run.csh      # Run QA for part 2
 set exitstat = $status
 if ( $exitstat != 0 ) then
@@ -156,7 +159,7 @@ while ( $cnt < $EPI_NDAY )
     @ cnt = $cnt + $NDAYS
 
     singularity exec \
-       --bind ${HOSTDATA}:/opt/SMOKE/data \
+       --bind ${HOSTDATA}:/opt/SMOKE/data ${extradirs} \
        ${CONTAINER}  /opt/SMOKE/scripts/run/smk_run.csh     # Run programs
     set exitstat = $status
     if ( $exitstat != 0 ) then
@@ -167,7 +170,7 @@ while ( $cnt < $EPI_NDAY )
     if ( $?DEBUGMODE )  exit( 999 )
 
     singularity exec \
-       --bind ${HOSTDATA}:/opt/SMOKE/data \
+       --bind ${HOSTDATA}:/opt/SMOKE/data ${extradirs} \
        ${CONTAINER}  /opt/SMOKE/scripts/run/qa_run.csh      # Run QA for part 2
     set exitstat = $status
     if ( $exitstat != 0 ) then

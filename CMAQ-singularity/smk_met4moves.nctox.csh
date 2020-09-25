@@ -27,6 +27,9 @@ set CONTAINER = /work/cmaq.simg
 
 unsetenv SINGULARITYENV_DEBUGMODE
 
+set extradirs = ''
+# set extradirs = '=B /foo'
+
 ## Set Assigns file basename
 setenv SINGULARITYENV_ASSIGNS_FILE ASSIGNS.nctox.cmaq.cb05_soa.us12-nc
 
@@ -48,7 +51,7 @@ setenv MOVES_OUTFILE $METDAT/MOVES_${GRID}_${STDATE}-${ENDATE}.txt
 
 
 singularity exec \
-   --bind ${HOSTDATA}:/opt/SMOKE/data \
+   --bind ${HOSTDATA}:/opt/SMOKE/data ${extradirs} \
    ${CONTAINER}  /opt/SMOKE/scripts/run/smk_met4moves_nctox.csh     # Run programs
 set exitstat = $status
 if ( $exitstat != 0 ) then

@@ -12,6 +12,9 @@
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
 
+set extradirs = ''
+# set extradirs = '-B /foo'
+
 # Set up environment for verbose-level and/or debug:
 
 setenv SINGULARITYENV_CTM_DIAG_LVL  0
@@ -34,7 +37,7 @@ setenv SINGULARITYENV_APPL          2016_12SE1
 setenv SINGULARITYENV_HOURS_8HRMAX  24
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+ --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
  ${CONTAINER} /opt/CMAQ_REPO/scripts/run_bldoverlay.csh
 
 if ( ${err_status} != 0 ) then

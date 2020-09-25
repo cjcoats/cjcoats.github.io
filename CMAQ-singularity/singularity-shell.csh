@@ -11,8 +11,11 @@
 #   Comment out un-used directories and the matching "--bind" directives.
 
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
-set SMOKEDATA = /work/SCRATCH/SMOKE.git/data
+set SMOKEDATA = /work/SCRATCH/SMOKE
 set CONTAINER = /work/cmaq.simg
+
+set extradirs = ''
+# set extradirs = '=B /foo'
 
 #   Set up environment variables such as START_DATE, below.
 
@@ -32,7 +35,7 @@ setenv SINGULARITYENV_NPROW         3
 
 cd ${HOSTDATA}
 
-singularity shell -s /usr/bin/tcsh \
+singularity shell -s /usr/bin/tcsh  ${extradirs}\
  --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
  --bind ${SMOKEDATA}:/opt/SMOKE/data \
  ${CONTAINER}

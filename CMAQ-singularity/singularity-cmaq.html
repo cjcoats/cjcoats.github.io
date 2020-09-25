@@ -8,7 +8,7 @@
     Singularity CMAQ Container
 </TITLE>
 </HEAD>
-
+c
 <BODY BGCOLOR="#FFFFFF"
       TOPMARGIN="15"
       MARGINHEIGHT="15"
@@ -227,6 +227,13 @@
                       (multi-day) CMAQ CCTM run and then use the
                       container's <VAR>run_cctm.csh</VAR> worker-script
                       to execute that run.
+                 <DT><A HREF="copy_cmaq_bld.csh"    ><VAR>copy_cmaq_bld.csh</VAR></A>
+                 <DD> to copy a CMAQ CCTM build-directory to the host
+                      machine.
+                 <DT><A HREF="copy_cmaq_nml.csh"    ><VAR>copy_cmaq_nml.csh</VAR></A>
+                 <DD> to copy the CMAQ CCTM namelist-files to a
+                      specified directory on the host machine.
+                 <P>
                  <DT><A HREF="cmaq_appendwrf.csh"    ><VAR>cmaq_appendwrf.csh</VAR></A>
                  <DD> etc...
                  <DT><A HREF="cmaq_bcon.csh"         ><VAR>cmaq_bcon.csh</VAR></A>
@@ -745,6 +752,19 @@ Requirements for your Host Machine
     </PRE>
 
 
+    <STRONG>If you want to mount additional directories on the
+    container</STRONG>, you may use shell-variable
+    <CODE>extradirs</CODE> to put one or more directives
+    <CODE>-B&nbsp;&lt;directory&gt;</CODE> that will cause the container
+    to mount the directories specified.  For example, if you want the
+    container to mount host-directories <VAR>/proj</VAR> and
+    <VAR>/work</VAR> (as <VAR>/proj</VAR> and <VAR>/work</VAR> on the
+    container), modify the script like this:
+    <BLOCKQUOTE><CODE>
+    set extradirs = '-B /proj -B /work'
+    </CODE></BLOCKQUOTE>
+    <P>
+
     <STRONG>If you want a debug-run for a modeling component</STRONG>,
     the scripts are also set up to support debugging, if requested. You
     will need to do the following:  First, build a debug-executable for
@@ -778,7 +798,7 @@ Requirements for your Host Machine
 
 <HR> <!- ------------------------------------------------------------- ->
 
-<H2><A NAME="cctm">CMAQ CCTM Restructuring</A></H2>
+<H2><A NAME="cctm">CMAQ CCTM Specifics and Restructuring</A></H2>
 
 <BLOCKQUOTE>
 
@@ -836,6 +856,14 @@ Requirements for your Host Machine
              frequently the interaction between <VAR>mpirun</VAR> and
              debugging is flaky.  But one may hope :-)
         <P>
+        <DT> <STRONG><CODE>NMLDIR</CODE></STRONG> (optionally)
+        <DD> <EM>if this environment variable is defined:</EM> use this
+             directory for CCTM namelist files.
+        <DT> <STRONG><CODE>BLDDIR</CODE></STRONG> (optionally)
+        <DD> <EM>if this environment variable is defined:</EM> use this
+             directory as the CCTM build-directory, to find the
+             executable.
+        <P>
         <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
         <DD> Run starting-date, formatted <CODE>YYYY-MM-DD</CODE> [2016-07-01]
         <DT> <STRONG><CODE>END_DATE</CODE></STRONG>
@@ -873,6 +901,33 @@ Requirements for your Host Machine
              [<VAR>${HOSTDATA}/${APPL}/GRIDDESC</VAR> on your host
              machine; this binds to container-file
              <VAR>/opt/CMAQ_REPO/data/${APPL}/GRIDDESC</VAR>]
+        <P>
+        <DT> <STRONG><CODE>Advanced Topics</CODE></STRONG>
+        <DD> <STRONG>to customize <CODE>NAMELIST</CODE></STRONG> files,
+             you can use script
+             <VAR><A HREF="copy_cmaq_nml.csh">copy_cmaq_nml.csh</A></VAR>
+             to copy the &quot;vanilla&quot; namelists to a directory on
+             your host machine given by the script's environment-variable
+             <CODE>SINGULARITYENV_NMLDIR</CODE>, customize the file(s)
+             there, and then use the <CODE>SINGULARITYENV_NMLDIR</CODE>
+             in the <VAR>cmaq_cctm.csh</VAR> script to tell the CCTM to
+             use those namelists.
+             <P>
+             <STRONG>to build and use a custom executable</STRONG>,
+             you can use script
+             <VAR><A HREF="copy_cmaq_bld.csh">copy_cmaq_bld.csh</A></VAR>
+             to copy a build-directory on the container to a directory on
+             your host machine given by the script's environment-variable
+             <CODE>SINGULARITYENV_BLDDIR</CODE>, do a custom re-build of
+             the CMAQ CCTM executable there, and then use the
+             <CODE>SINGULARITYENV_NMLDIR</CODE> environment variable in the
+             <VAR>cmaq_cctm.csh</VAR> script to use the executable from
+             that directory, or else use the <CODE>SINGULARITYENV_EXEC</CODE>
+             environment variable to give the path for the executable
+             you want to use (provided it is in a directory (like
+             <CODE>${HOME}</CODE>) mounted onto the container.
+             <P>             
+
     </DL></BLOCKQUOTE>
     <P>
     In the <VAR>run_cctm.csh</VAR> script on the container, 

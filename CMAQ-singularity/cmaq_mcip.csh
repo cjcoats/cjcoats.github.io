@@ -14,6 +14,9 @@
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
 
+set extradirs = ''
+# set extradirs = '-B /foo'
+
 # Set up environment for verbose-level and/or debug:
 
 setenv SINGULARITYENV_CTM_DIAG_LVL  0
@@ -51,7 +54,7 @@ setenv SINGULARITYENV_WRF_LC_REF_LAT    40.0
 # setenv SINGULARITYENV_LPRT_ROW   0
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+ --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
  ${CONTAINER} /opt/CMAQ_REPO/scripts/run_mcip.csh
 
 if ( ${err_status} != 0 ) then

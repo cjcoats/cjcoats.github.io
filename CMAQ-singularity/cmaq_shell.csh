@@ -8,6 +8,9 @@ set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set SMOKEDATA = /work/SCRATCH/SMOKE.git/data
 set CONTAINER = /work/cmaq.simg
 
+set extradirs = ''
+# set extradirs = '-B /foo'
+
 #   Set up environment variables such as START_DATE, below.
 
 setenv SINGULARITYENV_START_DATE    "2016-07-01"
@@ -27,5 +30,5 @@ setenv SINGULARITYENV_NPROW         3
 cd ${HOSTDATA}
 
 singularity shell -s /usr/bin/tcsh \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+ --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
  ${CONTAINER}
