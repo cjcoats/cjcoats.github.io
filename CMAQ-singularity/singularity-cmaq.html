@@ -8,7 +8,7 @@
     Singularity CMAQ Container
 </TITLE>
 </HEAD>
-c
+
 <BODY BGCOLOR="#FFFFFF"
       TOPMARGIN="15"
       MARGINHEIGHT="15"
@@ -28,8 +28,11 @@ c
         <LI>  <A HREF = "#prep"    >CMAQ Pre-Processing</A>
         <LI>  <A HREF = "#post"    >CMAQ Post-Processing</A>
         <LI>  <A HREF = "#util"    >CMAQ Utilities</A>
-        <LI>  <A HREF = "#smoke"   >SMOKE</A>
-        <LI>  <A HREF = "#tools"   >Interactive Tool Use</A>
+        <LI>  <A HREF = "#smoke"   >SMOKE Emissions Modeling System</A>
+        <LI>  <A HREF = "#amet "   >Atmospheric Model Evaluation Tool (AMET)</A>
+        <LI>  <A HREF = "#tools "  >Interactive Tool Use</A>
+        <LI>  <A HREF = "#files"   >APPENDIX:  Selected Directory structure
+                                    on the Container</A>
     </UL>
 
 
@@ -107,7 +110,7 @@ c
         <DD> including run-scripts and programs <VAR>aggwndw, beld3to2
              bluesky2inv, cemscan, cntlmat, elevpoint,  extractida,
              gcntl4carb, gentpro, geofac, grdmat, grwinven,  inlineto2d,
-             invsplit, layalloc, laypoint, met4moves, metcombine, 
+             invsplit, layalloc, laypoint, met4moves, metcombine,
              metscan, movesmrg, mrgelev, mrggrid, mrgpt, pktreduc,
              saregroup,  smk2emis, smkinven, smkmerge, smkreport,
              spcmat, surgtool,  temporal, tmpbeis3, uam2ncf</VAR>.
@@ -147,6 +150,9 @@ c
         <DD> GUI programming editor, aliased to <VAR>xx</VAR>
         <DT> <STRONG><VAR>xxdiff</VAR></STRONG>
         <DD> GUI difference tool, aliased to <VAR>xd</VAR>
+        <DT> <STRONG><VAR>okular</VAR></STRONG>-4.10
+        <DD> Document (PDF/PostScript/MarkDown) viewer, e.g., to view
+             CMAQ docs in <VAR>/opt/CMAQ_REPO/DOCS</VAR>
         <DT> <STRONG><VAR>findent</VAR></STRONG>
         <DD> Fortran indentation/code-transformation tool
     </DL></BLOCKQUOTE>
@@ -167,7 +173,7 @@ c
     <BLOCKQUOTE><DL>
         <DT> <STRONG><VAR>/opt/CMAQ_REPO/scripts/</VAR></STRONG>
         <DD> worker-scripts designed to run CMAQ modeling components.
-             These are invoked by host-machine scripts such as 
+             These are invoked by host-machine scripts such as
              <VAR>cmaq_cctm.csh</VAR> or <VAR>cmaq_icon.csh</VAR>
              (below)
         <DT> <STRONG><VAR>/opt/CMAQ_REPO/bin/</VAR></STRONG>
@@ -176,7 +182,7 @@ c
         <DD> optimized and debug CMAQ CCTM executables for various MPI versions.
         <DT> <STRONG><VAR>/opt/SMOKE/scripts/run/</VAR></STRONG>
         <DD> worker-scripts to run SMOKE.
-             These are invoked by host-machine scripts such as 
+             These are invoked by host-machine scripts such as
              <VAR>smk_point_nctox.csh</VAR> (below)
         <DT> <STRONG><VAR>/opt/SMOKE/Linux2_x86_64gfort_medium/</VAR></STRONG>, <BR>
              <STRONG><VAR>/opt/SMOKE/Linux2_x86_64gfort_mediumdbg/</VAR></STRONG>,
@@ -204,8 +210,8 @@ c
              <VAR>singularity&nbsp;exec</VAR> of &quot;worker
              scripts&quot; that actually run the modeling programs.
              <BR>
-             <STRONG>Note</STRONG> that <VAR>cmaq_</VAR> and <VAR>smk_</VAR> 
-             and <VAR>singularity-term.csh</VAR> scripts 
+             <STRONG>Note</STRONG> that <VAR>cmaq_</VAR> and <VAR>smk_</VAR>
+             and <VAR>singularity-term.csh</VAR> scripts
              also contain batch-queue directives, e.g.,  for
              queue/batch usage on the UNC servers <VAR>longleaf</VAR> or
              <VAR>dogwood</VAR>, where <VAR>singularity</VAR> is only
@@ -300,7 +306,7 @@ Requirements for your Host Machine
     other sites), Singularity is configured to run on the compute nodes
     only, but not on the login nodes.  The
     <VAR>cmaq_cmaq/Scripts-BATCH/</VAR> versions of the scripts
-    are intended for this usage, e.g., on the UNC cluster <VAR>dogwood</VAR>. 
+    are intended for this usage, e.g., on the UNC cluster <VAR>dogwood</VAR>.
     For other such situations, consult your cluster's systems
     administrator for instructions on how to run Singularity
     applications and (for the CCTM) how to select the appropriate
@@ -312,13 +318,13 @@ Requirements for your Host Machine
     with each other (<VAR>mpirun</VAR> from MPICH-3 will not work with a
     program built with OpenMPI, for example) your host machine needs to
     be running the same MPI implementation as the CCTM executable on
-    this Singularity container.  There are CCTM builds for 
+    this Singularity container.  There are CCTM builds for
     <STRONG>three different MPI implementations: MPICH-3, MVAPICH-2, and
     OPENMPI-3</STRONG>; script-variable <CODE>MPIVERSION</CODE> in the
     <VAR>cmaq_cctm*.csh</VAR> script selects which of these will
     be used.
     <P>
-    
+
     In this container, the only MPI application affected by this is the
     CMAQ CCTM; all of the other applications in this container are
     either &quot;serial&quot; or (shared-memory) OpenMP-parallel (some
@@ -365,90 +371,12 @@ Requirements for your Host Machine
     your container's <CODE>/opt/CMAQ_REPO/data/</CODE>; the container's
     SMOKE scripts are in <CODE>/opt/SMOKE/scripts/run/</CODE>, and
     <CODE>${HOSTDATA}</CODE> is mounted on
-    <CODE>/opt/SMOKE/data/</CODE>, as indicated below.
-    <P>
-    <STRONG><A NAME="files">Selected CMAQ-container directories and
-    Files:</A></STRONG>
-    <PRE>
-    /data                               #  extra mount-point, if needed
-
-    /opt/AMET_14/
-    /opt/CMAQ_REPO/
-    /opt/CMAQ_REPO/bin/                 #  optimized Linux2_x86_64gfort_medium executables
-        appendwrf_v531.exe
-        BCON_v531.exe
-        bldmake_gcc.exe
-        bldoverlay_v531.exe
-        block_extract_v531.exe
-        calc_tmetric_v531.exe
-        CCTM_v531.exe
-        combine_v531.exe
-        hr2day_v531.exe
-        ICON_v531.exe
-        mcip.exe
-        sitecmp_dailyo3_v531.exe
-        sitecmp_v531.exe
-        writesite_v531.exe
-    /opt/CMAQ_REPO/data/
-    /opt/CMAQ_REPO/scripts/             #  run_&lt;something&gt;.csh model-component scripts
-        run_appendwrf.csh
-        run_bcon.csh
-        run_bldoverlay.csh
-        run_block_extract.csh
-        run_calc_tmetric.csh
-        run_cctm.csh
-        run_combine.csh
-        run_hr2day.csh
-        run_icon.csh
-        run_mcip.csh
-        run_writesite.csh
-    /opt/CMAQ_REPO/tables/              #  time independent ASCII files and tables
-    /opt/CMAQ_REPO/CCTM/
-    /opt/CMAQ_REPO/CCTM/scripts/        #  various bldit, run-cctm, etc. scripts, and CCTM build-directories
-        BLD_CCTM_v531_gcc-mpich3/
-        BLD_CCTM_v531_gcc-mvapich2/
-        BLD_CCTM_v531_gcc-openmpi/
-        BLD_CCTM_v531_gccdbg-mpich3/
-        BLD_CCTM_v531_gccdbg-mvapich2/
-        BLD_CCTM_v531_gccdbg-openmpi/
-    /opt/CMAQ_REPO/CCTM/src/
-    /opt/CMAQ_REPO/CCTM/src/MECHS/      # namelists and chemical-mechanism files
-    /opt/CMAQ_REPO/DOCS/
-    /opt/CMAQ_REPO/POST/
-    /opt/CMAQ_REPO/PREP/
-    /opt/CMAQ_REPO/UTIL/
-
-    /opt/SMOKE/
-    /opt/SMOKE/assigns/
-        ASSIGNS.EDGAR.cmaq.cb05_soa.HEMI_108k
-        ASSIGNS.nctox.cmaq.cb05_soa.us12-nc
-    /opt/SMOKE/data/
-    /opt/SMOKE/scripts/
-    /opt/SMOKE/scripts/run/
-        cntl_run.csh
-        qa_run.csh
-        smk_run.csh
-    /opt/SMOKE/src/
-    /opt/SMOKE/Linux2_x86_64gfort_medium/
-    /opt/SMOKE/Linux2_x86_64gfort_mediumdbg/
-
-    /opt/ioapi-3.2/
-    /opt/ioapi-3.2/ioapi/
-    /opt/ioapi-3.2/m3tools/
-    /opt/ioapi-3.2/Linux2_x86_64gfort_medium/
-    /opt/ioapi-3.2/Linux2_x86_64gfort_mediumdbg/
-
-    /opt/bin/
-        findent
-        panoply
-        pave
-        verdi.sh
-        wfindent
-    </PRE>
+    <CODE>/opt/SMOKE/data/</CODE>, as indicated <A HREF = "#struct">
+    in the APPENDIX</A>.
     <P>
 
 
-    <STRONG><A NAME="host">Selected Host-machine Directories and
+    <STRONG><A NAME="host">Selected Host-machine CMAQ Directories and
     Files:</A></STRONG>
     <P>
     <VAR>Singularity</VAR> <STRONG>mounts various directories from
@@ -462,17 +390,17 @@ Requirements for your Host Machine
     The assumption in the current &quot;execute a CMAQ model component
     on the container&quot; scripts is that <STRONG>a single master
     data-directory <CODE>${HOSTDATA}</CODE></STRONG> on the host should
-    be mounted onto the container's <VAR>/opt/CMAQ_REPO/data/</VAR>: 
+    be mounted onto the container's <VAR>/opt/CMAQ_REPO/data/</VAR>:
     that <STRONG>master data-directory will have
     sub-directories</STRONG> for all of the input data <STRONG>and for
     the CCTM output data and logs</STRONG>.  The expected sub-directory
-    structure for the master directory is given below. 
+    structure for the master directory is given below.
     <BR>
     Note that this is a unified-and-simplified directory structure used
     by all of the CMAQ modeling components.  The top level
     subdirectories of  <CODE>${HOSTDATA}</CODE> are grid or case
     specific subdirectories named for environment variable
-    <CODE>${APPL}</CODE> (or possibly more than one of these, e.g., for 
+    <CODE>${APPL}</CODE> (or possibly more than one of these, e.g., for
     programs <VAR>ICON</VAR> and <VAR>BCON</VAR> that are used with
     nested-grid applications). For consistency's
     same among all the scripts, and to avoid
@@ -527,11 +455,22 @@ Requirements for your Host Machine
     <PRE>
     --bind &lt;host-machine-directory&gt;:&lt;container-directory&gt;
     </PRE>
-    command-line option for the <VAR>singularity</VAR> commands to
-    specify what additional host-machine directories are mounted on the
-    container, and at what locations. This is how we will normally deal
+    (or <CODE>-B</CODE> instead of <CODE>--bind</CODE>) command-line
+    option for the <VAR>singularity</VAR> commands to specify what
+    additional host-machine directories are mounted on the container,
+    and at what locations. If the container-directory is not given, then
+    the directory is available on the container with the same name as on
+    the host.  For example,
+    <PRE>
+    --bind /proj
+    </PRE>
+    would mount the <VAR>/proj</VAR> directive from the host onto the
+    container, also as <VAR>/proj</VAR>.
+    <P>
+
+    This command-line directive is how we will normally deal
     with input and output directories for model-data. For example, if
-    the container is <VAR>${CONTAINER}=/work/cmaq.simg</VAR>, and the 
+    the container is <VAR>${CONTAINER}=/work/cmaq.simg</VAR>, and the
     host-directory is <VAR>${HOSTDATA}=/work/SCRATCH/CMAQv5.3.1_Benchmark_2Day</VAR>,
     the following command mounts that directory on
     container-directory <VAR>/opt/CMAQ_REPO/data</VAR> before invoking
@@ -619,7 +558,7 @@ Requirements for your Host Machine
     and utility programs do not follow the modeling standard of
     returning the program's exit status using I/O&nbsp;API routine
     <CODE>M3EXIT()</CODE> to terminate execution, thus making proper
-    process management  difficult for them.  
+    process management  difficult for them.
     </EM><P>
 
     The <STRONG>sample scripts</STRONG> from directory
@@ -654,10 +593,10 @@ Requirements for your Host Machine
     </OL>
 
     <STRONG>For SMOKE scripts</STRONG> using
-    <VAR>singularity&nbsp;exec</VAR> to run SMOKE applications; 
+    <VAR>singularity&nbsp;exec</VAR> to run SMOKE applications;
     <A HREF = "#smoke">see the section below.</A>  Note that the
     standard SMOKE script-structure runs a (potentially large) set
-    of time-independent SMOKE programs, followed by a sequence of 
+    of time-independent SMOKE programs, followed by a sequence of
     per-day runs of a set of time stepped SMOKE programs, and can
     be quite complex :-)
     <P>
@@ -723,7 +662,7 @@ Requirements for your Host Machine
         <DD> path name for the CMAQ container on your host-machine
     </DL></BLOCKQUOTE>
 
-    <STRONG>For batch-queue use of the scripts</STRONG> you may also 
+    <STRONG>For batch-queue use of the scripts</STRONG> you may also
     need to customize the batch-queue parameters.
     <P>
 
@@ -732,7 +671,7 @@ Requirements for your Host Machine
     on your host system
     <BLOCKQUOTE><DL>
         <DT> <CODE>MPIVERSION</CODE>
-        <DD> <CODE>mpich</CODE>, <CODE>mvapich</CODE>, or <CODE>openmpi</CODE>, 
+        <DD> <CODE>mpich</CODE>, <CODE>mvapich</CODE>, or <CODE>openmpi</CODE>,
     </DL></BLOCKQUOTE>
     <PRE>
     setenv  SINGULARITYENV_MPIVERSION  &lt;value&gt;
@@ -831,7 +770,7 @@ Requirements for your Host Machine
     other compiler-choices (Intel, PGI, ...) are not supported.  The
     choice of which executable to use (and whether to invoke the
     debugger on that executable) is controlled by container-environment
-    variables <STRONG><CODE>MPIVERSION</CODE></STRONG> and 
+    variables <STRONG><CODE>MPIVERSION</CODE></STRONG> and
     <STRONG><CODE>DEBUG</CODE></STRONG>.
     <P>
 
@@ -930,11 +869,11 @@ Requirements for your Host Machine
              environment variable to give the path for the executable
              you want to use (provided it is in a directory (like
              <CODE>${HOME}</CODE>) mounted onto the container.
-             <P>             
+             <P>
 
     </DL></BLOCKQUOTE>
     <P>
-    In the <VAR>run_cctm.csh</VAR> script on the container, 
+    In the <VAR>run_cctm.csh</VAR> script on the container,
     <STRONG>additional CCTM-control environment variables</STRONG>,
      e.g.,  <CODE>GRID_NAME, CONC_SPCS, CTM_MAXSYNC,
     CTM_OCEAN_CHEM, </CODE> etc., are
@@ -1031,9 +970,9 @@ Requirements for your Host Machine
     <VAR>/opt/CMAQ_REPO/PREP/create_omi/scripts/cmaq_omi_run.csh</VAR>
     on the  container, copy it out to a host-machine directory that will
     be mounted on the container (<VAR>${HOME}</VAR>?), edit it there,
-    using 
+    using
         <BLOCKQUOTE><VAR>
-        setenv SINGULARITYENV_...</VAR> 
+        setenv SINGULARITYENV_...</VAR>
         </BLOCKQUOTE>
     for the environment variables),  and then using
         <BLOCKQUOTE>
@@ -1453,7 +1392,9 @@ Requirements for your Host Machine
     for &quot;medium&quot; memory model (so that even very large data
     sets are supported); the executables can be found in directories
     <VAR>/opt/SMOKE/Linux2_x86_64gfort_medium/</VAR> and
-    <VAR>opt/SMOKE/Linux2_x86_64gfort_mediumdbg/</VAR>.
+    <VAR>opt/SMOKE/Linux2_x86_64gfort_mediumdbg/</VAR> (for a more
+    complete listing of directories on the container, 
+    <A HREF="#files"> see the APPENDIX</A>.
     <P>
 
     The SMOKE scripts have all been re-structured to make correct use of
@@ -1528,6 +1469,31 @@ Requirements for your Host Machine
 
 </BLOCKQUOTE>
 
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="amet">Atmospheric Model Evaluation Tool (AMET)</A></H2>
+
+<BLOCKQUOTE>
+
+    AMET Version 1.4 is installed under container-directory
+    <VAR>/opt/AMET_v14/</VAR>.  
+    <P>
+    
+    Note that AMET support tools <VAR>bldoverlay_v531.exe</VAR>,
+    <VAR>combine_v531.exe</VAR>, <VAR>sitecmp_v531.exe</VAR>, and
+    <VAR>sitecmp_dailyo3_v531.exe</VAR> are installed with CMAQ in
+    container-directory <VAR>/opt/CMAQ_REPO/bin</VAR>.
+    <P>
+    
+    [TBD...]
+    <P>
+
+</BLOCKQUOTE>
+
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
@@ -1554,7 +1520,7 @@ Requirements for your Host Machine
     directory mounted from the host-machine, and generating outputs in
     a(nother) directory mounted from the host-machine (recalling that
     attempts to write data into the container's file-system itself will
-    fail, with a &quot;permission denied&quot; nasty-gram); you may 
+    fail, with a &quot;permission denied&quot; nasty-gram); you may
     recall that your <VAR>${HOSTDATA}</VAR>, your <VAR>${HOME}</VAR>,
     and <VAR>/tmp/</VAR> are examples of such directories mounted on the
     container from your host-machine...
@@ -1600,9 +1566,9 @@ Requirements for your Host Machine
              or  launching <VAR>singularity-term.csh</VAR> to a
              debug-queue
              <P>
-             Note that any output from <VAR>verdi</VAR> (e.g., any image-files 
+             Note that any output from <VAR>verdi</VAR> (e.g., any image-files
              you created, or output from <CODE>save project</CODE> must
-             be in a directory mounted from your host-machine; you may 
+             be in a directory mounted from your host-machine; you may
              recall that your <VAR>${HOME</VAR> is one such directory...
              <P>
         <DT> <STRONG><VAR>AMET</VAR></STRONG> version <CODE>1.4</CODE>
@@ -1612,7 +1578,7 @@ Requirements for your Host Machine
              <BR>
              AMET matches the model output for particular locations to
              the corresponding observed values from one or more networks
-             of monitors. 
+             of monitors.
              <P>
         <DT> <STRONG><VAR>pave</VAR></STRONG> version <CODE>3.0 beta</CODE>
         <DD> a visualization tool for I/O API / UAM / CAMX data, from MCNC
@@ -1633,13 +1599,13 @@ Requirements for your Host Machine
              <BR>
              <EM>Note also that the <STRONG>file-selection GUI</STRONG> fails,
              due to software versioning problems (&quot;library rot&quot;)</EM>;
-             however, 
+             however,
              <BLOCKQUOTE><VAR>
              pave [&lt;config&gt;] -f &lt;path to file&gt; ...
              </VAR></BLOCKQUOTE>
              does work, where <VAR>${config} = 2, 3, 3a, 3b, 3d, 3g,
              5, 6, 51, frac, lu, o3, soil, strm, tk</VAR>
-             identifies one of the on-container PAVE configuration-files 
+             identifies one of the on-container PAVE configuration-files
              <VAR>pave.${config}.config</VAR> found in container directory
              <VAR>/opt/pave-3.0/Config/</VAR>
              <BR>
@@ -1648,7 +1614,7 @@ Requirements for your Host Machine
              palette, where the first ten colors are blues with varying
              saturation ranging from near-white to fully-saturated.<BR>
              <VAR>${config} = frac, lu, o3, soil, strm, tk</VAR> are for
-             the relevant specific variable, e.g., <VAR>tk</VAR> for 
+             the relevant specific variable, e.g., <VAR>tk</VAR> for
              <CODE>TK</CODE>, Temperature (Kelvin).<BR>
              <VAR>pave</VAR> is probably best run interactively
              after you invoke <VAR>singularity-shell.csh</VAR>
@@ -1720,6 +1686,11 @@ Requirements for your Host Machine
              xx foo bar qux
              </VAR></BLOCKQUOTE>
              <P>
+        <DT> <STRONG><VAR>okular</VAR></STRONG>
+        <DD> PDF/MarkDown viewer,  after you invoke
+             <VAR>singularity-shell.csh</VAR>, e.g., for reading CMAQ
+             documents in <VAR>/opt/CMAQ_REPO/DOCS</VAR>.
+             <P>
         <DT> <STRONG><VAR>xxdiff</VAR></STRONG>
         <DD> GUI file-differencing tool for interactive use,  after you invoke
              <VAR>singularity-shell.csh</VAR><BR>
@@ -1734,7 +1705,7 @@ Requirements for your Host Machine
         <DT> <STRONG><VAR>findent</VAR></STRONG>
         <DD> see <A HREF="https://github.com/wvermin/findent">https://github.com/wvermin/findent</A><BR>
              Fortran source indentation and beautification program for
-             both fixed (&quot;f77-style&quot) and free 
+             both fixed (&quot;f77-style&quot) and free
              (&quot;f90-style&quot) format;  also converts Fortran fixed
              format to Fortran free format (and vice-versa). It will
              accept CMAQ and SMOKE's non-Standard &quot;fixed-132&quot;
@@ -1824,14 +1795,117 @@ Requirements for your Host Machine
 
 <HR> <!- ------------------------------------------------------------- ->
 
-Copyright &copy; 2020 Carlie J. Coats, Jr., and 
+<H2><A NAME="files">APPENDIX:  Selected Directory structure on the
+Container</A></H2>
+
+<BLOCKQUOTE>
+    <PRE>
+    /data                               #  extra mount-point, if needed
+
+    /opt/AMET_14/
+    /opt/CMAQ_REPO/
+    /opt/CMAQ_REPO/bin/                 #  optimized Linux2_x86_64gfort_medium executables
+        appendwrf_v531.exe
+        BCON_v531.exe
+        bldmake_gcc.exe
+        bldoverlay_v531.exe
+        block_extract_v531.exe
+        calc_tmetric_v531.exe
+        CCTM_v531.exe
+        combine_v531.exe
+        hr2day_v531.exe
+        ICON_v531.exe
+        mcip.exe
+        sitecmp_dailyo3_v531.exe
+        sitecmp_v531.exe
+        writesite_v531.exe
+    /opt/CMAQ_REPO/data/
+    /opt/CMAQ_REPO/scripts/             #  run_&lt;something&gt;.csh model-component scripts
+        run_appendwrf.csh
+        run_bcon.csh
+        run_bldoverlay.csh
+        run_block_extract.csh
+        run_calc_tmetric.csh
+        run_cctm.csh
+        run_combine.csh
+        run_hr2day.csh
+        run_icon.csh
+        run_mcip.csh
+        run_writesite.csh
+    /opt/CMAQ_REPO/tables/              #  time independent ASCII files and tables
+    /opt/CMAQ_REPO/CCTM/
+    /opt/CMAQ_REPO/CCTM/scripts/        #  various bldit, run-cctm, etc. scripts, and CCTM build-directories
+        BLD_CCTM_v531_gcc-mpich3/
+        BLD_CCTM_v531_gcc-mvapich2/
+        BLD_CCTM_v531_gcc-openmpi/
+        BLD_CCTM_v531_gccdbg-mpich3/
+        BLD_CCTM_v531_gccdbg-mvapich2/
+        BLD_CCTM_v531_gccdbg-openmpi/
+    /opt/CMAQ_REPO/CCTM/src/
+    /opt/CMAQ_REPO/CCTM/src/MECHS/      # namelists and chemical-mechanism files
+    /opt/CMAQ_REPO/DOCS/
+    /opt/CMAQ_REPO/POST/
+    /opt/CMAQ_REPO/PREP/
+    /opt/CMAQ_REPO/UTIL/
+
+    /opt/SMOKE/
+    /opt/SMOKE/assigns/
+        ASSIGNS.EDGAR.cmaq.cb05_soa.HEMI_108k
+        ASSIGNS.nctox.cmaq.cb05_soa.us12-nc
+    /opt/SMOKE/data/
+    /opt/SMOKE/scripts/
+    /opt/SMOKE/scripts/run/
+        cntl_run.csh
+        qa_run.csh
+        smk_run.csh
+    /opt/SMOKE/src/
+    /opt/SMOKE/Linux2_x86_64gfort_medium/
+    /opt/SMOKE/Linux2_x86_64gfort_mediumdbg/
+
+    /opt/AMET_v14/
+    /opt/AMET_v14/R_analysis_code
+    /opt/AMET_v14/R_analysis_code/batch_scripts
+    /opt/AMET_v14/R_db_code
+    /opt/AMET_v14/bin
+    /opt/AMET_v14/configure
+    /opt/AMET_v14/docs
+    /opt/AMET_v14/model_data
+    /opt/AMET_v14/model_data/AQ
+    /opt/AMET_v14/model_data/MET
+    /opt/AMET_v14/model_data/MET/metExample_wrf
+    /opt/AMET_v14/obs
+    /opt/AMET_v14/obs/AQ
+    /opt/AMET_v14/obs/MET
+    /opt/AMET_v14/output
+    /opt/AMET_v14/scripts_analysis
+    /opt/AMET_v14/scripts_db
+
+    /opt/ioapi-3.2/
+    /opt/ioapi-3.2/ioapi/
+    /opt/ioapi-3.2/m3tools/
+    /opt/ioapi-3.2/Linux2_x86_64gfort_medium/
+    /opt/ioapi-3.2/Linux2_x86_64gfort_mediumdbg/
+
+    /opt/bin/
+        findent
+        panoply
+        pave
+        verdi.sh
+        wfindent
+    </PRE>
+    <P>
+</BLOCKQUOTE>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+Copyright &copy; 2020 Carlie J. Coats, Jr., and
 University of North Carolina Institute for the Environment
 <P>
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
 <br>
-This work is licensed under a 
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative 
+This work is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
 Commons Attribution-ShareAlike 4.0 International License</a>.
 <P>
 
