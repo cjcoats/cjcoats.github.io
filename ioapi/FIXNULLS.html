@@ -1,0 +1,64 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: FIXNULLS.html 188 2020-10-03 15:08:47Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> FIXNULLS() and DOWNCASE()</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" 
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+
+<H1>    FIXNULLS() </H1>
+
+<H2> Fortran version: </H2>
+<PRE>
+    SUBROUTINE FIXNULLS( ASTRING )
+        CHARACTER*(*), INTENT(INOUT) :: ASTRING    ! string to be trimmed of NULLs
+</PRE><P>    
+
+<H2> NO C version: </H2>
+<P> 
+
+<H2> Summary: </H2>
+
+    <CODE>SUBROUTINE FIXNULLS()</CODE> removes trailing ASCII-nulls,
+    replacing them with blanks (to deal with problems caused by the lack
+    of sophistication of netCDF's Fortran bindings), especially for
+    MPAS-format netCDEF.
+    <P> 
+
+    <STRONG>See also</STRONG> <A HREF = "UPCASE.html">UPCASE()</A>
+    and <A HREF = "LUSTR.html">LUSTR()</A>.
+    <P>
+
+        
+<H2> Preconditions: </H2>
+
+    <PRE>
+    <A HREF = "M3UTILIO.html">USE M3UTILIO</A>
+    </PRE><P>
+<P>     
+
+
+<HR>
+
+<A HREF = "UNGRIDB.html" >
+Previous:  <STRONG>UNGRIDB</STRONG>
+</A><P> 
+
+<A HREF = "AA.html#utility"> 
+Up: <STRONG>Utility Routines</STRONG> 
+</A><P>
+
+<A HREF = "AA.html"> 
+To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+</A><P>
+
+</BODY>
+</HTML>
+

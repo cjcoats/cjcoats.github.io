@@ -218,7 +218,8 @@
              available on the compute-nodes.
              <P>
              Reference copies of these scripts are available in the list
-             below, for you to view or download:
+             below, for you to view or download (use browser-command
+             &quot;Save link as...&quot;):
              <BLOCKQUOTE>
              <DL>
                  <DT><A HREF="singularity-shell.csh" ><VAR>singularity-shell.csh</VAR></A>
@@ -228,11 +229,12 @@
                  <DD> Launch an interactive <VAR>rxvt</VAR> terminal
                       from the container (e.g., from a debug batch-queue)
                  <P>
-                 <DT><A HREF="cmaq_cctm.csh"         ><VAR>cmaq_cctm.csh</VAR></A>
-                 <DD> Set up environment on the container for a
-                      (multi-day) CMAQ CCTM run and then use the
-                      container's <VAR>run_cctm.csh</VAR> worker-script
-                      to execute that run.
+                 <DT><A HREF="cmaq_ncview.csh"       ><VAR>cmaq_ncview.csh</VAR></A>
+                 <DD> Run visualization-tool <VAR>ncview</VAR>
+                 <DT><A HREF="cmaq_panoply.csh"      ><VAR>cmaq_panoply.csh</VAR></A>
+                 <DD> etc...
+                 <DT><A HREF="cmaq_verdi.csh"        ><VAR>cmaq_verdi.csh</VAR></A>
+                 <P>
                  <DT><A HREF="copy_cmaq_bld.csh"    ><VAR>copy_cmaq_bld.csh</VAR></A>
                  <DD> to copy a CMAQ CCTM build-directory to the host
                       machine.
@@ -240,9 +242,16 @@
                  <DD> to copy the CMAQ CCTM namelist-files to a
                       specified directory on the host machine.
                  <P>
+                 <DT><A HREF="cmaq_cctm.csh"         ><VAR>cmaq_cctm.csh</VAR></A>
+                 <DD> Set up environment on the container for a
+                      (multi-day) CMAQ CCTM run and then use the
+                      container's <VAR>run_cctm.csh</VAR> worker-script
+                      to execute that run.
+                 <P>
                  <DT><A HREF="cmaq_appendwrf.csh"    ><VAR>cmaq_appendwrf.csh</VAR></A>
-                 <DD> etc...
+                 <DD> Run CMAQ post-processor <VAR>appendwrf</VAR>
                  <DT><A HREF="cmaq_bcon.csh"         ><VAR>cmaq_bcon.csh</VAR></A>
+                 <DD> etc...
                  <DT><A HREF="cmaq_bldoverlay.csh"   ><VAR>cmaq_bldoverlay.csh</VAR></A>
                  <DT><A HREF="cmaq_block_extract.csh"><VAR>cmaq_block_extract.csh</VAR></A>
                  <DT><A HREF="cmaq_calc_tmetric.csh" ><VAR>cmaq_calc_tmetric.csh</VAR></A>
@@ -250,10 +259,6 @@
                  <DT><A HREF="cmaq_icon.csh"         ><VAR>cmaq_icon.csh</VAR></A>
                  <DT><A HREF="cmaq_mcip.csh"         ><VAR>cmaq_mcip.csh</VAR></A>
                  <DT><A HREF="cmaq_writesite.csh"    ><VAR>cmaq_writesite.csh</VAR></A>
-                 <P>
-                 <DT><A HREF="cmaq_ncview.csh"       ><VAR>cmaq_ncview.csh</VAR></A>
-                 <DT><A HREF="cmaq_panoply.csh"      ><VAR>cmaq_panoply.csh</VAR></A>
-                 <DT><A HREF="cmaq_verdi.csh"        ><VAR>cmaq_verdi.csh</VAR></A>
                  <P>
                  <DT><A HREF="smk_area_nctox.csh"        ><VAR>smk_area_nctox.csh</VAR></A>
                  <DD> Set up the environment and run a (multi-day) SMOKE area source run

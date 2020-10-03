@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 186 2020-08-28 17:40:06Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 188 2020-10-03 15:08:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 186 2020-08-28 17:40:06Z coats $
+    $Id: NEWSTUFF.html 188 2020-10-03 15:08:47Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,10 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#oct022020"> 
+               New routine <CODE>FIXNULLS</CODE> to fix trailing
+               ASCII-nulls in strings; use <CODE>FIXNULLS</CODE> for
+               MPAS netCDF.
          <LI>  <A HREF = "#aug282020"> 
                New <VAR>Makeinclude.*gfort10*</VAR> files for <VAR>gfortran</VAR></A>
                version 10; new 20200828 tagged version.
@@ -746,6 +750,40 @@
         % nm libnetcdff.a | grep ncclos<BR>
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = "oct022020">
+    New utility routine <CODE>FIXNULLS</CODE> to fix trailing ASCII-nulls in
+    strings; use <CODE>FIXNULLS</CODE> for MPAS netCDF.
+    <P>
+    Generic <CODE>GCD(), LCM()</CODE>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Kemal Gurer, California Air Resources Board, pointed out this
+    problem with MPAS-format netCDF, which was padding character-strings
+    with trailing nulls.  (The netCDF Fortran bindings do not have a
+    sophisticated understanding of Fortran character-strings and do
+    not always &quot;do the right thing.&quot;)
+    <P>
+    New <CODE>SUBROUTINE FIXNULLS()</CODE> in 
+    <A HREF="M3UTILIO.html"><CODE>MODULE M3UTILIO</CODE></A> replaces
+    trailing ASCII-nulls with blanks (to deal with problems caused by
+    the lack of sophistication of netCDF's Fortran bindings), especially
+    for MPAS-format netCDF.
+    <P>
+    <A HREF="M3UTILIO.html"><CODE>MODULE MPASFIO</CODE></A> now uses
+    <CODE>FIXNULLS()</CODE> to deal with strings coming from this
+    defect in MPAS-format netCDF.
+    <P>
+    Generic <A HREF="GCD.html"><CODE>GCD(), LCM()</CODE></A> for
+    <CODE>INTEGER</CODE> and <CODE>INTEGER(8)</CODE> arguments.
     <P>
     </BLOCKQUOTE>
 
@@ -7415,7 +7453,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 186 2020-08-28 17:40:06Z coats $
+    $Id: NEWSTUFF.html 188 2020-10-03 15:08:47Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

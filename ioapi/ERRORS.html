@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 179 2020-07-14 17:16:56Z coats $" -->
+<!-- "$Id: ERRORS.html 188 2020-10-03 15:08:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -80,7 +80,7 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 179 2020-07-14 17:16:56Z coats $"
+    !! Version "$Id: ERRORS.html 188 2020-10-03 15:08:47Z coats $"
     </PRE>
     </BLOCKQUOTE>
 <P>
@@ -114,7 +114,7 @@
     Standard.
     <P>
     <EM>Thanks to Mrs. Indumathi S Iyer, (SO/D), BARC, for pointing out
-    this compiler-problem and help with testing the fix.&mdash;CJC
+    this compiler-problem and help with testing the fix.&mdash;CJC</EM>
     <P>
     </BLOCKQUOTE>
 
@@ -389,10 +389,10 @@ open3c.o:
     and used 6 other times (including in <VAR>open3c.o</VAR>)
     <P>
     
-    Generally, missing symbols with <VAR>omp</VAR> or
+    Generally, missing symbols with <VAR>kmp</VAR>, <VAR>omp</VAR> or
     <VAR>openmp</VAR> as parts of their name indicate that you may
     have compiled the I/O&nbsp;API with OpenMP parallelism enabled, but
-    are not linking your program accordinglly.  Look in the relevant
+    are not linking your program accordingly.  Look in the relevant
     <VAR>ioapi/Makeinclude.$BIN</VAR> for the <VAR>make</VAR>-variables
     <CODE>OMPFLAGS</CODE> and <CODE>OMPLIBS</CODE> to see what you
     need to add to your program's <VAR>Makefile</VAR>.

@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GCD.html 103 2015-01-16 16:55:45Z coats $" -->
+<!-- "$Id: GCD.html 188 2020-10-03 15:08:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> GCD() and LCM()</TITLE>
 </HEAD>
@@ -15,11 +15,24 @@
 <H1>    GCD() </H1>
 
 <H2> Fortran version: </H2>
+<STRONG>Fortran-90 generic routines <VAR>GCD(), LCM</VAR> for I/O&nbsp;API-3.2:</STRONG> 
+compiler selects the appropriate type-specific form depending upon the
+number and types of the keys and key-lists:
 <PRE>
     INTEGER FUNCTION  GCD( P, Q )
-        INTEGER, INTENT( IN ) :: P, Q
+        &lt;type&gt;, INTENT( IN ) :: P, Q
     INTEGER FUNCTION  LCM( P, Q )
-        INTEGER, INTENT( IN ) :: P, Q
+        &lt;type&gt;, INTENT( IN ) :: P, Q
+</PRE><P> 
+
+<STRONG>Type-specific forms:</STRONG>
+<PRE>
+    INTEGER    FUNCTION  GCDI( I1, I2 )
+    INTEGER(8) FUNCTION  GCDL( L1, L2 )
+    INTEGER    FUNCTION  LCMI( I1, I2 )
+    INTEGER(8) FUNCTION  LCML( L1, L2 )
+        INTEGER,    INTENT( IN ) :: I1, I2
+        INTEGER(8), INTENT( IN ) :: L1, L2
 </PRE><P> 
 
 <H2> C version:   </H2>
@@ -34,7 +47,7 @@
     <CODE>P,Q</CODE>.
     <P> 
 
-    For Fortran-90 declarations and interface checking:    
+    For generic version, Fortran-90 declarations, and interface checking:    
     <PRE>
     <A HREF = "M3UTILIO.html">USE M3UTILIO</A>
     </PRE><P>
@@ -49,11 +62,19 @@
 <H2> Fortran Usage: </H2>
 <PRE>
     ...
+    USE M3UTILIO
     ...
-    INTEGER   GCD
-    INTEGER   P, Q, D
+    INTEGER     P, Q, D
+    INTEGER(8)  L, M, N
     ...
     D = GCD( P, Q )   !  Now D is the gcd of P,Q
+    ...
+    N = GCD( L, M )   !  Now N is the gcd of L,M
+    ...
+    ...
+    D = LCM( P, Q )   !  Now D is the lcm of P,Q
+    ...
+    N = LCM( L, M )   !  Now N is the lcm of L,M
     ...
 </PRE><P> 
 

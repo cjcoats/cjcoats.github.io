@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: M3UTILIO.html 434 2016-11-22 17:55:35Z coats $" -->
+<!-- "$Id: M3UTILIO.html 188 2020-10-03 15:08:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE>MODULE M3UTILIO</TITLE>
 </HEAD>
@@ -179,10 +179,15 @@
     routines <VAR>SUBROUTINE&nbsp;FIXFIELD()</VAR>,
     <VAR>FUNCTION&nbsp;KEYVAL()</VAR>, and <VAR>SUBROUTINE&nbsp;KEYSTR()</VAR>
     that replace various less-well-conceived SMOKE&nbsp;1.x
-    library-routines,  
-    as well as <VAR><A HREF="LASTTIME.html">SUBROUTINE&nbsp;LASTTIME()</A></VAR> that robustly
-    computes the last date&amp;time in a time step sequence (even for
-    millenia-long runs, without <CODE>INTEGER</CODE> overflow).
+    library-routines;  
+    <A HREF="FIXNULLS.html"><VAR>SUBROUTINE&nbsp;FIXNULLS()</VAR></A>
+    that replaces trailing ASCII-nulls with blanks (to deal with
+    problems caused by the lack of sophistication of netCDF's Fortran
+    bindings), especially for MPAS-format netCDEF; as well as
+    <VAR><A HREF="LASTTIME.html">SUBROUTINE&nbsp;LASTTIME()</A></VAR>
+    that robustly computes the last date&amp;time in a time step
+    sequence (even for millenia-long runs, without <CODE>INTEGER</CODE>
+    overflow).
     <P>
 
     </BLOCKQUOTE>
