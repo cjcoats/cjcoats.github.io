@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 146 2020-03-25 18:03:32Z coats $" -->
+<!-- "$Id: AA.html 189 2020-10-06 17:05:28Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -990,15 +990,18 @@ Contents
              <EM>(I/O&nbsp;API-3.2 or later)</EM><BR>
              <STRONG><CODE>BENVINT(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>INTEGER</CODE> from
              environment, with bounds-checking
+             <STRONG><CODE>BENVINT8(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>INTEGER(8)</CODE> from
+             environment, with bounds-checking
              <EM>(I/O&nbsp;API-3.2 or later)</EM><BR>
              <STRONG><CODE>BENVREAL(LNAME,&nbsp;...)</CODE></STRONG>get <CODE>REAL</CODE> from 
              environment, with bounds-checking
              <EM>(I/O&nbsp;API-3.2 or later)</EM><BR>
              <STRONG><CODE>ENVDBLE(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>DOUBLE PRECISION</CODE> from environment<BR>
-             <STRONG><CODE>ENVINT(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>INTEGER</CODE> from environment<BR>
+             <STRONG><CODE>ENVINT(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp;  get <CODE>INTEGER</CODE> from environment<BR>
+             <STRONG><CODE>ENVINT8(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>INTEGER</CODE> from environment<BR>
              <STRONG><CODE>ENVREAL(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>REAL</CODE>  from environment<BR>
-             <STRONG><CODE>ENVSTR(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>CHARACTER</CODE> string from environment<BR>
-             <STRONG><CODE>ENVYN(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>LOGICAL</CODE> from environment
+             <STRONG><CODE>ENVSTR(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp;  get <CODE>CHARACTER</CODE> string from environment<BR>
+             <STRONG><CODE>ENVYN(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp;   get <CODE>LOGICAL</CODE> from environment
              from the environment
              <P>
         <DT> <A HREF = "FINDS.html" >
@@ -1056,15 +1059,15 @@ Contents
              Fortran-90 generic function for
              prompting user for a numeric or <CODE>LOGICAL</CODE>
              answer, with <CODE>DEFAULT</CODE> and bounds checking.<BR>
-             <EM>(I/O&nbsp;API-3.2 or later):</EM> Generic form and new
-             <CODE>GETDBLE1, GETNUM1, GETREAL1</CODE> forms that do not
-             have bounds checking.<BR>
+             <EM>(I/O&nbsp;API-3.2 or later):</EM> <CODE>GETINT8</CODE>;
+             Generic form and new <CODE>GETDBLE1, GETNUM1, GETINT81,
+             GETREAL1</CODE> forms that do not have bounds checking.<BR>
              Subsumes the following older specific forms (which
              are still available):
         <DD> <CODE><STRONG>
              <A HREF = "GETDBLE.html" >GETDBLE and GETDBLE1</A>,<BR>
              <A HREF = "GETMENU.html" >GETMENU</A>,<BR>
-             <A HREF = "GETNUM.html"  >GETNUM and GETNUM1</A>,<BR>
+             <A HREF = "GETNUM.html"  >GETNUM, GETNUM1, GETINT8, GETINT81</A>,<BR>
              <A HREF = "GETREAL.html" >GETREAL and GETREAL1</A>,<BR>
              <A HREF = "GETYN.html"   >GETYN</A>,<BR>
              </STRONG></CODE><P>
@@ -1290,7 +1293,7 @@ Contents
     for easy interactive use.  They begin by
     displaying a &quot;splash screen&quot; displaying the name, usage,
     and version for the program, and then prompt the user for the
-    sepcifications for the program-run.  Most of these prompts have
+    specifications for the program-run.  Most of these prompts have
     default values computed from the metadata in input-file headers;
     defaults may be accepted by hitting the <CODE>RETURN</CODE> key.
     To develop scripts for them, it is generally best to run them
@@ -1317,14 +1320,12 @@ Contents
              extract data data from a gridded file to the boundary of
              a subgrid window (see <STRONG>m3wndw</STRONG> below for
              extracting to the window itself)
-        <P>
         <DT> <A HREF = "DAYAGG.html" >
              <STRONG>dayagg</STRONG>:
              </A>
              construct weighted averages from a set of input files
              and write the result to a seasonal &quot;standard day&quot;
              (year-zero) output file.
-        <P>
         <DT> <A HREF = "FINDWNDW.html" >
              <STRONG>findwndw</STRONG>:
              </A>
@@ -1332,14 +1333,12 @@ Contents
              find the specifications for the smallest window into the
              grid of  <CODE>FILE2</CODE> that completely covers the grid
              of <CODE>FILE1</CODE>.
-        <P>
         <DT> <A HREF = "GRIDPROBE.html" >
              <STRONG>gridprobe</STRONG>:
              </A>
              build ASCII time series file by interpolating a selected
              set of (Lat-Lon specified) points for a selected variable
              from a GRIDDED file.
-        <P>
         <DT> <A HREF = "INSERTGRID.html" >
              <STRONG>insertgrid</STRONG>:
              </A>
@@ -1347,7 +1346,6 @@ Contents
              subdomain-file to &quot;covered&quot; grid cells in a
              coarse-resolution large-domain file, with map-projection
              transformation as appropriate.
-        <P>
         <DT> <A HREF = "M3CPLE.html" >
              <STRONG>m3cple</STRONG> and <STRONG>m3interp</STRONG>:
              </A>
@@ -1746,7 +1744,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 146 2020-03-25 18:03:32Z coats $
+$Id: AA.html 189 2020-10-06 17:05:28Z coats $
     </PRE>
 
 </BODY>

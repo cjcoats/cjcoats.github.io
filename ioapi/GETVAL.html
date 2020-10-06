@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GETVAL.html 6 2017-05-04 18:54:56Z coats $" -->
+<!-- "$Id: GETVAL.html 189 2020-10-06 17:05:28Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> GETVAL() </TITLE>
 </HEAD>
@@ -55,6 +55,14 @@
         CHARACTER*(*), INTENT(IN   ) :: PROMPT
         END FUNCTION GETNUM1
 
+        INTEGER(8) FUNCTION GETINT8( LO , HI , DEFAULT , PROMPT )
+        INTEGER(8)   , INTENT(IN   ) :: LO, HI, DEFAULT
+        CHARACTER*(*), INTENT(IN   ) :: PROMPT
+
+        INTEGER(8) FUNCTION GETINT81( DEFAULT , PROMPT )
+        INTEGER(8)   , INTENT(IN   ) :: DEFAULT ! Default return value
+        CHARACTER*(*), INTENT(IN   ) :: PROMPT  ! Prompt for user
+
         REAL   FUNCTION GETREAL ( LO , HI , DEFAULT , PROMPT )
         REAL         , INTENT(IN   ) :: LO , HI , DEFAULT
         CHARACTER*(*), INTENT(IN   ) :: PROMPT
@@ -100,7 +108,7 @@
     <A HREF = "GETDATE.html">GETDATE()</A>,<BR>
     <A HREF = "GETDBLE.html">GETDBLE() and GETDBLE1()</A>,<BR>
     <A HREF = "GETMENU.html">GETMENU()</A>,<BR>
-    <A HREF = "GETNUM.html" >GETNUM() and GETNUM1()</A>, <BR>
+    <A HREF = "GETNUM.html" >GETNUM(), GETNUM1(), GETINT8(), and GETINT81()</A>, <BR>
     <A HREF = "GETREAL.html">GETREAL() and GETREAL1()</A>, <BR>
     <A HREF = "GETSTR.html" >GETSTR()</A>, and<BR>
     <A HREF = "GETYN.html"  >GETYN()</A>.

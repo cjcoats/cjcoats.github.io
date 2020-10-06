@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GETNUM.html 175 2015-02-27 12:57:33Z coats $" -->
+<!-- "$Id: GETNUM.html 189 2020-10-06 17:05:28Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> GETNUM() </TITLE>
 </HEAD>
@@ -12,7 +12,7 @@
       MARGINHEIGHT="15"
       LEFTMARGIN="15"
       MARGINWIDTH="15">
-<H1>    GETNUM() </H1>
+<H1>    GETNUM() and GETINT8()</H1>
 
 <H2> Fortran version: </H2>
 <PRE>
@@ -21,6 +21,12 @@
         INTEGER      , INTENT(IN   ) :: LO      ! Minimum allowed return value
         INTEGER      , INTENT(IN   ) :: HI      ! Maximum allowed return value
         INTEGER      , INTENT(IN   ) :: DEFAULT ! Default return value
+        CHARACTER*(*), INTENT(IN   ) :: PROMPT  ! Prompt for user
+    INTEGER(8) FUNCTION GETINT8( LO , HI , DEFAULT , PROMPT )
+    INTEGER(8) FUNCTION GETINT81( DEFAULT , PROMPT )
+        INTEGER(8)   , INTENT(IN   ) :: LO      ! Minimum allowed return value
+        INTEGER(8)   , INTENT(IN   ) :: HI      ! Maximum allowed return value
+        INTEGER(8)   , INTENT(IN   ) :: DEFAULT ! Default return value
         CHARACTER*(*), INTENT(IN   ) :: PROMPT  ! Prompt for user
 </PRE><P>
 

@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ENVGETS.html 419 2016-09-06 15:10:10Z coats $" -->
+<!-- "$Id: ENVGETS.html 189 2020-10-06 17:05:28Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> ENVGET(), [B]ENV*() and env*c() </TITLE>
 </HEAD>
@@ -25,8 +25,8 @@
 
     <BLOCKQUOTE>
         <STRONG>New routines</STRONG> for I/O&nbsp;API-3.2 and later:
-         <CODE>BENVINT(), BENVDBLE(), BENVREAL()</CODE> are
-        &quot;bounded&quot;  versions of <CODE>ENVINT(), ENVDBLE(),
+         <CODE>BENVINT(), <CODE>BENVINT8(), BENVDBLE(), BENVREAL()</CODE> are
+        &quot;bounded&quot;  versions of <CODE>ENVINT(), <CODE>ENVINT8(), ENVDBLE(),
         ENVREAL()</CODE>:  instead of a <CODE>DEFAULT</CODE> argument, they
         have three <CODE>MINVAL, MAXVAL, DEFAULT</CODE> arguments:  the
         result is guaranteed to be between  <CODE>MINVAL</CODE> and
@@ -74,6 +74,21 @@ INTERFACE ENVGET(... )      !! generic:  I/O API v3.2 or later, only
         INTEGER      , INTENT(IN   ) :: DEFAULT ! default value (if LNAME not set, or empty)
         INTEGER      , INTENT(  OUT) :: STAT    ! for error/default-case detection
 
+    !!...  INTEGER(8) (64-bit) arguments; return a INTEGER(8):
+
+    INTEGER(8) FUNCTION BENVINT8( LNAME, DESCRIP, MINVAL, MAXVAL, DEFAULT, STAT )
+        CHARACTER*(*), INTENT(IN   ) :: LNAME   ! logical name to evaluate
+        CHARACTER*(*), INTENT(IN   ) :: DESC    ! description of the value
+        INTEGER(8)   , INTENT(IN   ) :: MINVAL
+        INTEGER(8)   , INTENT(IN   ) :: MAXVAL
+        INTEGER(8)   , INTENT(IN   ) :: DEFAULT ! default value (if LNAME not set, or empty)
+        INTEGER      , INTENT(  OUT) :: STAT    ! for error/default-case detection
+   INTEGER(8) FUNCTION ENVINT8( LNAME, DESCRIP, DEFAULT, STAT )
+        CHARACTER*(*), INTENT(IN   ) :: LNAME   ! logical name to evaluate
+        CHARACTER*(*), INTENT(IN   ) :: DESC    ! description of the value
+        INTEGER(8)   , INTENT(IN   ) :: DEFAULT ! default value (if LNAME not set, or empty)
+        INTEGER      , INTENT(  OUT) :: STAT    ! for error/default-case detection
+
     !!...  REAL arguments; return a REAL:
 
     REAL FUNCTION BENVREAL( LNAME, DESCRIP, MINVAL, MAXVAL, DEFAULT, STATUS )
@@ -106,21 +121,22 @@ INTERFACE ENVGET(... )      !! generic:  I/O API v3.2 or later, only
         CHARACTER*(*), INTENT(IN   ) :: DESCRIP ! description of the value
         LOGICAL      , INTENT(IN   ) :: DEFAULT ! default value (if LNAME not set, or empty)
         INTEGER      , INTENT(  OUT) :: STATUS  !  for distinguishing error/default-value cases
-    END INTERFACE           !! envget()
+
+END INTERFACE           !! envget()
 
     !!...  CHARACTER-string arguments:
 
-    INTERFACE
+INTERFACE
 
-        SUBROUTINE ENVSTR( LNAME, DESC, DEFAULT, EQNAME, STAT )
-        CHARACTER*(*), INTENT(IN   ) :: LNAME
-        CHARACTER*(*), INTENT(IN   ) :: DESC
-        CHARACTER*(*), INTENT(IN   ) :: DEFAULT
-        CHARACTER*(*), INTENT(  OUT) :: EQNAME
-        INTEGER      , INTENT(  OUT) :: STAT
-        END SUBROUTINE ENVSTR
+    SUBROUTINE ENVSTR( LNAME, DESC, DEFAULT, EQNAME, STAT )
+    CHARACTER*(*), INTENT(IN   ) :: LNAME
+    CHARACTER*(*), INTENT(IN   ) :: DESC
+    CHARACTER*(*), INTENT(IN   ) :: DEFAULT
+    CHARACTER*(*), INTENT(  OUT) :: EQNAME
+    INTEGER      , INTENT(  OUT) :: STAT
+    END SUBROUTINE ENVSTR
 
-    END INTERFACE           !! envstr()
+END INTERFACE           !! envstr()
 </PRE><P> 
 
 
@@ -135,6 +151,10 @@ int envintc( const char * lname       ,
              const char * description ,
              int          defaultval  ,
              int        * status )
+int envint64c( const char * lname       ,
+               const char * description ,
+               int64_t      defaultval  ,
+               int        * status )
 float envrealc( const char * lname       ,
                 const char * description ,
                 float        defaultval  ,
@@ -210,7 +230,7 @@ int envync( const char * lname       ,
     <STRONG>See also</STRONG>
     <BLOCKQUOTE>
     <A HREF = "ENVDBLE.html">ENVDBLE</A>,<BR>
-    <A HREF = "ENVINT.html">ENVINT</A>, <BR>
+    <A HREF = "ENVINT.html">ENVINT and ENVINT8</A>, <BR>
     <A HREF = "ENVREAL.html">ENVREAL</A>, <BR>
     <A HREF = "ENVSTR.html">ENVSTR</A>,<BR>
     <A HREF = "ENVYN.html">ENVYN</A>,<BR>

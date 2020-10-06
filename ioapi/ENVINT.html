@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ENVINT.html 175 2015-02-27 12:57:33Z coats $" -->
+<!-- "$Id: ENVINT.html 189 2020-10-06 17:05:28Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> ENVINT() and envintc() </TITLE>
 </HEAD>
@@ -12,7 +12,7 @@
       MARGINHEIGHT="15" 
       LEFTMARGIN="15" 
       MARGINWIDTH="15">
-<H1>    ENVINT(), BENVINT(), and envintc() </H1>
+<H1>    ENVINT(), BENVINT(), ENVINT8(), BENVINT8(),  envintc(), and envint64c() </H1>
 
 <H2> Fortran version: </H2>
 <BLOCKQUOTE>
@@ -40,10 +40,27 @@ INTEGER FUNCTION BENVINT( LNAME, DESCRIP, MINVAL, MAXVAL, DEFAULT, STAT )
     INTEGER      , INTENT(IN   ) :: MAXVAL
     INTEGER      , INTENT(IN   ) :: DEFAULT ! default value (if LNAME not set, or empty)
     INTEGER      , INTENT(  OUT) :: STAT    ! for error/default-case detection
+INTEGER FUNCTION ENVINT8( LNAME, DESCRIP, DEFAULT, STAT )
+    CHARACTER*(*), INTENT(IN   ) :: LNAME   ! logical name to evaluate
+    CHARACTER*(*), INTENT(IN   ) :: DESC    ! description of the value
+    INTEGER(8)   , INTENT(IN   ) :: DEFAULT ! default value (if LNAME not set, or empty)
+    INTEGER      , INTENT(  OUT) :: STAT    ! for error/default-case detection
+
+INTEGER FUNCTION BENVINT8( LNAME, DESCRIP, MINVAL, MAXVAL, DEFAULT, STAT )
+    CHARACTER*(*), INTENT(IN   ) :: LNAME   ! logical name to evaluate
+    CHARACTER*(*), INTENT(IN   ) :: DESC    ! description of the value
+    INTEGER(8)   , INTENT(IN   ) :: MINVAL
+    INTEGER(8)   , INTENT(IN   ) :: MAXVAL
+    INTEGER(8)   , INTENT(IN   ) :: DEFAULT ! default value (if LNAME not set, or empty)
+    INTEGER      , INTENT(  OUT) :: STAT    ! for error/default-case detection
 </PRE><P>    
 
 <H2> C version: </H2>
 <PRE>
+int envintc( const char * lname       , 
+             const char * description , 
+             int          defaultval  ,
+             int        * status )
 int envintc( const char * lname       , 
              const char * description , 
              int          defaultval  ,
