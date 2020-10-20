@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 189 2020-10-06 17:05:28Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 191 2020-10-20 14:45:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 189 2020-10-06 17:05:28Z coats $
+    $Id: NEWSTUFF.html 191 2020-10-20 14:45:47Z coats $
     </EM>
     <HR>
 
@@ -33,44 +33,47 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
-         <LI>  <A HREF = "#oct062020"> 
+         <LI>  <A HREF = "#oct202020">
+               Fix <CODE>ADJUSTL</CODE> bug  reported by ZHUANSHI HE
+               in <CODE>GETNUM, GETINT8</CODE>
+         <LI>  <A HREF = "#oct062020">
                New routines <CODE>ENVINT8, BENVINT8, GETINT8, GETINT81</CODE>
                for (64-bit) <CODE>INTEGER*8</CODE>
-         <LI>  <A HREF = "#oct022020"> 
+         <LI>  <A HREF = "#oct022020">
                New routine <CODE>FIXNULLS</CODE> to fix trailing
                ASCII-nulls in strings; use <CODE>FIXNULLS</CODE> for
                MPAS netCDF.
-         <LI>  <A HREF = "#aug282020"> 
+         <LI>  <A HREF = "#aug282020">
                New <VAR>Makeinclude.*gfort10*</VAR> files for <VAR>gfortran</VAR></A>
                version 10; new 20200828 tagged version.
-         <LI>  <A HREF = "#july122020"> 
+         <LI>  <A HREF = "#july122020">
                Additional compile-flag for <VAR>gfortran</VAR></A>
                version 10; bug-fixes in pnetcdf create-file routine.
-         <LI>  <A HREF = "#july072020"> 
+         <LI>  <A HREF = "#july072020">
                Bug-fix in <VAR>m3tools/gridprobe</VAR></A>
-         <LI>  <A HREF = "#june1920"> 
+         <LI>  <A HREF = "#june1920">
                Increased message-buffer length in <CODE>STR2DBLE, STR2INT,
                STR2REAL</CODE> routines
                </A>
-         <LI>  <A HREF = "#may2920"> 
+         <LI>  <A HREF = "#may2920">
                Bug-fix in M3Tools program <VAR>m3interp</VAR>
                </A>
-         <LI>  <A HREF = "#apr202020"> 
+         <LI>  <A HREF = "#apr202020">
                I/O API&nbsp;3.2 release 2020104.
                </A>
-         <LI>  <A HREF = "#feb142020"> 
+         <LI>  <A HREF = "#feb142020">
                Enhancement to M3Tools program <CODE>GRIDPROBE</CODE> for
                optional M3IO-file output.
                </A>
-         <LI>  <A HREF = "#nov272019"> 
+         <LI>  <A HREF = "#nov272019">
                Mods to <CODE>MODMPASFIO</CODE> for
                I/O&nbsp;API-3.2-large compatibility
                </A>
-         <LI>  <A HREF = "#oct162019"> 
+         <LI>  <A HREF = "#oct162019">
                Increase <CODE>MXFILE3</CODE> to 256;
                new <CODE>PARMS3-LARGE.EXT</CODE> for CMAQ-DDM
                </A>
-         <LI>  <A HREF = "#sep132019"> 
+         <LI>  <A HREF = "#sep132019">
                Bug-fixes for <VAR><STRONG>m3tools</STRONG></VAR>
                programs <VAR>findwndw, gridprobe, insertgrid, latlon,
                m3cple, m3interp, projtool</VAR>, reported by
@@ -78,22 +81,22 @@
                </A>
          <LI>  <A HREF = "#aug292019">
                Bug-fix for <CODE>LIST:</CODE> file-lists</A>
-         <LI>  <A HREF = "#aug142019"> 
+         <LI>  <A HREF = "#aug142019">
                Bug-fix for multi-layer operation for  <VAR>M3TOOLS</VAR>
                program <VAR>mtxcple</VAR>;<BR>
                <VAR>ioapi-3.2-large.tar.gz</VAR></A>
-         <LI>  <A HREF = "#jun152019"> 
+         <LI>  <A HREF = "#jun152019">
                Bugs for default <CODE>RUNLEN</CODE> in <VAR>M3TOOLS</VAR>
                programs <VAR>m3diff</VAR>, <VAR>m3stat</VAR>,
                <VAR>m3tshift</VAR>, <VAR>n3wndw</VAR>, <VAR>vertot</VAR>,
                reported by Winston Hao, NY DEC.  Now fixed.<BR>
                New <VAR>M3TOOLS</VAR> program
-               <STRONG><VAR>wndwdesc</VAR></STRONG></A> computes the 
+               <STRONG><VAR>wndwdesc</VAR></STRONG></A> computes the
                corners for the windowed sub-grid of a specified grid
                that encloses specified Lat-Lon corners, and writes the
                result to a <CODE>GRIDDESC</CODE> file.<BR>
                Bug-fix in file-list mode.
-         <LI>  <A HREF = "#mar192019"> 
+         <LI>  <A HREF = "#mar192019">
                <CODE>RDTFLAG(*)</CODE></A> now puts both its input argument
                date&amp;time and the on-file date&amp;time into normal
                form, for compatibility with &quot;unusual&quot;
@@ -107,7 +110,7 @@
                <CODE>INDEXKEY()</CODE></A>; <VAR>m3tools/latlon</VAR>
                enhancement
          <LI>  <A HREF = "#apr042018">Fixes to
-               <VAR>ioapi/rdatt3,wratt3</VAR> and 
+               <VAR>ioapi/rdatt3,wratt3</VAR> and
                <VAR>m3tools/mtxcalc,mtxcple</VAR>;
                web updates</A>
          <LI>  <A HREF = "#mar272018">Bug-fix to
@@ -761,6 +764,19 @@
 
 <HR> <!----------------------------------------------------------------->
 
+<H2> <A NAME = "oct202020">
+    Fix <CODE>ADJUSTL</CODE> bug  reported by ZHUANSHI HE
+    in <CODE>GETNUM, GETINT8</CODE>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Subject says it.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
 <H2> <A NAME = "oct062020">
     New routines <CODE>ENVINT8, BENVINT8, GETINT8, GETINT81</CODE>
     for (64-bit) <CODE>INTEGER*8</CODE>; bug-fix in <CODE>MODMPASFIO</CODE>
@@ -795,7 +811,7 @@
     sophisticated understanding of Fortran character-strings and do
     not always &quot;do the right thing.&quot;)
     <P>
-    New <CODE>SUBROUTINE FIXNULLS()</CODE> in 
+    New <CODE>SUBROUTINE FIXNULLS()</CODE> in
     <A HREF="M3UTILIO.html"><CODE>MODULE M3UTILIO</CODE></A> replaces
     trailing ASCII-nulls with blanks (to deal with problems caused by
     the lack of sophistication of netCDF's Fortran bindings), especially
@@ -822,7 +838,7 @@
 
     <BLOCKQUOTE>
     Version 10 of <VAR>gfortran</VAR>  takes a particularly
-    idiosyncratic interpretation of the (latest) Fortran-2018 Standard. 
+    idiosyncratic interpretation of the (latest) Fortran-2018 Standard.
     Starting with netCDF and going through the I/O&nbsp;API, M3Tools,
     CMAQ. SMOKE, and all other programs, program-builds that use this
     version of <VAR>gfortran</VAR> need to include the  compile-flag
@@ -832,7 +848,7 @@
     <P>
     In order to get rid of the enormous number of spurious warning
     messages with most versions of <VAR>gfortran</VAR>, there are now
-    new <VAR>Makeinclude</VAR> files specific to 
+    new <VAR>Makeinclude</VAR> files specific to
     <VAR>gfortran-10</VAR>; the other  <VAR>gfortran Makeinclude</VAR>
     files have reverted to the pre-July&nbsp;2020 behavior.
     <P>
@@ -876,7 +892,7 @@
     Fortran-2018 (not Fortran-90, not Fortran-95, not Fortran-2008)
     Standard.
     <P>
-    
+
     Additionally, there was an argument-list error in PnetCDF/MPI
     enabled routine <VAR>pn_crtfil3.f</VAR>, now fixed.
     <P>
@@ -966,7 +982,7 @@
              successful builds, but at the cost of a warning for the
              compiler not recognizing the other version of this flag.
              <P>
-        <DT> <VAR>M3Tools program <STRONG>m3tproc</STRONG></VAR> 
+        <DT> <VAR>M3Tools program <STRONG>m3tproc</STRONG></VAR>
         <DD> changes for better handling of default responses.
              <P>
         <DT> Bug-fixes for <CODE>BUFFERED3</CODE> virtual file type
@@ -994,7 +1010,7 @@
     now supports either M3IO file output, ASCII output, or both (instead
     of only ASCII output).
     <P>
-    
+
     To turn on M3IO output
     <PRE>
     setenv  OUTFILE    &lt;path name for output ASCII   file&gt; or &quot;NONE&quot;
@@ -1041,7 +1057,7 @@
         <DT><CODE>INTEGER, PUBLIC, PARAMETER :: MXMPASFILE = 64</CODE>
         <DD> Maximum number of MPAS-files for this module.
         <P>
-    </DL>    
+    </DL>
     </BLOCKQUOTE>
     </BLOCKQUOTE>
 
@@ -1074,7 +1090,7 @@
     At the same time, the &quot;normal&quot;-I/O&nbsp;API parameter
     <CODE>MXFILE3</CODE> was increased to 256.  This should not affect
     any application that does not access the internal I/O&nbsp;API
-    <CODE>STATE3</CODE> data structures (as applications are forbidden 
+    <CODE>STATE3</CODE> data structures (as applications are forbidden
     to do).  Note that CMAQ's <VAR>pario</VAR> routines violate this
     restriction and thus are subject to hard-to-diagnose problems;
     therefore, <STRONG>any CMAQ versions that use this library should be
@@ -1215,7 +1231,7 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    There was a typo in the refined-grid definition for 
+    There was a typo in the refined-grid definition for
     <A HREF="MTXCALC.html"><VAR>m3tools/mtxcalc</VAR></A>
     that had the effect of &quot;squashing&quot; the output-range for
     the matrix that was calculated.  Fixed.
@@ -1241,7 +1257,7 @@
 
     <BLOCKQUOTE>
     Jim Dew points out that in the <VAR>Makeinclude.*pg*</VAR>
-    (the Makeinclude-files for PGI-compiler binary types), the 
+    (the Makeinclude-files for PGI-compiler binary types), the
     use of double-quotes in the definition of <VAR>make</VAR>-variable
     <CODE>MODI</CODE> is not supported by GNU <VAR>make</VAR>,
     and creates compile-time errors.
@@ -1256,7 +1272,7 @@
     <P>
     Note that the distinction of whether there is a trailing blank
     is necessary:  the usual UNIX industry standard directive for
-    module-search directives is 
+    module-search directives is
     <BLOCKQUOTE><CODE>
     -I<VAR>directory</VAR>
     </CODE></BLOCKQUOTE>
@@ -1266,7 +1282,7 @@
     </CODE></BLOCKQUOTE>
     with no space (a space would be a directive "delete all current
     module-search directives", which would subsequently be followed
-    by new module-search directives).  PGI wants 
+    by new module-search directives).  PGI wants
     <BLOCKQUOTE><CODE>
     -module <VAR>directory</VAR>
     </CODE></BLOCKQUOTE>
@@ -1326,14 +1342,14 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "apr042018">
-    Fixes to <VAR>ioapi/rdatt3,wratt3</VAR> and 
+    Fixes to <VAR>ioapi/rdatt3,wratt3</VAR> and
     <VAR>m3tools/mtxcalc,mtxcple</VAR>;
     web updates
 </A></H2>
 
     <BLOCKQUOTE>
     Bug-fixes in <A HREF="RDATT3.html"><VAR>ioapi/rdatt3</VAR></A> and
-    <A HREF="WRATT3.html"><VAR>ioapi/wratt3</VAR></A>: 
+    <A HREF="WRATT3.html"><VAR>ioapi/wratt3</VAR></A>:
     fixed bug introduced by I/O&nbsp;API 3.2 PnetCDF changes.
     <P>
     Bug-fixes in   <A
@@ -1362,7 +1378,7 @@
     Bug-fix in <A HREF="MTXCALC.html"><VAR>m3tools/mtxcalc</VAR></A>:
     fixed uninitialized <CODE>NUMER, DENOM</CODE> variables.
     <P>
-    
+
     <P>
     Modified debug <VAR>gfortran</VAR> <CODE>Makeinclude</CODE>s to use
     the latest (?) version of compile-flag for &quot;trap
@@ -1382,7 +1398,7 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    Modified generic routine <A HREF="XY2XY.html"><CODE>XY2XY()</CODE></A>     
+    Modified generic routine <A HREF="XY2XY.html"><CODE>XY2XY()</CODE></A>
     from <A HREF="MODGCTP.html"><CODE>MODULE&nbsp;MODGCTP</CODE></A> to
     &pass-through location arguments: if <CODE>X_IN&lt;AMISS3</CODE>
     or <CODE>X_IN&lt;AMISS3</CODE> then after the call to
@@ -1406,7 +1422,7 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    For I/O&nbsp;API-3.2 post Dec.&nbsp;25,&nbsp;2017, 
+    For I/O&nbsp;API-3.2 post Dec.&nbsp;25,&nbsp;2017,
     <VAR><STRONG>m3tools</STRONG></VAR> program
     <A HREF = "LATLON.html"><VAR><STRONG>latlon</STRONG></VAR></A>
     now also writes M3DBLE (double-precision) Latitude-Longitude
@@ -1418,7 +1434,7 @@
     <P>
 
     Additionally, it is now possible to do interactive definition of
-    grids with map projections of types 
+    grids with map projections of types
     <UL>
         <LI> <CODE>TRMGRD3</CODE>: Transverse Mercator projection
         <LI> <CODE>EQMGRD3</CODE>: Equatorial Mercator projection
@@ -1480,7 +1496,7 @@
     <BLOCKQUOTE><CODE>
     CU( 4,S ) =  X * Y
     </CODE></BLOCKQUOTE>
-    in the I/O&nbsp;API-3.2 version of 
+    in the I/O&nbsp;API-3.2 version of
     <A HREF = "UNGRIDB.html"><CODE>UNGRIDB()</CODE></A>.
     <P>
     Now fixed.
@@ -1503,14 +1519,14 @@
      uses MPAS-cell values (as for <CODE>MPCELLMATX()</CODE>, below)
     instead of barycentric-linear interpolation.
     <P>
-     
+
      <CODE>INTEGER</CODE>-variable support for <CODE>MODMPASFIO</CODE>
      generic routine
      <A HREF="MODMPASFIO.html#interp.html"><CODE>MPINTERP()</CODE></A>:
      uses MPAS-cell values (as for <CODE>MPCELLMATX()</CODE>, below)
     instead of barycentric-linear interpolation.
      <P>
-     
+
      New &quot;incidence-matrix&quot; generic routine
      <A HREF="MODMPASFIO.html#cmatx.html"><CODE>MPCELLMATX()</CODE></A>
      returns the MPAS-cell subscripts for a set of points or 2-D grid of
@@ -1622,7 +1638,7 @@
 <HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "aug112017">
-   Bug-fixes for <CODE>MODULE MODMPASFIO</CODE> 
+   Bug-fixes for <CODE>MODULE MODMPASFIO</CODE>
 </A></H2>
 
     <BLOCKQUOTE>
@@ -1663,7 +1679,7 @@
 
 <H2> <A NAME = "jul052017">
      Bug-fixes</A> for time stepped versions of read and write
-     operations in 
+     operations in
      <A HREF="MODMPASFIO.html"><CODE>MODULE MODMPASFIO</CODE></A> and
      <A HREF="MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>
 </H2>
@@ -1711,7 +1727,7 @@
 
     <BLOCKQUOTE>
     Subject says it:  bugs in time step versions of read/write
-    routines; with time interpolation of <CODE>BNDARY3</CODE> 
+    routines; with time interpolation of <CODE>BNDARY3</CODE>
     boundary condition data structures.
     <P>
     Thanks to Joey Huang for reporting the <VAR>m3tools</VAR> bug.
@@ -1912,7 +1928,7 @@
     <BLOCKQUOTE>
     New routines <CODE>READNCVAR4DD(), READNCVAR4DI(), READNCVAR4DR(),
     READNCVEC4DD(), READNCVEC4DI(), READNCVEC4DR()</CODE>
-    in the generic routine <CODE>READNCVAR()</CODE>in 
+    in the generic routine <CODE>READNCVAR()</CODE>in
     <A HREF="MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>
     <P>
     Bug-fixes (fixed bad dimension-check) for
@@ -2027,7 +2043,7 @@
 
     <BLOCKQUOTE>
     Chris Nolte, US EPA ORD, points out a bug in the I/O&nbsp;API 3.2
-    version of <VAR>m3tools</VAR> program 
+    version of <VAR>m3tools</VAR> program
     <A HREF="M3TPROC.html"><VAR>m3tproc</VAR></A>, together
     with a documentation problem and a <VAR>m3tools/Makefile</VAR> problem.<BR>
     FIXED.
@@ -3272,7 +3288,7 @@
     <P>
     Bonyoung Koo, Environ, found a set of bugs in
     <A HREF="M3COMBO.html"><VAR>m3tools/m3combo</VAR></A>  associated
-    with the use of this tool for <CODE>CUSTOM</CODE> and 
+    with the use of this tool for <CODE>CUSTOM</CODE> and
     <CODE>BOUNDARY</CODE> files.  This bug is now fixed in both
     I/O&nbsp;API versions 3.0 and 3.1.
     <P>
@@ -3711,10 +3727,10 @@ I/O&nbsp;API Version&nbsp;3.1 <EM>Beta</EM>&nbsp;1
              compilers.
              <P>
         <LI> Use of new <A HREF="M3UTILIO.html"><VAR>MODULE M3UTILIO</VAR></A>
-             is encouraged, and use of <CODE>INCLUDE</CODE>-files 
+             is encouraged, and use of <CODE>INCLUDE</CODE>-files
              <CODE>PARMS3.EXT</CODE>, <CODE>FDESC3.EXT</CODE>, and
              <CODE>IODECL3.EXT</CODE> is deprecated.  This
-             <VAR>MODULE</VAR> gives access to all the I/O&nbsp;API 
+             <VAR>MODULE</VAR> gives access to all the I/O&nbsp;API
              <CODE>PARAMETER</CODE>s and declarations, including
              Fortran-90-style explicit interfaces for all the relevant
              routines.
@@ -7476,7 +7492,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 189 2020-10-06 17:05:28Z coats $
+    $Id: NEWSTUFF.html 191 2020-10-20 14:45:47Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

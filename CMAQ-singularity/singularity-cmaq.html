@@ -191,11 +191,11 @@
     <P>
 
     <STRONG>Accompanying this container</STRONG> and installed on your
-    host-machine will be a directory <STRONG><VAR>cmaq_cmaq/</VAR></STRONG>
+    host-machine will be a directory <STRONG><VAR>singularity_cmaq/</VAR></STRONG>
     with five subdirectories:
     <BLOCKQUOTE><DL>
         <DT> <STRONG><VAR>Docs/</VAR></STRONG>
-        <DD> with this document <VAR>cmaq_cmaq.html</VAR>, and
+        <DD> with this document <VAR>singularity_cmaq.html</VAR>, and
              with configuration-files indicating how this singularity
              container was configured;
              <P>
@@ -204,11 +204,12 @@
              <P>
         <DT> <STRONG><VAR>Scripts/</VAR></STRONG>
         <DD> sample host-scripts to run <VAR>CMAQ</VAR> modeling
-             components, SMOKE,  or interactive shell <VAR>tcsh</VAR> on
-             the container.  The paradigm is that these scripts set up
-             environment variables (etc.) on the container, then do
-             <VAR>singularity&nbsp;exec</VAR> of &quot;worker
-             scripts&quot; that actually run the modeling programs.
+             components, SMOKE,  vis programs, or interactive shell
+             <VAR>tcsh</VAR> on the container.  The paradigm is that
+             these scripts set up environment variables (etc.) on the
+             container, then do <VAR>singularity&nbsp;exec</VAR> of
+             either vis-program executables or &quot;worker scripts&quot;
+             that actually run the modeling programs.
              <BR>
              <STRONG>Note</STRONG> that <VAR>cmaq_</VAR> and <VAR>smk_</VAR>
              and <VAR>singularity-term.csh</VAR> scripts
@@ -224,7 +225,7 @@
              <DL>
                  <DT><A HREF="singularity-shell.csh" ><VAR>singularity-shell.csh</VAR></A>
                  <DD> Log on to the container from the host command-line
-                      (non-batch!).
+                      (non-batch!  ...in your current terminal-window).
                  <DT><A HREF="singularity-term.csh"  ><VAR>singularity-term.csh</VAR></A>
                  <DD> Launch an interactive <VAR>rxvt</VAR> terminal
                       from the container (e.g., from a debug batch-queue)
@@ -236,8 +237,7 @@
                  <DT><A HREF="cmaq_verdi.csh"        ><VAR>cmaq_verdi.csh</VAR></A>
                  <P>
                  <DT><A HREF="copy_cmaq_bld.csh"    ><VAR>copy_cmaq_bld.csh</VAR></A>
-                 <DD> to copy a CMAQ CCTM build-directory to the host
-                      machine.
+                 <DD> Copy a CMAQ CCTM build-directory to the host machine.
                  <DT><A HREF="copy_cmaq_nml.csh"    ><VAR>copy_cmaq_nml.csh</VAR></A>
                  <DD> to copy the CMAQ CCTM namelist-files to a
                       specified directory on the host machine.
@@ -569,25 +569,32 @@ Requirements for your Host Machine
     The <STRONG>sample scripts</STRONG> from directory
     <VAR>cmaq_cmaq/Scripts-CMAQ/</VAR> and
     <VAR>cmaq_cmaq/Scripts-SMOKE/</VAR>
-    are of two types:
+    are of three types:
     <OL>
         <LI> Scripts that use <VAR>singularity&nbsp;exec</VAR> to run
-             on-container modeling scripts (found in directory/files
-             <VAR>/opt/CMAQ_REPO/scripts/*csh</VAR> for CMAQ
-             components or <VAR>/opt/SMOKE/scripts/run/*csh</VAR>),
-             after setting up data directories mounted from
-             your host machine, and after setting up environment
-             variables used to control those scripts;
-        <LI> A script  <STRONG><VAR>singularity-shell.csh</VAR></STRONG>
-             that  (after setting up environment and mounted
+             on-container executables (e.g., vis programs) or modeling
+             scripts (found in directory/files
+             <VAR>/opt/CMAQ_REPO/scripts/*csh</VAR> for CMAQ components
+             or <VAR>/opt/SMOKE/scripts/run/*csh</VAR>), after setting
+             up data directories mounted from your host machine, and
+             after setting up environment variables used to control
+             those scripts;
+        <LI> Script  <STRONG><VAR>singularity-shell.csh</VAR></STRONG>
+             (for interactive use within your own terminal-window), and
+             <STRONG><VAR>singularity-term.csh</VAR></STRONG> (for batch
+             use) that  (after setting up environment and mounted
              directories), uses the <VAR>singularity&nbsp;shell</VAR>
              command that gives you a <VAR>tcsh</VAR> session on the
              container from your host-machine command-line, to allow you
              to run interactive programs such as <VAR>ncdump</VAR>,
              <VAR>ncview</VAR>, <VAR>m3stat</VAR> (etc.),
              <VAR>VERDI</VAR>, or <VAR>pave</VAR> that are installed in
-             the container, e.g., for <A HREF = "#tools">Interactive
-             Tool Use</A>.
+             the container, e.g., for
+             <A HREF = "#tools">Interactive Tool Use</A>.
+             <BR>
+             <VAR>singularity-term.csh</VAR> launches a terminal from
+             the container with a <VAR>tcsh</VAR> session for you, so
+             that it can be used from batch queues.
              <BR>
              <EM>NOTE that for the UNC servers, <VAR>singularity</VAR>
              is not available from login-node command-lines; the
@@ -595,6 +602,10 @@ Requirements for your Host Machine
              a debug-queue, where it will launch an X-based terminal
              from the container, to give you that sort of command-line
              access there.</EM>
+        <LI> Scripts <VAR>copy_cmaq_bld.csh</VAR> and <VAR>copy_cmaq_nml.csh</VAR>
+             copy respectively either a CMAQ CCTM build-directory or a
+             CMAQ CCTM  namelist-file from the container to your host
+             machine.
     </OL>
 
     <STRONG>For SMOKE scripts</STRONG> using
