@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: M3DIFF.html 26 2017-10-13 17:30:06Z coats $" -->
+<!-- "$Id: M3DIFF.html 193 2020-11-10 17:33:10Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> Program M3DIFF </TITLE>
 </HEAD>
@@ -37,10 +37,10 @@ default statistical analysis.
 
 <H2> Summary </H2>
 
-The <CODE>M3DIFF</CODE> program performs <STRONG>
-<A HREF="GRIDOPS.html">
-the standard binary grid-comparison operations</A> on pairs of <A HREF =
-"VBLE.html"> variables</A>  from a user-specified pair of
+The  <STRONG><VAR>m3tools</VAR></STRONG><CODE>M3DIFF</CODE> program performs
+<STRONG><A HREF="GRIDOPS.html">the standard binary <CODE>GRIDOPS</CODE>
+grid-comparison operations</A> on pairs of
+<A HREF = "VBLE.html"> variables</A>  from a user-specified pair of
 <A HREF = "DATATYPES.html#grdded"> GRIDDED </A>
 <A HREF = "DATATYPES.html#bndary"> BOUNDARY </A>, or
 <A HREF = "DATATYPES.html#custom"> CUSTOM </A>
@@ -58,10 +58,13 @@ etc.). The files must use the same <A HREF = "GRIDS.html"> grid </A>
 in order for the program to perform the comparison operations.  
 <P> 
 
-<EM>Note that file B can be the same as file A;</EM> this allows 
-you to compute the ratio of variables O3 and NO2, for example, or 
-the difference of NO2 between two successive hours or days within 
-a single file.  Note also that M3DIFF requires that the file types
+<EM>Note that file <CODE>B</CODE> can be the same as file
+<CODE>A</CODE>;</EM> this allows  you to compute the ratio of variables
+<CODE>O3</CODE> and <CODE>NO2</CODE> within the same concentration-file,
+for example, or  the difference of <CODE>NO2</CODE> between two
+successive hours or days within  a single file.
+<BR>
+Note also that <VAR>M3DIFF</VAR> requires that the file types
 and their grid dimensions must match.
 <P> 
 

@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 191 2020-10-20 14:45:47Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 193 2020-11-10 17:33:10Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 191 2020-10-20 14:45:47Z coats $
+    $Id: NEWSTUFF.html 193 2020-11-10 17:33:10Z coats $
     </EM>
     <HR>
 
@@ -33,14 +33,22 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#nov102020">
+               New pointwise-product operation</A> for use in, e.g.,
+               <STRONG><VAR>m3tools</VAR></STRONG> program
+               <CODE>M3DIFF</CODE>.  Thanks to Calvin Arter, UNC IE.
+               <BR>
+               Size-traps in <COE>GRIDOPS</CODE>  to avoid denormals in denominators.
+         <LI>  <A HREF = "#nov062020">
+               Typo-fixes in <VAR>PARMS3.EXT, crtfil3.F90</VAR></A>
          <LI>  <A HREF = "#oct202020">
-               Fix <CODE>ADJUSTL</CODE> bug  reported by ZHUANSHI HE
+               Fix <CODE>ADJUSTL</CODE> bug</A>  reported by ZHUANSHI HE
                in <CODE>GETNUM, GETINT8</CODE>
          <LI>  <A HREF = "#oct062020">
-               New routines <CODE>ENVINT8, BENVINT8, GETINT8, GETINT81</CODE>
+               New routines <CODE>ENVINT8, BENVINT8, GETINT8, GETINT81</CODE></A>
                for (64-bit) <CODE>INTEGER*8</CODE>
          <LI>  <A HREF = "#oct022020">
-               New routine <CODE>FIXNULLS</CODE> to fix trailing
+               New routine <CODE>FIXNULLS</CODE></A> to fix trailing
                ASCII-nulls in strings; use <CODE>FIXNULLS</CODE> for
                MPAS netCDF.
          <LI>  <A HREF = "#aug282020">
@@ -756,6 +764,55 @@
         % nm libnetcdff.a | grep ncclos<BR>
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME ="nov102020">
+     New pointwise-product operation for use in, e.g.,
+     <STRONG><VAR>m3tools</VAR></STRONG> program <CODE>M3DIFF</CODE>
+     <BR>
+     Size-traps in <COE>GRIDOPS</CODE>  to avoid denormals in denominators.
+</A></H2>
+
+    <BLOCKQUOTE>
+    Calvin Arter (UNC Institute for the Environment) introduced a new
+    pointwise-product grid-algebra operation <CODE>A&nbsp;*&nbsp;B</CODE>
+    into <A HREF = "GRIDOPS.html"><CODE>SUBROUTINE GRIDOPS</CODE></A>.
+    This operation is then used by (among others)
+    <STRONG><VAR>m3tools</VAR></STRONG> programs
+    <A HREF = "M3DIFF.html"><VAR>m3diff</VAR></A> and
+    <A HREF = "MPASDIFF.html"><VAR>mpasdiff</VAR></A>.
+    <P>
+    
+    In particular, operation <CODE>A&nbsp;*&nbsp;B</CODE> may be
+    used in conjunction with a <CODE>REAL</CODE> mask-variable
+    (=1 on the requested region, =0 elsewhere) &quot;mask&quot; file to
+    &quot;mask out&quot; regions  for selected variables.
+    <P>
+
+    Size traps (against <CODE>EPS&nbsp;=&nbsp;1.1755E-38</CODE> 
+    were put into <CODE>SUBROUTINE GRIDOPS</CODE>, to avoid
+    denormals in denominators of operations having a divide
+    (e.g., normalized differences) in them.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME = <A HREF = "nov062020">
+    Typo-fixes in <VAR>PARMS3.EXT, crtfil3.F90</VAR>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Subject says it.
     <P>
     </BLOCKQUOTE>
 
@@ -7492,7 +7549,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 191 2020-10-20 14:45:47Z coats $
+    $Id: NEWSTUFF.html 193 2020-11-10 17:33:10Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

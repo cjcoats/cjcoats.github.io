@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRIDOPS.html 103 2015-01-16 16:55:45Z coats $" -->
+<!-- "$Id: GRIDOPS.html 193 2020-11-10 17:33:10Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> GRIDOPS() </TITLE>
 </HEAD>
@@ -31,27 +31,32 @@
 
 <H2> Summary: </H2>
 
-    Used by the <A HREF = "M3DIFF.html"> M3DIFF </A> program; useful
-    for QA and analysis programs generally.
+    Used by the <STRONG><VAR>m3tools</VAR></STRONG> programs
+    <A HREF = "M3DIFF.html"><VAR>M3DIFF</VAR></A> and
+    <A HREF = "MPASDIFF.html"><VAR>MPASDIFF</VAR></A>;
+    useful for QA and analysis programs generally.
     <P> 
     
-    main routine GRIDOPS generates C = A "op" B, where "op" is an
-    operation defined in terms of state variable DIFMODE (as specified
-    below).  This is most useful when you're always doing the same
-    operation to the data.
+    Main routine <CODE>GRIDOPS</CODE> generates
+    <CODE>C&nbsp;=&nbsp;A&nbsp;<VAR>op</VAR>&nbsp;B</CODE>, where
+    <VAR>op</VAR> is an operation defined in terms of state variable
+    <CODE>DIFMODE</CODE> (as specified below).  This is most useful when
+    you're always doing the same operation to the data.
     <P> 
 
-    Entry PICKOPS is used to set state variable DIFMODE, and returns the 
-    name of the corresponding operation.  Uses 
-    <A HREF = "GETMENU.html"> GETMENU() </A> to select the operation.
+    Entry <CODE>PICKOPS</CODE> is used to set state variable
+    <CODE>DIFMODE</CODE>, and returns the name of the corresponding
+    operation.  Uses <A HREF = "GETMENU.html"><CODE>GETMENU()</CODE></A>
+    to select the operation.
     <P>
     
-    Entry NAMEDOP takes an operation name (from PICKOPS), and a full
-    set of GRIDOPS arguments, selects the appropriate DIFMODE, and goes
-    the head of GRIDOPS.  This is useful when you alternating among a
-    set of operations you're applying to the data.  In this case, it is
-    useful to initialize a table of operations to be performed via
-    PICKOPS.
+    Entry <CODE>NAMEDOP</CODE> takes an operation name (from
+    <CODE>PICKOPS</CODE>), and a full set of <CODE>GRIDOPS</CODE>
+    arguments, selects the appropriate <CODE>DIFMODE</CODE>, and goes the
+    head of <CODE>GRIDOPS</CODE>.  This is useful when you alternating
+    among a set of operations you're applying to the data.  In this
+    case, it is useful to initialize a table of operations to be
+    performed via <CODE>PICKOPS</CODE>.
     <P> 
     
     The <A NAME = "ops"> supported operations </A> are the following
@@ -75,16 +80,23 @@
 17  (pointwise) minimum                                min( A,B )
 18  value from grid A                                  A
 19  value from grid B                                  B
+20  (pointwise) product                                A * B
 </PRE>
+<P> 
+
+<EM><STRONG>NOTE Nov.&nbsp;10, 2020:</STRONG> Operation 20 (pointwise
+product) was introduced for I/O&nbsp;API-3.2 on , by Calvin Arter, UNC
+Institute for the Environment, especially for use with mask-files.</EM>
 <P> 
 
         
 <H2> Preconditions </H2>
 
-    Call entry PICKOPS before calling GRIDOPS
+    Call entry <CODE>PICKOPS</CODE> before calling <CODE>GRIDOPS</CODE>
     <P> 
     
-    Valid OPNAME for NAMEDOP (e.g., a name obtained from PICKOPS).
+    Valid <CODE>OPNAME</CODE> for <CODE>NAMEDOP</CODE> (e.g., a name
+    obtained from <CODE>PICKOPS</CODE>).
 <P> 
 
     

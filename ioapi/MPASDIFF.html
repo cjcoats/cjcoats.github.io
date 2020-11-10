@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: MPASDIFF.html 38 2017-10-25 19:49:48Z coats $" -->
+<!-- "$Id: MPASDIFF.html 193 2020-11-10 17:33:10Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> Program MPASDIFF </TITLE>
 </HEAD>
@@ -39,15 +39,16 @@ mpasdiff  &lt;and respond to the prompts&gt;
 <H2> Summary </H2>
 
     <BLOCKQUOTE>
-    The <CODE>MPASDIFF</CODE> program performs <STRONG>
-    <A HREF="GRIDOPS.html"> the standard binary grid-comparison
-    operations</A></STRONG> on pairs of variables or layer-ranges of
-    variables from a user-specified pair of MPAS_format-netCDF files
-    <VAR>INFILEA</VAR> and <VAR>INFILEB</VAR>, computes statistics 
-    (mean, sigma, max and its location, min and its location) for each 
-    specified variable and for the specified &quot;difference&quot; 
-    operation and write the statistical result to the program-log or to
-    a specified ASCII <VAR>REPORT</VAR> file.
+    The  <STRONG><VAR>m3tools</VAR></STRONG> <CODE>MPASDIFF</CODE> program performs
+    <STRONG> <A HREF="GRIDOPS.html">the standard binary
+    <CODE>GRIDOPS</CODE> grid-comparison operations</A></STRONG> on
+    pairs of variables or layer-ranges of variables from a
+    user-specified pair of MPAS-format-netCDF files <VAR>INFILEA</VAR>
+    and <VAR>INFILEB</VAR>, computes statistics  (mean, sigma, max and
+    its location, min and its location) for each  specified variable and
+    for the specified &quot;difference&quot;  operation and writes the
+    statistical result to the program-log or to a specified ASCII
+    <VAR>REPORT</VAR> file.
     <BR>
     <EM>
     Note that the program displays the variables by name-and-number,
@@ -149,6 +150,9 @@ mpasdiff &lt;&lt;  !DONE
               unstructured-grid description, utilities for computations
               on those grids, and routines for input and output of data
               in MPAS-format-netCDF files.
+        <LI>  <A HREF = "GRIDOPS.html"><CODE>SUBROUTINE
+              GRIDOPS</CODE></A> to compute various array-operations
+              (differences, normalized differences, ratios, etc.).
              <P>
         <LI>  <VAR><STRONG>m3tools</STRONG></VAR> program
               <A HREF = "MPASSTAT.html"><VAR><STRONG>mpasstat</STRONG></VAR></A>
