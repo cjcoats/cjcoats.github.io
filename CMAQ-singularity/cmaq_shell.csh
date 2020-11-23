@@ -2,11 +2,12 @@
 # ===================== Script to Invoke Singularity-Shell =========================
 #   Not for batch use on "longleaf.unc.edu" etc. servers (see ../Scripts-BATCH)
 #*********************************************************************
-#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
+#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_${CMAQ_VRSN}/data"
 
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set SMOKEDATA = /work/SCRATCH/SMOKE.git/data
 set CONTAINER = /work/cmaq.simg
+set CMAQ_VRSN = 5.3.1
 
 set extradirs = ''
 # set extradirs = '-B /foo'
@@ -30,5 +31,5 @@ setenv SINGULARITYENV_NPROW         3
 cd ${HOSTDATA}
 
 singularity shell -s /usr/bin/tcsh \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
+ --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data ${extradirs} \
  ${CONTAINER}

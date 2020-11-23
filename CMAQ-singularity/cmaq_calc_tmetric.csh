@@ -7,13 +7,14 @@
 #   allow Singularity on login-nodes
 #*********************************************************************
 
-#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
+#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_${CMAQ_VRSN}/data"
 #   must have subdirectories:
 #       ${CRS_APPL} for conc-file and gridded met inputs
 #       ${FIN_APPL} for bdy met-file inputs and BCON outputs
 
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
+set CMAQ_VRSN = 5.3.1
 
 set extradirs = ''
 # set extradirs = '-B /foo'
@@ -41,13 +42,13 @@ setenv SINGULARITYENV_INFILES         "( COMBINE_ACONC_${RUNID}_201607.nc )"
 
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
- ${CONTAINER} /opt/CMAQ_REPO/scripts/run_block_extract.csh
+ --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data ${extradirs} \
+ ${CONTAINER} /opt/CMAQ_${CMAQ_VRSN}/scripts/run_block_extract.csh
 
 if ( ${err_status} != 0 ) then
     echo ""
     echo "****************************************************************"
-    echo "** Error for /opt/CMAQ_REPO/scripts/run_block_extract.csh     **"
+    echo "** Error for /opt/CMAQ_${CMAQ_VRSN}/scripts/run_block_extract.csh     **"
     echo "**    STATUS=${err_status}                                    **"
     echo "****************************************************************"
 endif

@@ -29,10 +29,10 @@ As "root" on the bootstrap host machine:
      yum install gnuplot
      yum install hwloc hwloc-devel
      yum install ImageMagick
+     yum install infiniband-diags-devel
      yum install jre
      yum install ksh
      yum install kate
-     yum install libmad libmad-devel
      yum install lzma lzma-devel
      yum install man
      yum install motif

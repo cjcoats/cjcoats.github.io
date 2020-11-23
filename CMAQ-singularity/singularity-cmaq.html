@@ -49,10 +49,13 @@
     You will be running a virtualized system (&quot;the container&quot;)
     for this package on your own server or workstation (the &quot;host
     machine&quot;).  The container has a complete CMAQ working
-    environment for you to use on that virtualized system, without
-    needing to build anything, and not needing to worry about
-    installation of prerequisite software (compilers, libraries, etc.)
-    except for <VAR>singularity</VAR> itself.
+    environment for you to use on that virtualized system (for CMAQ
+    versions 5.3.1 and 5.3.2), without needing to build anything, and
+    not needing to worry about installation of prerequisite software
+    (compilers, libraries, etc.) except for <VAR>singularity</VAR>
+    itself.<BR>
+    <EM>Throughout, CMAQ_${VRSN} means your choice of CMAQ_531
+    (for CMAQ version 5.3.1) or CMAQ_532 (for CMAQ-5.3.2)</EM>
     <P>
     This package has two components:
     <UL>
@@ -91,8 +94,9 @@
 
     Installed in this container are:
     <BLOCKQUOTE><DL>
-        <DT> <STRONG>CMAQ-git</STRONG> of June&nbsp;10, 2020
-             (version <CODE>5.3.1</CODE>)
+        <DT> <STRONG>CMAQ-git</STRONG> of June&nbsp;10, 2020 and 
+             Nov&nbsp;22, 2020)
+             (versions <CODE>5.3.1</CODE> and <CODE>5.3.1</CODE>)
         <DD> including <VAR>CCTM</VAR>, <BR>
              preprocessors <VAR>bcon</VAR>,
              <VAR>create_omi</VAR>, <VAR>icon</VAR>, and
@@ -152,7 +156,7 @@
         <DD> GUI difference tool, aliased to <VAR>xd</VAR>
         <DT> <STRONG><VAR>okular</VAR></STRONG>-4.10
         <DD> Document (PDF/PostScript/MarkDown) viewer, e.g., to view
-             CMAQ docs in <VAR>/opt/CMAQ_REPO/DOCS</VAR>
+             CMAQ docs in <VAR>/opt/CMAQ_531/DOCS</VAR>
         <DT> <STRONG><VAR>findent</VAR></STRONG>
         <DD> Fortran indentation/code-transformation tool
     </DL></BLOCKQUOTE>
@@ -171,15 +175,22 @@
 
     <STRONG>On this container</STRONG> are directories
     <BLOCKQUOTE><DL>
-        <DT> <STRONG><VAR>/opt/CMAQ_REPO/scripts/</VAR></STRONG>
+        <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/scripts/</VAR></STRONG>
         <DD> worker-scripts designed to run CMAQ modeling components.
              These are invoked by host-machine scripts such as
              <VAR>cmaq_cctm.csh</VAR> or <VAR>cmaq_icon.csh</VAR>
              (below)
-        <DT> <STRONG><VAR>/opt/CMAQ_REPO/bin/</VAR></STRONG>
+        <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/bin/</VAR></STRONG>
         <DD> optimized executables for the CMAQ modeling components
-        <DT> <STRONG><VAR>/opt/CMAQ_REPO/CCTM/scripts/BLD_CCTM_v531_gcc[dbg]-*/</VAR></STRONG>
+        <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/CCTM/scripts/BLD_CCTM_${VRSN}_gcc[dbg]-*/</VAR></STRONG>
         <DD> optimized and debug CMAQ CCTM executables for various MPI versions.
+        <DT> <STRONG><VAR>/opt/SMOKE/scripts/run/</VAR></STRONG>
+        <DT> <STRONG><VAR>/opt/CMAQ_532/CCTM/scripts/BLD_CCTM_${VRSN}_ISAM_gcc[dbg]-*/</VAR></STRONG>
+        <DD> optimized and debug CMAQ CCTM-ISAM executables for various MPI versions
+        (CMAQ-5.3.2 only)
+        <DT> <STRONG><VAR>/opt/CMAQ_532/CCTM/scripts/BLD_CCTM_${VRSN}_DDM_gcc[dbg]-*/</VAR></STRONG>
+        <DD> optimized and debug CMAQ CCTM-DDM executables for various MPI versions
+        (CMAQ-5.3.2 only)
         <DT> <STRONG><VAR>/opt/SMOKE/scripts/run/</VAR></STRONG>
         <DD> worker-scripts to run SMOKE.
              These are invoked by host-machine scripts such as
@@ -211,10 +222,10 @@
              either vis-program executables or &quot;worker scripts&quot;
              that actually run the modeling programs.
              <BR>
-             <STRONG>Note</STRONG> that <VAR>cmaq_</VAR> and <VAR>smk_</VAR>
-             and <VAR>singularity-term.csh</VAR> scripts
-             also contain batch-queue directives, e.g.,  for
-             queue/batch usage on the UNC servers <VAR>longleaf</VAR> or
+             <STRONG>Note</STRONG> that the <VAR>cmaq_</VAR> and
+             <VAR>smk_</VAR> and <VAR>singularity-term.csh</VAR> scripts
+             also contain batch-queue directives, e.g.,  for queue/batch
+             usage on the UNC servers <VAR>longleaf</VAR> or
              <VAR>dogwood</VAR>, where <VAR>singularity</VAR> is only
              available on the compute-nodes.
              <P>
@@ -242,11 +253,23 @@
                  <DD> to copy the CMAQ CCTM namelist-files to a
                       specified directory on the host machine.
                  <P>
-                 <DT><A HREF="cmaq_cctm.csh"         ><VAR>cmaq_cctm.csh</VAR></A>
+                 <DT><A HREF="cmaq_cctm.csh"         ><VAR>cmaq_cctm.csh</VAR></A><BR>
+                     <A HREF="cmaq_cctm.mpich.csh"   ><VAR>cmaq_cctm.mpich.csh</VAR></A><BR>
+                     <A HREF="cmaq_cctm.mvapich.csh" ><VAR>cmaq_cctm.mvapich.csh</VAR></A><BR>
+                     <A HREF="cmaq_cctm.openmpi.csh" ><VAR>cmaq_cctm.openmpi.csh</VAR></A><BR>
+                     <A HREF="cmaq_ddm.mpich.csh"    ><VAR>cmaq_ddm.mpich.csh</VAR></A><BR>
+                     <A HREF="cmaq_ddm.mvapich.csh"  ><VAR>cmaq_ddm.mvapich.csh</VAR></A><BR>
+                     <A HREF="cmaq_ddm.openmpi.csh"  ><VAR>cmaq_ddm.openmpi.csh</VAR></A><BR>
+                     <A HREF="cmaq_isam.mpich.csh"   ><VAR>cmaq_isam.openmpi.mpich.csh</VAR></A><BR>
+                     <A HREF="cmaq_isam.mvapich.csh" ><VAR>cmaq_isam.mvapich.csh</VAR></A><BR>
+                     <A HREF="cmaq_isam.openmpi.csh" ><VAR>cmaq_isam.csh</VAR></A>               
                  <DD> Set up environment on the container for a
-                      (multi-day) CMAQ CCTM run and then use the
-                      container's <VAR>run_cctm.csh</VAR> worker-script
-                      to execute that run.
+                      (multi-day) CMAQ CCTM run (for &quot;vanilla&quot;, DDM3D enabled, or
+                      ISAM enabled, respectively) and then use the
+                      container's <VAR>run_cctm.csh</VAR> (etc.) worker-scripts
+                      to execute that run.<BR>
+                      Note that there are versions of these scripts for
+                      each of the supported MPI versions.
                  <P>
                  <DT><A HREF="cmaq_appendwrf.csh"    ><VAR>cmaq_appendwrf.csh</VAR></A>
                  <DD> Run CMAQ post-processor <VAR>appendwrf</VAR>
@@ -274,6 +297,8 @@
                  <DT><A HREF="smk_rateperhour_nctox.csh"     ><VAR>smk_rateperhour_nctox.csh</VAR></A>
                  <DT><A HREF="smk_rateperprofile_nctox.csh"  ><VAR>smk_rateperprofile_nctox.csh</VAR></A>
                  <DT><A HREF="smk_ratepervehicle_nctox.csh"  ><VAR>smk_ratepervehicle_nctox.csh</VAR></A>
+                 <P>
+                 <DT><VAR>[AMET scripts]</VAR>
              </DL>
              </BLOCKQUOTE>
     </DL></BLOCKQUOTE>
@@ -365,15 +390,15 @@ Requirements for your Host Machine
     directory hierarchies but adapted to the specifics of this
     container.  Here is a selection of relevant parts the top few levels
     of that installation hierarchy.  Note that all the CMAQ related
-    optimized executables are sym-linked to
-    <CODE>/opt/CMAQ_REPO/bin/</CODE>; all the extra analysis tools, etc.,
+    optimized executables are sym-linked to directories
+    <CODE>/opt/CMAQ_${VRSN}/bin/</CODE>; all the extra analysis tools, etc.,
     are in <CODE>/opt/bin/</CODE> or
     <CODE>/opt/ioapi-3.2/Linux2_x86_64gfort_medium/</CODE>, which are
     already in  your <CODE>PATH</CODE> on the container; the container's
     run-CMAQ-component scripts are in
-    <CODE>/opt/CMAQ_REPO/scripts/</CODE>, and data in your host machine
+    <CODE>/opt/CMAQ_${VRSN}/scripts/</CODE>, and data in your host machine
     data-directory <CODE>${HOSTDATA}</CODE> is generally mounted on
-    your container's <CODE>/opt/CMAQ_REPO/data/</CODE>; the container's
+    your container's <CODE>/opt/CMAQ_${VRSN}/data/</CODE>; the container's
     SMOKE scripts are in <CODE>/opt/SMOKE/scripts/run/</CODE>, and
     <CODE>${HOSTDATA}</CODE> is mounted on
     <CODE>/opt/SMOKE/data/</CODE>, as indicated <A HREF = "#struct">
@@ -395,7 +420,7 @@ Requirements for your Host Machine
     The assumption in the current &quot;execute a CMAQ model component
     on the container&quot; scripts is that <STRONG>a single master
     data-directory <CODE>${HOSTDATA}</CODE></STRONG> on the host should
-    be mounted onto the container's <VAR>/opt/CMAQ_REPO/data/</VAR>:
+    be mounted onto the container's <VAR>/opt/CMAQ_${VRSN}/data/</VAR>:
     that <STRONG>master data-directory will have
     sub-directories</STRONG> for all of the input data <STRONG>and for
     the CCTM output data and logs</STRONG>.  The expected sub-directory
@@ -478,21 +503,21 @@ Requirements for your Host Machine
     the container is <VAR>${CONTAINER}=/work/cmaq.simg</VAR>, and the
     host-directory is <VAR>${HOSTDATA}=/work/SCRATCH/CMAQv5.3.1_Benchmark_2Day</VAR>,
     the following command mounts that directory on
-    container-directory <VAR>/opt/CMAQ_REPO/data</VAR> before invoking
-    container-script <VAR>/opt/CMAQ_REPO/scripts/run_cctm.csh</VAR>:
+    container-directory <VAR>/opt/CMAQ_${VRSN}/data</VAR> before invoking
+    container-script <VAR>/opt/CMAQ_${VRSN}/scripts/run_cctm.csh</VAR>:
     <PRE>
     singularity exec \
-     --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
-     ${CONTAINER} /opt/CMAQ_REPO/scripts/run_cctm.csh
+     --bind ${HOSTDATA}:/opt/CMAQ_${VRSN}/data \
+     ${CONTAINER} /opt/CMAQ_${VRSN}/scripts/run_cctm.csh
     </PRE>
 
     Subdirectories of host data-directory <VAR>${HOSTDATA}</VAR> will be seen
     on the container as matching subdirectories of the container
-    data-directory  <VAR>/opt/CMAQ_REPO/data</VAR>. Here in this
+    data-directory  <VAR>/opt/CMAQ_${VRSN}/data</VAR>. Here in this
     example,
     <VAR>/work/SCRATCH/CMAQv5.3.1_Benchmark_2Day/2016_12SE1/met/</VAR>
     on the host corresponds to
-    <VAR>/opt/CMAQ_REPO/data/2016_12SE1/met/</VAR>
+    <VAR>/opt/CMAQ_${VRSN}/data/2016_12SE1/met/</VAR>
     on the container, etc.  The full subdirectory structure of the data
     directory is given above.
     <P>
@@ -567,14 +592,12 @@ Requirements for your Host Machine
     </EM><P>
 
     The <STRONG>sample scripts</STRONG> from directory
-    <VAR>cmaq_cmaq/Scripts-CMAQ/</VAR> and
-    <VAR>cmaq_cmaq/Scripts-SMOKE/</VAR>
-    are of three types:
+    <VAR>cmaq_cmaq/Scripts/</VAR> are of three types:
     <OL>
         <LI> Scripts that use <VAR>singularity&nbsp;exec</VAR> to run
              on-container executables (e.g., vis programs) or modeling
              scripts (found in directory/files
-             <VAR>/opt/CMAQ_REPO/scripts/*csh</VAR> for CMAQ components
+             <VAR>/opt/CMAQ_${VRSN}/scripts/*csh</VAR> for CMAQ components
              or <VAR>/opt/SMOKE/scripts/run/*csh</VAR>), after setting
              up data directories mounted from your host machine, and
              after setting up environment variables used to control
@@ -621,7 +644,7 @@ Requirements for your Host Machine
     <VAR>singularity&nbsp;exec</VAR> to run a CMAQ modeling component,
     say <VAR>foo</VAR>, need to mount a data-directory
     <CODE>${HOSTDATA}</CODE> on your host machine to the expected
-    data-directory <CODE>/opt/CMAQ_REPO/data</CODE> on the container
+    data-directory <CODE>/opt/CMAQ_${VRSN}/data</CODE> on the container
     (using <CODE>--bind</CODE>), and to establish environment variables
     (of the form <CODE>SINGULARITYENV_&lt;name&gt;</CODE>) on the host
     that <VAR>singularity</VAR>  maps into environment variables on the
@@ -635,14 +658,14 @@ Requirements for your Host Machine
     setenv SINGULARITYENV_&lt;name&gt;   &lt;value&gt;
     ...
     singularity exec \
-      --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
-      ${CONTAINER} /opt/CMAQ_REPO/scripts/run_foo.csh
+      --bind ${HOSTDATA}:/opt/CMAQ_531/data \
+      ${CONTAINER} /opt/CMAQ_531/scripts/run_foo.csh
     set err_status = ${status}
 
     if ( ${err_status} != 0 ) then
         echo ""
         echo "********************************************************"
-        echo "** Error for /opt/CMAQ_REPO/scripts/run_foo.csh       **"
+        echo "** Error for /opt/CMAQ_531/scripts/run_foo.csh        **"
         echo "**    STATUS=${err_status}                            **"
         echo "********************************************************"
     endif
@@ -743,9 +766,16 @@ Requirements for your Host Machine
     can also be used to override the executable</EM> for the modeling
     component that you are running.  The value should be the
     <STRONG>path on the container</STRONG> to the executable (after any
-    host-directory mount-operations).  Be aware that this facility
-    may well have problems due to shared-library incompatibilities
+    host-directory mount-operations).  Be aware that <STRONG>you will
+    have problems running executables built on the host-machine</STRONG>
+    because of problems due to shared-library incompatibilities
     between your host machine and the container's CentOS-7 virtual OS.
+    If you do this, you should use the <VAR>singularity-shell.csh</VAR>
+    or <VAR>singularity-term.csh</VAR> script to use the container  and
+    its compilers and libraries to build the executable on a directory
+    you mount from your host machine.  You may want to look at that
+    component's <VAR>Makefile</VAR> to help you determine which compile
+    flags, etc., to use.
     <P>
 
 </BLOCKQUOTE>
@@ -766,13 +796,25 @@ Requirements for your Host Machine
     The executables can be found as <CODE>CCTM_v531.exe</CODE> in the
     following CMAQ-container directories:
     <PRE>
-    /opt/CMAQ_REPO/CCTM/scripts/
-        BLD_CCTM_v531_gcc-mpich3/
-        BLD_CCTM_v531_gcc-openmpi/
-        BLD_CCTM_v531_gcc-mvapich2/
-        BLD_CCTM_v531_gccdbg-mpich3/
-        BLD_CCTM_v531_gccdbg-openmpi/
-        BLD_CCTM_v531_gccdbg-mvapich2/
+    /opt/CMAQ_${VRSN}/CCTM/scripts/
+        BLD_CCTM_v${VRSN}_gcc-mpich3/
+        BLD_CCTM_v${VRSN}_gcc-openmpi/
+        BLD_CCTM_v${VRSN}_gcc-mvapich2/
+        BLD_CCTM_v${VRSN}_gccdbg-mpich3/
+        BLD_CCTM_v${VRSN}_gccdbg-openmpi/
+        BLD_CCTM_v${VRSN}_gccdbg-mvapich2/
+        BLD_CCTM_v532_DDM_gcc-mpich3/
+        BLD_CCTM_v532_DDM_gcc-openmpi/
+        BLD_CCTM_v532_DDM_gcc-mvapich2/
+        BLD_CCTM_v532_DDM_gccdbg-mpich3/
+        BLD_CCTM_v532_DDM_gccdbg-openmpi/
+        BLD_CCTM_v532_DDM_gccdbg-mvapich2/
+        BLD_CCTM_v532_ISAM_gcc-mpich3/
+        BLD_CCTM_v532_ISAM_gcc-openmpi/
+        BLD_CCTM_v532_ISAM_gcc-mvapich2/
+        BLD_CCTM_v532_ISAM_gccdbg-mpich3/
+        BLD_CCTM_v532_ISAM_gccdbg-openmpi/
+        BLD_CCTM_v532_ISAM_gccdbg-mvapich2/
     </PRE>
     respectively.  In all cases, they are compiled for &quot;64-bit
     medium memory model&quot; (see
@@ -794,11 +836,20 @@ Requirements for your Host Machine
     run-scripts and the CMAQ directories for use with the container.
     The reasons for this are two-fold:  first, for consistency among the
     CMAQ CCTM, its pre-processors, post-processors, and utility
-    programs; secondly,  so that there might be a single
-    &quot;generic&quot; CCTM run-script on the container,
-    <STRONG>controlled by the following list of environment
-    variables</STRONG> (each of which has a default, indicated in square
-    brackets [LIKE THIS]):
+    programs; secondly,  so that there is a single
+    &quot;generic&quot; CCTM run-script on the container for each
+    CMAQ CCTM version:
+    <BLOCKQUOTE><DL>
+        <DT> <STRONG><VAR>cmaq_cctm.csh</VAR></STRONG>
+        <DD> for the &quot;vanilla&quot; CMAQ CCTM; 
+        <DT> <STRONG><VAR>cmaq_ddm.csh</VAR></STRONG>
+        <DD> for theDDM3D enabledCMAQ CCTM; 
+        <DT> <STRONG><VAR>cmaq_isam.csh</VAR></STRONG>
+        <DD> for theISAM enabled CMAQ CCTM.
+    </DL></BLOCKQUOTE>
+    These scripts are <STRONG>controlled by the following list of
+    environment variables</STRONG> (each of which has a default,
+    indicated in square brackets [LIKE THIS]):
     <BLOCKQUOTE><DL>
         <DT> <STRONG><CODE>MPIVERSION</CODE></STRONG>
         <DD> <CODE>mpich</CODE>, <CODE>openmpi</CODE>, or
@@ -859,42 +910,47 @@ Requirements for your Host Machine
         <DD> path for <CODE>GRIDDESC</CODE> file on the container
              [<VAR>${HOSTDATA}/${APPL}/GRIDDESC</VAR> on your host
              machine; this binds to container-file
-             <VAR>/opt/CMAQ_REPO/data/${APPL}/GRIDDESC</VAR>]
+             <VAR>/opt/CMAQ_${VRSN}/data/${APPL}/GRIDDESC</VAR>]
         <P>
         <DT> <STRONG><CODE>Advanced Topics</CODE></STRONG>
         <DD> <STRONG>to customize <CODE>NAMELIST</CODE></STRONG> files,
              you can use script
              <VAR><A HREF="copy_cmaq_nml.csh">copy_cmaq_nml.csh</A></VAR>
              to copy the &quot;vanilla&quot; namelists to a directory on
-             your host machine given by the script's environment-variable
-             <CODE>SINGULARITYENV_NMLDIR</CODE>, customize the file(s)
-             there, and then use the <CODE>SINGULARITYENV_NMLDIR</CODE>
-             in the <VAR>cmaq_cctm.csh</VAR> script to tell the CCTM to
-             use those namelists.
+             your host machine given by the script's
+             environment-variable <CODE>SINGULARITYENV_NMLDIR</CODE>,
+             customize the file(s) there, and then use the
+             <CODE>SINGULARITYENV_NMLDIR</CODE> in the
+             <VAR>cmaq_cctm.csh, cmaq_ddm.csh, cmaq_isam.csh</VAR>
+             scripts to tell the CCTM to use those namelists.
              <P>
              <STRONG>to build and use a custom executable</STRONG>,
              you can use script
              <VAR><A HREF="copy_cmaq_bld.csh">copy_cmaq_bld.csh</A></VAR>
-             to copy a build-directory on the container to a directory on
-             your host machine given by the script's environment-variable
-             <CODE>SINGULARITYENV_BLDDIR</CODE>, do a custom re-build of
-             the CMAQ CCTM executable there, and then use the
-             <CODE>SINGULARITYENV_NMLDIR</CODE> environment variable in the
-             <VAR>cmaq_cctm.csh</VAR> script to use the executable from
-             that directory, or else use the <CODE>SINGULARITYENV_EXEC</CODE>
-             environment variable to give the path for the executable
-             you want to use (provided it is in a directory (like
-             <CODE>${HOME}</CODE>) mounted onto the container.
+             to copy a build-directory on the container to a directory
+             on your host machine given by the script's
+             environment-variable <CODE>SINGULARITYENV_BLDDIR</CODE>, do
+             a custom re-build of the CMAQ CCTM executable there (using
+             the <VAR>singularity-shell.csh</VAR> script to give you
+             access to the container's compilers and  libraries), and
+             then use the <CODE>SINGULARITYENV_NMLDIR</CODE> environment
+             variable in the <VAR>cmaq_cctm.csh</VAR> script to use the
+             executable from that directory, or else use the
+             <CODE>SINGULARITYENV_EXEC</CODE> environment variable to
+             give the path for the executable you want to use (provided
+             it is in a directory (like <CODE>${HOME}</CODE>) mounted
+             onto the container.
              <P>
 
     </DL></BLOCKQUOTE>
     <P>
-    In the <VAR>run_cctm.csh</VAR> script on the container,
+    In the <VAR>run_cctm.csh</VAR>, <VAR>run_ddm.csh</VAR>, and
+    <VAR>run_isam.csh</VAR>  scripts on the container,
     <STRONG>additional CCTM-control environment variables</STRONG>,
-     e.g.,  <CODE>GRID_NAME, CONC_SPCS, CTM_MAXSYNC,
-    CTM_OCEAN_CHEM, </CODE> etc., are
-    not hard-coded (changeable only by editing the script), but are
-    established, with their default values, after the pattern
+    e.g.,  <CODE>GRID_NAME, CONC_SPCS, CTM_MAXSYNC, CTM_OCEAN_CHEM,
+    </CODE> etc., are not hard-coded (changeable only by editing the
+    script), but are established, with their default values, after the
+    pattern
     <PRE>
     if ( ! $?FOO )  setenv  FOO  BAR
     </PRE>
@@ -914,18 +970,20 @@ Requirements for your Host Machine
     setenv  SINGULARITYENV_FOO  QUX
     </PRE>
 
-    The <VAR>run_cctm.csh</VAR> script makes potentially <STRONG>multiple
-    single-day CCTM runs</STRONG>, one for each day from <CODE>START_DATE</CODE>
-    through <CODE>END_DATE</CODE>, inclusive.
+    The <VAR>run_cctm.csh</VAR> script (etc.)makes potentially
+    <STRONG>multiple single-day CCTM runs</STRONG>, one for each day
+    from <CODE>START_DATE</CODE> through <CODE>END_DATE</CODE>,
+    inclusive.
     <P>
 
-    Note that both the <VAR>run_cctm.csh</VAR> script and the
-    <VAR>cmaq_cctm.csh</VAR> script have been re-structured to
-    capture exit-status (from <CODE>M3EXIT()</CODE> or from other causes
-    of failure, e.g., <CODE>SEGFAULT</CODE>) correctly; and in case of
-    such a failure,  <VAR>run_cctm.csh</VAR> terminates the current run
-    with a descriptive message immediately if that status indicates
-    error, rather than to go ahead blindly ahead with more runs after a
+    Note that both the container based scripts like
+    <VAR>run_cctm.csh</VAR> and the host based scripts like
+    <VAR>cmaq_cctm.csh</VAR> script have been re-structured to capture
+    exit-status (from <CODE>M3EXIT()</CODE> or from other causes of
+    failure, e.g., <CODE>SEGFAULT</CODE>) correctly; and in case of such
+    a failure,  <VAR>run_cctm.csh</VAR> terminates the current run with
+    a descriptive message immediately if that status indicates error,
+    rather than to go ahead blindly ahead with more runs after a
     failure.
     <P>
 
@@ -968,11 +1026,11 @@ Requirements for your Host Machine
         <P>
         <DT> Optionally, <STRONG><CODE>GRIDDESC</CODE></STRONG>
         <DD> path for <CODE>GRIDDESC</CODE> file on the container
-             [<VAR>/opt/CMAQ_REPO/data/${CRS_APPL}/GRIDDESC</VAR>]
+             [<VAR>/opt/CMAQ_${VRSN}/data/${CRS_APPL}/GRIDDESC</VAR>]
     </DL></BLOCKQUOTE>
     mounts a data-directory (which should contain subdirectories for
     both the input and output grids, and then executes the
-    container-script <VAR>/opt/CMAQ_REPO/scripts/run_bcon.csh</VAR>
+    container-script <VAR>/opt/CMAQ_${VRSN}/scripts/run_bcon.csh</VAR>
     which runs program <VAR>ICON</VAR> on the container.
     <P>
     </BLOCKQUOTE>
@@ -983,7 +1041,7 @@ Requirements for your Host Machine
     deferred to a later date...
     <P>
     If you want to do it yourself, look at the script
-    <VAR>/opt/CMAQ_REPO/PREP/create_omi/scripts/cmaq_omi_run.csh</VAR>
+    <VAR>/opt/CMAQ_${VRSN}/PREP/create_omi/scripts/cmaq_omi_run.csh</VAR>
     on the  container, copy it out to a host-machine directory that will
     be mounted on the container (<VAR>${HOME}</VAR>?), edit it there,
     using
@@ -992,7 +1050,7 @@ Requirements for your Host Machine
         </BLOCKQUOTE>
     for the environment variables),  and then using
         <BLOCKQUOTE>
-        <VAR>singularity exec /opt/CMAQ_REPO/bin/create_omi</VAR>
+        <VAR>singularity exec /opt/CMAQ_${VRSN}/bin/create_omi</VAR>
         </BLOCKQUOTE>
      to execute the program.
     </BLOCKQUOTE>
@@ -1023,11 +1081,11 @@ Requirements for your Host Machine
         <P>
         <DT> Optionally, <STRONG><CODE>GRIDDESC</CODE></STRONG>
         <DD> path for <CODE>GRIDDESC</CODE> file on the container
-             [<VAR>/opt/CMAQ_REPO/data/${CRS_APPL}/GRIDDESC</VAR>]
+             [<VAR>/opt/CMAQ_${VRSN}/data/${CRS_APPL}/GRIDDESC</VAR>]
     </DL></BLOCKQUOTE>
     mounts a data-directory (which should contain subdirectories for
     both the input and output grids), and then executes the
-    container-script <VAR>/opt/CMAQ_REPO/scripts/run_icon.csh</VAR>
+    container-script <VAR>/opt/CMAQ_${VRSN}/scripts/run_icon.csh</VAR>
     which runs program <VAR>ICON</VAR> on the container.
     <P>
     </BLOCKQUOTE>
@@ -1097,7 +1155,7 @@ Requirements for your Host Machine
     for the container, and mounts the data-directory (which should
     contain subdirectories for both WRF input data and MCIP output data)
     on the container, and then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_mcip.csh</VAR> which runs program
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_mcip.csh</VAR> which runs program
     <VAR>MCIP</VAR> on the container.
     <P>
     </BLOCKQUOTE>
@@ -1124,7 +1182,7 @@ Requirements for your Host Machine
     and the  basenames  <CODE>INFILE1, INFILE2, INFILE3</CODE> for the
     three input files and the one output file for <VAR>appendwrf</VAR>,
     and then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_appendwrf.csh</VAR> which runs
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_appendwrf.csh</VAR> which runs
     program <VAR>appendwrf</VAR> on the container.
     <P>
     </BLOCKQUOTE>
@@ -1137,7 +1195,7 @@ Requirements for your Host Machine
     HOURS_8HRMAX</CODE> and optionally <CODE>MISS_CHECK, SPECIES,
     UNITS</CODE>, mounts the indicated data-directory
     <CODE>${HOSTDIR}</CODE>, and then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_bldoverlay.csh</VAR> which runs
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_bldoverlay.csh</VAR> which runs
     program <VAR>bldoverlay</VAR> on the container.
     <P>
     </BLOCKQUOTE>
@@ -1179,7 +1237,7 @@ Requirements for your Host Machine
     </DL></BLOCKQUOTE>
     for the container, and mounts the data-directory on the container,
     then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_block_extract.csh</VAR> which runs
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_block_extract.csh</VAR> which runs
     program <VAR>block_extract</VAR> on the container.
     </BLOCKQUOTE>
 
@@ -1206,7 +1264,7 @@ Requirements for your Host Machine
     </DL></BLOCKQUOTE>
     for the container, mounts the data-directory on the container,
     and then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_calc_tmetric.csh</VAR> which runs
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_calc_tmetric.csh</VAR> which runs
     program <VAR>calc_tmetric</VAR> on the container.
     </BLOCKQUOTE>
 
@@ -1229,7 +1287,7 @@ Requirements for your Host Machine
     </DL></BLOCKQUOTE>
     for the container, mounts the data-directory on the container,
     and then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_combine.csh</VAR> which runs
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_combine.csh</VAR> which runs
     program <VAR>combine</VAR> on the container, with one execution
     for (3-D) concentration files and one execution for (2-D) deposition files
     for each day from <VAR>START_DATE</VAR> through <VAR>END_DATE</VAR>, inclusive.
@@ -1277,7 +1335,7 @@ Requirements for your Host Machine
     </DL></BLOCKQUOTE>
     for the container, mounts the data-directory on the container,
     and then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_hr2day.csh</VAR> which runs
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_hr2day.csh</VAR> which runs
     program <VAR>hr2day</VAR> on the container.
     </BLOCKQUOTE>
 
@@ -1287,15 +1345,15 @@ Requirements for your Host Machine
     tbd... <BR>
     Look at the following scripts on the container and the suggestions for
     scripting <VAR>create_omi</VAR>, above (or use the
-    <VAR>singuilarity-shell.csh</VAR> script to run <VAR>/opt/CMAQ_REPO/bin/sitecmp</VAR>
+    <VAR>singuilarity-shell.csh</VAR> script to run <VAR>/opt/CMAQ_${VRSN}/bin/sitecmp</VAR>
     interactively):
     <PRE>
-    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_AQS_Daily.csh
-    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_AQS_Hourly.csh
-    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_CSN.csh
-    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_IMPROVE.csh
-    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_NADP.csh
-    /opt/CMAQ_REPO//POST/sitecmp/scripts/run_sitecmp_SEARCH_Hourly.csh
+    /opt/CMAQ_${VRSN}/POST/sitecmp/scripts/run_sitecmp_AQS_Daily.csh
+    /opt/CMAQ_${VRSN}/POST/sitecmp/scripts/run_sitecmp_AQS_Hourly.csh
+    /opt/CMAQ_${VRSN}/POST/sitecmp/scripts/run_sitecmp_CSN.csh
+    /opt/CMAQ_${VRSN}/POST/sitecmp/scripts/run_sitecmp_IMPROVE.csh
+    /opt/CMAQ_${VRSN}/POST/sitecmp/scripts/run_sitecmp_NADP.csh
+    /opt/CMAQ_${VRSN}/POST/sitecmp/scripts/run_sitecmp_SEARCH_Hourly.csh
     </PRE>
     </BLOCKQUOTE>
 
@@ -1304,8 +1362,8 @@ Requirements for your Host Machine
     <BLOCKQUOTE>
     tbd... look at the following scripts on the container:
     <PRE>
-    /opt/CMAQ_REPO//POST/sitecmp_dailyo3/scripts/run_sitecmp_dailyo3_AQS.csh
-    /opt/CMAQ_REPO//POST/sitecmp_dailyo3/scripts/run_sitecmp_dailyo3_CASTNET.csh
+    /opt/CMAQ_${VRSN}//POST/sitecmp_dailyo3/scripts/run_sitecmp_dailyo3_AQS.csh
+    /opt/CMAQ_${VRSN}//POST/sitecmp_dailyo3/scripts/run_sitecmp_dailyo3_CASTNET.csh
 
     </PRE>
     </BLOCKQUOTE>
@@ -1348,7 +1406,7 @@ Requirements for your Host Machine
     </DL></BLOCKQUOTE>
     for the container, mounts the data-directory on the container,
     and then executes the  container-script
-    <VAR>/opt/CMAQ_REPO/scripts/run_writesite.csh</VAR> which runs
+    <VAR>/opt/CMAQ_${VRSN}/scripts/run_writesite.csh</VAR> which runs
     program <VAR>writesite</VAR> on the container.
     </BLOCKQUOTE>
 
@@ -1499,10 +1557,10 @@ Requirements for your Host Machine
     <VAR>/opt/AMET_v14/</VAR>.  
     <P>
     
-    Note that AMET support tools <VAR>bldoverlay_v531.exe</VAR>,
-    <VAR>combine_v531.exe</VAR>, <VAR>sitecmp_v531.exe</VAR>, and
-    <VAR>sitecmp_dailyo3_v531.exe</VAR> are installed with CMAQ in
-    container-directory <VAR>/opt/CMAQ_REPO/bin</VAR>.
+    Note that AMET support tools <VAR>bldoverlay_${VRSN}.exe</VAR>,
+    <VAR>combine_${VRSN}.exe</VAR>, <VAR>sitecmp_${VRSN}.exe</VAR>, and
+    <VAR>sitecmp_dailyo3_${VRSN}.exe</VAR> are installed with CMAQ in
+    container-directorues <VAR>/opt/CMAQ_${VRSN}/bin</VAR>.
     <P>
     
     [TBD...]
@@ -1705,7 +1763,7 @@ Requirements for your Host Machine
         <DT> <STRONG><VAR>okular</VAR></STRONG>
         <DD> PDF/MarkDown viewer,  after you invoke
              <VAR>singularity-shell.csh</VAR>, e.g., for reading CMAQ
-             documents in <VAR>/opt/CMAQ_REPO/DOCS</VAR>.
+             documents in <VAR>/opt/CMAQ_${VRSN}/DOCS</VAR>.
              <P>
         <DT> <STRONG><VAR>xxdiff</VAR></STRONG>
         <DD> GUI file-differencing tool for interactive use,  after you invoke
@@ -1749,16 +1807,16 @@ Requirements for your Host Machine
     The essential content of it  is the following, which establishes
     various container-environment variables <CODE>APPL , EMIS</CODE>,
     etc., and then mounts the host directory <CODE>${HOSTDATA}</CODE> on
-    container-directory <CODE>/opt/CMAQ_REPO/data</CODE>, and then
+    container-directory <CODE>/opt/CMAQ_${VRSN}/data</CODE>, and then
     invokes an interactive <VAR>tcsh</VAR> session on the container
     <VAR>${CONTAINER}</VAR>, and starting from directory
-    <CODE>/opt/CMAQ_REPO/data</CODE> on the container:
+    <CODE>/opt/CMAQ_${VRSN}/data</CODE> on the container:
     <PRE>
 
     #!/bin/csh -f
     #
     # Script to Invoke "singularity shell" for cmaq container
-    #   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
+    #   Data directory on host:  mounts onto container-directory "/opt/CMAQ_${VRSN}/data"
 
     set HOSTDATA  = &lt;path for data directory on your host machine&gt;
     set CONTAINER = &lt;path for CMAQ container on your host machine&gt;
@@ -1775,7 +1833,7 @@ Requirements for your Host Machine
     cd ${HOSTDATA}
 
     singularity shell -s /usr/bin/tcsh \
-     --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+     --bind ${HOSTDATA}:/opt/CMAQ_${VRSN}/data \
      ${CONTAINER}
 
     </PRE>
@@ -1786,8 +1844,8 @@ Requirements for your Host Machine
     </PRE>
     or
     <PRE>
-    pave -f /opt/CMAQ_REPO/data/${APPL}/met/mcip/METCRO2D_160701.nc \
-         -f /opt/CMAQ_REPO/data/${APPL}/cctm/CCTM_ACONC_v531_gcc_2016_12SE1_20160701.nc
+    pave -f /opt/CMAQ_${VRSN}/data/${APPL}/met/mcip/METCRO2D_160701.nc \
+         -f /opt/CMAQ_${VRSN}/data/${APPL}/cctm/CCTM_ACONC_v531_gcc_2016_12SE1_20160701.nc
     </PRE>
     or something like the following <VAR>m3stat</VAR> run (noting that
     the report-file created by <VAR>m3stat</VAR> below must be in a
@@ -1795,7 +1853,7 @@ Requirements for your Host Machine
     not a directory mounted from the host-system, the system will give
     you a nasty-gram indicating &quot;permission denied&quot;):
     <PRE>
-    cd /opt/CMAQ_REPO/data/${APPL}/met/mcip
+    cd /opt/CMAQ_${VRSN}/data/${APPL}/met/mcip
     ls
     setenv AFILE   $cwd/METCRO2D_160701.nc
     setenv REPORT  $HOME/METCRO2D_160701.stats
@@ -1819,8 +1877,8 @@ Container</A></H2>
     /data                               #  extra mount-point, if needed
 
     /opt/AMET_14/
-    /opt/CMAQ_REPO/
-    /opt/CMAQ_REPO/bin/                 #  optimized Linux2_x86_64gfort_medium executables
+    /opt/CMAQ_${VRSN}/
+    /opt/CMAQ_${VRSN}/bin/                 #  optimized Linux2_x86_64gfort_medium executables
         appendwrf_v531.exe
         BCON_v531.exe
         bldmake_gcc.exe
@@ -1835,8 +1893,8 @@ Container</A></H2>
         sitecmp_dailyo3_v531.exe
         sitecmp_v531.exe
         writesite_v531.exe
-    /opt/CMAQ_REPO/data/
-    /opt/CMAQ_REPO/scripts/             #  run_&lt;something&gt;.csh model-component scripts
+    /opt/CMAQ_${VRSN}/data/
+    /opt/CMAQ_${VRSN}/scripts/             #  run_&lt;something&gt;.csh model-component scripts
         run_appendwrf.csh
         run_bcon.csh
         run_bldoverlay.csh
@@ -1848,21 +1906,21 @@ Container</A></H2>
         run_icon.csh
         run_mcip.csh
         run_writesite.csh
-    /opt/CMAQ_REPO/tables/              #  time independent ASCII files and tables
-    /opt/CMAQ_REPO/CCTM/
-    /opt/CMAQ_REPO/CCTM/scripts/        #  various bldit, run-cctm, etc. scripts, and CCTM build-directories
+    /opt/CMAQ_${VRSN}/tables/              #  time independent ASCII files and tables
+    /opt/CMAQ_${VRSN}/CCTM/
+    /opt/CMAQ_${VRSN}/CCTM/scripts/        #  various bldit, run-cctm, etc. scripts, and CCTM build-directories
         BLD_CCTM_v531_gcc-mpich3/
         BLD_CCTM_v531_gcc-mvapich2/
         BLD_CCTM_v531_gcc-openmpi/
         BLD_CCTM_v531_gccdbg-mpich3/
         BLD_CCTM_v531_gccdbg-mvapich2/
         BLD_CCTM_v531_gccdbg-openmpi/
-    /opt/CMAQ_REPO/CCTM/src/
-    /opt/CMAQ_REPO/CCTM/src/MECHS/      # namelists and chemical-mechanism files
-    /opt/CMAQ_REPO/DOCS/
-    /opt/CMAQ_REPO/POST/
-    /opt/CMAQ_REPO/PREP/
-    /opt/CMAQ_REPO/UTIL/
+    /opt/CMAQ_${VRSN}/CCTM/src/
+    /opt/CMAQ_${VRSN}/CCTM/src/MECHS/      # namelists and chemical-mechanism files
+    /opt/CMAQ_${VRSN}/DOCS/
+    /opt/CMAQ_${VRSN}/POST/
+    /opt/CMAQ_${VRSN}/PREP/
+    /opt/CMAQ_${VRSN}/UTIL/
 
     /opt/SMOKE/
     /opt/SMOKE/assigns/

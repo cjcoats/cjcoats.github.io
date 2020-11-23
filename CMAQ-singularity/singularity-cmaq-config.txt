@@ -19,9 +19,9 @@ gnuplot-4.6.2-3.el7.x86_64.rpm
 hwloc-1.11.8-4.el7.x86_64
 hwloc-devel-1.11.8-4.el7.x86_64
 ImageMagick-6.9.10.68-3.el7.x86_64
+infiniband-diags-devel-2.1.0-1.el7.x86_64
+infiniband-diags-2.1.0-1.el7.x86_64
 kate-4.10.5-6.el7.x86_64.rpm
-libmad-0.15.1b-26.el7.x86_64
-libmad-devel-0.15.1b-26.el7.x86_64
 motif-2.3.4-14.el7_5.x86_64.rpm
 mpich-3.2-3.2-2.el7.x86_64.rpm
 mpich-devel-3.2-3.2-2.el7.x86_64.rpm

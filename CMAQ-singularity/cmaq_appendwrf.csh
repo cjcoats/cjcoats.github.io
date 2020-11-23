@@ -7,10 +7,11 @@
 #   allow Singularity on login-nodes
 #*********************************************************************
 
-#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
+#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_${CMAQ_VRSN}/data"
 
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
+set CMAQ_VRSN = 5.3.1
 
 set extradirs = ''
 # set extradirs = '-B /foo'
@@ -38,13 +39,13 @@ setenv SINGULARITYENV_INFILE3  <basename>
 setenv SINGULARITYENV_OUTFILE  <basename>
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
- ${CONTAINER} /opt/CMAQ_REPO/scripts/run_appendwrf.csh
+ --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data ${extradirs} \
+ ${CONTAINER} /opt/CMAQ_${CMAQ_VRSN}/scripts/run_appendwrf.csh
 
 if ( ${err_status} != 0 ) then
     echo ""
     echo "****************************************************************"
-    echo "** Error for /opt/CMAQ_REPO/scripts/run_appendwrf.csh         **"
+    echo "** Error for /opt/CMAQ_${CMAQ_VRSN}/scripts/run_appendwrf.csh         **"
     echo "**    STATUS=${err_status}                                    **"
     echo "****************************************************************"
 endif

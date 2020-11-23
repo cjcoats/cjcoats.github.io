@@ -7,6 +7,7 @@
 #SBATCH -J CMAQ8
 #SBATCH -p debug_queue
 ##SBATCH -p 528_queue
+#SBATCH --exclusive
 #SBATCH -o /proj/ie/apps/dogwood/singularity/LOGS/singularity-cctm.batch.Benchmark_2Day.8pe.log
 #SBATCH -e /proj/ie/apps/dogwood/singularity/LOGS/singularity-cctm.batch.Benchmark_2Day.8pe.err
 
@@ -21,10 +22,9 @@
 #       ${CRS_APPL} for conc-file and gridded met inputs
 #       ${FIN_APPL} for bdy met-file inputs and BCON outputs
 
-set HOSTDATA  = /proj/ie/proj/staff/cjcoats/CMAQv532_Benchmark_2Day
+set HOSTDATA  = /proj/ie/proj/staff/cjcoats/CMAQv5.3.2_Benchmark_2Day
 set CONTAINER = /proj/ie/apps/dogwood/singularity/cmaq.sif
-set CMAQ_VRSN = 532
-
+set CMAQ_VRSN = 5.3.2
 
 #*********************************************************************
 #   For CMAQ-option control-variables such as CONC_SPCS, CTM_MAXSYNC, KZMIN, etc.,
@@ -38,7 +38,9 @@ set CMAQ_VRSN = 532
 #   Set up environment for MPI-version (mpich, mvapich, or openmpi),
 #   verbose-level and/or debug:
 
-setenv   SINGULARITYENV_MPIVERSION    mvapich
+setenv SINGULARITYENV_MPIVERSION    openmpi
+setenv SINGULARITYENV_CTM_DIAG_LVL  0
+
 unsetenv SINGULARITYENV_DEBUG
 unsetenv SINGULARITYENV_EXEC
 

@@ -17,13 +17,14 @@
 #   Singularity on login-nodes
 #*********************************************************************
 #  HOST-CUSTOMIZATION VARIABLES:
-#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_REPO/data"
+#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_${CMAQ_VRSN}/data"
 #   must have subdirectories:
 #       ${CRS_APPL} for conc-file and gridded met inputs
 #       ${FIN_APPL} for bdy met-file inputs and BCON outputs
 
-set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
+set HOSTDATA  = /work/SCRATCH/CMAQv532_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
+set CMAQ_VRSN = 532
 
 #*********************************************************************
 #   For CMAQ-option control-variables such as CONC_SPCS, CTM_MAXSYNC, KZMIN, etc.,
@@ -165,15 +166,15 @@ setenv SINGULARITYENV_CTM_DIAG_LVL  0
 #*********************************************************************
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
- ${CONTAINER} /opt/CMAQ_REPO/scripts/run_cctm.csh
+ --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data ${extradirs} \
+ ${CONTAINER} /opt/CMAQ_${CMAQ_VRSN}/scripts/run_cctm.csh
  
 set err_status = ${status}
 
 if ( ${err_status} != 0 ) then
     echo ""
     echo "****************************************************************"
-    echo "** Error for /opt/CMAQ_REPO/scripts/run_cctm.csh              **"
+    echo "** Error for /opt/CMAQ_${CMAQ_VRSN}/scripts/run_cctm.csh              **"
     echo "**    STATUS=${err_status}                                    **"
     echo "****************************************************************"
 endif

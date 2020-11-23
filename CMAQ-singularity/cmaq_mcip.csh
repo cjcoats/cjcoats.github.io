@@ -13,6 +13,7 @@
 
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
+set CMAQ_VRSN = 5.3.1
 
 set extradirs = ''
 # set extradirs = '-B /foo'
@@ -54,13 +55,13 @@ setenv SINGULARITYENV_WRF_LC_REF_LAT    40.0
 # setenv SINGULARITYENV_LPRT_ROW   0
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
- ${CONTAINER} /opt/CMAQ_REPO/scripts/run_mcip.csh
+ --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data ${extradirs} \
+ ${CONTAINER} /opt/CMAQ_${CMAQ_VRSN}/scripts/run_mcip.csh
 
 if ( ${err_status} != 0 ) then
     echo ""
     echo "****************************************************************"
-    echo "** Error for /opt/CMAQ_REPO/scripts/run_mcip.csh              **"
+    echo "** Error for /opt/CMAQ_${CMAQ_VRSN}/scripts/run_mcip.csh              **"
     echo "**    STATUS=${err_status}                                    **"
     echo "****************************************************************"
 endif

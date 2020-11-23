@@ -17,6 +17,14 @@
 #   allow Singularity on login-nodes
 #*********************************************************************
 #  HOST-CUSTOMIZATION VARIABLES:
+#   CMAQ version (531 or 532) and container-directory
+#   Base container-directory for the AMET code
+
+set VRSN      = 531
+set CMAQ_HOME = /opt/CMAQ_${VRSN}
+
+setenv AMETBASE	/opt/AMET_v14
+
 #   Data directories on host:  mount onto container-directories
 #   "/opt/CMAQ_REPO/data", "/opt/AMET_v14/obs", "/opt/AMET_v14/output" respectively
 
@@ -88,7 +96,7 @@ setenv SINGULARITYENV_misc_plots        T     #> T/F; Create bugle plots and soc
 
 setenv SINGULARITYENV_SITE_FILE_FORMAT  csv
 
-setenv SINGULARITYENV_VRSN
+setenv SINGULARITYENV_VRSN      ${VRSN}
 setenv SINGULARITYENV_PROC
 setenv SINGULARITYENV_MECH
 setenv SINGULARITYENV_APPL
@@ -98,23 +106,6 @@ setenv SINGULARITYENV_RUNID
 #> 2. System configuration, location of observations and code repositories
 # ==================================================================================
 
-#> Configure the system environment
-  setenv compiler     intel                      #> Compiler used to compile combine, sitecmp, sitecmp_dailyo3
-  setenv compilerVrsn 18.0                     #> Compiler version
- # source /work/MOD3DEV/cmaq_common/cmaq_env.csh  #> Set up compilation and runtime environments on EPA system
- # source /work/MOD3DEV/cmaq_common/R_env.csh     #> Set up R environment on EPA system
-
-#> Set the location of the $CMAQ_HOME project directory used in
-#> the bldit_project.csh script of the CMAQ5.3 git repository.
-#> This directory contains executables for combine, sitecmp and
-#> sitecmp_daily and the species definition files needed
-#> for combine.  If you are not using a CMAQ5.3 reposiotry you can
-#> modify the location of the executables and spec_def files later
-#> in the script.
- set CMAQ_HOME = /path/CMAQv53_repo
-
-#> Base directory where AMET code resides
- setenv AMETBASE	/home/AMETv14b
 
 #> Set the location of the observation data.
 #> Observation data in the format needed for sitecmp are available 
@@ -143,12 +134,12 @@ setenv SINGULARITYENV_RUNID
 #> Define RUNID as any combination of parameters above or others. By default,
 #> this information will be collected into this one string, $RUNID, for easy
 #> referencing in output binaries and log files as well as in other scripts.
- setenv RUNID  ${VRSN}_${compilerString}_${APPL}
+ setenv RUNID  ${VRSN}_${APPL}
 
 #> Name and location of daily MET output. Required files = METCRO2D, METCRO3D
 #> This script assumes MET files are dated with the following naming convention:
 #> ${METCRO2D_NAME}_${YY}${MM}${DD}.nc, ${METCRO3D_NAME}_${YY}${MM}${DD}.nc
- setenv METDIR  /path/SE53BENCH/multi_day/cctm_input/met/mcip  #> Location of MET ouput.
+ setenv METDIR     = ${CMAQ_HOME}/data/met/mcip #> Location of MET ouput.
  set METCRO2D_NAME = METCRO2D                   #> METCRO2D file name (without date and file extension).
  set METCRO3D_NAME = METCRO3D                   #> METCRO3D file name (without date and file extension).
 
@@ -156,7 +147,7 @@ setenv SINGULARITYENV_RUNID
 #> This script assumes daily CCTM output files are dated with the following naming convention:
 #> [File Name]_${YYYY}${MM}${DD}.nc where [File Name] typically = [File Type]_[Application ID].
 #> for example: CCTM_ACONC_v52_intel17.0_SE52BENCH_${YYYY}${MM}${DD}.nc
- setenv CCTMOUTDIR  /path/SE53BENCH/multi_day/ref_output/cctm    #> Location of CCTM output.
+ setenv CCTMOUTDIR  ${CMAQ_HOME}/data/cctm    #> Location of CCTM output.
  set CCTM_ACONC_NAME    = CCTM_ACONC_${RUNID}    #> ACONC file name (without date and file extension).
  set CCTM_APMDIAG_NAME  = CCTM_APMDIAG_${RUNID}  #> APMDIAG file name (without date and file extension).
  set CCTM_WETDEP1_NAME  = CCTM_WETDEP1_${RUNID}  #> WETDEP1 file name (without date and file extension).
@@ -181,7 +172,7 @@ setenv SINGULARITYENV_RUNID
 # =====================================================================
 
 #> Set the full path of combine executable.
- setenv EXEC_combine ${CMAQ_HOME}/POST/combine/scripts/BLD_combine_${VRSN}_${compiler}${compilerVrsn}/combine_${VRSN}.exe
+ setenv EXEC_combine ${CMAQ_HOME}/bin/combine_${VRSN}.exe
 
 #> Set location of species definition files for concentration and deposition species needed to run combine.
  setenv SPEC_CONC  ${CMAQ_HOME}/POST/combine/scripts/spec_def_files/SpecDef_${MECH}.txt

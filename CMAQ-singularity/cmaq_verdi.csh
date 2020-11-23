@@ -8,18 +8,19 @@
 
 set HOSTDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER = /work/cmaq.simg
+set CMAQ_VRSN = 5.3.1
 
 set extradirs = ''
 # set extradirs = '-B /foo'
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data ${extradirs} \
+ --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data ${extradirs} \
  ${CONTAINER} /opt/bin/verdi.sh
 
 if ( ${err_status} != 0 ) then
     echo ""
     echo "****************************************************************"
-    echo "** Error for /opt/CMAQ_REPO/scripts/run_verdi.csh              **"
+    echo "** Error for /opt/CMAQ_${CMAQ_VRSN}/scripts/run_verdi.csh              **"
     echo "**    STATUS=${err_status}                                    **"
     echo "****************************************************************"
 endif

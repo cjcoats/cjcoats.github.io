@@ -21,9 +21,9 @@
 #       ${CRS_APPL} for conc-file and gridded met inputs
 #       ${FIN_APPL} for bdy met-file inputs and BCON outputs
 
-set HOSTDATA  = /proj/ie/proj/staff/cjcoats/CMAQv532_Benchmark_2Day
+set HOSTDATA  = /proj/ie/proj/staff/cjcoats/CMAQv5.3.2_Benchmark_2Day
 set CONTAINER = /proj/ie/apps/dogwood/singularity/cmaq.sif
-set CMAQ_VRSN = 532
+set CMAQ_VRSN = 5.3.2
 
 
 #*********************************************************************

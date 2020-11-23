@@ -21,9 +21,9 @@
 #       ${CRS_APPL} for conc-file and gridded met inputs
 #       ${FIN_APPL} for bdy met-file inputs and BCON outputs
 
-set HOSTDATA  = /proj/ie/proj/staff/cjcoats/CMAQv532_Benchmark_2Day
+set HOSTDATA  = /proj/ie/proj/staff/cjcoats/CMAQv5.3.2_Benchmark_2Day
 set CONTAINER = /proj/ie/apps/dogwood/singularity/cmaq.sif
-set CMAQ_VRSN = 532
+set CMAQ_VRSN = 5.3.2
 
 
 #*********************************************************************
@@ -38,7 +38,7 @@ set CMAQ_VRSN = 532
 #   Set up environment for MPI-version (mpich, mvapich, or openmpi),
 #   verbose-level and/or debug:
 
-setenv   SINGULARITYENV_MPIVERSION    mvapich
+setenv   SINGULARITYENV_MPIVERSION    mpich
 unsetenv SINGULARITYENV_DEBUG
 unsetenv SINGULARITYENV_EXEC
 
@@ -164,7 +164,7 @@ setenv SINGULARITYENV_CTM_DIAG_LVL  0
 #*********************************************************************
 
 singularity exec \
- --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data ${extradirs} \
+ --bind ${HOSTDATA}:/opt/CMAQ_${CMAQ_VRSN}/data \
  ${CONTAINER} /opt/CMAQ_${CMAQ_VRSN}/scripts/run_cctm.csh
  
 set err_status = ${status}
