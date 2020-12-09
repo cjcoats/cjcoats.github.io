@@ -34,14 +34,14 @@ if ( ${err_status} != 0 ) then
 endif
 
 singularity exec -B ${SINGULARITYENV_NMLDIR} ${extradirs}  \
- ${CONTAINER} /opt/CMAQ_REPO/scripts/cp_nmldir.csh
+ ${CONTAINER} /opt/CMAQ_532/scripts/cp_nmldir.csh
  
 set err_status = ${status}
 
 if ( ${err_status} != 0 ) then
     echo ""
     echo "****************************************************************"
-    echo "** Error for /opt/CMAQ_REPO/scripts/CMAQ_nmldir.csh              **"
+    echo "** Error for /opt/CMAQ_532/scripts/CMAQ_nmldir.csh              **"
     echo "**    STATUS=${err_status}                                    **"
     echo "****************************************************************"
 endif

@@ -31,14 +31,14 @@ setenv SINGULARITYENV_MPIVERSION    openmpi
 setenv SINGULARITYENV_BLDDIR        /tmp/BLD_CCTM_v531_gcc
 
 singularity exec -B ${SINGULARITYENVBLDDIRDIR} ${extradirs}  \
- ${CONTAINER} /opt/CMAQ_REPO/scripts/cp_blddir.csh
+ ${CONTAINER} /opt/CMAQ_532/scripts/cp_blddir.csh
  
 set err_status = ${status}
 
 if ( ${err_status} != 0 ) then
     echo ""
     echo "****************************************************************"
-    echo "** Error for /opt/CMAQ_REPO/scripts/CMAQ_blddir.csh              **"
+    echo "** Error for /opt/CMAQ_532/scripts/CMAQ_blddir.csh              **"
     echo "**    STATUS=${err_status}                                    **"
     echo "****************************************************************"
 endif

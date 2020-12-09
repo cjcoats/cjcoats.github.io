@@ -3,7 +3,7 @@
 #   Not for batch use on "longleaf.unc.edu" etc. servers (see ../Scripts-BATCH)
 #*********************************************************************
 #   Data directories on host:  
-#       HOSTDATA mounts onto container-directory "/opt/CMAQ_REPO/data"
+#       HOSTDATA mounts onto container-directory "/opt/CMAQ_531/data"
 #       and must have subdirectories:
 #           ${CRS_APPL} for conc-file and gridded met inputs
 #           ${FIN_APPL} for bdy met-file inputs and BCON outputs 
@@ -36,6 +36,6 @@ setenv SINGULARITYENV_NPROW         3
 cd ${HOSTDATA}
 
 singularity shell -s /usr/bin/tcsh  ${extradirs}\
- --bind ${HOSTDATA}:/opt/CMAQ_REPO/data \
+ --bind ${HOSTDATA}:/opt/CMAQ_531/data \
  --bind ${SMOKEDATA}:/opt/SMOKE/data \
  ${CONTAINER}

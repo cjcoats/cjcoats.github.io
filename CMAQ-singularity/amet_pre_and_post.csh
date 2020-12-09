@@ -26,7 +26,7 @@ set CMAQ_HOME = /opt/CMAQ_${VRSN}
 setenv AMETBASE	/opt/AMET_v14
 
 #   Data directories on host:  mount onto container-directories
-#   "/opt/CMAQ_REPO/data", "/opt/AMET_v14/obs", "/opt/AMET_v14/output" respectively
+#   "/opt/CMAQ_532/data", "/opt/AMET_v14/obs", "/opt/AMET_v14/output" respectively
 
 set CMAQDATA  = /work/SCRATCH/CMAQv5.3.1_Benchmark_2Day
 set AMETOBS   = /work/SCRATCH/obsdata

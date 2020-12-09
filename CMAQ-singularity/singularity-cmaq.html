@@ -96,7 +96,7 @@
     <BLOCKQUOTE><DL>
         <DT> <STRONG>CMAQ-git</STRONG> of June&nbsp;10, 2020 and 
              Nov&nbsp;22, 2020)
-             (versions <CODE>5.3.1</CODE> and <CODE>5.3.1</CODE>)
+             (versions <CODE>5.3.1</CODE> and <CODE>5.3.2</CODE>)
         <DD> including <VAR>CCTM</VAR>, <BR>
              preprocessors <VAR>bcon</VAR>,
              <VAR>create_omi</VAR>, <VAR>icon</VAR>, and
@@ -119,7 +119,8 @@
              saregroup,  smk2emis, smkinven, smkmerge, smkreport,
              spcmat, surgtool,  temporal, tmpbeis3, uam2ncf</VAR>.
         <DT> <STRONG><VAR>AMET</VAR></STRONG> version <CODE>1.4</CODE>
-        <DD> model evaluation tool
+        <DD> model evaluation tool (scripting currently under
+        development...)
         <DT> <STRONG><VAR>verdi</VAR></STRONG> version
         <CODE>2.0_beta</CODE>
         <DD> visualization tool
@@ -872,7 +873,12 @@ Requirements for your Host Machine
         <DT> <STRONG><CODE>BLDDIR</CODE></STRONG> (optionally)
         <DD> <EM>if this environment variable is defined:</EM> use this
              directory as the CCTM build-directory, to find the
-             executable.
+             executable.<BR>
+             <EM>NOTE that the <CODE>BLDDIR</CODE> must be consistent
+             with the <CODE>MPIVERSION</CODE>, since the
+             <CODE>MVAPICH</CODE> <STRONG>mpirun</STRONG> cannot
+             necessarily run an  <CODE>OPENMPI</CODE> executable,
+             etc.</EM>
         <P>
         <DT> <STRONG><CODE>START_DATE</CODE></STRONG>
         <DD> Run starting-date, formatted <CODE>YYYY-MM-DD</CODE> [2016-07-01]
