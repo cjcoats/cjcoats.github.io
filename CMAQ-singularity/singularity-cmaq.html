@@ -31,8 +31,10 @@
         <LI>  <A HREF = "#smoke"   >SMOKE Emissions Modeling System</A>
         <LI>  <A HREF = "#amet "   >Atmospheric Model Evaluation Tool (AMET)</A>
         <LI>  <A HREF = "#tools "  >Interactive Tool Use</A>
-        <LI>  <A HREF = "#files"   >APPENDIX:  Selected Directory structure
+        <LI>  <A HREF = "#files"   >APPENDIX&nbsp;1:  Selected Directory structure
                                     on the Container</A>
+        <LI>  <A HREF = "#execs"   >APPENDIX&nbsp;2:  Building additional
+                                    CMAQ CCTM executables</A>
     </UL>
 
 
@@ -765,16 +767,17 @@ Requirements for your Host Machine
 
     <EM>Note that environment variable <CODE>SINGULARITYENV_EXEC</CODE>
     can also be used to override the executable</EM> for the modeling
-    component that you are running.  The value should be the
+    component that you are running.  See <A HREF="#execs">Appendix 2</A>
+    below. The value <CODE>SINGULARITYENV_EXEC</CODE> should be the
     <STRONG>path on the container</STRONG> to the executable (after any
     host-directory mount-operations).  Be aware that <STRONG>you will
     have problems running executables built on the host-machine</STRONG>
-    because of problems due to shared-library incompatibilities
-    between your host machine and the container's CentOS-7 virtual OS.
-    If you do this, you should use the <VAR>singularity-shell.csh</VAR>
-    or <VAR>singularity-term.csh</VAR> script to use the container  and
-    its compilers and libraries to build the executable on a directory
-    you mount from your host machine.  You may want to look at that
+    because of problems due to shared-library incompatibilities between
+    your host machine and the container's CentOS-7 virtual OS. If you do
+    this, you should use the <VAR>singularity-shell.csh</VAR> or
+    <VAR>singularity-term.csh</VAR> script to use the container  and its
+    compilers and libraries to build the executable on a directory you
+    mount from your host machine.  You may want to look at that
     component's <VAR>Makefile</VAR> to help you determine which compile
     flags, etc., to use.
     <P>
@@ -1875,7 +1878,7 @@ Requirements for your Host Machine
 
 <HR> <!- ------------------------------------------------------------- ->
 
-<H2><A NAME="files">APPENDIX:  Selected Directory structure on the
+<H2><A NAME="files">APPENDIX&nbsp;1:  Selected Directory structure on the
 Container</A></H2>
 
 <BLOCKQUOTE>
@@ -1915,12 +1918,24 @@ Container</A></H2>
     /opt/CMAQ_${VRSN}/tables/              #  time independent ASCII files and tables
     /opt/CMAQ_${VRSN}/CCTM/
     /opt/CMAQ_${VRSN}/CCTM/scripts/        #  various bldit, run-cctm, etc. scripts, and CCTM build-directories
-        BLD_CCTM_v531_gcc-mpich3/
-        BLD_CCTM_v531_gcc-mvapich2/
-        BLD_CCTM_v531_gcc-openmpi/
-        BLD_CCTM_v531_gccdbg-mpich3/
-        BLD_CCTM_v531_gccdbg-mvapich2/
-        BLD_CCTM_v531_gccdbg-openmpi/
+        BLD_CCTM_${VRSN}_gcc-mpich3/
+        BLD_CCTM_${VRSN}_gcc-mvapich2/
+        BLD_CCTM_${VRSN}_gcc-openmpi/
+        BLD_CCTM_${VRSN}_gccdbg-mpich3/
+        BLD_CCTM_${VRSN}_gccdbg-mvapich2/
+        BLD_CCTM_${VRSN}_gccdbg-openmpi/
+        BLD_CCTM_${VRSN}_DDM3D_gcc-mpich3/
+        BLD_CCTM_${VRSN}_DDM3D_gcc-mvapich2/
+        BLD_CCTM_${VRSN}_DDM3D_gcc-openmpi/
+        BLD_CCTM_${VRSN}_DDM3D_gccdbg-mpich3/
+        BLD_CCTM_${VRSN}_DDM3D_gccdbg-mvapich2/
+        BLD_CCTM_${VRSN}_DDM3D_gccdbg-openmpi/
+        BLD_CCTM_${VRSN}_ISAM_gcc-mpich3/
+        BLD_CCTM_${VRSN}_ISAM_gcc-mvapich2/
+        BLD_CCTM_${VRSN}_ISAM_gcc-openmpi/
+        BLD_CCTM_${VRSN}_ISAM_gccdbg-mpich3/
+        BLD_CCTM_${VRSN}_ISAM_gccdbg-mvapich2/
+        BLD_CCTM_${VRSN}_ISAM_gccdbg-openmpi/
     /opt/CMAQ_${VRSN}/CCTM/src/
     /opt/CMAQ_${VRSN}/CCTM/src/MECHS/      # namelists and chemical-mechanism files
     /opt/CMAQ_${VRSN}/DOCS/
@@ -1974,6 +1989,60 @@ Container</A></H2>
         wfindent
     </PRE>
     <P>
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME="files">APPENDIX&nbsp;2:  Building additional (e.g., CMAQ CCTM)
+executables</A></H2>
+
+<BLOCKQUOTE>
+    As noted above,  environment variable <CODE>SINGULARITYENV_EXEC</CODE>
+    can also be used to override the executable</EM> for the modeling
+    component that you are running.<BR>
+    <STRONG>NOTE that you will need to build such executables using the
+    compilers and libraries on the container; otherwise, you will
+    aalmost certainly encounter shared-library problems.  <EM>Gee,
+    thanks, Ulrich Drepper!</EM>
+    </STRONG>
+    
+    <STRONG>First,</STRONG> you will probably need  to copy a
+    source-directory from the container to an area on the host
+    machine, using the <VAR>singularity-shell.csh</VAR> command.
+    It is recommended that this area be under your home directory,
+    so that host-machine and singularity-container paths to the
+    executable will be the same.  Here is a sample of how you
+    might do this, assuming you want to build a CMAQ-5.3.2-DDM-mpich3 
+    CCTM executable under directory <VAR></VAR>:
+    <UL>
+        <LI>  On the host, do <VAR>mkdir -p $HOME/mystuff/</VAR>
+              (if you don't have that directory already)
+        <LI>  On the host, do <VAR>singularity-shell.csh</VAR>
+              or <VAR>singularity-term.csh</VAR>
+        <LI>  On the container, do <VAR>cd /opt/CMAQ_532/CCTM/scripts/</VAR>
+              to get to the directory holding the container's
+              appropriate build-directory
+        <LI>  On the container, do 
+              <VAR>cp -r BLD_CCTM_532_DDM3D_gcc-mpich3/ $HOME/mystuff/</VAR>
+        <LI>  On the host, modify the codes in
+              <VAR>$HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/</VAR> as
+              you desire.
+        <LI>  On the container, do <VAR>cd $HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/</VAR>
+              then <VAR>make</VAR>.  This will build the <VAR></VAR>
+        <LI>  In your host's <VAR>cmaq_ddm.mpich.csh</VAR> script, add the
+              command 
+              <BLOCKQUOTE>
+              <CODE>setenv SINGULARITYENV_EXEC $HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/CCTM_v532_DDM3D.exe</CODE>
+              </BLOCKQUOTE>
+        <LI>  Run your new script.
+    </UL>
+    
+    <P>
+
 </BLOCKQUOTE>
 
 <HR> <!- ------------------------------------------------------------- ->
