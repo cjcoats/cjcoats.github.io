@@ -4,8 +4,11 @@ As "root" on the bootstrap host machine:
  singularity create -s 8192 cmaq.img
  singularity build --sandbox /work/cmaq.sif library://library/default/centos
 
- Use the following command to do installations
- singularity shell --writable  /work/cmaq.sif
+ Use the following command to do installations from the command-prompt
+ in a terminal:
+
+ singularity shell -s /usr/bin/tcsh --writable  /work/cmaq.sif
+
  and then:
 
      yum -y install epel-release
@@ -79,8 +82,9 @@ As "root" on the bootstrap host machine:
          git clone https://github.com/USEPA/CMAQ.git        ~~> /opt/CMAQ_REPO/
          git clone https://github.com/CEMPD/SMOKE.git       ~~> /opt/SMOKE/
          git clone https://github.com/cjcoats/pave-3.0.git  ~~> /opt/pave-3.0/
+         git clone https://github.com/USEPA/AMET.git        ~~> /opt/AMET_v14/
 
-     download and install the following under directory /opt: 
+     download and install the following under directory /opt:
 
         VERDI   from https://www.cmascenter.org/verdi/
         ncview  from http://meteora.ucsd.edu/~pierce/ncview_home_page.html
@@ -94,7 +98,20 @@ As "root" on the bootstrap host machine:
         panoply
         pave
         verdi.sh
-        
+
     Copy nedit-resource files from initial host machine to /opt/share/nedit
 
-singularity shell --writable -s /usr/bin/tcsh /work/cmaq.sif
+    Major script revisions
+      * Partition scripts so that there is a container-resident portion
+        that knows about container specifics (e.g., directory-paths,
+        etc.) and that uses environment variables to control the run;
+        and a  host-resident portion that sets up environment variables
+        (etc.) for the run and invokes the container-resident script.
+      * Rewrite the scripts to deal with the container specifics.
+      * Fix the scripts so that error-status is correctly recognized and
+        passed up the script-invocation sequence so that errors are
+        treated properly.
+      * Fix the scripts so that user-customized executables can be used
+        (see Appendix 2 of the User Manual).
+      * Fix the scripts so that trying to run executables under a debugger
+        actually works.
