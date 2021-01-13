@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRIDS.html 111 2019-04-17 13:45:16Z coats $" -->
+<!-- "$Id: GRIDS.html 196 2021-01-13 15:23:09Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> On The Definition of Grids and Coordinates for Models-3  </TITLE>
 </HEAD>
@@ -511,17 +511,39 @@ follows:
     <LI>  <STRONG>VGSIGZ3</STRONG>:  sigma-Z
     <LI>  <STRONG>VGWRFEM</STRONG>:  WRF mass-core (WRF-EM) dry-sigma
     <LI>  <STRONG>VGWRFNM</STRONG>:  WRF NMM-core vertical coordinate
-    <LI>  <STRONG>GISLAY3</STRONG>:  (non-geometric) GIS layer
+                                     <P>
+    <LI>  <STRONG>TBLLAY3</STRONG>:  Interpolation-table pseudo-layers
+                                     (e.g., each layer L represents
+                                     emissions at temperature VGLVLS(L);
+                                     one computes emissions by
+                                     interpolating from this table
+                                     to the 2-meter air temperature)
+                                     <BR>
+                                     <EM>I/O&nbsp;API-3.2 NOV 17 2020 or later</EM>
+    <LI>  <STRONG>GISLAY3</STRONG>:  (arc) GIS layers (e.g., each layer
+                                     is a 2-D land-cover type grid and
+                                     grid-values at a layer are
+                                     properties for that respective
+                                     land-cover type)
+                                     <BR>
+                                     <EM>I/O&nbsp;API-3.2 Apr 4 2020 or later</EM>
+                                     <P>
     <LI>  <STRONG>IMISS3</STRONG>:  vertical coordinate type not applicable 
                                     (e.g., time-dependent vertical 
                                     coordinates), or &quot;other&quot;.
 </UL>
-Note that as a special case, it may be useful to &quot;abuse&quot; the
-notion of &quot;layer&quot; in the same fashion as GIS systems
-do&mdash;for example, to have fractional land cover subscripted by
-land-cover category.  In that case, the layer-type token should be
-<CODE>GISLAY3</CODE>, and the file-description should describe the GIS
-layers in its <CODE>FDESC3D</CODE> field.
+Note that as these last special cases, it may be useful to
+&quot;abuse&quot; the notion of &quot;layer&quot; in the same fashion as
+GIS systems do&mdash;for example, to have fractional land cover
+subscripted by land-cover category.  In that case, the layer-type token
+should be <CODE>GISLAY3</CODE>, and the file-description should describe
+the GIS layers in its <CODE>FDESC3D</CODE> field.  Or for
+<CODE>TBLLAY3</CODE> each grid-slice may be a 2-D gridded entry in an
+interpolation-table, e.g., with temperature values <CODE>VGLVS3D(1)=0.0
+, VGLVS3D(2)=5.0, VGLVS3D(3)=10.0, ... (degrees C)</CODE> and one uses
+this table to interpolate the respective variable to the  (degrees-C)
+2-meter air temperature.
+<P>
 
 The <A HREF = "INCLUDE.html#fdesc"> <CODE>FDESC3.EXT</CODE> </A>
 attribute <VAR>NLAYS3D</VAR> stores the actual number of layers in a

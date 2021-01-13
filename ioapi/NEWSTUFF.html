@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 193 2020-11-10 17:33:10Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 196 2021-01-13 15:23:09Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 193 2020-11-10 17:33:10Z coats $
+    $Id: NEWSTUFF.html 196 2021-01-13 15:23:09Z coats $
     </EM>
     <HR>
 
@@ -33,12 +33,24 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#jan122021">
+               Improved error reporting in <CODE>GETEFILE(), GETDFILE(),
+               GETFFILE(), INITLOG3()</CODE></A>
+               <BR>
+               Improved debug-flags in 
+               <VAR>Makeinclude.Linux2_x86_64dbg</VAR>, 
+               <VAR>Makeinclude.Linux2_x86_64gfortdbg</VAR>;
+               new <VAR>Makeinclude.Linux2_x86_64pgdbg</VAR>.
+               <BR>
+               new vertical coordinate type <CODE>TBLLAY3&nbsp;(=-2)</CODE> 
+               in <VAR>PARMS3.EXT</VAR> and <VAR>PARMS3-LARGE.EXT</VAR> 
+               for interpolation-table-valued I/O&nbsp;API files.
          <LI>  <A HREF = "#nov102020">
                New pointwise-product operation</A> for use in, e.g.,
                <STRONG><VAR>m3tools</VAR></STRONG> program
                <CODE>M3DIFF</CODE>.  Thanks to Calvin Arter, UNC IE.
                <BR>
-               Size-traps in <COE>GRIDOPS</CODE>  to avoid denormals in denominators.
+               Size-traps in <CODE>GRIDOPS</CODE>  to avoid denormals in denominators.
          <LI>  <A HREF = "#nov062020">
                Typo-fixes in <VAR>PARMS3.EXT, crtfil3.F90</VAR></A>
          <LI>  <A HREF = "#oct202020">
@@ -772,11 +784,34 @@
 
 <HR> <!----------------------------------------------------------------->
 
+<H2> <A NAME ="jan122021">
+    Improved error reporting in <CODE>GETEFILE(), GETDFILE(),
+    GETFFILE(), INITLOG3()</CODE>
+    <BR>
+    Improved debug-flags in  <VAR>Makeinclude.Linux2_x86_64dbg</VAR>, 
+    <VAR>Makeinclude.Linux2_x86_64gfortdbg</VAR>; new
+    <VAR>Makeinclude.Linux2_x86_64pgdbg</VAR>.
+    <BR>
+    New vertical coordinate type <CODE>TBLLAY3&nbsp;(=-2)</CODE> in
+    <VAR>PARMS3.EXT</VAR> and <VAR>PARMS3-LARGE.EXT</VAR>  for
+    interpolation-table-valued I/O&nbsp;API files (as in MOVESTABLE
+    emissions).
+</A></H2>
+
+    <BLOCKQUOTE>
+    Subject says it.
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
 <H2> <A NAME ="nov102020">
      New pointwise-product operation for use in, e.g.,
      <STRONG><VAR>m3tools</VAR></STRONG> program <CODE>M3DIFF</CODE>
      <BR>
-     Size-traps in <COE>GRIDOPS</CODE>  to avoid denormals in denominators.
+     Size-traps in <CODE>GRIDOPS</CODE>  to avoid denormals in denominators.
 </A></H2>
 
     <BLOCKQUOTE>
@@ -807,7 +842,7 @@
 
 <HR> <!----------------------------------------------------------------->
 
-<H2> <A NAME = <A HREF = "nov062020">
+<H2> <A NAME = "nov062020">
     Typo-fixes in <VAR>PARMS3.EXT, crtfil3.F90</VAR>
 </A></H2>
 
@@ -7549,7 +7584,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 193 2020-11-10 17:33:10Z coats $
+    $Id: NEWSTUFF.html 196 2021-01-13 15:23:09Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
