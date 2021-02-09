@@ -98,9 +98,10 @@ alias  verdi /opt/bin/verdi.sh
 
     mkdir /opt/bin
     mkdir /opt/share
+    mkdir /opt/share/nedit
     mkdir /opt/source
         cd /opt/source
-        cat >& xtitle.c<< HERE
+        cat >& xtitle.c  << HERE
 #include <stdio.h>
 main( int argc, char *argv[] )
     {
@@ -114,8 +115,7 @@ main( int argc, char *argv[] )
         printf( "\033]2;%s\007", "usage:  xtitle <title>" ) ;
         }
     }
-
-        HERE
+HERE
         cc -o /opt/bin/xtitle xtitle.c
 
     mkdir /opt/wgrib
@@ -218,6 +218,24 @@ main( int argc, char *argv[] )
         git clone https://github.com/CEMPD/SMOKE.git       ~~> /opt/SMOKE/
 
         git clone https://github.com/cjcoats/pave-3.0.git  ~~> /opt/pave-3.0/
+            cd /opt/pave-3.0/src
+            cp Makeinclude.template Makeinclude and edit definitions:
+            -------------------------------------------------------
+BUILD   = Linux2_x86_64gfort_medium
+
+#........  Directory definitions:
+
+BASEDIR = /opt/pave-3.0
+EXTERN  = ${BASEDIR}/external_libs
+INCDIR  = ${BASEDIR}/include
+LIBDIR  = ${BASEDIR}/lib
+SRCINC  = ${BASEDIR}/src/include
+IOSRC   = /opt/ioapi-3.2/ioapi
+IOLIB   = /opt/ioapi-3.2/${BUILD}
+BINDIR  = ${BASEDIR}/bin
+            -------------------------------------------------------            
+            cp Makefile.template Makefile
+            make
 
         git clone https://github.com/USEPA/AMET.git        ~~> /opt/AMET_v14/
 
@@ -235,7 +253,10 @@ main( int argc, char *argv[] )
        pave     -> /opt/pave-3.0/bin/pave
        verdi.sh -> /opt/VERDI_2.0_beta/verdi.sh
 
-   Copy nedit-resource files from initial host machine to /opt/share/nedit
+   Copy nedit-resource files from initial host machine to
+   "/opt/share/nedit" [this will add language mode for F90, among
+   other things]
+
 
    Major script revisions
      * Partition scripts so that there is a container-resident portion
