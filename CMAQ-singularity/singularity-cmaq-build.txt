@@ -1,117 +1,253 @@
 
 As "root" on the bootstrap host machine:
 
- singularity create -s 8192 cmaq.img
- singularity build --sandbox /work/cmaq.sif library://library/default/centos
+singularity create -s 8192 cmaq.img
+singularity build --sandbox /work/cmaq.sif library://library/default/centos
 
- Use the following command to do installations from the command-prompt
- in a terminal:
+Use the following command to do installations from the command-prompt
+in a terminal:
 
- singularity shell -s /usr/bin/tcsh --writable  /work/cmaq.sif
+singularity shell -s /usr/bin/tcsh --writable  /work/cmaq.sif
 
- and then:
+and then:
 
-     yum -y install epel-release
+    yum -y install epel-release
 
-     yum install bc
-     yum install bison
-     yum install bzip2
-     yum install curl
-     yum install cvs
-     yum install ddd
-     yum install dos2unix
-     yum install file
-     yum install firefox
-     yum install flex
-     yum install gcc
-     yum install gcc-gfortran
-     yum install gcc-c++
-     yum install gd-devel
-     yum install git
-     yum install glibc-devel
-     yum install gnuplot
-     yum install hwloc hwloc-devel
-     yum install ImageMagick
-     yum install infiniband-diags-devel
-     yum install jre
-     yum install ksh
-     yum install kate
-     yum install lzma lzma-devel
-     yum install man
-     yum install motif
-     yum install mpich mpich-devel
-     yum install mvapich2 mvapich2-devel
-     yum install openmpi3 openmpi3-devel
-     yum install qmake
-     yum install qt-devel
-     yum install rcs
-     yum install subversion
-     yum install tcsh
-     yum install time
-     yum install unix2dos
-     yum install wget
-     yum install xguest
-     yum install xlib-static
-     yum install zlib zlib-devel
+    yum install bc
+    yum install bison
+    yum install bzip2
+    yum install curl
+    yum install cvs
+    yum install ddd
+    yum install dos2unix
+    yum install file
+    yum install firefox
+    yum install flex
+    yum install gcc
+    yum install gcc-gfortran
+    yum install gcc-c++
+    yum install gd-devel
+    yum install git
+    yum install glibc-devel
+    yum install gnuplot
+    yum install hwloc hwloc-devel
+    yum install ImageMagick
+    yum install infiniband-diags-devel
+    yum install jre
+    yum install ksh
+    yum install kate
+    yum install lzma lzma-devel
+    yum install man
+    yum install motif
+    yum install mpich mpich-devel
+    yum install mvapich2 mvapich2-devel
+    yum install openmpi3 openmpi3-devel
+    yum install qmake
+    yum install qt-devel
+    yum install rcs
+    yum install subversion
+    yum install tcsh
+    yum install time
+    yum install unix2dos
+    yum install wget
+    yum install xguest
+    yum install xlib-static
+    yum install zlib zlib-devel
 
-     yum install grads
-     yum install meld
-     yum install ncarg
-     yum install ncview
-     yum install nco
-     yum install nedit
-     yum install netcdf
-     yum install netcdf-devel
-     yum install netcdf-static
-     yum install netcdf-cxx
-     yum install netcdf-cxx-devel
-     yum install netcdf-cxx-static
-     yum install netcdf-fortran
-     yum install netcdf-fortran-devel
-     yum install netcdf-fortran-static
-     yum install netcdf-mpich
-     yum install netcdf-mpich-devel
-     yum install netcdf-mpich-static
-     yum install netcdf4-python
+    yum install grads
+    yum install meld
+    yum install ncarg
+    yum install ncview
+    yum install nco
+    yum install nedit
+    yum install netcdf
+    yum install netcdf-devel
+    yum install netcdf-static
+    yum install netcdf-cxx
+    yum install netcdf-cxx-devel
+    yum install netcdf-cxx-static
+    yum install netcdf-fortran
+    yum install netcdf-fortran-devel
+    yum install netcdf-fortran-static
+    yum install netcdf-mpich
+    yum install netcdf-mpich-devel
+    yum install netcdf-mpich-static
+    yum install netcdf4-python
 
-     rpm -i -vv http://www.city-fan.org/ftp/contrib/yum-repo/rhel7/x86_64/xxdiff-4.0.1-1.0.cf.rhel7.x86_64.rpm
+    rpm -i -vv http://www.city-fan.org/ftp/contrib/yum-repo/rhel7/x86_64/xxdiff-4.0.1-1.0.cf.rhel7.x86_64.rpm
 
-     cd /opt and then download and build the following (moving the
-     sources to the indicated directories):
-         git clone https://github.com/cjcoats/ioapi-3.2.git ~~> /opt/ioapi-3.2
-         git clone https://github.com/USEPA/CMAQ.git        ~~> /opt/CMAQ_REPO/
-         git clone https://github.com/CEMPD/SMOKE.git       ~~> /opt/SMOKE/
-         git clone https://github.com/cjcoats/pave-3.0.git  ~~> /opt/pave-3.0/
-         git clone https://github.com/USEPA/AMET.git        ~~> /opt/AMET_v14/
+   Create /etc/profile.d/local.csh with the following contents:
+    ------------------------------------------------------------
+if ( ! $?PATH             ) setenv PATH            "/usr/sbin:/usr/bin:/usr/local/bin"
+if ( ! $?PERLLIB          ) setenv PERLLIB         ""
+if ( ! $?MANPATH          ) setenv MANPATH         ""
+if ( ! $?LD_LIBRARY_PATH  ) setenv LD_LIBRARY_PATH ""
+if ( ! $?LIBRARY_PATH     ) setenv LIBRARY_PATH    "/usr/lib:/usr/lib64:/usr/lib/gcc/x86_64-redhat-linux/"
+if ( ! $?PYTHONPATH       ) setenv PYTHONPATH      ""
 
-     download and install the following under directory /opt:
+setenv BIN	        Linux2_x86_64gfort_medium
+setenv PATH	        "/opt/bin:/opt/ioapi-3.2/${BIN}:${PATH}:."
+setenv MANPATH      "/usr/share/man/mpich:${MANPATH}:/opt/share/man:/usr/share/man/openmpi3-x86_64:/usr/share/man/mvapich2-x86_64"
+setenv NEDIT_HOME   /opt/share/nedit
+setenv AMETBASE     /opt/AMET_v14
 
-        VERDI   from https://www.cmascenter.org/verdi/
-        ncview  from http://meteora.ucsd.edu/~pierce/ncview_home_page.html
-        panoply from https://www.giss.nasa.gov/tools/panoply/
-        GrADS   from http://cola.gmu.edu/grads/
-        NCAR Graphics from http://ngwww.ucar.edu/
-        findent from https://github.com/wvermin/findent and build...
+alias  xd   'xxdiff -i -b -B -w  \!* &'
+alias  xx   '(setenv LC_CTYPE en_US; nedit -bg "#F0F8E0" \!* >& /dev/null ) &'
+alias  verdi /opt/bin/verdi.sh
+    ------------------------------------------------------------
 
-    Make symbolic links to /opt/bin for the following executables created above:
-        findent
-        panoply
-        pave
-        verdi.sh
+    mkdir /opt/bin
+    mkdir /opt/share
+    mkdir /opt/source
+        cd /opt/source
+        cat >& xtitle.c<< HERE
+#include <stdio.h>
+main( int argc, char *argv[] )
+    {
+    if ( argc > 1 ) 
+        {
+        printf( "\033]1;%s\007", argv[1] ) ;
+        printf( "\033]2;%s\007", argv[1] ) ;
+        }
+    else{
+        printf( "\033]1;%s\007", "usage:  xtitle <title>" ) ;
+        printf( "\033]2;%s\007", "usage:  xtitle <title>" ) ;
+        }
+    }
 
-    Copy nedit-resource files from initial host machine to /opt/share/nedit
+        HERE
+        cc -o /opt/bin/xtitle xtitle.c
 
-    Major script revisions
-      * Partition scripts so that there is a container-resident portion
-        that knows about container specifics (e.g., directory-paths,
-        etc.) and that uses environment variables to control the run;
-        and a  host-resident portion that sets up environment variables
-        (etc.) for the run and invokes the container-resident script.
-      * Rewrite the scripts to deal with the container specifics.
-      * Fix the scripts so that error-status is correctly recognized and
-        passed up the script-invocation sequence so that errors are
-        treated properly.
-      * Fix the scripts so that user-customized executables can be used
-        (see Appendix 2 of the User Manual).
-      * Fix the scripts so that trying to run executables under a debugger
-        actually works.
+    mkdir /opt/wgrib
+        cd /opt/wgrib
+        wget ftp://ftp.cpc.ncep.noaa.gov/wd51we/wgrib/wgrib.c
+        cc -o /opt/bin/wgrib wgrib.c
+
+    cd /opt and then download and build the following (moving the
+    sources to the indicated directories):
+
+        git clone https://github.com/cjcoats/ioapi-3.2.git ~~> /opt/ioapi-3.2
+            cd /opt/ioapi-3.2; mkdir ${BIN} ; mkdir ${BIN}dbg
+            edit /opt/ioapi-3.2/ioapi/Makefile and /opt/ioapi-3.2/m3tools/Makefile
+            to replace "BASEDIR = /home/coats/ioapi-3.2" with
+            "BASEDIR = /opt/ioapi-3.2"
+            cd /opt/ioapi-3.2/ioapi;   make; make BIN=${BIN}dbg
+            cd /opt/ioapi-3.2/m3tools; make; make BIN=${BIN}dbg            
+
+        git clone https://github.com/USEPA/CMAQ.git        ~~> /opt/CMAQ_532/
+        (and similarly for CMAQ-5.3.1 if you want it).
+            cd /opt/CMAQ_532/CCTM/scripts.
+
+            If you want DDM version, cp bldit_cctm.csh bldit_isam.csh
+            and uncomment DDM3D_CCTM
+            
+            "./bldit_cctm.csh gcc" which will build directory BLD_CCTM_v532_gcc/
+            and then eventually fail
+            cd BLD_CCTM_v532_gcc; rm *.o *.mod *.exe.
+            For each MPI implementation:
+
+                rpm -ql <MPI implementation> to determine paths to the
+                "mpif90" executable, MPI libraries, and include files.
+                cp -r BLD_CCTM_v532_gcc  BLD_CCTM_v532_gcc-<mpi-version>
+                and edit BLD_CCTM_v532_gcc-<mpi-version>/Makefile so that 
+                it begins:
+                -------------------------------------------------------
+#   Makefile generated for parallel execution using program bldmake
+#   and modified by C.Coats for use with singularity container.
+#
+#   Memory model:  -mcmodel=medium
+#
+#   Libraries used:
+#       Vendor provided MPI (mvapich2, mpich3, or openmpi)
+#       Vendor provided netCDF
+#       I/O API root directory /opt/ioapi-3.2/
+#------------------------------------------------- 
+
+ EXEC = CCTM_v532.exe
+
+ FC  = <path to MPI mpif90 executable>
+ CC  = gcc
+
+ BIN = Linux2_x86_64gfort_medium
+
+ IOINC  = /opt/ioapi-3.2/ioapi/fixed_src
+ IOLIB  = /opt/ioapi-3.2/${BIN}
+ MPIINC = <MPI include path)
+
+ include_path = -I $(IOLIB) -I $(IOINC) -I $(MPIINC)
+
+ FSTD = -mcmodel=medium -O3 -funroll-loops -finit-character=32 -Wtabs -Wsurprising -ftree-vectorize -ftree-loop-if-convert -finline-limit=512
+
+ f_FLAGS   = -ffixed-form -ffixed-line-length-132 -finit-character=32 $(FSTD) $(include_path)
+ f90_FLAGS = -ffree-form  -ffree-line-length-none -finit-character=32 $(FSTD) $(include_path)
+
+ F_FLAGS   = $(f_FLAGS)
+ F90_FLAGS = $(f90_FLAGS)
+ C_FLAGS   = -mcmodel=medium -O2 -DFLDMN -I $(MPIINC)
+
+ LINKER     = $(FC)
+ LINK_FLAGS = -fopenmp
+
+ LIBRARIES = -L$(IOLIB) -lioapi  \
+  -L/usr/lib64 -lnetcdff -lnetcdf \
+  -L<MPI library path> -lmpich -lmad
+
+ CPP = $(FC)...
+                -------------------------------------------------------
+                and run  "make"
+
+                If debug-executables are desired, 
+                cp -r BLD_CCTM_v532_gcc  BLD_CCTM_v532_gccdbg-<mpi-version>
+                and edit BLD_CCTM_v532_gccdbg-<mpi-version>/Makefile so that 
+                it contains the above, except for:
+                -------------------------------------------------------
+  FSTD = -mcmodel=medium -Wall -O0 -g -fcheck=all -ffpe-trap=invalid,zero,overflow -fbacktrace -finit-character=32
+                -------------------------------------------------------
+                and run "make".
+
+            If you want the ISAM version, cp bldit_cctm.csh bldit_isam.csh
+            and uncomment ISAM_CCTM, and repeat the procedures above, using
+            bldit_isam.csh, copying to BLD_CCTM_v532_ISAM_gcc[dbg]-<MPI version>,
+            do the matching "Makefile" edits, then run "make"
+
+            If you want the DDM3D version, cp bldit_cctm.csh
+            bldit_isam.csh and uncomment DDM3D_CCTM, and repeat the
+            procedures above, with BLD_CCTM_v532_DDM_gcc[dbg]-<MPI
+            version>, do the matching "Makefile" edits, then run "make"
+
+        git clone https://github.com/CEMPD/SMOKE.git       ~~> /opt/SMOKE/
+
+        git clone https://github.com/cjcoats/pave-3.0.git  ~~> /opt/pave-3.0/
+
+        git clone https://github.com/USEPA/AMET.git        ~~> /opt/AMET_v14/
+
+    download and install the following under directory /opt:
+
+       VERDI   from https://www.cmascenter.org/verdi/
+       ncview  from http://meteora.ucsd.edu/~pierce/ncview_home_page.html
+       panoply from https://www.giss.nasa.gov/tools/panoply/
+       GrADS   from http://cola.gmu.edu/grads/
+       NCAR Graphics from http://ngwww.ucar.edu/
+       findent from https://github.com/wvermin/findent and build...
+
+   Make symbolic links to /opt/bin for the following executables created above:
+       panoply  -> /opt/PanoplyJ/panoply.sh
+       pave     -> /opt/pave-3.0/bin/pave
+       verdi.sh -> /opt/VERDI_2.0_beta/verdi.sh
+
+   Copy nedit-resource files from initial host machine to /opt/share/nedit
+
+   Major script revisions
+     * Partition scripts so that there is a container-resident portion
+       that knows about container specifics (e.g., directory-paths,
+       etc.) and that uses environment variables to control the run;
+       and a  host-resident portion that sets up environment variables
+       (etc.) for the run and invokes the container-resident script.
+     * Rewrite the scripts to deal with the container specifics.
+     * Fix the scripts so that error-status is correctly recognized and
+       passed up the script-invocation sequence so that errors are
+       treated properly.
+     * Fix the scripts so that user-customized executables can be used
+       (see Appendix 2 of the User Manual).
+     * Fix the scripts so that trying to run executables under a debugger
+       actually works.
