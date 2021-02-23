@@ -2059,8 +2059,9 @@ executables</A></H2>
     To re-build your own version of one of the CMAQ pre- or post-processors,
     go through the analogous process of copying its build-directory to your
     host machine, modifying the code in it, then using the container's
-    compilers and libraries to build it, and modifying the host-script
-    to use that executable accordingly.
+    compilers and libraries to build it, and modifying the host-script's
+    <CODE>setenv&nbsp;SINGULARITYENV_EXEC&nbsp;...</CODE>
+    for that processor to use your new executable, much as above.
     <P>
 
 </BLOCKQUOTE>
