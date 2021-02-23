@@ -8,57 +8,47 @@
 #SBATCH -p debug_queue
 ##SBATCH -p 528_queue
 ##SBATCH --exclusive
-#SBATCH -o /proj/ie/apps/dogwood/singularity/Scripts/cctm.openmpi.hybrid.2016_12SE1.64pe.log
-#SBATCH -e /proj/ie/apps/dogwood/singularity/Scripts/cctm.openmpi.hybrid.2016_12SE1.64pe.err
+#SBATCH -o /proj/ie/apps/dogwood/singularity/Scripts/Logs-dogwood-64/cctm.mvapich.hybrid.2016_12SE1.log
+#SBATCH -e /proj/ie/apps/dogwood/singularity/Scripts/Logs-dogwood-64/cctm.mvapich.hybrid.2016_12SE1.err
 
-# ===================== Singularity "Run CCTM" Script =========================
-# Script 6/2020  by C. COATS, UNC IE, for using Singularity to run on the
-#   CMAQ Singularity container on "longleaf" or "dogwood", which do not
-#   allow Singularity on login-nodes
-#*********************************************************************
+# ===================== Singularity "Run CCTM in hybrid mode" Script ===========
+# Script 2/2021  by C. COATS, UNC IE, for using Singularity to run on the
+#   CMAQ CCTM from Singularity container in "brute-force hybrid" mode
+#   on "longleaf" or "dogwood", which do not allow Singularity on login-nodes
+#*******************************************************************************
+# NOTE:
+#   shell-variables ("set foo = ...") are used by this script, on the host.
+#   SINGULARITYENV_ environment variables ("setenv SINGULARITYENV_foo ...")
+#   are used to generate matching environment variables on the container.
+#
+#   Environment variables and user-set run-control variables are in ALL CAPS;
+#   following UNIX conventions, other shell variables are in lower case.
+#*******************************************************************************
 #  HOST-CUSTOMIZATION VARIABLES:
-#   Data directory on host:  mounts onto container-directory "/opt/CMAQ_${CMAQ_VRSN}/data"
-#   must have subdirectories:
-#   Specifyr MPI-version (mpich, mvapich, or openmpi)
-#>  Toggle Diagnostic Mode which will print verbose information to
-#>  standard output (==1:  echo environment; ==2, full echo)
+#   host-path CONTAINER to container
+#   host-directory hostdirs for DATA on host:  mounts onto container-directory "/opt/CMAQ_${CMAQ_VRSN}/data"
+#   Specify MPI-version MPIVERSION (mpich, mvapich, or openmpi)
+#   Host-directory CMAQ_HOME for script etc.
+#   Host-directory CMAQ_DATA for input and output data for run
+#>  Toggle Diagnostic Mode CTM_VERBOSE which will print verbose information
+#>  to standard output:  ==0:  no extra diagnostics,
+#                        ==1:  echo environment; 
+#                        ==2:  full echo
+#   Enable debugging if DEBUG defined
+#   container-path EXEC for executable
 
 set bar = '-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=--=-=-=-=-=-=-'
 
-set CMAQ_HOME   = /proj/ie/proj/staff/cjcoats/work
-set CMAQ_DATA   = /proj/ie/proj/staff/cjcoats/CMAQv5.3.1_Benchmark_2Day/2016_12SE1
-set HOSTDATA    = /proj/ie/proj/staff/cjcoats/CMAQv5.3.1_Benchmark_2Day
 set CONTAINER   = /proj/ie/apps/dogwood/singularity/cmaq.sif
 set MPIVERSION  = mvapich
+set CMAQ_HOME   = /proj/ie/proj/staff/cjcoats/work
+set CMAQ_DATA   = /proj/ie/proj/staff/cjcoats/CMAQv5.3.1_Benchmark_2Day/2016_12SE1
 set CTM_VERBOSE = 0
+set CMAQ_VRSN   = 532           #  or 532_ISAM or 532_DDM3D
 
-if ( $CTM_VERBOSE == 2 ) set echo
-
-# =====================================================================
-#> CCTM Configuration Options
-# =====================================================================
-#> Set General Prameters for Configuring the Simulation
-#> Define RUNID as any combination of parameters above or others. By default,
-#> this information will be collected into this one string, $RUNID, for easy
-#> referencing in output binaries and log files as well as in other scripts.
-
-set CMAQ_VRSN   = 532
-set MECH        = cb6r3_ae7_aq
-set PROC        = mpi
-set APPL        = 2016_12SE1
-set EMIS        = 2016ff
-
-set START_DATE  = "2016-07-01"
-set END_DATE    = "2016-07-02"
-set START_TIME  = 000000
-set RUN_LENGTH  = 240000
-set TIME_STEP   =  10000
-set NEW_START   =  TRUE
-set RUNID       = ${CMAQ_VRSN}_gcc_${END_DATE}
-
-# setenv DEBUG   1
-# setenv EXEC    <path to user-supplied executable>
-# setenv NMLDIR  <path for CMAQ namelist files>
+# set DEBUG     = 1
+# set EXEC      = <container-path to user-supplied executable>
+# set NMLPATH   = <container-path for CMAQ namelist files>
 
 unset DEBUG
 unset EXEC
@@ -89,14 +79,86 @@ if ( ! $?EXEC ) then
 
     set EXEC = ${bld}/CCTM_v${CMAQ_VRSN}.exe
 
+else
+
+    set bld = `dirname ${EXEC}`     # for namelists, etc.
+
 endif
+
+if ( $CTM_VERBOSE == 2 ) set echo
+
+# =====================================================================
+#> CCTM Configuration Options
+# =====================================================================
+#> Set General Prameters for Configuring the Simulation
+#> Define RUNID as any combination of parameters above or others. By default,
+#> this information will be collected into this one string, $RUNID, for easy
+#> referencing in output binaries and log files as well as in other scripts.
+
+set MECH         = cb6r3_ae7_aq
+set PROC         = mpi
+set APPL         = 2016_12SE1
+set EMIS         = 2016ff
+
+set START_DATE   = "2016-07-01"
+set END_DATE     = "2016-07-02"
+set START_TIME   = 000000
+set RUN_LENGTH   = 240000
+set TIME_STEP    =  10000
+set GRID_NAME    = 2016_12SE1           #> check GRIDDESC file for GRID_NAME options
+set CLOBBER_DATA = TRUE                 #> Keep or Delete Existing Output Files
+set NEW_START    =  TRUE
+set RUNID        = ${CMAQ_VRSN}_gcc_${END_DATE}
+
+#> Set Working, Input, and Output Directories
+
+set rundir = ${CMAQ_HOME}/CCTM/scripts           #> host-Directory for run-script, etc.
+set outdir = ${CMAQ_DATA}/output/CCTM_${APPL}    #> host-Directory for output
+set inpdir = ${CMAQ_DATA}                        #> host-Directory for input
+set logdir = ${CMAQ_HOME}                        #> host-Directory for logs
+
+# set NMLPATH to container-path for namelists if you're not using the default
+# from the CCTM-build directory:
+# set NMLPATH = ...
+if ( ! $?NMLPATH ) set NMLPATH = ${bld}          #> container-directory for Namelists.
+
+set hostdirs = "-B ${CMAQ_DATA},${CMAQ_HOME},${rundir}"    # = "${CMAQ_DATA},${CMAQ_HOME},${rundir},${NMLPATH}" for non-${bld} NMLPATH
+
+# =====================================================================
+#> Input Directories and Filenames
+# =====================================================================
+
+set ICpath    = ${inpdir}/icbc                  #> initial conditions input directory
+set BCpath    = ${inpdir}/icbc                  #> boundary conditions input directory
+set EMISpath  = ${inpdir}/emis/gridded_area/gridded     #> gridded emissions input directory
+set IN_PTpath = ${inpdir}/emis/inln_point       #> point source emissions input directory
+set IN_LTpath = ${inpdir}/lightning             #> lightning NOx input directory
+set METpath   = ${inpdir}/met/mcip              #> meteorology input directory
+#set JVALpath = ${inpdir}/jproc                 #> offline photolysis rate table directory
+set LUpath    = ${inpdir}/land                  #> BELD landuse data for windblown dust model
+set SZpath    = ${inpdir}/land                  #> surf zone file for in-line seaspray emissions
+set OMIpath   = ${NMLPATH}                      #> ozone column data for the photolysis model
+
+if ( ! -d ${logdir} ) mkdir -p ${logdir}
+if ( ! -d ${outdir} ) mkdir -p ${outdir}
+
+echo ""
+echo "Working   Directory is $rundir"
+echo "Build     Directory is $bld"
+echo "Output    Directory is $outdir"
+echo "Namnelist Directory is NMLPATH"
+echo "Log       Directory is ${logdir}"
+echo "Starting date       is $START_DATE"
+echo "Ending date         is $END_DATE"
+echo "Executable Name     is ${EXEC}"
+
+singularity exec echo "Executable Name   is ${EXEC}"
 
 #> Print attributes of the executable
 if ( $CTM_VERBOSE != 0 ) then
-    ls -l $EXEC
-    size $EXEC
-    unlimit
-    limit
+    singularity exec ${CONTAINER} ls -l ${EXEC}
+    singularity exec ${CONTAINER} size  ${EXEC}
+    singularity exec ${CONTAINER} limit
 endif
 
 #>      Horizontal domain decomposition
@@ -110,102 +172,44 @@ endif
 set npcol_nprow = "${npcol} ${nprow}"
 @ nprocs        = $npcol * $nprow
 
-setenv SINGULARITYENV_START_DATE  "${START_DATE}"
-setenv SINGULARITYENV_END_DATE    "${END_DATE}"
-setenv SINGULARITYENV_RUN_LENGTH  "${RUN_LENGTH}"
-setenv SINGULARITYENV_TIME_STEP   "${TIME_STEP}"
-setenv SINGULARITYENV_APPL        "${APPL}"
-setenv SINGULARITYENV_APPL        "${APPL}"
-setenv SINGULARITYENV_PROC        "${PROC}"
-setenv SINGULARITYENV_VRSN        "${CMAQ_VRSN}"
-setenv SINGULARITYENV_MECH        "${MECH}"
-setenv SINGULARITYENV_NPCOL       "${npcol}"
-setenv SINGULARITYENV_NPROW       "${nprow}"
-setenv SINGULARITYENV_NPCOL_NPROW "${npcol_nprow}"
-setenv SINGULARITYENV_NPROCS      "${nprocs}"
+#> Ozone column data; Optics file
+set OMIfile   = OMI_1979_to_2017.dat
+set OPTfile   = PHOT_OPTICS.dat
+set GRIDDESC  = $METpath/GRIDDESC   #> grid description file
 
-# ===================================================================
-#> Runtime Environment Options
-# ===================================================================
+#> Retrieve the number of columns, rows, and layers in this simulation
+set nz   = 35
+set nx   = `grep -A 1 ${GRID_NAME} ${GRIDDESC} | tail -1 | sed 's/  */ /g' | cut -d' ' -f6`
+set ny   = `grep -A 1 ${GRID_NAME} ${GRIDDESC} | tail -1 | sed 's/  */ /g' | cut -d' ' -f7`
+@ ncells = ${nx} * ${ny} * ${nz}
 
-echo 'Start Model Run At ' `date`
+setenv SINGULARITYENV_APPL          "${APPL}"
+setenv SINGULARITYENV_PROC          "${PROC}"
+setenv SINGULARITYENV_VRSN          "${CMAQ_VRSN}"
+setenv SINGULARITYENV_MECH          "${MECH}"
+setenv SINGULARITYENV_GRID_NAME     "${GRID_NAME}"
+setenv SINGULARITYENV_GRIDDESC      "${GRIDDESC}"
+setenv SINGULARITYENV_NPCOL         "${npcol}"
+setenv SINGULARITYENV_NPROW         "${nprow}"
+setenv SINGULARITYENV_NPCOL_NPROW   "${npcol_nprow}"
+setenv SINGULARITYENV_NPROCS        "${nprocs}"
+setenv SINGULARITYENV_EXECUTION_ID  "CMAQ_CCTM${CMAQ_VRSN}_`id -u -n`_`date -u +%Y%m%d_%H%M%S_%N`"    #> Inform I/O API of the Execution ID
 
-#> Set Working, Input, and Output Directories
-
-set workdir = ${CMAQ_HOME}/CCTM/scripts           #> Working Directory. Where the runscript is.
-set outdir  = ${CMAQ_DATA}/output/CCTM_${APPL}    #> Output Directory
-set inpdir  = ${CMAQ_DATA}                        #> Input Directory
-set logdir  = ${CMAQ_HOME}                        #> Log Directory Location
-set nmlpath = /proj/ie/proj/staff/cjcoats/BLD_CCTM_v531_openmpi3_intel17
-# set nmlpath = ${bld}                              #> Location of Namelists.
-
-# =====================================================================
-#> Input Directories and Filenames
-# =====================================================================
-
-set ICpath    = $inpdir/icbc              #> initial conditions input directory
-set BCpath    = $inpdir/icbc              #> boundary conditions input directory
-set EMISpath  = $inpdir/emis/gridded_area/gridded #> gridded emissions input directory
-set IN_PTpath = $inpdir/emis/inln_point   #> point source emissions input directory
-set IN_LTpath = $inpdir/lightning         #> lightning NOx input directory
-set METpath   = $inpdir/met/mcip          #> meteorology input directory
-#set JVALpath  = $inpdir/jproc            #> offline photolysis rate table directory
-set LUpath    = $inpdir/land              #> BELD landuse data for windblown dust model
-set SZpath    = $inpdir/land              #> surf zone file for in-line seaspray emissions
-set OMIpath   = $nmlpath                  #> ozone column data for the photolysis model
-
-#> Set Timestepping Parameters
- set STTIME     = 000000           #> beginning GMT time (HHMMSS)
- set NSTEPS     = 240000           #> time duration (HHMMSS) for this run
- set TSTEP      = 010000           #> output time step interval (HHMMSS)
-                                   #>   ${workdir} | ${CCTM_SRC}/MECHS/${MECH} | ${BLD}
- echo ""
- echo "Working Directory is $workdir"
- echo "Build   Directory is $bld"
- echo "Output  Directory is $outdir"
- echo "Log     Directory is $logdir"
- echo "Executable Name   is $EXEC"
- echo "Starting date     is $START_DATE"
- echo "Ending date       is $END_DATE"
-
-#> Define Execution ID: e.g. [CMAQ-Version-Info]_[User]_[Date]_[Time]
-setenv EXECUTION_ID "CMAQ_CCTM${CMAQ_VRSN}_`id -u -n`_`date -u +%Y%m%d_%H%M%S_%N`"    #> Inform I/O API of the Execution ID
-echo ""
-echo "---CMAQ EXECUTION ID: $EXECUTION_ID ---"
-
-#> Keep or Delete Existing Output Files
-set CLOBBER_DATA = TRUE
-
-#> Logfile Options
-#> Master Log File Name; uncomment to write standard output to a log, otherwise write to screen
-#setenv LOGFILE $CMAQ_HOME/$RUNID.log
-if (! -e $logdir ) then
-    mkdir -p $logdir
-endif
 setenv SINGULARITYENV_PRINT_PROC_TIME  Y    #> Print timing for all science subprocesses to Logfile
                                             #>   [ default: TRUE or Y ]
 setenv SINGULARITYENV_STDOUT           Y    #> Override I/O-API trying to write information to both the processor
                                             #>   logs and STDOUT [ options: Y | N ]
 
-set grid_name = 2016_12SE1          #> check GRIDDESC file for grid_name options
-set griddesc  = $METpath/GRIDDESC   #> grid description file
-
-#> Retrieve the number of columns, rows, and layers in this simulation
-set nz   = 35
-set nx   = `grep -A 1 ${grid_name} ${griddesc} | tail -1 | sed 's/  */ /g' | cut -d' ' -f6`
-set ny   = `grep -A 1 ${grid_name} ${griddesc} | tail -1 | sed 's/  */ /g' | cut -d' ' -f7`
-@ ncells = ${nx} * ${ny} * ${nz}
-
 #> Output Species and Layer Options
- #> CONC file species; comment or set to "ALL" to write all species to CONC
- setenv SINGULARITYENV_CONC_SPCS      "O3 NO ANO3I ANO3J NO2 FORM ISOP NH3 ANH4I ANH4J ASO4I ASO4J"
- setenv SINGULARITYENV_CONC_BLEV_ELEV " 1 1" #> CONC file layer range; comment to write all layers to CONC
+#> CONC file species; comment or set to "ALL" to write all species to CONC
+setenv SINGULARITYENV_CONC_SPCS         "O3 NO ANO3I ANO3J NO2 FORM ISOP NH3 ANH4I ANH4J ASO4I ASO4J"
+setenv SINGULARITYENV_CONC_BLEV_ELEV    " 1 1"  #> CONC file layer range; comment to write all layers to CONC
 
- #> ACONC file species; comment or set to "ALL" to write all species to ACONC
- #setenv SINGULARITYENV_AVG_CONC_SPCS   "O3 NO CO NO2 ASO4I ASO4J NH3"
- setenv SINGULARITYENV_AVG_CONC_SPCS    "ALL"
- setenv SINGULARITYENV_ACONC_BLEV_ELEV  " 1 1"  #> ACONC file layer range; comment to write all layers to ACONC
- setenv SINGULARITYENV_AVG_FILE_ENDTIME  N      #> override default beginning ACONC timestamp [ default: N ]
+#> ACONC file species; comment or set to "ALL" to write all species to ACONC
+#setenv SINGULARITYENV_AVG_CONC_SPCS    "O3 NO CO NO2 ASO4I ASO4J NH3"
+setenv SINGULARITYENV_AVG_CONC_SPCS     "ALL"
+setenv SINGULARITYENV_ACONC_BLEV_ELEV   " 1 1"  #> ACONC file layer range; comment to write all layers to ACONC
+setenv SINGULARITYENV_AVG_FILE_ENDTIME      N   #> override default beginning ACONC timestamp [ default: N ]
 
 #> Synchronization Time Step and Tolerance Options
 setenv SINGULARITYENV_CTM_MAXSYNC   300       	#> max sync time step (sec) [ default: 720 ]
@@ -241,7 +245,7 @@ setenv SINGULARITYENV_CTM_BIOGEMIS         Y    #> calculate in-line biogenic em
 
 #> Vertical Extraction Options
 setenv SINGULARITYENV_VERTEXT              N
-setenv SINGULARITYENV_VERTEXT_COORD_PATH   ${workdir}/lonlat.csv
+setenv SINGULARITYENV_VERTEXT_COORD_PATH   /opt/CMAQ_${CMAQ_VRSN}/CCTM/scripts/lonlat.csv # container-path...
 
 #> I/O Controls
 setenv SINGULARITYENV_IOAPI_LOG_WRITE 	    N   #> turn on excess WRITE3 logging [ options: Y | N ]
@@ -273,7 +277,7 @@ setenv SINGULARITYENV_CLD_DIAG             N    #> cloud diagnostic file [ defau
 setenv SINGULARITYENV_CTM_PHOTDIAG         N    #> photolysis diagnostic file [ default: N ]
 setenv SINGULARITYENV_NLAYS_PHOTDIAG      "1"   #> Number of layers for PHOTDIAG2 and PHOTDIAG3 from
                                                 #>     Layer 1 to NLAYS_PHOTDIAG  [ default: all layers ]
-#setenv SINGULARITYENV_NWAVE_PHOTDIAG      "294 303 310 316 333 381 607"  #> Wavelengths written for variables
+#setenv SINGULARITYENV_NWAVE_PHOTDIAG     "294 303 310 316 333 381 607"  #> Wavelengths written for variables
                                                 #>   in PHOTDIAG2 and PHOTDIAG3
                                                 #>   [ default: all wavelengths ]
 
@@ -289,82 +293,109 @@ setenv SINGULARITYENV_VDIFF_DIAG_FILE      N    #> vdiff & possibly aero grav. s
 setenv SINGULARITYENV_LTNGDIAG             N    #> lightning diagnostic file [ default: N ]
 setenv SINGULARITYENV_B3GTS_DIAG           N    #> BEIS mass emissions diagnostic file [ default: N ]
 setenv SINGULARITYENV_CTM_WVEL             Y    #> save derived vertical velocity component to conc
+setenv SINGULARITYENV_CTM_PROCAN           N    #> use process analysis [ default: N]
+setenv SINGULARITYENV_CTM_ISAM             N    #> Integrated Source Apportionment Method (ISAM) Options
+setenv SINGULARITYENV_STM_SO4TRACK         N    #> sulfur tracking [ default: N ]
+
+if ( $SINGULARITYENV_STM_SO4TRACK == 'Y' || $SINGULARITYENV_STM_SO4TRACK == 'T' ) then
+    setenv SINGULARITYENV_STM_ADJSO4       Y        #> option to normalize sulfate tracers [ default: Y ]
+endif
+
+#> species defn & photolysis
+setenv SINGULARITYENV_gc_matrix_nml ${NMLPATH}/GC_${MECH}.nml
+setenv SINGULARITYENV_ae_matrix_nml ${NMLPATH}/AE_${MECH}.nml
+setenv SINGULARITYENV_nr_matrix_nml ${NMLPATH}/NR_${MECH}.nml
+setenv SINGULARITYENV_tr_matrix_nml ${NMLPATH}/Species_Table_TR_0.nml
+setenv SINGULARITYENV_CSQY_DATA     ${NMLPATH}/CSQY_DATA_${MECH}
+setenv SINGULARITYENV_OMI           ${OMIpath}/$OMIfile
+setenv SINGULARITYENV_OPTICS_DATA   ${OMIpath}/$OPTfile
+#setenv SINGULARITYENV_XJ_DATA      $JVALpath/$JVALfile
+
+# singularity exec  ${hostdirs} ${CONTAINER} ls ${SINGULARITYENV_CSQY_DATA} >& /dev/null
+# if ( ! ${status} ) then
+#     echo "EXITING:  ${SINGULARITYENV_CSQY_DATA}  not found "
+#     exit 1
+# endif
+# 
+# singularity exec  ${hostdirs} ${CONTAINER} ls ${SINGULARITYENV_OPTICS_DATA} >& /dev/null
+# if ( ! ${status} ) then
+#     echo "EXITING:  ${SINGULARITYENV_OPTICS_DATA}  not found "
+#     exit 1
+# endif
+
+# ===================================================================
+#> Runtime Environment Options
+# ===================================================================
+
+echo 'Start Model Run At ' `date`
+echo "---CMAQ EXECUTION ID: $SINGULARITYENV_EXECUTION_ID ---"
 
 # =====================================================================
 #> Begin Loop Through Simulation Days
 # =====================================================================
-set rtarray = ""
+set pid      = $$
+set rtarray  = ""
+set todayg   = ${START_DATE}
+set yyyyjjj  = `date -ud "${START_DATE}" +%Y%j`    #> Convert YYYY-MM-DD to yyyyjjj
+set stop_day = `date -ud "${END_DATE}"   +%Y%j`      #> Convert YYYY-MM-DD to yyyyjjj
+set ndays    = 0
 
-set TODAYG    = ${START_DATE}
-set TODAYJ    = `date -ud "${START_DATE}" +%Y%j`    #> Convert YYYY-MM-DD to YYYYJJJ
-set START_DAY = ${TODAYJ}
-set STOP_DAY  = `date -ud "${END_DATE}" +%Y%j`      #> Convert YYYY-MM-DD to YYYYJJJ
-set NDAYS     = 0
+while ( ${yyyyjjj} <= ${stop_day} )                       #>Compare dates in terms of yyyyjjj
 
-while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of YYYYJJJ
-
-    @ NDAYS = ${NDAYS} + 1
+    @ ndays = ${ndays} + 1
 
     #> Retrieve Calendar day Information
-    set YYYYMMDD = `date -ud "${TODAYG}" +%Y%m%d`   #> Convert YYYY-MM-DD to YYYYMMDD
-    set YYYYMM   = `date -ud "${TODAYG}" +%Y%m`     #> Convert YYYY-MM-DD to YYYYMM
-    set YYMMDD   = `date -ud "${TODAYG}" +%y%m%d`   #> Convert YYYY-MM-DD to YYMMDD
-    set YYYYJJJ  = $TODAYJ
-
     #> Calculate Yesterday's Date
-    set YESTERDAY = `date -ud "${TODAYG}-1days" +%Y%m%d` #> Convert YYYY-MM-DD to YYYYJJJ
+    set yyyymmdd = `date -ud "${todayg}"       +%Y%m%d` #> Convert YYYY-MM-DD to yyyymmdd
+    set yyyymm   = `date -ud "${todayg}"       +%Y%m`   #> Convert YYYY-MM-DD to yyyymm
+    set yymmdd   = `date -ud "${todayg}"       +%y%m%d` #> Convert YYYY-MM-DD to yymmdd
+    set yesterg  = `date -ud "${todayg}-1days" +%Y%m%d` #> Convert YYYY-MM-DD to YYYYMMDD
 
     # =====================================================================
     #> Set Output String and Propagate Model Configuration Documentation
     # =====================================================================
     echo ""
-    echo "Set up input and output files for Day ${TODAYG}."
+    echo "Set up input and output files for Day ${todayg}."
 
     #> set output file name extensions
-    set CTM_APPL = ${RUNID}_${YYYYMMDD}
-
     #> Copy Model Configuration To Output Folder
-    if ( ! -d "$outdir" ) mkdir -p $outdir
-    cp  /proj/ie/apps/dogwood/singularity/cmaq.sif/opt/CMAQ_REPO/CCTM/scripts/BLD_CCTM_v531_gcc/CCTM_v531.cfg ${outdir}/CCTM_${CTM_APPL}.cfg
+    set ctm_appl = ${RUNID}_${yyyymmdd}
+    singularity exec  ${hostdirs} ${CONTAINER}  cp ${bld}/CCTM_v${CMAQ_VRSN}.cfg ${outdir}/CCTM_${ctm_appl}.cfg
+
+    #setenv SINGULARITYENV_LOGFILE $CMAQ_HOME/$RUNID.log
 
     # =====================================================================
     #> Input Files (Some are Day-Dependent)
     # =====================================================================
 
     #> Initial conditions
-    if ($NEW_START == true || $NEW_START == TRUE ) then
+    if (${NEW_START} == true || ${NEW_START} == TRUE ) then
         set ICFILE = ICON_20160630_bench.nc
         setenv SINGULARITYENV_INIT_MEDC_1   notused
         setenv SINGULARITYENV_INITIAL_RUN   Y       #related to restart soil information file
     else
         set ICpath = $outdir
-        set ICFILE = CCTM_CGRID_${RUNID}_${YESTERDAY}.nc
-        setenv SINGULARITYENV_INIT_MEDC_1   $ICpath/CCTM_MEDIA_CONC_${RUNID}_${YESTERDAY}.nc
+        set ICFILE = CCTM_CGRID_${RUNID}_${yesterg}.nc
+        setenv SINGULARITYENV_INIT_MEDC_1   $ICpath/CCTM_MEDIA_CONC_${RUNID}_${yesterg}.nc
         setenv SINGULARITYENV_INITIAL_RUN   N
     endif
 
     #> Boundary conditions
-    set BCFILE = BCON_${YYYYMMDD}_bench.nc
+    set BCFILE = BCON_${yyyymmdd}_bench.nc
 
     #> Off-line photolysis rates
-    #set JVALfile  = JTABLE_${YYYYJJJ}
-
-    #> Ozone column data
-    set OMIfile   = OMI_1979_to_2017.dat
-
-    #> Optics file
-    set OPTfile = PHOT_OPTICS.dat
+    #set JVALfile  = JTABLE_${yyyyjjj}
 
     #> MCIP meteorology files
-    set GRID_BDY_2D = $METpath/GRIDBDY2D.${YYMMDD}.nc  # GRID files are static, not day-specific
-    set GRID_CRO_2D = $METpath/GRIDCRO2D.${YYMMDD}.nc
-    set GRID_CRO_3D = $METpath/GRIDCRO3D.${YYMMDD}.nc
-    set GRID_DOT_2D = $METpath/GRIDDOT2D.${YYMMDD}.nc
-    set MET_CRO_2D  = $METpath/METCRO2D.${YYMMDD}.nc
-    set MET_CRO_3D  = $METpath/METCRO3D.${YYMMDD}.nc
-    set MET_DOT_3D  = $METpath/METDOT3D.${YYMMDD}.nc
-    set MET_BDY_3D  = $METpath/METBDY3D.${YYMMDD}.nc
-    set LUFRAC_CRO  = $METpath/LUFRAC_CRO.${YYMMDD}.nc
+    setenv SINGULARITYENV_GRID_BDY_2D  $METpath/GRIDBDY2D_${yymmdd}.nc  # GRID files are static, not day-specific
+    setenv SINGULARITYENV_GRID_CRO_2D  $METpath/GRIDCRO2D_${yymmdd}.nc
+    setenv SINGULARITYENV_GRID_CRO_3D  $METpath/GRIDCRO3D_${yymmdd}.nc
+    setenv SINGULARITYENV_GRID_DOT_2D  $METpath/GRIDDOT2D_${yymmdd}.nc
+    setenv SINGULARITYENV_MET_CRO_2D   $METpath/METCRO2D_${yymmdd}.nc
+    setenv SINGULARITYENV_MET_CRO_3D   $METpath/METCRO3D_${yymmdd}.nc
+    setenv SINGULARITYENV_MET_DOT_3D   $METpath/METDOT3D_${yymmdd}.nc
+    setenv SINGULARITYENV_MET_BDY_3D   $METpath/METBDY3D_${yymmdd}.nc
+    setenv SINGULARITYENV_LUFRAC_CRO   $METpath/LUFRAC_CRO_${yymmdd}.nc
 
     #> Emissions Control File
     #>
@@ -383,14 +414,14 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
     #> + Emission Control (DESID) Documentation in the CMAQ User's Guide:
     #>   https://github.com/USEPA/CMAQ/blob/master/DOCS/Users_Guide/Appendix/CMAQ_UG_appendixB_emissions_control.md
     #>
-    setenv SINGULARITYENV_EMISSCTRL_NML ${nmlpath}/EmissCtrl_${MECH}.nml
+    setenv SINGULARITYENV_EMISSCTRL_NML ${NMLPATH}/EmissCtrl_${MECH}.nml
 
     #> Spatial Masks For Emissions Scaling
     setenv SINGULARITYENV_CMAQ_MASKS $SZpath/12US1_surf_bench.nc #> horizontal grid-dependent surf zone file
 
     #> Gridded Emissions Files
     setenv SINGULARITYENV_N_EMIS_GR            1
-    setenv SINGULARITYENV_GR_EMIS_001          ${EMISpath}/emis_mole_all_${YYYYMMDD}_cb6_bench.nc
+    setenv SINGULARITYENV_GR_EMIS_001          ${EMISpath}/emis_mole_all_${yyyymmdd}_cb6_bench.nc
     setenv SINGULARITYENV_GR_EMIS_LAB_001      GRIDDED_EMIS
     setenv SINGULARITYENV_GR_EM_SYM_DATE_001   F
 
@@ -404,18 +435,18 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
     setenv SINGULARITYENV_STK_GRPS_001 $IN_PTpath/stack_groups/stack_groups_ptnonipm_${STKCASEG}.nc
     setenv SINGULARITYENV_STK_GRPS_002 $IN_PTpath/stack_groups/stack_groups_ptegu_${STKCASEG}.nc
     setenv SINGULARITYENV_STK_GRPS_003 $IN_PTpath/stack_groups/stack_groups_othpt_${STKCASEG}.nc
-    setenv SINGULARITYENV_STK_GRPS_004 $IN_PTpath/stack_groups/stack_groups_ptfire_${YYYYMMDD}_${STKCASEG}.nc
+    setenv SINGULARITYENV_STK_GRPS_004 $IN_PTpath/stack_groups/stack_groups_ptfire_${yyyymmdd}_${STKCASEG}.nc
     setenv SINGULARITYENV_STK_GRPS_005 $IN_PTpath/stack_groups/stack_groups_pt_oilgas_${STKCASEG}.nc
-    setenv SINGULARITYENV_LAYP_STTIME $STTIME
-    setenv SINGULARITYENV_LAYP_NSTEPS $NSTEPS
+    setenv SINGULARITYENV_LAYP_STTIME  $START_TIME
+    setenv SINGULARITYENV_LAYP_NSTEPS  $RUN_LENGTH
 
     # Emission Rates for Inline Point Sources
-    setenv SINGULARITYENV_STK_EMIS_001 $IN_PTpath/ptnonipm/inln_mole_ptnonipm_${YYYYMMDD}_${STKCASEE}.nc
-    setenv SINGULARITYENV_STK_EMIS_002 $IN_PTpath/ptegu/inln_mole_ptegu_${YYYYMMDD}_${STKCASEE}.nc
-    setenv SINGULARITYENV_STK_EMIS_003 $IN_PTpath/othpt/inln_mole_othpt_${YYYYMMDD}_${STKCASEE}.nc
-    setenv SINGULARITYENV_STK_EMIS_004 $IN_PTpath/ptfire/inln_mole_ptfire_${YYYYMMDD}_${STKCASEE}.nc
-    setenv SINGULARITYENV_STK_EMIS_005 $IN_PTpath/pt_oilgas/inln_mole_pt_oilgas_${YYYYMMDD}_${STKCASEE}.nc
-    setenv SINGULARITYENV_LAYP_STDATE $YYYYJJJ
+    setenv SINGULARITYENV_STK_EMIS_001 $IN_PTpath/ptnonipm/inln_mole_ptnonipm_${yyyymmdd}_${STKCASEE}.nc
+    setenv SINGULARITYENV_STK_EMIS_002 $IN_PTpath/ptegu/inln_mole_ptegu_${yyyymmdd}_${STKCASEE}.nc
+    setenv SINGULARITYENV_STK_EMIS_003 $IN_PTpath/othpt/inln_mole_othpt_${yyyymmdd}_${STKCASEE}.nc
+    setenv SINGULARITYENV_STK_EMIS_004 $IN_PTpath/ptfire/inln_mole_ptfire_${yyyymmdd}_${STKCASEE}.nc
+    setenv SINGULARITYENV_STK_EMIS_005 $IN_PTpath/pt_oilgas/inln_mole_pt_oilgas_${yyyymmdd}_${STKCASEE}.nc
+    setenv SINGULARITYENV_LAYP_STDATE  ${yyyyjjj}
 
     # Label Each Emissions Stream
     setenv SINGULARITYENV_STK_EMIS_LAB_001 PT_NONEGU
@@ -446,7 +477,7 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
         #> In-line lightning NOx options
         setenv SINGULARITYENV_USE_NLDN  N        #> use hourly NLDN strike file [ default: Y ]
         if ( $SINGULARITYENV_USE_NLDN == Y ) then
-            setenv SINGULARITYENV_NLDN_STRIKES ${IN_LTpath}/NLDN.12US1.${YYYYMMDD}_bench.nc
+            setenv SINGULARITYENV_NLDN_STRIKES ${IN_LTpath}/NLDN.12US1.${yyyymmdd}_bench.nc
         endif
         setenv SINGULARITYENV_LTNGPARMS_FILE ${IN_LTpath}/LTNG_AllParms_12US1_bench.nc #> lightning parameter file
     endif
@@ -454,14 +485,14 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
     #> In-line biogenic emissions configuration
     if ( $SINGULARITYENV_CTM_BIOGEMIS == 'Y' ) then
         set IN_BEISpath = ${inpdir}/land
-        setenv SINGULARITYENV_GSPRO      ${nmlpath}/gspro_biogenics.txt
+        setenv SINGULARITYENV_GSPRO      ${NMLPATH}/gspro_biogenics.txt
         setenv SINGULARITYENV_B3GRD      $IN_BEISpath/b3grd_bench.nc
         setenv SINGULARITYENV_BIOSW_YN   Y      #> use frost date switch [ default: Y ]
         setenv SINGULARITYENV_BIOSEASON  $IN_BEISpath/bioseason.cmaq.2016_12US1_full_bench.ncf
                                                 #> ignore season switch file if BIOSW_YN = N
         setenv SINGULARITYENV_SUMMER_YN  Y      #> Use summer normalized emissions? [ default: Y ]
         setenv SINGULARITYENV_PX_VERSION Y      #> MCIP is PX version? [ default: N ]
-        setenv SINGULARITYENV_SOILINP    ${outdir}/CCTM_SOILOUT_${RUNID}_${YESTERDAY}.nc
+        setenv SINGULARITYENV_SOILINP    ${outdir}/CCTM_SOILOUT_${RUNID}_${yesterg}.nc
                                                 #> Biogenic NO soil input file; ignore if INITIAL_RUN = Y
     endif
 
@@ -478,63 +509,46 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
     #> Bidirectional ammonia configuration
     if ( $SINGULARITYENV_CTM_ABFLUX == 'Y' ) then
         setenv SINGULARITYENV_E2C_SOIL        ${LUpath}/epic_festc1.4_20180516/2016_US1_soil_bench.nc
-        setenv SINGULARITYENV_E2C_CHEM        ${LUpath}/epic_festc1.4_20180516/2016_US1_time${YYYYMMDD}_bench.nc
-        setenv SINGULARITYENV_E2C_CHEM_YEST   ${LUpath}/epic_festc1.4_20180516/2016_US1_time${YESTERDAY}_bench.nc
+        setenv SINGULARITYENV_E2C_CHEM        ${LUpath}/epic_festc1.4_20180516/2016_US1_time${yyyymmdd}_bench.nc
+        setenv SINGULARITYENV_E2C_CHEM_YEST   ${LUpath}/epic_festc1.4_20180516/2016_US1_time${yesterg}_bench.nc
         setenv SINGULARITYENV_E2C_LU          ${LUpath}/beld4_12kmCONUS_2011nlcd_bench.nc
     endif
 
     #> Inline Process Analysis
-    setenv SINGULARITYENV_CTM_PROCAN N        #> use process analysis [ default: N]
-    if ( $?SINGULARITYENV_CTM_PROCAN ) then   # $CTM_PROCAN is defined
-        if ( $SINGULARITYENV_CTM_PROCAN == 'Y' || $SINGULARITYENV_CTM_PROCAN == 'T' ) then
-            #> process analysis global column, row and layer ranges
-            #       setenv SINGULARITYENV_PA_BCOL_ECOL "10 90"  # default: all columns
-            #       setenv SINGULARITYENV_PA_BROW_EROW "10 80"  # default: all rows
-            #       setenv SINGULARITYENV_PA_BLEV_ELEV "1  4"   # default: all levels
-            setenv SINGULARITYENV_PACM_INFILE ${nmlpath}/pa_${MECH}.ctl
-            setenv SINGULARITYENV_PACM_REPORT ${outdir}/"PA_REPORT".${YYYYMMDD}
-        endif
+    if ( $SINGULARITYENV_CTM_PROCAN == 'Y' || $SINGULARITYENV_CTM_PROCAN == 'T' ) then
+        #> process analysis global column, row and layer ranges
+        #       setenv SINGULARITYENV_PA_BCOL_ECOL "10 90"  # default: all columns
+        #       setenv SINGULARITYENV_PA_BROW_EROW "10 80"  # default: all rows
+        #       setenv SINGULARITYENV_PA_BLEV_ELEV "1  4"   # default: all levels
+        setenv SINGULARITYENV_PACM_INFILE ${NMLPATH}/pa_${MECH}.ctl
+        setenv SINGULARITYENV_PACM_REPORT ${outdir}/"PA_REPORT".${yyyymmdd}
     endif
 
     #> Integrated Source Apportionment Method (ISAM) Options
-    setenv SINGULARITYENV_CTM_ISAM N
-    if ( $?SINGULARITYENV_CTM_ISAM ) then
-        if ( $SINGULARITYENV_CTM_ISAM == 'Y' || $SINGULARITYENV_CTM_ISAM == 'T' ) then
-            setenv SINGULARITYENV_SA_IOLIST ${workdir}/isam_control.txt
-            setenv SINGULARITYENV_ISAM_BLEV_ELEV    " 1 1"
-            setenv SINGULARITYENV_AISAM_BLEV_ELEV   " 1 1"
+    if ( $SINGULARITYENV_CTM_ISAM == 'Y' || $SINGULARITYENV_CTM_ISAM == 'T' ) then
+        setenv SINGULARITYENV_SA_IOLIST         ${rundir}/isam_control.txt
+        setenv SINGULARITYENV_ISAM_BLEV_ELEV    " 1 1"
+        setenv SINGULARITYENV_AISAM_BLEV_ELEV   " 1 1"
 
-            #> Set Up ISAM Initial Condition Flags
-            if ($SINGULARITYENV_NEW_START == true || $SINGULARITYENV_NEW_START == TRUE ) then
-               setenv SINGULARITYENV_ISAM_NEW_START Y
-               setenv SINGULARITYENV_ISAM_PREVDAY
-            else
-               setenv SINGULARITYENV_ISAM_NEW_START N
-               setenv SINGULARITYENV_ISAM_PREVDAY   "${outdir}/CCTM_SA_CGRID_${RUNID}_${YESTERDAY}.nc"
-            endif
-
-            #> Set Up ISAM Output Filenames
-            setenv SINGULARITYENV_SA_ACONC_1      "${outdir}/CCTM_SA_ACONC_${CTM_APPL}.nc -v"
-            setenv SINGULARITYENV_SA_CONC_1       "${outdir}/CCTM_SA_CONC_${CTM_APPL}.nc -v"
-            setenv SINGULARITYENV_SA_DD_1         "${outdir}/CCTM_SA_DRYDEP_${CTM_APPL}.nc -v"
-            setenv SINGULARITYENV_SA_WD_1         "${outdir}/CCTM_SA_WETDEP_${CTM_APPL}.nc -v"
-            setenv SINGULARITYENV_SA_CGRID_1      "${outdir}/CCTM_SA_CGRID_${CTM_APPL}.nc -v"
-
-            #> Set optional ISAM regions files
-            # setenv SINGULARITYENV_ISAM_REGIONS /work/MOD3EVAL/nsu/isam_v53/CCTM/scripts/RGN_ISAM.nc
-
+        #> Set Up ISAM Initial Condition Flags
+        if ($NEW_START == true || $NEW_START == TRUE ) then
+           setenv SINGULARITYENV_ISAM_NEW_START Y
+           setenv SINGULARITYENV_ISAM_PREVDAY
+        else
+           setenv SINGULARITYENV_ISAM_NEW_START N
+           setenv SINGULARITYENV_ISAM_PREVDAY   "${outdir}/CCTM_SA_CGRID_${RUNID}_${yesterg}.nc"
         endif
-    endif
 
-     #> Sulfur Tracking Model (STM)
-    setenv SINGULARITYENV_STM_SO4TRACK N        #> sulfur tracking [ default: N ]
-    if ( $?SINGULARITYENV_STM_SO4TRACK ) then
-        if ( $SINGULARITYENV_STM_SO4TRACK == 'Y' || $SINGULARITYENV_STM_SO4TRACK == 'T' ) then
+        #> Set Up ISAM Output Filenames
+        setenv SINGULARITYENV_SA_ACONC_1      "${outdir}/CCTM_SA_ACONC_${ctm_appl}.nc -v"
+        setenv SINGULARITYENV_SA_CONC_1       "${outdir}/CCTM_SA_CONC_${ctm_appl}.nc -v"
+        setenv SINGULARITYENV_SA_DD_1         "${outdir}/CCTM_SA_DRYDEP_${ctm_appl}.nc -v"
+        setenv SINGULARITYENV_SA_WD_1         "${outdir}/CCTM_SA_WETDEP_${ctm_appl}.nc -v"
+        setenv SINGULARITYENV_SA_CGRID_1      "${outdir}/CCTM_SA_CGRID_${ctm_appl}.nc -v"
 
-            #> option to normalize sulfate tracers [ default: Y ]
-            setenv SINGULARITYENV_STM_ADJSO4 Y
+        #> Set optional ISAM regions files
+        # setenv SINGULARITYENV_ISAM_REGIONS /work/MOD3EVAL/nsu/isam_v53/CCTM/scripts/RGN_ISAM.nc
 
-        endif
     endif
 
     # =====================================================================
@@ -542,46 +556,41 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
     # =====================================================================
 
     #> set output file names
-    setenv SINGULARITYENV_S_CGRID         "${outdir}/CCTM_CGRID_${CTM_APPL}.nc"         #> 3D Inst. Concentrations
-    setenv SINGULARITYENV_CTM_CONC_1      "${outdir}/CCTM_CONC_${CTM_APPL}.nc -v"       #> On-Hour Concentrations
-    setenv SINGULARITYENV_A_CONC_1        "${outdir}/CCTM_ACONC_${CTM_APPL}.nc -v"      #> Hourly Avg. Concentrations
-    setenv SINGULARITYENV_MEDIA_CONC      "${outdir}/CCTM_MEDIA_CONC_${CTM_APPL}.nc -v" #> NH3 Conc. in Media
-    setenv SINGULARITYENV_CTM_DRY_DEP_1   "${outdir}/CCTM_DRYDEP_${CTM_APPL}.nc -v"     #> Hourly Dry Deposition
-    setenv SINGULARITYENV_CTM_DEPV_DIAG   "${outdir}/CCTM_DEPV_${CTM_APPL}.nc -v"       #> Dry Deposition Velocities
-    setenv SINGULARITYENV_B3GTS_S         "${outdir}/CCTM_B3GTS_S_${CTM_APPL}.nc -v"    #> Biogenic Emissions
-    setenv SINGULARITYENV_SOILOUT         "${outdir}/CCTM_SOILOUT_${CTM_APPL}.nc"       #> Soil Emissions
-    setenv SINGULARITYENV_CTM_WET_DEP_1   "${outdir}/CCTM_WETDEP1_${CTM_APPL}.nc -v"    #> Wet Dep From All Clouds
-    setenv SINGULARITYENV_CTM_WET_DEP_2   "${outdir}/CCTM_WETDEP2_${CTM_APPL}.nc -v"    #> Wet Dep From SubGrid Clouds
-    setenv SINGULARITYENV_CTM_PMDIAG_1    "${outdir}/CCTM_PMDIAG_${CTM_APPL}.nc -v"     #> On-Hour Particle Diagnostics
-    setenv SINGULARITYENV_CTM_APMDIAG_1   "${outdir}/CCTM_APMDIAG_${CTM_APPL}.nc -v"    #> Hourly Avg. Particle Diagnostics
-    setenv SINGULARITYENV_CTM_RJ_1        "${outdir}/CCTM_PHOTDIAG1_${CTM_APPL}.nc -v"  #> 2D Surface Summary from Inline Photolysis
-    setenv SINGULARITYENV_CTM_RJ_2        "${outdir}/CCTM_PHOTDIAG2_${CTM_APPL}.nc -v"  #> 3D Photolysis Rates
-    setenv SINGULARITYENV_CTM_RJ_3        "${outdir}/CCTM_PHOTDIAG3_${CTM_APPL}.nc -v"  #> 3D Optical and Radiative Results from Photolysis
-    setenv SINGULARITYENV_CTM_SSEMIS_1    "${outdir}/CCTM_SSEMIS_${CTM_APPL}.nc -v"     #> Sea Spray Emissions
-    setenv SINGULARITYENV_CTM_DUST_EMIS_1 "${outdir}/CCTM_DUSTEMIS_${CTM_APPL}.nc -v"   #> Dust Emissions
-    setenv SINGULARITYENV_CTM_IPR_1       "${outdir}/CCTM_PA_1_${CTM_APPL}.nc -v"       #> Process Analysis
-    setenv SINGULARITYENV_CTM_IPR_2       "${outdir}/CCTM_PA_2_${CTM_APPL}.nc -v"       #> Process Analysis
-    setenv SINGULARITYENV_CTM_IPR_3       "${outdir}/CCTM_PA_3_${CTM_APPL}.nc -v"       #> Process Analysis
-    setenv SINGULARITYENV_CTM_IRR_1       "${outdir}/CCTM_IRR_1_${CTM_APPL}.nc -v"      #> Chem Process Analysis
-    setenv SINGULARITYENV_CTM_IRR_2       "${outdir}/CCTM_IRR_2_${CTM_APPL}.nc -v"      #> Chem Process Analysis
-    setenv SINGULARITYENV_CTM_IRR_3       "${outdir}/CCTM_IRR_3_${CTM_APPL}.nc -v"      #> Chem Process Analysis
-    setenv SINGULARITYENV_CTM_DRY_DEP_MOS "${outdir}/CCTM_DDMOS_${CTM_APPL}.nc -v"      #> Dry Dep
-    setenv SINGULARITYENV_CTM_DRY_DEP_FST "${outdir}/CCTM_DDFST_${CTM_APPL}.nc -v"      #> Dry Dep
-    setenv SINGULARITYENV_CTM_DEPV_MOS    "${outdir}/CCTM_DEPVMOS_${CTM_APPL}.nc -v"    #> Dry Dep Velocity
-    setenv SINGULARITYENV_CTM_DEPV_FST    "${outdir}/CCTM_DEPVFST_${CTM_APPL}.nc -v"    #> Dry Dep Velocity
-    setenv SINGULARITYENV_CTM_VDIFF_DIAG  "${outdir}/CCTM_VDIFF_DIAG_${CTM_APPL}.nc -v" #> Vertical Dispersion Diagnostic
-    setenv SINGULARITYENV_CTM_VSED_DIAG   "${outdir}/CCTM_VSED_DIAG_${CTM_APPL}.nc -v"  #> Particle Grav. Settling Velocity
-    setenv SINGULARITYENV_CTM_LTNGDIAG_1  "${outdir}/CCTM_LTNGHRLY_${CTM_APPL}.nc -v"   #> Hourly Avg Lightning NO
-    setenv SINGULARITYENV_CTM_LTNGDIAG_2  "${outdir}/CCTM_LTNGCOL_${CTM_APPL}.nc -v"    #> Column Total Lightning NO
-    setenv SINGULARITYENV_CTM_VEXT_1      "${outdir}/CCTM_VEXT_${CTM_APPL}.nc -v"       #> On-Hour 3D Concs at select sites
+    setenv SINGULARITYENV_S_CGRID         "${outdir}/CCTM_CGRID_${ctm_appl}.nc"         #> 3D Inst. Concentrations
+    setenv SINGULARITYENV_CTM_CONC_1      "${outdir}/CCTM_CONC_${ctm_appl}.nc -v"       #> On-Hour Concentrations
+    setenv SINGULARITYENV_A_CONC_1        "${outdir}/CCTM_ACONC_${ctm_appl}.nc -v"      #> Hourly Avg. Concentrations
+    setenv SINGULARITYENV_MEDIA_CONC      "${outdir}/CCTM_MEDIA_CONC_${ctm_appl}.nc -v" #> NH3 Conc. in Media
+    setenv SINGULARITYENV_CTM_DRY_DEP_1   "${outdir}/CCTM_DRYDEP_${ctm_appl}.nc -v"     #> Hourly Dry Deposition
+    setenv SINGULARITYENV_CTM_DEPV_DIAG   "${outdir}/CCTM_DEPV_${ctm_appl}.nc -v"       #> Dry Deposition Velocities
+    setenv SINGULARITYENV_B3GTS_S         "${outdir}/CCTM_B3GTS_S_${ctm_appl}.nc -v"    #> Biogenic Emissions
+    setenv SINGULARITYENV_SOILOUT         "${outdir}/CCTM_SOILOUT_${ctm_appl}.nc"       #> Soil Emissions
+    setenv SINGULARITYENV_CTM_WET_DEP_1   "${outdir}/CCTM_WETDEP1_${ctm_appl}.nc -v"    #> Wet Dep From All Clouds
+    setenv SINGULARITYENV_CTM_WET_DEP_2   "${outdir}/CCTM_WETDEP2_${ctm_appl}.nc -v"    #> Wet Dep From SubGrid Clouds
+    setenv SINGULARITYENV_CTM_PMDIAG_1    "${outdir}/CCTM_PMDIAG_${ctm_appl}.nc -v"     #> On-Hour Particle Diagnostics
+    setenv SINGULARITYENV_CTM_APMDIAG_1   "${outdir}/CCTM_APMDIAG_${ctm_appl}.nc -v"    #> Hourly Avg. Particle Diagnostics
+    setenv SINGULARITYENV_CTM_RJ_1        "${outdir}/CCTM_PHOTDIAG1_${ctm_appl}.nc -v"  #> 2D Surface Summary from Inline Photolysis
+    setenv SINGULARITYENV_CTM_RJ_2        "${outdir}/CCTM_PHOTDIAG2_${ctm_appl}.nc -v"  #> 3D Photolysis Rates
+    setenv SINGULARITYENV_CTM_RJ_3        "${outdir}/CCTM_PHOTDIAG3_${ctm_appl}.nc -v"  #> 3D Optical and Radiative Results from Photolysis
+    setenv SINGULARITYENV_CTM_SSEMIS_1    "${outdir}/CCTM_SSEMIS_${ctm_appl}.nc -v"     #> Sea Spray Emissions
+    setenv SINGULARITYENV_CTM_DUST_EMIS_1 "${outdir}/CCTM_DUSTEMIS_${ctm_appl}.nc -v"   #> Dust Emissions
+    setenv SINGULARITYENV_CTM_IPR_1       "${outdir}/CCTM_PA_1_${ctm_appl}.nc -v"       #> Process Analysis
+    setenv SINGULARITYENV_CTM_IPR_2       "${outdir}/CCTM_PA_2_${ctm_appl}.nc -v"       #> Process Analysis
+    setenv SINGULARITYENV_CTM_IPR_3       "${outdir}/CCTM_PA_3_${ctm_appl}.nc -v"       #> Process Analysis
+    setenv SINGULARITYENV_CTM_IRR_1       "${outdir}/CCTM_IRR_1_${ctm_appl}.nc -v"      #> Chem Process Analysis
+    setenv SINGULARITYENV_CTM_IRR_2       "${outdir}/CCTM_IRR_2_${ctm_appl}.nc -v"      #> Chem Process Analysis
+    setenv SINGULARITYENV_CTM_IRR_3       "${outdir}/CCTM_IRR_3_${ctm_appl}.nc -v"      #> Chem Process Analysis
+    setenv SINGULARITYENV_CTM_DRY_DEP_MOS "${outdir}/CCTM_DDMOS_${ctm_appl}.nc -v"      #> Dry Dep
+    setenv SINGULARITYENV_CTM_DRY_DEP_FST "${outdir}/CCTM_DDFST_${ctm_appl}.nc -v"      #> Dry Dep
+    setenv SINGULARITYENV_CTM_DEPV_MOS    "${outdir}/CCTM_DEPVMOS_${ctm_appl}.nc -v"    #> Dry Dep Velocity
+    setenv SINGULARITYENV_CTM_DEPV_FST    "${outdir}/CCTM_DEPVFST_${ctm_appl}.nc -v"    #> Dry Dep Velocity
+    setenv SINGULARITYENV_CTM_VDIFF_DIAG  "${outdir}/CCTM_VDIFF_DIAG_${ctm_appl}.nc -v" #> Vertical Dispersion Diagnostic
+    setenv SINGULARITYENV_CTM_VSED_DIAG   "${outdir}/CCTM_VSED_DIAG_${ctm_appl}.nc -v"  #> Particle Grav. Settling Velocity
+    setenv SINGULARITYENV_CTM_LTNGDIAG_1  "${outdir}/CCTM_LTNGHRLY_${ctm_appl}.nc -v"   #> Hourly Avg Lightning NO
+    setenv SINGULARITYENV_CTM_LTNGDIAG_2  "${outdir}/CCTM_LTNGCOL_${ctm_appl}.nc -v"    #> Column Total Lightning NO
+    setenv SINGULARITYENV_CTM_VEXT_1      "${outdir}/CCTM_VEXT_${ctm_appl}.nc -v"       #> On-Hour 3D Concs at select sites
 
     #> set floor file (neg concs)
-    setenv SINGULARITYENV_FLOOR_FILE ${outdir}/FLOOR_${CTM_APPL}.txt
-
-    #> look for existing log files and output files
-    ( ls CTM_LOG_???.${CTM_APPL} > buff.txt ) >& /dev/null
-    ( ls ${logdir}/CTM_LOG_???.${CTM_APPL} >> buff.txt ) >& /dev/null
-    set log_test = `cat buff.txt`; rm -f buff.txt
+    setenv SINGULARITYENV_FLOOR_FILE ${outdir}/FLOOR_${ctm_appl}.txt
 
     set OUT_FILES = ( ${SINGULARITYENV_FLOOR_FILE}      ${SINGULARITYENV_S_CGRID}         \
                       ${SINGULARITYENV_CTM_CONC_1}      ${SINGULARITYENV_A_CONC_1}        \
@@ -600,47 +609,35 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
                       ${SINGULARITYENV_CTM_VDIFF_DIAG}  ${SINGULARITYENV_CTM_VSED_DIAG}   \
                       ${SINGULARITYENV_CTM_LTNGDIAG_1}  ${SINGULARITYENV_CTM_LTNGDIAG_2}  \
                       ${SINGULARITYENV_CTM_VEXT_1} )
-    if ( $?SINGULARITYENV_CTM_ISAM ) then
-        if ( $SINGULARITYENV_CTM_ISAM == 'Y' || $SINGULARITYENV_CTM_ISAM == 'T' ) then
-            set OUT_FILES = (${OUT_FILES} ${SINGULARITYENV_SA_ACONC_1} ${SINGULARITYENV_SA_CONC_1} ${SINGULARITYENV_SA_DD_1} ${SA_WD_1} ${SINGULARITYENV_SA_CGRID_1}  )
 
-        endif
+    if ( $SINGULARITYENV_CTM_ISAM == 'Y' || $SINGULARITYENV_CTM_ISAM == 'T' ) then
+        set OUT_FILES = (${OUT_FILES} ${SINGULARITYENV_SA_ACONC_1} ${SINGULARITYENV_SA_CONC_1} \
+                              ${SINGULARITYENV_SA_DD_1} ${SA_WD_1} ${SINGULARITYENV_SA_CGRID_1} )
     endif
-    set OUT_FILES = `echo $OUT_FILES | sed "s; -v;;g" `
-    ( ls $OUT_FILES > buff.txt ) >& /dev/null
-    set out_test = `cat buff.txt`
-    rm -f buff.txt
 
-    #> delete previous output if requested
+
+    #> delete previous logs and output if requested
     if ( $CLOBBER_DATA == true || $CLOBBER_DATA == TRUE  ) then
-        echo
-        echo "Existing Logs and Output Files for Day ${TODAYG} Will Be Deleted"
 
-        #> remove previous log files
-        foreach file ( ${log_test} )
-           #echo "Deleting log file: $file"
-           /bin/rm -f $file
-        end
+        echo "\nExisting Logs and Output Files for Day ${todayg} Will Be Deleted"
+       
+        rm -f  CTM_LOG_???.${ctm_appl} ${logdir}/CTM_LOG_???.${ctm_appl} ${logdir}/CTM_LOG_???.${ctm_appl}
+        /bin/rm -f ${OUT_FILES} ${outdir}/CCTM_EMDIAG*${RUNID}_${yyyymmdd}.nc
 
-        #> remove previous output files
-        foreach file ( ${out_test} )
-           #echo "Deleting output file: $file"
-           /bin/rm -f $file
-        end
-        /bin/rm -f ${outdir}/CCTM_EMDIAG*${RUNID}_${YYYYMMDD}.nc
+    else        #> error if previous log or output files exist
 
-    else
-        #> error if previous log files exist
-        if ( "$log_test" != "" ) then
+        ls CTM_LOG_???.${ctm_appl}  ${logdir}/CTM_LOG_???.${ctm_appl} >& /dev/null
+        
+        if ( ! ${status ) then
             echo "*** Logs exist - run ABORTED ***"
             echo "*** To overide, set CLOBBER_DATA = TRUE in run_cctm.csh ***"
             echo "*** and these files will be automatically deleted. ***"
             exit 1
         endif
 
-        #> error if previous output files exist
-        if ( "$out_test" != "" ) then
-            echo "*** Output Files Exist - run will be ABORTED ***"
+        ls ${OUT_FILES} ${outdir}/CCTM_EMDIAG*${RUNID}_${yyyymmdd}.nc >& /dev/null
+        if ( ! ${status} ) then
+            echo "\n*** Output Files Exist - run will be ABORTED ***"
             foreach file ( $out_test )
                 echo " cannot delete $file"
             end
@@ -648,38 +645,17 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
             echo "*** and these files will be automatically deleted. ***"
             exit 1
         endif
+
     endif
 
     #> for the run control ...
-    setenv SINGULARITYENV_CTM_STDATE    $YYYYJJJ
-    setenv SINGULARITYENV_CTM_STTIME    $STTIME
-    setenv SINGULARITYENV_CTM_RUNLEN    $NSTEPS
-    setenv SINGULARITYENV_CTM_TSTEP     $TSTEP
-    setenv SINGULARITYENV_INIT_CONC_1   $ICpath/$ICFILE
-    setenv SINGULARITYENV_BNDY_CONC_1   $BCpath/$BCFILE
-    setenv SINGULARITYENV_OMI           $OMIpath/$OMIfile
-    setenv SINGULARITYENV_OPTICS_DATA   $OMIpath/$OPTfile
-   #setenv SINGULARITYENV_XJ_DATA       $JVALpath/$JVALfile
-    set TR_DVpath = $METpath
-    set TR_DVfile = $MET_CRO_2D
-
-    #> species defn & photolysis
-    setenv SINGULARITYENV_gc_matrix_nml ${nmlpath}/GC_$MECH.nml
-    setenv SINGULARITYENV_ae_matrix_nml ${nmlpath}/AE_$MECH.nml
-    setenv SINGULARITYENV_nr_matrix_nml ${nmlpath}/NR_$MECH.nml
-    setenv SINGULARITYENV_tr_matrix_nml ${nmlpath}/Species_Table_TR_0.nml
-
-    #> check for photolysis input data
-    setenv SINGULARITYENV_CSQY_DATA ${nmlpath}/CSQY_DATA_$MECH
-
-    if (! (-e $SINGULARITYENV_CSQY_DATA ) ) then
-        echo " $SINGULARITYENV_CSQY_DATA  not found "
-        exit 1
-    endif
-    if (! (-e $SINGULARITYENV_OPTICS_DATA ) ) then
-        echo " $SINGULARITYENV_OPTICS_DATA  not found "
-        exit 1
-    endif
+    setenv SINGULARITYENV_NEW_START     ${NEW_START}
+    setenv SINGULARITYENV_CTM_STDATE    ${yyyyjjj}
+    setenv SINGULARITYENV_CTM_STTIME    ${START_TIME}
+    setenv SINGULARITYENV_CTM_RUNLEN    ${RUN_LENGTH}
+    setenv SINGULARITYENV_CTM_TSTEP     ${TIME_STEP}
+    setenv SINGULARITYENV_INIT_CONC_1   ${ICpath}/$ICFILE
+    setenv SINGULARITYENV_BNDY_CONC_1   ${BCpath}/$BCFILE
 
     # ===================================================================
     #> Execution Portion
@@ -687,7 +663,7 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
 
     #> Print Startup Dialogue Information to Standard Out
     echo ${bar}
-    echo "CMAQ Processing of Day $YYYYMMDD Began at `date`"
+    echo "\n CMAQ Processing of Day $yyyymmdd Began at `date`"
     echo ${bar}
     if ( ${CTM_VERBOSE} > 0 ) then
         env | sort
@@ -698,42 +674,45 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
     set echo
 
     #> Executable call for single PE, uncomment to invoke
-    #>( /usr/bin/time -p $bld/$EXEC ) |& tee buff_${EXECUTION_ID}.txt
+    #>( /usr/bin/time -p $bld/${EXEC} ) |& tee buff_${EXECUTION_ID}.txt
     #>
     #> Executable call for multi PE, configure for your system
 
     if ( $?DEBUG ) then
-        mpirun -np ${NPROCS} \
-        singularity exec -B /proj ${CONTAINER} ddd ${EXEC}
+        mpirun -np ${nprocs} \
+        singularity exec  ${hostdirs} ${CONTAINER} /usr/bin/ddd ${EXEC}
         echo "${bar}"
         echo "EXITING:  Debug run complete.\n"
         exit( 0 )
     endif
 
-    ( /usr/bin/time -p mpirun -np ${NPROCS} \
-        singularity exec -B /proj ${CONTAINER} ${EXEC} ) \
-        |& tee buff_${EXECUTION_ID}.txt
+    ( /usr/bin/time -p mpirun -np ${nprocs} \
+        singularity exec  ${hostdirs} ${CONTAINER} ${EXEC} ) \
+        |& tee buff_${pid}.txt
     set errstat = ${status}
     if ( $CTM_VERBOSE < 2 ) unset echo
 
     #> Harvest Timing Output so that it may be reported below
-    set rtarray = "${rtarray} `tail -3 buff_${EXECUTION_ID}.txt | grep -Eo '[+-]?[0-9]+([.][0-9]+)?' | head -1` "
-    rm -rf buff_${EXECUTION_ID}.txt
+    set rtarray = "${rtarray} `tail -3 buff_${pid}.txt | grep -Eo '[+-]?[0-9]+([.][0-9]+)?' | head -1` "
+    rm -rf buff_${pid}.txt
 
     #> Abort script if abnormal termination
     if ( ${errstat} != 0 ) then
         echo ""
         echo "**************************************************************"
-        echo "** Error: CMAQ failed for day $YYYYMMDD                     **"
+        echo "** Error: CMAQ failed for day $yyyymmdd                     **"
         echo "** Error STATUS = ${errstat}                                **"
         echo "**   The runscript will now abort rather than proceeding    **"
         echo "**   to subsequent days.                                    **"
         echo "**************************************************************"
         break
-    else if ( ! -e $S_CGRID ) then
+    endif
+
+    singularity exec ${CONTAINER}  ls ${SINGULARITYENV_S_CGRID}  >& /dev/null
+    if ( ${status} ) then
         echo ""
         echo "**************************************************************"
-        echo "** Error: CMAQ failed for day $YYYYMMDD                     **"
+        echo "** Error: CMAQ failed for day $yyyymmdd                     **"
         echo "** Runscript Detected an Error: CGRID file was not written. **"
         echo "**   This indicates that CMAQ was interrupted or an issue   **"
         echo "**   exists with writing output. The runscript will now     **"
@@ -744,7 +723,7 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
 
     #> Print Concluding Text
     echo
-    echo "CMAQ Processing of Day $YYYYMMDD Finished at `date`"
+    echo "CMAQ Processing of Day $yyyymmdd Finished at `date`"
     echo
     echo "\\\\\=====\\\\\=====\\\\\=====\\\\\=====/////=====/////=====/////=====/////"
     echo
@@ -754,17 +733,16 @@ while ($TODAYJ <= $STOP_DAY )                       #>Compare dates in terms of 
     # ===================================================================
 
     #> Save Log Files and Move on to Next Simulation Day
-    mv CTM_LOG_???.${CTM_APPL} $logdir
+    mv CTM_LOG_???.${ctm_appl} ${logdir}
     if ( $CTM_VERBOSE != 0 ) then
-      mv CTM_DIAG_???.${CTM_APPL} $logdir
+        mv CTM_DIAG_???.${ctm_appl} ${logdir}
     endif
 
-    #> The next simulation day will, by definition, be a restart
-    setenv NEW_START false
-
+    #> The next simulation day will, by definition, be a restart;
     #> Increment both Gregorian and Julian Days
-    set TODAYG = `date -ud "${TODAYG}+1days" +%Y-%m-%d` #> Add a day for tomorrow
-    set TODAYJ = `date -ud "${TODAYG}" +%Y%j` #> Convert YYYY-MM-DD to YYYYJJJ
+    set NEW_START = FALSE
+    set todayg    = `date -ud "${todayg}+1days" +%Y-%m-%d`     #> Add a day for tomorrow
+    set yyyyjjj   = `date -ud "${todayg}" +%Y%j`               #> Convert YYYY-MM-DD to yyyyjjj
 
 end  #Loop to the next Simulation Day
 
@@ -773,12 +751,12 @@ end  #Loop to the next Simulation Day
 #> Generate Timing Report
 # ===================================================================
 set RTMTOT = 0
-foreach it ( `seq ${NDAYS}` )
+foreach it ( `seq ${ndays}` )
     set rt     = `echo ${rtarray} | cut -d' ' -f${it}`
     set RTMTOT = `echo "${RTMTOT} + ${rt}" | bc -l`
 end
 
-set RTMAVG = `echo "scale=2; ${RTMTOT} / ${NDAYS}" | bc -l`
+set RTMAVG = `echo "scale=2; ${RTMTOT} / ${ndays}" | bc -l`
 set RTMTOT = `echo "scale=2; ${RTMTOT} / 1" | bc -l`
 
 echo
@@ -787,17 +765,17 @@ echo "  ***** CMAQ TIMING REPORT *****"
 echo "=================================="
 echo "Start Day: ${START_DATE}"
 echo "End Day:   ${END_DATE}"
-echo "Number of Simulation Days: ${NDAYS}"
-echo "Domain Name:               ${grid_name}"
-echo "Number of Grid Cells:      ${NCELLS}  (ROW x COL x LAY)"
-echo "Number of Layers:          ${NZ}"
-echo "Number of Processes:       ${NPROCS}"
+echo "Number of Simulation Days: ${ndays}"
+echo "Domain Name:               ${GRID_NAME}"
+echo "Number of Grid Cells:      ${ncells}  (ROW x COL x LAY)"
+echo "Number of Layers:          ${nz}"
+echo "Number of Processes:       ${nprocs}"
 echo "   All times are in seconds."
 echo
 echo "Num  Day        Wall Time"
 set d = 0
 set day = ${START_DATE}
-foreach it ( `seq ${NDAYS}` )
+foreach it ( `seq ${ndays}` )
     # Set the right day and format it
     set d = `echo "${d} + 1"  | bc -l`
     set n = `printf "%02d" ${d}`

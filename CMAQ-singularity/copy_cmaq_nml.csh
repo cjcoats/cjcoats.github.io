@@ -33,6 +33,8 @@ if ( ${err_status} != 0 ) then
     exit( ${err_status} )
 endif
 
+mkdir -p ${SINGULARITYENV_NMLDIR}
+
 singularity exec -B ${SINGULARITYENV_NMLDIR} ${extradirs}  \
  ${CONTAINER} /opt/CMAQ_532/scripts/cp_nmldir.csh
  

@@ -3,6 +3,9 @@ RPMS (etc) used to build the singularity-cmaq writable image:
 
 Sylabs centos : 7/7.6/7.6.1810/latest 
 
+redhat-rpm-config-9.1.0-88.el7.centos.noarch
+redhat-menus-12.0.2-8.el7.noarch
+
 bzip2-1.0.6-13.el7.x86_64.rpm
 curl-7.29.0-54.el7.x86_64.rpm
 cvs-1.11.23-35.el7.x86_64.rpm

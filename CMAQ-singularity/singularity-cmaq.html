@@ -187,7 +187,6 @@
         <DD> optimized executables for the CMAQ modeling components
         <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/CCTM/scripts/BLD_CCTM_${VRSN}_gcc[dbg]-*/</VAR></STRONG>
         <DD> optimized and debug CMAQ CCTM executables for various MPI versions.
-        <DT> <STRONG><VAR>/opt/SMOKE/scripts/run/</VAR></STRONG>
         <DT> <STRONG><VAR>/opt/CMAQ_532/CCTM/scripts/BLD_CCTM_${VRSN}_ISAM_gcc[dbg]-*/</VAR></STRONG>
         <DD> optimized and debug CMAQ CCTM-ISAM executables for various MPI versions
         (CMAQ-5.3.2 only)
@@ -796,9 +795,11 @@ Requirements for your Host Machine
 <BLOCKQUOTE>
 
     There are optimized and debug <STRONG>CMAQ executables</STRONG> for
-    each of three MPI implementations:  MPICH-3, OPENMPI-3, and MVAPICH-2.
-    The executables can be found as <CODE>CCTM_*.exe</CODE> in the
-    following CMAQ-container directories:
+    each of three MPI implementations:  MPICH-3, OPENMPI-3, and
+    MVAPICH-2 for each of the &quot;normal&quot;, DDM3D, and ISAM
+    versions of the CMAQ CCTM, for the <VAR>cb6r3_ae7_aq</VAR> chemical
+    mechanism.  The executables can be found as <CODE>CCTM_*.exe</CODE>
+    in the following CMAQ-container directories:
     <PRE>
     /opt/CMAQ_${VRSN}/CCTM/scripts/
         BLD_CCTM_v${VRSN}_gcc-mpich3/
@@ -829,10 +830,11 @@ Requirements for your Host Machine
 
     Note that since these are the only CCTM executables (matching
     exactly the compilers and MPI implementations on the container),
-    other compiler-choices (Intel, PGI, ...) are not supported.  The
-    choice of which executable to use (and whether to invoke the
-    debugger on that executable) is controlled by container-environment
-    variables <STRONG><CODE>MPIVERSION</CODE></STRONG> and
+    other MPI versons and compiler-choices (Intel, PGI, ...) are not
+    supported.  The choice of which executable to use (and whether to
+    invoke the debugger on that executable) is controlled by
+    container-environment variables
+    <STRONG><CODE>MPIVERSION</CODE></STRONG> and
     <STRONG><CODE>DEBUG</CODE></STRONG>.
     <P>
 
@@ -2006,41 +2008,59 @@ executables</A></H2>
     component that you are running.<BR>
     <STRONG>NOTE that you will need to build such executables using the
     compilers and libraries on the container; otherwise, you will
-    aalmost certainly encounter shared-library problems.  <EM>Gee,
+    almost certainly encounter shared-library problems.  <EM>Gee,
     thanks, Ulrich Drepper!</EM>
     </STRONG>
+    <P>
     
     <STRONG>First,</STRONG> you will probably need  to copy a
-    source-directory from the container to an area on the host
-    machine, using the <VAR>singularity-shell.csh</VAR> command.
-    It is recommended that this area be under your home directory,
-    so that host-machine and singularity-container paths to the
-    executable will be the same.  Here is a sample of how you
-    might do this, assuming you want to build a CMAQ-5.3.2-DDM-mpich3 
-    CCTM executable under directory <VAR></VAR>:
+    source-directory from the container to an area on the host machine,
+    using the <VAR>singularity-shell.csh</VAR> command. It is
+    recommended that this area be under either <VAR>/tmp</VAR>  or your
+    home directory, so that host-machine and singularity-container paths
+    to the executable will be the same.  Here is a sample of how you
+    might do this, assuming you want to build a CMAQ-5.3.2-mpich3 
+    CCTM executable under directory <VAR>$HOME/mystuff/</VAR>.
+    <P>
+    You can use either the <VAR>copy_cmaq_bld.csh</VAR> script to copy
+    a selected CMAQ CCTM BLD-directory to your host machine, or do the
+    following steps:
     <UL>
         <LI>  On the host, do <VAR>mkdir -p $HOME/mystuff/</VAR>
               (if you don't have that directory already)
         <LI>  On the host, do <VAR>singularity-shell.csh</VAR>
-              or <VAR>singularity-term.csh</VAR>
+              or <VAR>singularity-term.csh</VAR> to go to the container.
         <LI>  On the container, do <VAR>cd /opt/CMAQ_532/CCTM/scripts/</VAR>
-              to get to the directory holding the container's
+              to get to the container-directory holding the container's
               appropriate build-directory
-        <LI>  On the container, do 
-              <VAR>cp -r BLD_CCTM_532_DDM3D_gcc-mpich3/ $HOME/mystuff/</VAR>
-        <LI>  On the host, modify the codes in
-              <VAR>$HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/</VAR> as
-              you desire.
-        <LI>  On the container, do <VAR>cd $HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/</VAR>
-              then <VAR>make</VAR>.  This will build the <VAR></VAR>
-        <LI>  In your host's <VAR>cmaq_ddm.mpich.csh</VAR> script, add the
-              command 
+        <LI>  On the container, copy that build-directory to your chosen
+              build-directory:
+              <VAR>cp -r BLD_CCTM_532_gcc-mpich3/ $HOME/mystuff/</VAR>
+    </UL>
+    Then build the new executable and use it:
+    <UL>
+        <LI>  On the host, modify the codes iny our chosen
+              build-directory (e.g.,
+              <VAR>$HOME/mystuff/BLD_CCTM_532_gcc-mpich3/</VAR>) as you
+              desire.
+        <LI>  On the container, use <VAR>singularity-shell.csh</VAR> to do 
+              <VAR>cd $HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/</VAR>
+              then <VAR>make</VAR> on the container.  This will build
+              the CCTM executable.
+        <LI>  In your host's <VAR>cmaq_*.csh</VAR> script, add the
+              command for that executable:
               <BLOCKQUOTE>
               <CODE>setenv SINGULARITYENV_EXEC $HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/CCTM_v532_DDM3D.exe</CODE>
               </BLOCKQUOTE>
         <LI>  Run your new script.
-    </UL>
+    </UL>    
+    <P>
     
+    To re-build your own version of one of the CMAQ pre- or post-processors,
+    go through the analogous process of copying its build-directory to your
+    host machine, modifying the code in it, then using the container's
+    compilers and libraries to build it, and modifying the host-script
+    to use that executable accordingly.
     <P>
 
 </BLOCKQUOTE>

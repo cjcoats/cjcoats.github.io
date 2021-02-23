@@ -42,8 +42,6 @@ and then:
     yum install mpich mpich-devel
     yum install mvapich2 mvapich2-devel
     yum install openmpi3 openmpi3-devel
-    yum install qmake
-    yum install qt-devel
     yum install rcs
     yum install subversion
     yum install tcsh
@@ -69,9 +67,6 @@ and then:
     yum install netcdf-fortran
     yum install netcdf-fortran-devel
     yum install netcdf-fortran-static
-    yum install netcdf-mpich
-    yum install netcdf-mpich-devel
-    yum install netcdf-mpich-static
     yum install netcdf4-python
 
     rpm -i -vv http://www.city-fan.org/ftp/contrib/yum-repo/rhel7/x86_64/xxdiff-4.0.1-1.0.cf.rhel7.x86_64.rpm

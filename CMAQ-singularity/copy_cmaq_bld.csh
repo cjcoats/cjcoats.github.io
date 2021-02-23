@@ -30,7 +30,9 @@ setenv SINGULARITYENV_MPIVERSION    openmpi
 
 setenv SINGULARITYENV_BLDDIR        /tmp/BLD_CCTM_v531_gcc
 
-singularity exec -B ${SINGULARITYENVBLDDIRDIR} ${extradirs}  \
+mkdir -p ${SINGULARITYENV_BLDDIRDIR}
+
+singularity exec -B ${SINGULARITYENV_BLDDIRDIR} ${extradirs}  \
  ${CONTAINER} /opt/CMAQ_532/scripts/cp_blddir.csh
  
 set err_status = ${status}
