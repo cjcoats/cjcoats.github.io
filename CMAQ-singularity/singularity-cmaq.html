@@ -22,6 +22,8 @@
     <UL>
         <LI>  <A HREF = "#intro"   >Introduction</A>
         <LI>  <A HREF = "#deps"    >Host Dependencies: Requirements for your Host Machine</A>
+        <LI>  <A HREF = "#user"    >Interactive Sessions and
+                                    User-Authored Scripts</A>
         <LI>  <A HREF = "#dirs"    >Directories, Environment Variables, and the Container</A>
         <LI>  <A HREF = "#script"  >Script generalities</A>
         <LI>  <A HREF = "#cctm"    >CMAQ CCTM Re-Structuring</A>
@@ -96,10 +98,11 @@
 
     Installed in this container are:
     <BLOCKQUOTE><DL>
-        <DT> <STRONG>CMAQ-git</STRONG> of June&nbsp;10, 2020 and 
+        <DT> <STRONG>CMAQ-git</STRONG> of June&nbsp;10, 2020 and
              Nov&nbsp;22, 2020)
              (versions <CODE>5.3.1</CODE> and <CODE>5.3.2</CODE>)
-        <DD> including <VAR>CCTM</VAR>, <BR>
+        <DD> including <VAR>CCTM</VAR> (and the <VAR>CCTM_DDM3D</VAR>
+             and <VAR>CCTM_ISAM</VAR> executables for 5.3.2, also), <BR>
              preprocessors <VAR>bcon</VAR>,
              <VAR>create_omi</VAR>, <VAR>icon</VAR>, and
              <VAR>mcip</VAR>, <BR>
@@ -129,7 +132,8 @@
         <P>
         <DT> <STRONG><VAR>pave</VAR></STRONG> version <CODE>3.0-beta</CODE>
         <DD> I/O&nbsp;API / UAM / CAMX data visualization tool,
-             from MCNC and Carlie J. Coats, Jr., Ph.D.
+             from MCNC and Carlie J. Coats, Jr., Ph.D.<BR>
+             <EM>Supports data sets larger than 2 GB.</EM>
         <DT> <STRONG><VAR>ncview</VAR></STRONG> version 2.1.2
         <DD> netCDF-file visualization tool, from UCSD
         <DT> <STRONG><VAR>panoply</VAR></STRONG>
@@ -178,21 +182,29 @@
 
     <STRONG>On this container</STRONG> are directories
     <BLOCKQUOTE><DL>
+        <DT> <STRONG><VAR>/opt/ioapi-3.2/ioapi</VAR></STRONG><BR>
+             <STRONG><VAR>/opt/ioapi-3.2/m3tools</VAR></STRONG>
+        <DD> I/O&nbsp;API source and <CODE>INCLUDE</CODE>-files,
+             and  M3Tools source.
+        <DT> <STRONG><VAR>/opt/ioapi-3.2/Linux2_x86_64gfort_medium/<BR>
+             /opt/ioapi-3.2/Linux2_x86_64gfort_mediumdbg/</VAR></STRONG>
+        <DD> Optimized and debug/check-everything I/O&nbsp;API libraries
+             and module-files, and M3Tools executables.
+        <P>
         <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/scripts/</VAR></STRONG>
-        <DD> worker-scripts designed to run CMAQ modeling components.
+        <DD> worker-scripts designed to run non-CCTM CMAQ pre-processor,
+             post-processor, and utility-program modeling components.
              These are invoked by host-machine scripts such as
              <VAR>cmaq_cctm.csh</VAR> or <VAR>cmaq_icon.csh</VAR>
              (below)
         <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/bin/</VAR></STRONG>
-        <DD> optimized executables for the CMAQ modeling components
-        <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/CCTM/scripts/BLD_CCTM_${VRSN}_gcc[dbg]-*/</VAR></STRONG>
-        <DD> optimized and debug CMAQ CCTM executables for various MPI versions.
-        <DT> <STRONG><VAR>/opt/CMAQ_532/CCTM/scripts/BLD_CCTM_${VRSN}_ISAM_gcc[dbg]-*/</VAR></STRONG>
-        <DD> optimized and debug CMAQ CCTM-ISAM executables for various MPI versions
-        (CMAQ-5.3.2 only)
-        <DT> <STRONG><VAR>/opt/CMAQ_532/CCTM/scripts/BLD_CCTM_${VRSN}_DDM_gcc[dbg]-*/</VAR></STRONG>
-        <DD> optimized and debug CMAQ CCTM-DDM executables for various MPI versions
-        (CMAQ-5.3.2 only)
+        <DD> optimized executables for the non-CCTM CMAQ modeling components
+        <DT> <STRONG><VAR>/opt/CMAQ_${VRSN}/CCTM/scripts/BLD_CCTM_${VRSN}_gcc[dbg]-*/</VAR></STRONG><BR>
+             <STRONG><VAR>/opt/CMAQ_532/CCTM/scripts/BLD_CCTM_${VRSN}_ISAM_gcc[dbg]-*/</VAR></STRONG><BR>
+             <STRONG><VAR>/opt/CMAQ_532/CCTM/scripts/BLD_CCTM_${VRSN}_DDM3D_gcc[dbg]-*/</VAR></STRONG>
+        <DD> optimized and debug CMAQ CCTM executables for various MPI
+        versions (*).  ISAM and DDM3D executables are available for CMAQ-5.3.2 only.
+        <P>
         <DT> <STRONG><VAR>/opt/SMOKE/scripts/run/</VAR></STRONG>
         <DD> worker-scripts to run SMOKE.
              These are invoked by host-machine scripts such as
@@ -264,7 +276,7 @@
                      <A HREF="cmaq_ddm.openmpi.csh"  ><VAR>cmaq_ddm.openmpi.csh</VAR></A><BR>
                      <A HREF="cmaq_isam.mpich.csh"   ><VAR>cmaq_isam.openmpi.mpich.csh</VAR></A><BR>
                      <A HREF="cmaq_isam.mvapich.csh" ><VAR>cmaq_isam.mvapich.csh</VAR></A><BR>
-                     <A HREF="cmaq_isam.openmpi.csh" ><VAR>cmaq_isam.csh</VAR></A>               
+                     <A HREF="cmaq_isam.openmpi.csh" ><VAR>cmaq_isam.csh</VAR></A>
                  <DD> Set up environment on the container for a
                       (multi-day) CMAQ CCTM run (for &quot;vanilla&quot;, DDM3D enabled, or
                       ISAM enabled, respectively) and then use the
@@ -373,6 +385,81 @@ Requirements for your Host Machine
 
 <HR> <!- ------------------------------------------------------------- ->
 
+<H2><A NAME="user">Interactive Sessions and User-Authored Scripts</A></H2>
+
+<BLOCKQUOTE>
+
+    One way of using this container is to think of it as a new machine
+    that already contains pre-built executables, together with a number
+    of additional modeling tools.  You can either use the pre-written
+    modeling scripts (below), or you can just &qult;log in&quot; to this
+    machine and work, writing your own scripts etc. as you may wish,
+    using these provided scripts:
+    <BLOCKQUOTE><DL>
+        <DT><A HREF="singularity-shell.csh" ><VAR>singularity-shell.csh</VAR></A>
+        <DD> Log in to a <VAR>tcsh</VAR>-shell session on the
+             container; or
+        <DT><A HREF="singularity-term.csh"  ><VAR>singularity-term.csh</VAR></A>
+        <DD> Open a new terminal from the container, with a
+             <VAR>tcsh</VAR>-shell session  in it.
+    </DL></BLOCKQUOTE>
+    Singularity will automatically mount your home directory and the
+    <VAR>/tmp</VAR> directory from your host-machine onto the
+    container's virtual machine.  You can also mount additional
+    directories from your host machine to the container's virtual
+    machine.  In these scripts, you can set <CODE>CMAQDATA</CODE> and
+    <CODE>SMOKEDATA</CODE> to your host-machine directories for CMAQ and
+    SMOKE data, respectively, that will be mounted to standard
+    container-directories <VAR>/opt/CMAQ_532/data/</VAR> and
+    <VAR>/opt/SMOKE/data/</VAR>, or you can set <CODE>extradirs</CODE>
+    to mount a list of directories to the container, under the same
+    names as on the host machine.  For example,
+    <BLOCKQUOTE><CODE>
+    set extradirs = &quot;-B /proj/ie/proj,/work,/ms/${USER}&quot;
+    </CODE></BLOCKQUOTE>
+    will make these scripts mount directories <VAR>/proj/ie/proj</VAR>,
+    <VAR>/work</VAR>, and  <VAR>/ms/&lt;your-login-name&gt;</VAR> from
+    the host-machine onto the container, under the same names as on the
+    host-machine.
+    <P>
+
+    From such a container-session, you can run various programs or
+    models that are already installed on the container interactively, or
+    you can write scripts that run them (or that do other tasks), just
+    as you would on a other login-session to any other machine.  You
+    will need to know the directories for modeling-components you want
+    to run (see above); paths for other utilities listed above, such as
+    <VAR>GrADS</VAR>, NCAR Graphics, and the <VAR>nedit</VAR> editor are
+    set up already.
+    <P>
+
+    <STRONG>Note that the container itself is read-only; your session
+    can only write to files in directories that you have mounted from
+    your host-machine; you cannot write directly into the container's
+    own directories.</STRONG>
+    <P>
+
+    <STRONG>Note also that executables from your host machine will
+    almost certainly have shared-library problems that keep them from
+    running in a container-session.  To build new executables that 
+    <EM>will</EM> run in a container-session, you need to build them
+    in a container-session (therefore using the container's own
+    compilers and libraries), in a directory that you have mounted from
+    the host machine:</STRONG>  see <A HREF = "#execs">APPENDIX&nbsp;2</A> below.
+    <P>
+
+    More details are given in the sections below.
+    <P>
+
+</BLOCKQUOTE>
+
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
 <H2><A NAME="dirs">Directories, Environment Variables, and the Container</A></H2>
 
 <BLOCKQUOTE>
@@ -382,7 +469,8 @@ Requirements for your Host Machine
         <LI> Where is modeling software installed?
         <LI> What directories are mounted from the container's host
              (and how do you mount additional data directories)?
-        <LI> How do you establish environment variables on the container?
+        <LI> How do you establish environment variables on the container
+             (from a script on your host-machine)?
     </UL></EM>
 
     <STRONG>On the container, modeling software is installed</STRONG>
@@ -735,17 +823,17 @@ Requirements for your Host Machine
     setenv  SINGULARITYENV_CTM_DIAG_LVL  &lt;value&gt;
     </PRE>
 
-
     <STRONG>If you want to mount additional directories on the
     container</STRONG>, you may use shell-variable
-    <CODE>extradirs</CODE> to put one or more directives
-    <CODE>-B&nbsp;&lt;directory&gt;</CODE> that will cause the container
-    to mount the directories specified.  For example, if you want the
-    container to mount host-directories <VAR>/proj</VAR> and
+    <CODE>extradirs</CODE> to put a directive with a comma delinited
+    list of directories <CODE>-B&nbsp;&lt;directories&gt;</CODE> that
+    will cause the container to mount the directories specified under
+    the same names as the host-machine uses.  For example, if you want
+    the container to mount host-directories <VAR>/proj</VAR> and
     <VAR>/work</VAR> (as <VAR>/proj</VAR> and <VAR>/work</VAR> on the
     container), modify the script like this:
     <BLOCKQUOTE><CODE>
-    set extradirs = '-B /proj -B /work'
+    set extradirs = '-B /proj,/work'
     </CODE></BLOCKQUOTE>
     <P>
 
@@ -808,12 +896,12 @@ Requirements for your Host Machine
         BLD_CCTM_v${VRSN}_gccdbg-mpich3/
         BLD_CCTM_v${VRSN}_gccdbg-openmpi/
         BLD_CCTM_v${VRSN}_gccdbg-mvapich2/
-        BLD_CCTM_v532_DDM_gcc-mpich3/
-        BLD_CCTM_v532_DDM_gcc-openmpi/
-        BLD_CCTM_v532_DDM_gcc-mvapich2/
-        BLD_CCTM_v532_DDM_gccdbg-mpich3/
-        BLD_CCTM_v532_DDM_gccdbg-openmpi/
-        BLD_CCTM_v532_DDM_gccdbg-mvapich2/
+        BLD_CCTM_v532_DDM3D_gcc-mpich3/
+        BLD_CCTM_v532_DDM3D_gcc-openmpi/
+        BLD_CCTM_v532_DDM3D_gcc-mvapich2/
+        BLD_CCTM_v532_DDM3D_gccdbg-mpich3/
+        BLD_CCTM_v532_DDM3D_gccdbg-openmpi/
+        BLD_CCTM_v532_DDM3D_gccdbg-mvapich2/
         BLD_CCTM_v532_ISAM_gcc-mpich3/
         BLD_CCTM_v532_ISAM_gcc-openmpi/
         BLD_CCTM_v532_ISAM_gcc-mvapich2/
@@ -847,11 +935,11 @@ Requirements for your Host Machine
     CMAQ CCTM version:
     <BLOCKQUOTE><DL>
         <DT> <STRONG><VAR>cmaq_cctm.csh</VAR></STRONG>
-        <DD> for the &quot;vanilla&quot; CMAQ CCTM; 
+        <DD> for the &quot;vanilla&quot; CMAQ CCTM;
         <DT> <STRONG><VAR>cmaq_ddm.csh</VAR></STRONG>
-        <DD> for theDDM3D enabledCMAQ CCTM; 
+        <DD> for the DDM3D enabledCMAQ CCTM;
         <DT> <STRONG><VAR>cmaq_isam.csh</VAR></STRONG>
-        <DD> for theISAM enabled CMAQ CCTM.
+        <DD> for the ISAM enabled CMAQ CCTM.
     </DL></BLOCKQUOTE>
     These scripts are <STRONG>controlled by the following list of
     environment variables</STRONG> (each of which has a default,
@@ -937,21 +1025,19 @@ Requirements for your Host Machine
              <P>
              <STRONG>to build and use a custom executable</STRONG>,
              you can use script
-             <VAR><A HREF="copy_cmaq_bld.csh">copy_cmaq_bld.csh</A></VAR>
-             to copy a build-directory on the container to a directory
-             on your host machine given by the script's
+             <VAR><A
+             HREF="copy_cmaq_bld.csh">copy_cmaq_bld.csh</A></VAR> to
+             copy a build-directory on the container to a directory on
+             your host machine given by the script's
              environment-variable <CODE>SINGULARITYENV_BLDDIR</CODE>, do
              a custom re-build of the CMAQ CCTM executable there (using
              the <VAR>singularity-shell.csh</VAR> script to give you
              access to the container's compilers and  libraries), and
-             then use the <CODE>SINGULARITYENV_NMLDIR</CODE> environment
-             variable in the <VAR>cmaq_cctm.csh</VAR> script to use the
-             executable from that directory, or else use the
-             <CODE>SINGULARITYENV_EXEC</CODE> environment variable to
-             give the path for the executable you want to use (provided
-             it is in a directory (like <CODE>${HOME}</CODE>) mounted
-             onto the container.
-             <P>
+             then use the  <CODE>SINGULARITYENV_EXEC</CODE> environment
+             variable to give the path for the executable you want to
+             use (provided it is in a directory (like
+             <CODE>${HOME}</CODE>) mounted onto the container. <BR>
+             See <A HREF = "#execs">APPENDIX&nbsp;2</A> below.<P>
 
     </DL></BLOCKQUOTE>
     <P>
@@ -1478,7 +1564,7 @@ Requirements for your Host Machine
     sets are supported); the executables can be found in directories
     <VAR>/opt/SMOKE/Linux2_x86_64gfort_medium/</VAR> and
     <VAR>opt/SMOKE/Linux2_x86_64gfort_mediumdbg/</VAR> (for a more
-    complete listing of directories on the container, 
+    complete listing of directories on the container,
     <A HREF="#files"> see the APPENDIX</A>.
     <P>
 
@@ -1565,15 +1651,15 @@ Requirements for your Host Machine
 <BLOCKQUOTE>
 
     AMET Version 1.4 is installed under container-directory
-    <VAR>/opt/AMET_v14/</VAR>.  
+    <VAR>/opt/AMET_v14/</VAR>.
     <P>
-    
+
     Note that AMET support tools <VAR>bldoverlay_${VRSN}.exe</VAR>,
     <VAR>combine_${VRSN}.exe</VAR>, <VAR>sitecmp_${VRSN}.exe</VAR>, and
     <VAR>sitecmp_dailyo3_${VRSN}.exe</VAR> are installed with CMAQ in
     container-directorues <VAR>/opt/CMAQ_${VRSN}/bin</VAR>.
     <P>
-    
+
     [TBD...]
     <P>
 
@@ -2012,14 +2098,14 @@ executables</A></H2>
     thanks, Ulrich Drepper!</EM>
     </STRONG>
     <P>
-    
+
     <STRONG>First,</STRONG> you will probably need  to copy a
     source-directory from the container to an area on the host machine,
     using the <VAR>singularity-shell.csh</VAR> command. It is
     recommended that this area be under either <VAR>/tmp</VAR>  or your
     home directory, so that host-machine and singularity-container paths
     to the executable will be the same.  Here is a sample of how you
-    might do this, assuming you want to build a CMAQ-5.3.2-mpich3 
+    might do this, assuming you want to build a CMAQ-5.3.2-mpich3
     CCTM executable under directory <VAR>$HOME/mystuff/</VAR>.
     <P>
     You can use either the <VAR>copy_cmaq_bld.csh</VAR> script to copy
@@ -2043,7 +2129,7 @@ executables</A></H2>
               build-directory (e.g.,
               <VAR>$HOME/mystuff/BLD_CCTM_532_gcc-mpich3/</VAR>) as you
               desire.
-        <LI>  On the container, use <VAR>singularity-shell.csh</VAR> to do 
+        <LI>  On the container, use <VAR>singularity-shell.csh</VAR> to do
               <VAR>cd $HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/</VAR>
               then <VAR>make</VAR> on the container.  This will build
               the CCTM executable.
@@ -2053,9 +2139,9 @@ executables</A></H2>
               <CODE>setenv SINGULARITYENV_EXEC $HOME/mystuff/BLD_CCTM_532_DDM3D_gcc-mpich3/CCTM_v532_DDM3D.exe</CODE>
               </BLOCKQUOTE>
         <LI>  Run your new script.
-    </UL>    
+    </UL>
     <P>
-    
+
     To re-build your own version of one of the CMAQ pre- or post-processors,
     go through the analogous process of copying its build-directory to your
     host machine, modifying the code in it, then using the container's
@@ -2068,7 +2154,7 @@ executables</A></H2>
 
 <HR> <!- ------------------------------------------------------------- ->
 
-Copyright &copy; 2020 Carlie J. Coats, Jr., and
+Copyright &copy; 2021 Carlie J. Coats, Jr., and
 University of North Carolina Institute for the Environment
 <P>
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
