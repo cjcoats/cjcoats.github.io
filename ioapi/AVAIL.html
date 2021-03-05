@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 186 2020-08-28 17:40:06Z coats $" -->
+<!-- "$Id: AVAIL.html 197 2021-03-05 20:20:59Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -452,7 +452,7 @@ m3stat:
                   <P>
                   <LI> <EM>I/O&nbsp;API 3.2 only:</EM> If you want to enable
                         the <A HREF="BUFFERED.html#pncf">PnetCDF
-                        distributed I/O</A> configuration (for CMAQ),
+                        distributed I/O</A> configuration (for CMAQ CCTM),
                         <EM>cd&nbsp;ioapi</EM>  and then
                         <EM>cp&nbsp;Makefile.pncf&nbsp;Makefile</EM>
                         and <VAR>setenv</VAR> environment variable
@@ -470,7 +470,8 @@ m3stat:
                                  Make sure you keep them separate.<BR>
                                  <STRONG>You will want to build
                                  both</STRONG>, since the PnetCDF
-                                 enabled libraries are for CMAQ only.
+                                 enabled libraries are for the CMAQ
+                                 CCTM only.
                             <LI> What is called <VAR>mpif90</VAR> is
                                  really a script that understands about
                                  an underlying compiler-set (e.g., Intel
@@ -635,7 +636,8 @@ m3stat:
                         programs.
                         <P>
                         For I/O&nbsp;API-3.2, if you are building the
-                        PnetCDF/MPI distributed-I/O version for CMAQ,
+                        PnetCDF/MPI distributed-I/O version for the CMAQ
+                        CCTM,
                         then install the appropriate MPI development
                         package, and download PnetCDF from
                         <A HREF="https://trac.mcs.anl.gov/projects/parallel-netcdf/wiki/Download">https://trac.mcs.anl.gov/projects/parallel-netcdf/wiki/Download</A>
@@ -2017,7 +2019,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 186 2020-08-28 17:40:06Z coats $
+    $Id: AVAIL.html 197 2021-03-05 20:20:59Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
