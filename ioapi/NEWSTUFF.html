@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 196 2021-01-13 15:23:09Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 199 2021-05-07 17:20:03Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 196 2021-01-13 15:23:09Z coats $
+    $Id: NEWSTUFF.html 199 2021-05-07 17:20:03Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,15 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#apr062021">
+               Bug-fix in gridded-output versions of <CODE>BILIN,
+               BMATVEC</CODE>,
+               <VAR><STRONG>m3tools</STRONG></VAR> program
+               <VAR>latlon</VAR>
+               <BR>
+               <VAR>Makefile</VAR>s now create <CODE>${OBJDIR}</CODE>
+               if necessary.
+               <BR>
          <LI>  <A HREF = "#jan122021">
                Improved error reporting in <CODE>GETEFILE(), GETDFILE(),
                GETFFILE(), INITLOG3()</CODE></A>
@@ -776,6 +785,38 @@
         % nm libnetcdff.a | grep ncclos<BR>
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME ="apr062021">
+    Bug-fix in gridded-output versions of <CODE>BILIN, BMATVEC</CODE>,
+    <VAR><STRONG>m3tools</STRONG></VAR> program <VAR>latlon</VAR>
+    <BR>
+    <VAR>Makefile</VAR>s now create <CODE>${OBJDIR}<CODE>
+    if necessary.
+</A></H2>
+
+    <BLOCKQUOTE>
+    There was an off-by-one single-indexing error in the gridded-output
+    versions of generic bilinear-interpolation routines 
+    <A HREF="BILIN.html"><CODE>BILIN</CODE></A> and 
+    <A HREF="BILIN.html"><CODE>BMATVEC</CODE></A>, now fixed.
+    <P>
+    There was a bug in the boundary-LATLON-file creation functionality
+    for <VAR><STRONG>m3tools</STRONG></VAR> program 
+    <A HREF="LATLON.html"><VAR>latlon</VAR></A>, now fixed.
+    <P>
+    Rules in the <VAR>Makefile</VAR>s now check to see if the build
+    directory  <CODE>${OBJDIR}<CODE> already exists; and if not, they
+    create it (simplifying the build-process for the I/O&nbsp;API.
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
     </BLOCKQUOTE>
 
@@ -7584,7 +7625,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 196 2021-01-13 15:23:09Z coats $
+    $Id: NEWSTUFF.html 199 2021-05-07 17:20:03Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
