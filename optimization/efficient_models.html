@@ -58,6 +58,58 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
 </A></H2>
 
 <H3>
+    Not covered here:  ALGORITHMS!
+</H3>
+
+    History shows that the largest speedups to computer problems come
+    not from the optimization techniques covered by this paper, but by
+    using improved algorithms.  Optimization may give factor-of-ten
+    improvements or in rare cases factor-of-hundreds, but algorithm
+    improvements may give factor-of-millions (or even more).  For
+    example:
+    <UL>
+        <LI>  Naive searching for text-substrings within text is quite
+              expensive &mdash; but much faster algorithms have been
+              found:
+              <BR>
+              <STRONG>It would not be unreasonable to say that the fast
+              <A HREF="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string-search_algorithm">
+              Boyer-Moore string-search algorithm</A> made Google
+              possible.</STRONG>
+        <P>
+        <LI>  <A HREF="https://en.wikipedia.org/wiki/Fast_Fourier_transform">
+              Fast Fourier Transforms</A> made modern signal processing
+              (audio, video, ...) feasible.
+        <P>
+        <LI>  SMOKE used a setup with fast binary searching and sorting
+              algorithms, together with efficient sparse-matrix processing
+              to greatly speed up emissions modeling.
+              <BR>
+              For NC emissions processing, the initial SMOKE prototype
+              took 8 minutes one-time-set-up and  2 minutes 43 seconds
+              per day's processing on a SPARC-2 &mdash; replacing 11
+              Cray-hours per day required for its predecessor EPS.
+        <P>
+        <LI>  For analyzing heat-flow problems, it has been estimated
+              that computer-hardware improvements have speeded up
+              processing by a factor of a million, but algorithm
+              improvments (brute-force, then successive over-relaxation,
+              multigrid, etc...) have speeded up processing by a factor of
+              ten billion!
+        <P>
+    </UL>
+    They strongly suggest &quot;think well about what you are doing,
+    rather than blindly going ahead with the first thing you think
+    of.&quot;  Optimization is useful, but using well-chosen algorithms
+    is even more so.
+
+<P>
+<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
+<P>
+
+<HR> <!----------------------------------------------------------------->
+
+<H3>
     Is It Worthwhile?<BR>
     EXAMPLE:  MAQSIP Optimization Results
 </H3>
@@ -173,57 +225,6 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
 <P>
 <HR> <!----------------------------------------------------------------->
 
-<H3>
-    Not covered here:  algorithms!
-</H3>
-
-    History shows that the largest speedups to computer problems come
-    not from the optimization techniques covered by this paper, but by
-    using improved algorithms.  Optimization may give factor-of-ten
-    improvements or in rare cases factor-of-hundreds, but algorithm
-    improvements may give factor-of-millions (or even more).  For
-    example:
-    <UL>
-        <LI>  Naive searching for text-substrings within text is quite
-              expensive &mdash; but much faster algorithms have been
-              found:
-              <BR>
-              <STRONG>It would not be unreasonable to say that the fast
-              <A HREF="https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string-search_algorithm">
-              Boyer-Moore string-search algorithm</A> made Google
-              possible.</STRONG>
-        <P>
-        <LI>  <A HREF="https://en.wikipedia.org/wiki/Fast_Fourier_transform">
-              Fast Fourier Transforms</A> made modern signal processing
-              (audio, video, ...) feasible.
-        <P>
-        <LI>  SMOKE used a setup with fast binary searching and sorting
-              algorithms, together with efficient sparse-matrix processing
-              to greatly speed up emissions modeling.
-              <BR>
-              For NC emissions processing, the initial SMOKE prototype
-              took 8 minutes one-time-set-up and  2 minutes 43 seconds
-              per day's processing on a SPARC-2 &mdash; replacing 11
-              Cray-hours per day required for its predecessor EPS.
-        <P>
-        <LI>  For analyzing heat-flow problems, it has been estimated
-              that computer-hardware improvements have speeded up
-              processing by a factor of a million, but algorithm
-              improvments (brute-force, then successive over-relaxation,
-              multigrid, etc...) have speeded up processing by a factor of
-              ten billion!
-        <P>
-    </UL>
-    They strongly suggest &quot;think well about what you are doing,
-    rather than blindly going ahead with the first thing you think
-    of.&quot;  Optimization may be useful, but using well-chosen
-    algorithms is even more so.
-
-<P>
-<EM><A HREF="#top">Back to <STRONG>Contents</STRONG></A></EM>
-<P>
-
-<HR> <!----------------------------------------------------------------->
 <H2><A NAME = "Eval">
     Easy Performance Evaluation
 </A></H2>
