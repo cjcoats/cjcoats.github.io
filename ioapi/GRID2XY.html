@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: GRID2XY.html 129 2019-09-13 20:09:58Z coats $" -->
+<!-- "$Id: GRID2XY.html 210 2021-11-10 19:14:54Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> SUBROUTINE GRID2XY </TITLE>
 </HEAD>
@@ -29,6 +29,15 @@ different map projection, with optional <CODE>SPHER1</CODE>,
                         GDTYP_I, P_ALP_I, P_BET_I, P_GAM_I, XCENT_I, YCENT_I,           &amp;
                         NCOLS_I, NROWS_I, XORIG_I, YORIG_I, XCELL_I, YCELL_I,           &amp;
                         XLOC_O, YLOC_O )
+    SUBROUTINE BNDY2XY( GDTYP_O, P_ALP_O, P_BET_O, P_GAM_O, XCENT_O, YCENT_O, SPHER_O,  &amp;
+                        GDTYP_I, P_ALP_I, P_BET_I, P_GAM_I, XCENT_I, YCENT_I, SPHER_I,  &amp;
+                        NCOLS_I, NROWS_I, NTHIK_I, XORIG_I, YORIG_I, XCELL_I, YCELL_I,  &amp;
+                        XLOC_B, YLOC_B )
+
+    SUBROUTINE BNDY2XY( GDTYP_O, P_ALP_O, P_BET_O, P_GAM_O, XCENT_O, YCENT_O,           &amp;
+                        GDTYP_I, P_ALP_I, P_BET_I, P_GAM_I, XCENT_I, YCENT_I,           &amp;
+                        NCOLS_I, NROWS_I, NTHIK_I, XORIG_I, YORIG_I, XCELL_I, YCELL_I,  &amp;
+                        XLOC_B, YLOC_B )
 
         INTEGER, INTENT(IN   ) :: GDTYP_O, GDTYP_I
         INTEGER, INTENT(IN   ) :: NCOLS_I, NROWS_I        !!  dimensions for GRID_I
@@ -37,16 +46,18 @@ different map projection, with optional <CODE>SPHER1</CODE>,
         REAL*8 , INTENT(IN   ) :: P_ALP_I, P_BET_I, P_GAM_I, XCENT_I, YCENT_I
         REAL*8 , INTENT(IN   ) :: XORIG_I, YORIG_I, XCELL_I, YCELL_I
         REAL*8 , INTENT(  OUT) :: XLOC_O( NCOLS_I,NROWS_I )     !!  GRID_O coords for
-        REAL*8 , INTENT(  OUT) :: YLOC_O( NCOLS_I,NROWS_I )     !!  GRID_I cell-centers
+        REAL*8 , INTENT(  OUT) :: YLOC_O( NCOLS_I,NROWS_I )     !!  GRID_I grid-cell centers
+        REAL*8 , INTENT(  OUT) :: XLOC_B( 2*NTHIK_I*(NCOLS_I+NROWS_I+2*NTHIK_I) )     !!  ... boundary-cell centers
+        REAL*8 , INTENT(  OUT) :: YLOC_B( 2*NTHIK_I*(NCOLS_I+NROWS_I+2*NTHIK_I) )     !!  
 </PRE><P>    
 
 
 <H2> Summary: </H2>
 
     Compute locations  <CODE>&lt;XLOC_O_O,YLOC_O&gt;</CODE> for all
-    (input) <VAR>GRID_I</VAR> grid-cell centerss relative to the
-    coordinate system for (output) <VAR>GRID_O</VAR> using USGS
-    GCTP-package routine <CODE>GTPZ0()</CODE>.  The usual
+    (input) <VAR>GRID_I</VAR> grid-cell or boundary-cell centers
+    relative to the coordinate system for (output) <VAR>GRID_O</VAR>
+    using USGS GCTP-package routine <CODE>GTPZ0()</CODE>.  The usual
     <A HREF="GRIDS.html#horiz">I/O&nbsp;API coordinate-description
     conventions</A> are used  for the
     <CODE>GDTYP,P_ALP,P_BET,P_GAM,XCENT,YCENT</CODE> input and output

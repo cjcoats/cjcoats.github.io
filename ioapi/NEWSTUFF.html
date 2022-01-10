@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 199 2021-05-07 17:20:03Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 211 2021-11-10 20:38:57Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 199 2021-05-07 17:20:03Z coats $
+    $Id: NEWSTUFF.html 211 2021-11-10 20:38:57Z coats $
     </EM>
     <HR>
 
@@ -31,6 +31,22 @@
 
     <UL>
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
+               <P>
+
+         <LI>  <A HREF = "#nov102021">
+               Bug-fixes for interpolation-mode operation of
+               <STRONG><VAR>m3tools</VAR></STRONG> programs
+               <CODE>M3CPLE</CODE> and <CODE>MTXCALC</CODE>
+               <BR>
+               I/O&nbsp;API-4.0 bug-fixes.
+               <P>
+         <LI>  <A HREF = "#oct212021">
+               <VAR>Beta</VAR> I/O&nbsp;API Version 4.0:  all &quot;free&quot;
+               (<CODE>.f90</CODE>) Standard conforming source code
+               format.
+               <BR>
+               <CODE>SCALEFAC</CODE> for <STRONG><VAR>M3Tools</VAR></STRONG>
+               program <STRONG><VAR>m3cple</VAR></STRONG>
                <P>
 
          <LI>  <A HREF = "#apr062021">
@@ -786,6 +802,65 @@
         0000000000001440 T ncclos_
     </VAR></BLOCKQUOTE>
     <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME ="nov102021">
+    Bug-fixes for interpolation-mode operation of
+    <STRONG><VAR>m3tools</VAR></STRONG> programs
+    <STRONG><VAR>m3cple</VAR></STRONG> and <STRONG><VAR>mtxcalc</VAR></STRONG>
+               <BR>
+               I/O&nbsp;API-4.0 bug-fixes.
+</A></H2>
+
+    <BLOCKQUOTE>
+    Subject says it.
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME ="oct212021">
+    I/O&nbsp;API-4.0:  Conversion to Standard conforming &quot;free&quot;
+    (<CODE>.f90</CODE>) source code format.
+    <BR>
+    <CODE>SCALEFAC</CODE> for <STRONG><VAR>M3Tools</VAR></STRONG>
+    program <STRONG><VAR>m3cple</VAR></STRONG>
+</A></H2>
+
+    <BLOCKQUOTE>
+    The remaining fixed-format (<CODE>f77</CODE>-style) Fortran codes
+    were converted to the newer Standard conforming(<CODE>.f90</CODE>-style)
+    free source code format.  This was aided by Willem Vermin's
+    <STRONG><VAR>findent</VAR></STRONG> utility:  see
+    <STRONG><VAR><A HREF="https://gitlab.com/wvermin/findent">
+    https://gitlab.com/wvermin/findent</A></VAR></STRONG>.
+    <P>
+    Except for the source-code format, this version is completely
+    compatible with I/O&nbsp;API-3.2. Minor bug-fixes were made to 
+    various prompts and error-messages but there are no usage nor
+    interface changes.
+    <P>
+    Note that this version should not be installed &quot;on top of&quot;
+    previous versions, because of name-collisions between older
+    <CODE>.f</CODE> source files and their newer <CODE>.f90</CODE>
+    counterparts, and the resulting <VAR>make</VAR> problems that
+    causes.
+    <P>
+    <STRONG><VAR>M3Tools</VAR></STRONG> program
+    <A HREF="M3CPLE.html"><STRONG><VAR>m3cple</VAR></STRONG></A> has a
+    new environmewnt-variable option <CODE>SCALEFAC</CODE> for emissions
+    interpolation (necessary because SMOKE gridded emissions data  uses
+    non-interpolatable, non-MKS units of the form <VAR>mass per unit time
+    <STRONG>per grid-cell</STRONG></VAR>, and one must re-scale the data
+    by the ratio of the output cell-area to the input cell-area).
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7625,7 +7700,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 199 2021-05-07 17:20:03Z coats $
+    $Id: NEWSTUFF.html 211 2021-11-10 20:38:57Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 199 2021-05-07 17:20:03Z coats $" -->
+<!-- "$Id: AVAIL.html 205 2021-10-21 15:46:13Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -140,17 +140,24 @@ m3stat:
 
 <HR> <!----------------------------------------------------------------->
 
-    <H3><A NAME="build">Build and installation instructions</A>
-               for I/O&nbsp;API Versions&nbsp;3.0, 3.1, and 3.2</H3>
+    <H3>
+        <A NAME="build">Build and installation instructions</A>
+        for I/O&nbsp;API Versions&nbsp;3.0, 3.1, 3.2, and 4.0
+    </H3>
 
     <BLOCKQUOTE>
     As of this writing (June&nbsp;2019), I/O&nbsp;API Versions 2.2 and
-    earlier are obsolete; 3.0 and 3.1 obsolescent, in critical-fixes-only
-    mode; and 3.2 is the current stable/production version.  See the
-    <A HREF = "NEWSTUFF.html">Change Log&nbsp;/&nbsp;&quot;What's
+    earlier are obsolete; 3.0 and 3.1 obsolescent, in
+    critical-fixes-only mode (and does not work with netCDF version 4
+    because of version-to-version incompatibilites in that product); 3.2
+    is the current stable/production version.  4.0 is the new (beta, as
+    of 10/21/2021) &quote;all Fortran converted to Standard conforming
+    <CODE>.f90</CODE> source code format. See the <A HREF =
+    "NEWSTUFF.html">Change Log&nbsp;/&nbsp;&quot;What's
     New&quot;&nbsp;/&nbsp;Research Directions</A> page for further
     information.
     <P>
+
     Basically, the I/O API is developed as a &quot;rolling release&quot;
     software system, with bug-fixes available as soon as they are made.
     This is most easily accessed by way of the GitHub version of the
@@ -166,22 +173,23 @@ m3stat:
                        from the CMAS web-site:<BR>
                        For the &quot;rolling release&quot; version
                        <BLOCKQUOTE>
+                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-4.0.tar.gz"><VAR>ioapi-4.0.tar.gz</VAR></A><BR>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz"><VAR>ioapi-3.2.tar.gz</VAR></A><BR>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A><BR>, or
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.
                        </BLOCKQUOTE>
                        or for the April&nbsp;20, 2020,  August&nbsp;7, 2020, or August&nbsp;28, 2020
-                       versions
+                       versions of I/O&nbsp;API Version&nbsp;3.2:
                        <BLOCKQUOTE>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020111.tar.gz"><VAR>ioapi-3.2-2020111.tar.gz</VAR></A>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020220.tar.gz"><VAR>ioapi-3.2-2020220.tar.gz</VAR></A>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-2020220.tar.gz"><VAR>ioapi-3.2-20200828.tar.gz</VAR></A>
                        </BLOCKQUOTE>
-                       It contains directories <CODE>ioapi</CODE> for
-                       the I/O&nbsp;API library source code,
-                       <CODE>HTML</CODE> for the documentation,
-                       <CODE>m3tools</CODE> for the related tool
-                       programs, and for version&nbsp;3.0,
+                       This &quot;tar-ball&quot; contains directories
+                       <CODE>ioapi</CODE> for the I/O&nbsp;API library
+                       source code, <CODE>HTML</CODE> for the
+                       documentation, <CODE>m3tools</CODE> for the
+                       related tool programs, and for version&nbsp;3.0,
                        <CODE>iotest</CODE> for various test-programs for
                        I/O&nbsp;API developers, and <CODE>notcdf</CODE>
                        for the NCEP <VAR>libnotcdf.a</VAR> library (a
@@ -2019,7 +2027,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 199 2021-05-07 17:20:03Z coats $
+    $Id: AVAIL.html 205 2021-10-21 15:46:13Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

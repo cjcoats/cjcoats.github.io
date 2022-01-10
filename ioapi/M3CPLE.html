@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: M3CPLE.html 166 2020-05-29 15:55:46Z coats $" -->
+<!-- "$Id: M3CPLE.html 205 2021-10-21 15:46:13Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> Programs M3CPLE and M3INTERP</TITLE>
 </HEAD>
@@ -21,6 +21,7 @@
     setenv  &lt;infile&gt;     &lt;path name&gt;
     setenv  &lt;outfile&gt;    &lt;path name&gt;
     setenv  GRIDDESC     &lt;path name&gt;
+    setenv  SCALEFAC     &lt;scaling factor&gt; [1.0]
     
     [m3cple | m3interp] <EM>&lt;and respond to the prompts&gt;</EM>
 </PRE>
@@ -86,6 +87,23 @@ should not be using any interpolation, but rather should be using some
 sort of aggregation  algorithm  (possibly using a matrix 
 from program <A HREF = "MTXBUILD.html"><VAR>MTXBUILD</VAR></A> 
 in conjunction with program <A HREF="MTXCPLE.html"><VAR>MTXCPLE</VAR></A>).
+<P>
+
+For I/O&nbsp;API-3.2 or later, versions of <VAR>M3CPLE</VAR> for
+Oct.&nbsp;21, 2021, a new re-scaling option was added to this program,
+primarily for use with SMOKE gridded emissions data (which uses
+non-interpolatable, non-MKS units of the form <VAR>mass per unit time
+<STRONG>per grid-cell</STRONG></VAR>, controlled by environment variable
+<CODE>SCALEFAC</CODE>.  By default, the  scaling factor is 1.0; however,
+for emissions data the scaling factor should be the ratio of the output
+cell-area to the input cell-area. 
+<BR>
+<I>For example with a 12KM input emissions grid and a 4KM output
+emissions grid, the scaling factor should be the value of
+<VAR>(4.0/12.0)&sup;2)</VAR>, i.e., you should
+<BLOCKQUOTE><CODE>
+setenv SCALEFAC 0.111111111
+</CODE></BLOCKQUOTE></I>
 <P>
 
 For the I/O&nbsp;API-3.2 or later, all grid-to-grid interpolations
