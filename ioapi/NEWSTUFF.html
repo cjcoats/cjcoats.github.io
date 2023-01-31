@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 211 2021-11-10 20:38:57Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 232 2023-01-13 20:56:36Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 211 2021-11-10 20:38:57Z coats $
+    $Id: NEWSTUFF.html 232 2023-01-13 20:56:36Z coats $
     </EM>
     <HR>
 
@@ -33,17 +33,26 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#jan102023">
+               New <STRONG><VAR>m3tools</VAR></STRONG> programs</A>
+               <CODE>WNDWPOINTS</CODE>, <CODE>WNDWPTDATA</CODE>, and 
+               <CODE>WRFWNDW</CODE>               
+               <BR>
+               Minor modes to <CODE>MODULE MODWRFIO</CODE>              
+               <BR>
+               New capabilities for <CODE>MODULE MODNCFIO</CODE>
+               <P>
          <LI>  <A HREF = "#nov102021">
                Bug-fixes for interpolation-mode operation of
                <STRONG><VAR>m3tools</VAR></STRONG> programs
-               <CODE>M3CPLE</CODE> and <CODE>MTXCALC</CODE>
+               <CODE>M3CPLE</CODE> and <CODE>MTXCALC</CODE></A>
                <BR>
                I/O&nbsp;API-4.0 bug-fixes.
                <P>
          <LI>  <A HREF = "#oct212021">
                <VAR>Beta</VAR> I/O&nbsp;API Version 4.0:  all &quot;free&quot;
                (<CODE>.f90</CODE>) Standard conforming source code
-               format.
+               format.</A>
                <BR>
                <CODE>SCALEFAC</CODE> for <STRONG><VAR>M3Tools</VAR></STRONG>
                program <STRONG><VAR>m3cple</VAR></STRONG>
@@ -53,7 +62,7 @@
                Bug-fix in gridded-output versions of <CODE>BILIN,
                BMATVEC</CODE>,
                <VAR><STRONG>m3tools</STRONG></VAR> program
-               <VAR>latlon</VAR>
+               <VAR>latlon</VAR></A>
                <BR>
                <VAR>Makefile</VAR>s now create <CODE>${OBJDIR}</CODE>
                if necessary.
@@ -810,12 +819,57 @@
 
 <HR> <!----------------------------------------------------------------->
 
+<H2> <A NAME ="jan102023">
+    New <STRONG><VAR>m3tools</VAR></STRONG> programs
+    <VAR>wndwpoints</VAR>, <VAR>wndwptdata</VAR>, and 
+    <VAR>wrfwndw</VAR>
+    <BR>
+    <CODE>MODULE MODWRFIO</CODE> update to match.
+</A></H2>
+
+    <BLOCKQUOTE>
+    <DL>
+        <DT> <A HREF="WNDWPOINTS.html"><VAR>wndwpoints</VAR>
+             and <VAR>wndwptdata</VAR></A>
+        <DD> Subset the point-sources in SMOKE-I/O&nbsp;API
+             <CODE>POINTS</CODE> and point-data files to a specified
+             a grid-window and write the result to  SMOKE-I/O&nbsp;API
+             files.
+             <P>
+        <DT> <A HREF="WRFWNDW.html"><VAR>wrfwndw</VAR></A>
+        <DD> Window/extract variables from WRF-format netCDF
+             files to a new WRF-format netCDF file.
+             <P>
+        <DT> <A HREF="MODWRFIO.html"><CODE>MODULE MODWRFIO</CODE></A>
+        <DD> Make new <CODE>PUBLIC></CODE> <CODE>MODULE</CODE>-variables 
+             <CODE>CDFIDW</CODE> and <CODE>FMODEW</CODE> for use in
+             program <VAR>wrfwndw</VAR>.
+             <BR>
+             Bug-fix for windowed-case <CODE>XOFFS1, YOFFS1</CODE>
+             <P>
+        <DT> <A HREF="MODNCFIO.html"><CODE>MODULE MODWRFIO</CODE></A>
+        <DD> Make new <CODE>PUBLIC></CODE> <CODE>MODULE</CODE>-variables 
+             has new variants of <CODE>CREATENC()></CODE>,
+             <CODE>DESCNCVAR()></CODE>, <CODE>READNCVAR()></CODE>, and
+             <CODE>WRITENCVAR()></CODE> with additional netCDF file-ID
+             argument.  These presume an already-open file, and do not
+             close that file upon completion.
+             <P>
+    </DL>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
 <H2> <A NAME ="nov102021">
     Bug-fixes for interpolation-mode operation of
     <STRONG><VAR>m3tools</VAR></STRONG> programs
     <STRONG><VAR>m3cple</VAR></STRONG> and <STRONG><VAR>mtxcalc</VAR></STRONG>
-               <BR>
-               I/O&nbsp;API-4.0 bug-fixes.
+    <BR>
+    I/O&nbsp;API-4.0 bug-fixes.
 </A></H2>
 
     <BLOCKQUOTE>
@@ -872,27 +926,23 @@
     Bug-fix in gridded-output versions of <CODE>BILIN, BMATVEC</CODE>,
     <VAR><STRONG>m3tools</STRONG></VAR> program <VAR>latlon</VAR>
     <BR>
-    <VAR>Makefile</VAR>s now create <CODE>${OBJDIR}<CODE>
+    <VAR>Makefile</VAR>s now create <CODE>${OBJDIR}</CODE>
     if necessary.
 </A></H2>
 
     <BLOCKQUOTE>
     There was an off-by-one single-indexing error in the gridded-output
-    versions of generic bilinear-interpolation routines 
-    <A HREF="BILIN.html"><CODE>BILIN</CODE></A> and 
-    <A HREF="BILIN.html"><CODE>BMATVEC</CODE></A>, now fixed.
+    versions of generic bilinear-interpolation routines  <A
+    HREF="BILIN.html"><CODE>BILIN</CODE> and  <CODE>BMATVEC</CODE></A>,
+    now fixed.
     <P>
     There was a bug in the boundary-LATLON-file creation functionality
     for <VAR><STRONG>m3tools</STRONG></VAR> program 
     <A HREF="LATLON.html"><VAR>latlon</VAR></A>, now fixed.
     <P>
     Rules in the <VAR>Makefile</VAR>s now check to see if the build
-    directory  <CODE>${OBJDIR}<CODE> already exists; and if not, they
+    directory  <CODE>${OBJDIR}</CODE> already exists; and if not, they
     create it (simplifying the build-process for the I/O&nbsp;API.
-    </BLOCKQUOTE>
-
-    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
-    <P>
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7700,7 +7750,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 211 2021-11-10 20:38:57Z coats $
+    $Id: NEWSTUFF.html 232 2023-01-13 20:56:36Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

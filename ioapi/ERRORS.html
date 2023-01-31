@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 188 2020-10-03 15:08:47Z coats $" -->
+<!-- "$Id: ERRORS.html 228 2023-01-12 19:13:43Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -26,6 +26,7 @@
 </A></H2>
 
     <UL>
+         <LI>  <A HREF="#iostat">About Fortran error-status codes</A>
          <LI>  <A HREF="#gfort10"><VAR>gfortran</VAR> version&nbsp;10
                 and lots of spurious warning messages</A>
          <LI>  <A HREF="AVAIL.html#cmaq"><VAR>CMAQ</VAR>,
@@ -80,8 +81,32 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 188 2020-10-03 15:08:47Z coats $"
+    !! Version "$Id: ERRORS.html 228 2023-01-12 19:13:43Z coats $"
     </PRE>
+    </BLOCKQUOTE>
+<P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2><A NAME="iostat">
+
+    About Fortran error-status codes
+
+</A></H2>
+
+    <BLOCKQUOTE>
+    I/O error status numbers are compiler specific, so one needs to know
+    what the underlying compiler is, and search for its error-code
+    list (Google for the compiler and quot;Fortran runtime error
+    codesquot;).
+    <P>
+
+    Note that for CMAQ, <VAR>mpif90</VAR> is actually a script 
+    &quot;wrapping&quot; around conventional Fortran+C compilers; this
+    script quot;knowsquot; which libraries and which include-files to
+    use, so you are highly dependent upon the underlying compiler and
+    need to search for its error-codes.
     </BLOCKQUOTE>
 <P>
 

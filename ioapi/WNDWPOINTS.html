@@ -1,0 +1,113 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: M3CPLE.html 205 2021-10-21 15:46:13Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> Programs WNDWPOINTS and WNDWPTDATA</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" 
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+
+<H1> <VAR>m3tools</VAR> Programs <VAR>WNDWPOINTS</VAR> and
+<VAR>WNDWPTDATA</VAR> </H1>
+
+<H2> Usage </H2>
+
+    For <VAR>WNDWPOINTS</VAR>:
+<PRE>
+    setenv  GRIDDESC    &lt;path name&gt;
+    setenv  OUTGRID     &lt;GRIDDESC name of the output-window grid&gt;
+    setenv  POINTS      &lt;path name for  input SMOKE POINTS file&gt;
+    setenv  PTFLAGS     &lt;path name for output window-flags file&gt;
+    setenv  OUTFILE     &lt;path name for output SMOKE POINTS file&gt;
+</PRE>
+    and for <VAR>WNDWPTDATA</VAR> </H1>
+<PRE>
+    setenv  GRIDDESC    &lt;path name&gt;
+    setenv  OUTGRID     &lt;GRIDDESC grid name&gt;
+    setenv  PTFLAGS     &lt;path name for  input window-flags file&gt;
+    setenv  INDATA      &lt;path name for output SMOKE POINT-data file&gt;
+    setenv  OUTDATA     &lt;path name for output SMOKE POINT-data file&gt;
+</PRE>
+
+
+<H2> Summary </H2>
+
+    The <VAR>WNDWPOINTS</VAR> program reads an input SMOKE I/O&nbsp;API
+    format file and an output &quot;window&quot; <CODE>OUTGRID</CODE>,
+    extracts all the data that lies within the coverage of <CODE>OUTGRID</CODE>,
+    and writes it to a new SMOKE I/O&nbsp;API
+    format file <CODE>OUTFILE</CODE>, together with a &quot;flags-file&quot; 
+    <CODE>PTFLAGS</CODE> for use by program <VAR>WNDWPTDATA</VAR>.  This
+    file has one variable <CODE>OUTFILE</CODE> such that
+    <UL>
+        <LI> <CODE>FLAGS(source) = 1</CODE> if <CODE>source</CODE> is
+             within the coverage of <CODE>OUTGRID</CODE>
+        <LI> <CODE>FLAGS(source) = 0</CODE> if <CODE>source</CODE> is
+             outside the coverage of <CODE>OUTGRID</CODE>
+    </UL>
+    <STRONG>If there are no points</STRONG> in the requested output
+    window, the program returns <CODE>EXITSTATUS = 3<CODE> to the
+    operating system, and does not create  <CODE>PTFLAGS</CODE>  and
+    <CODE>OUTFILE</CODE>.
+    <P>
+
+    The <VAR>WNDWPTDATA</VAR> program reads an input window-flags file
+    from  <VAR>WNDWPOINTS</VAR> and uses it to window all the
+    (source-subscripted) variables from an input SMOKE point-data file
+    (such as  <CODE>PTMP</CODE> or <CODE>PLAY</CODE>) to the coverage of
+    the indicated  <CODE>OUTGRID</CODE>, and writes the result to a new
+    SMOKE point-data file.
+    <P>
+
+    If you want to run these programs in <STRONG>batch mode</STRONG> 
+    (from a script), the recommended way to develop the script is to 
+    run the program once interactively noting the pattern of responses 
+    to prompts which generate the particular analysis you want.  The 
+    pattern of responses then becomes either a command-input file which 
+    you may redirect into the program in the script, or may become a 
+    &quot;here-document&quot; fed into the execution by the script.  
+    <P> 
+
+    Requires Fortran-90 for compilation.  Source code for program
+    <CODE>m3cple</CODE>is available <A HREF = "gpl.txt">under the GNU
+    GPL License, Version 2</A>, and can be downloaded here
+    <A HREF = "AVAIL.html">from CMAS</A> or here
+    <A HREF="https://github.com/cjcoats/ioapi-3.2">from GitHub</A>.
+    <P>
+
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "M3WNDW.html">Program <VAR>M3WNDW</VAR></A> 
+          window data from a gridded I/O&nbsp; file to a subgrid.
+          <P>
+    <LI>  <A HREF = "WRFTOM3.html">Program <VAR>WRFTOM3</VAR></A> 
+          Convert/extract/window variables from WRF-format netCDF
+          files to GRIDDED I/O&nbsp;API files.
+          <P>
+    <LI>  <A HREF = "WRFWNDW.html">Program <VAR>MTXCPLE</VAR></A> 
+          window data from a WRF-format netCDF file to a subgrid.
+          <P>
+</UL>
+
+<HR>
+
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>Related Programs</STRONG> 
+</A><P>
+
+<A HREF = "AA.html"> 
+To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+</A><P>
+
+    
+</BODY>
+</HTML>
+

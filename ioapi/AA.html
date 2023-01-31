@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 189 2020-10-06 17:05:28Z coats $" -->
+<!-- "$Id: AA.html 228 2023-01-12 19:13:43Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -269,7 +269,8 @@ Contents
 
 <HR> <!- ------------------------------------------------------------- ->
 
-<H2> <A HREF = "LIBS.html"> Object Libraries and Supported Machines</A> </H2>
+<H2> <A HREF = "LIBS.html"> Object Libraries and Supported
+Machines/Compilers/Variants</A> </H2>
 
 <HR> <!- ------------------------------------------------------------- ->
 
@@ -1498,6 +1499,14 @@ Contents
              layer-thickness nor mass-weighting into account;
              think of it as a programming-example)
         <P>
+        <DT> <A HREF = "WNDWPOINTS.html" >
+             <STRONG>wndwpoints</STRONG> and <STRONG>wndwptdata</STRONG>:
+             </A>
+             Subset the point-sources in SMOKE-I/O&nbsp;API
+             <CODE>POINTS</CODE> and point-data files to a specified
+             a grid-window and write the result to  SMOKE-I/O&nbsp;API
+             files.
+        <P>
         <DT> <STRONG>Programs for Data Import/Export</STRONG>
         <P>
         <DT> <A HREF = "AIRS2M3.html" >
@@ -1526,6 +1535,11 @@ Contents
              </A>
              Convert/extract/window variables from WRF-format netCDF
              files to GRIDDED I/O&nbsp;API files.
+        <DT> <A HREF = "WRFWNDW.html" >
+             <STRONG>wrfwndw</STRONG>:
+             </A>
+             Window/extract/window variables from WRF-format netCDF
+             files to a new WRF-format netCDF file.
         <P>
         <DT> <STRONG>Programs for coordinate-manipulation </STRONG>
         <P>
@@ -1744,7 +1758,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 189 2020-10-06 17:05:28Z coats $
+$Id: AA.html 228 2023-01-12 19:13:43Z coats $
     </PRE>
 
 </BODY>

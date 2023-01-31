@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: MODNCFIO.html 43 2017-11-07 16:25:35Z coats $" -->
+<!-- "$Id: MODNCFIO.html 231 2023-01-13 18:53:05Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>MODULE MODNCFIO</TITLE>
 </HEAD>
@@ -59,7 +59,7 @@
         <LI> Open the file with the indicated logical name;
         <LI> Perform appropriate error-checking
         <LI> Perform the indicated task
-        <LI> Close the indicated file.
+        <LI> <STRONG>When <CODE>CDFID</CODE> is not an argument: </STRONG> Close the indicated file.
     </OL>
     (in contrast with the MPAS-format-netCDF I/O routines in <A HREF =
     "MODMPASFIO.html"><CODE>MODULE&nbsp;MODMPASFIO</CODE></A> which
@@ -73,7 +73,7 @@
     Metadata Conventions</STRONG></A>, you will have quite a bit
     of additional work to do manually, setting up all the CF
     data structures in routine <CODE>CREATENC()</CODE>, and then
-    writing the metadata using <CODE>WRITENCVAR.()</CODE>.</STRONG>
+    writing the metadata using <CODE>WRITENCVAR.()</CODE>.
     This is in contrast to the situation within the I/O&nbsp;API proper,
     where <A HREF="MODATTS3.html#initcf">an <CODE>INITCF()</CODE>
     call</A> turns on the creation of CF-convention metadata, and  all
@@ -148,6 +148,11 @@
                                 NDIMS,  DNAMES, DSIZES,                     &amp;
                                 NVARS,  VNAMES, VTYPES, VNDIMS, VDNAME,     &amp;
                                 VUNITS, VLONGS, VDESCS )
+    LOGICAL FUNCTION  CREATENC( FNAME,  FHIST,  FDESC,                      &amp;
+                                NDIMS,  DNAMES, DSIZES,                     &amp;
+                                NVARS,  VNAMES, VTYPES, VNDIMS, VDNAME,     &amp;
+                                VUNITS, VLONGS, VDESCS                      &amp;
+                                CDFID )
         CHARACTER*(*), INTENT(IN   ) :: FNAME                <EM>!!  logical file name</EM>
         CHARACTER*(*), INTENT(IN   ) :: FHIST                <EM>!!  attribute  &quot;history&quot;</EM>
         CHARACTER*(*), INTENT(IN   ) :: FDESC                <EM>!!  attribute  &quot;description&quot;</EM>
@@ -162,6 +167,7 @@
         CHARACTER*(*), INTENT(IN   ) :: VUNITS(   NVARS )    <EM>!!  attribute  &quot;units&quot;</EM>
         CHARACTER*(*), INTENT(IN   ) :: VTITLE(   NVARS )    <EM>!!  attribute  &quot;long_name&quot;</EM>
         CHARACTER*(*), INTENT(IN   ) :: VDESCS(   NVARS )    <EM>!!  attribute  &quot;description&quot;</EM>
+        INTEGER      , INTENT(  OUT) :: CDFID                <EM>!!  netCDF file ID</EM>
     </PRE>
     Given a netCDF file definition, in terms of the dimension-definition
     and variable-definition arguments, create a new netCDF file with
@@ -200,7 +206,9 @@
     <H3><A NAME="desc"><CODE>DESCNCVAR()</CODE></A></H3>
     <PRE>
     LOGICAL FUNCTION DESCNCVAR( FNAME, MXVAR, NVARS, VNAMES, VTYPES, VNDIMS, VDIMS )
+    LOGICAL FUNCTION DESCNCVAR( FNAME, CDFID, MXVAR, NVARS, VNAMES, VTYPES, VNDIMS, VDIMS )
         CHARACTER*(*), INTENT(IN   ) :: FNAME           <EM>!!  logical file name</EM>
+        INTEGER      , INTENT(IN   ) :: CDFID           <EM>!!  netCDF file ID</EM>
         INTEGER      , INTENT(IN   ) :: MXVAR           <EM>!!  max # of vbles returned</EM>
         INTEGER      , INTENT(  OUT) :: NVARS           <EM>!!  min( MXVAR, actual # of vbles )</EM>
         CHARACTER*(*), INTENT(  OUT) :: VNAMES( MXVAR ) <EM>!!  variable names</EM>
@@ -310,8 +318,33 @@
     LOGICAL FUNCTION READNCVAR( FNAME, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, BGRID4 )
     LOGIC4L FUNCTION READNCVAR( FNAME, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, RGRID4 )
     LOGICAL FUNCTION READNCVAR( FNAME, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, DGRID4 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, SGRID0 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, BGRID0 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, RGRID0 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, DGRID0 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, IGRID1 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, SGRID1 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, BGRID1 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, RGRID1 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, DGRID1 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, IGRID2 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, SGRID2 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, BGRID2 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, RGRID2 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, DGRID2 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, IGRID3 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, SGRID3 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, BGRID3 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, RGRID3 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, DGRID3 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, IGRID4 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, SGRID4 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, BGRID4 )
+    LOGIC4L FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, RGRID4 )
+    LOGICAL FUNCTION READNCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, DGRID4 )
         CHARACTER*(*), INTENT(IN   ) :: FNAME                       <EM>!!  logical file name</EM>
         CHARACTER*(*), INTENT(IN   ) :: VNAME                       <EM>!!  variable name</EM>
+        INTEGER      , INTENT(IN   ) :: CDFID                       <EM>!!  netCDF file-ID</EM>
         INTEGER      , INTENT(IN   ) :: ISTEP                       <EM>!!  time-step number (1,2,3,...)</EM>
         INTEGER      , INTENT(IN   ) :: NCOLS, NROWS, NLAYS, NSPCS  <EM>!!  dimensions</EM>
         <EM>&lt;type&gt;       , INTENT(  OUT) ::  GRID ( NCOLS, [NROWS, [NLAYS,[NSPCS]]] )</EM>
@@ -468,8 +501,33 @@
     LOGICAL FUNCTION WRITENCVAR( FNAME, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, BGRID4 )
     LOGIC4L FUNCTION WRITENCVAR( FNAME, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, RGRID4 )
     LOGICAL FUNCTION WRITENCVAR( FNAME, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, DGRID4 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, SGRID0 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, BGRID0 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, RGRID0 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, DGRID0 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, IGRID1 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, SGRID1 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, BGRID1 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, RGRID1 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, DGRID1 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, IGRID2 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, SGRID2 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, BGRID2 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, RGRID2 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, DGRID2 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, IGRID3 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, SGRID3 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, BGRID3 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, RGRID3 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, DGRID3 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, IGRID4 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, SGRID4 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, BGRID4 )
+    LOGIC4L FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, RGRID4 )
+    LOGICAL FUNCTION WRITENCVAR( FNAME, CDFID, ISTEP, VNAME, NCOLS, NROWS, NLAYS, NSPCS, DGRID4 )
         CHARACTER*(*), INTENT(IN   ) :: FNAME                       <EM>!!  logical file name</EM>
         CHARACTER*(*), INTENT(IN   ) :: VNAME                       <EM>!!  variable name</EM>
+        INTEGER      , INTENT(IN   ) :: CDFID                       <EM>!!  netCDF file-ID</EM>
         INTEGER      , INTENT(IN   ) :: ISTEP                       <EM>!!  time-step number (1,2,3,...)</EM>
         INTEGER      , INTENT(IN   ) :: NCOLS, NROWS, NLAYS, NSPCS  <EM>!!  dimensions</EM>
         <EM>&lt;type&gt;       , INTENT(  OUT) ::  GRID ( NCOLS, [NROWS, [NLAYS,[NSPCS]]] )</EM>
@@ -533,8 +591,9 @@
     <P>
 
     Note that the time stepped forms have a somewhat-unexpected
-    <CODE>FNAME,&nbsp;ISTEP,&nbsp;VNAME,&nbsp;...</CODE> order of
-    arguments; this is a consequence of the need to have unique
+    <CODE>FNAME,&nbsp;ISTEP,&nbsp;VNAME,&nbsp;...</CODE> or
+    <CODE>FNAME,&nbsp;CDFID,&nbsp;ISTEP,&nbsp;VNAME,&nbsp;...</CODE> 
+    order of arguments; this is a consequence of the need to have unique
     argument-list specifications for the compiler to be able to
     distinguish which specific function-version is appropriate.
     <P>

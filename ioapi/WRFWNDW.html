@@ -1,0 +1,82 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: M3CPLE.html 205 2021-10-21 15:46:13Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> Program WRFWNDW</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" 
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+
+<H1> <VAR>m3tools</VAR> Program <VAR>WRFWNDW</VAR> </H1>
+
+<H2> Usage </H2>
+<PRE>
+    setenv  GRIDDESC     &lt;path name&gt;
+    setenv  OUTGRID      &lt;GRIDDESC grid-name for the un-staggered output grid&gt;
+    setenv  WRFIFILE     &lt;path name for  input WRF-netCDF file&gt;
+    setenv  WRFIFILE     &lt;path name for output WRF-netCDF file&gt;
+</PRE>
+
+<H2> Summary </H2>
+
+    The <VAR>WRFWNDW</VAR> program copies all data from an input
+    WRF-format-netCDF file to a matching output WRF-format-netCDF file,
+    windowing X-Y and X-Y-Z variables to the specified output-grid and
+    simply copying other variables and attributes.
+    <P> 
+
+    If you want to run this program in <STRONG>batch mode</STRONG> 
+    (from a script), the recommended way to develop the script is to 
+    run the program once interactively noting the pattern of responses 
+    to prompts which generate the particular analysis you want.  The 
+    pattern of responses then becomes either a command-input file which 
+    you may redirect into the program in the script, or may become a 
+    &quot;here-document&quot; fed into the execution by the script.  
+    <P> 
+
+    Requires Fortran-90 for compilation.  Source code for program
+    <CODE>m3cple</CODE>is available <A HREF = "gpl.txt">under the GNU
+    GPL License, Version 2</A>, and can be downloaded here
+    <A HREF = "AVAIL.html">from CMAS</A> or here
+    <A HREF="https://github.com/cjcoats/ioapi-3.2">from GitHub</A>.
+    <P>
+
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "M3WNDW.html">Program <VAR>M3WNDW</VAR></A> 
+          window data from a gridded file to a subgrid.
+          <P>
+    <LI>  <A HREF = "WRFGRIDDESC.html">Program <VAR>WRFGRIDDESC</VAR></A> 
+          Create a <VAR>GRIDDESC</VAR> file from the header-data
+          in a WRF-format netCDF file.
+          <P>
+    <LI>  <A HREF = "WRFTOM3.html">Program <VAR>WRFTOM3</VAR></A> 
+          Convert/extract/window variables from WRF-format netCDF
+          files to GRIDDED I/O&nbsp;API files.
+          <P>
+</UL>
+
+<HR>
+
+<A HREF = "M3COMBO.html" >
+Previous:  <STRONG>WRFTOM3</STRONG>
+</A><P> 
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>Related Programs</STRONG> 
+</A><P>
+
+<A HREF = "AA.html"> 
+To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+</A><P>
+    
+</BODY>
+</HTML>
+
