@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: INCLUDE.html 105 2018-05-01 14:17:48Z coats $" -->
+<!-- "$Id: INCLUDE.html 239 2023-03-14 15:06:03Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> MODULES AND PUBLIC INCLUDE FILES </TITLE>
 </HEAD>
@@ -15,7 +15,7 @@
 <H1> MODULES AND PUBLIC INCLUDE FILES </H1>
 
     <BLOCKQUOTE>
-    <A NAME = "contents">There</A> are five Fortran <VAR>MODULE</VAR>s,
+    <A NAME = "contents">There</A> are six Fortran <VAR>MODULE</VAR>s,
     and three primary (and one additional) public matching pairs of
     Fortran and C include files in the I/O&nbsp;API, with  the following
     sorts of content:
@@ -82,8 +82,8 @@
         <LI> <STRONG><EM>NOTE:</EM></STRONG> <VAR>STATE3.EXT</VAR> and
              <VAR>STATE3V.EXT</VAR> are <U>private</U> include-files,
              for internal I/OP&nbsp;API use only.<BR>
-             <EM>Not to be used for model or other application
-             codes.</EM>
+             <STRONG><EM>Not to be used for model or other application
+             codes.</EM></STRONG>
     </UL>
     <P>
 
@@ -98,11 +98,11 @@
     <VAR>SMOKE</VAR> use a non-Standard &quot;fixed-132&quot; source
     format</STRONG> that is not compatible with either of these Standard
     formats; for this reason, there is a script,
-    <VAR>ioapi/fix_src.csh</VAR> that can convert these INCLUDE files
-    into the format required of  <VAR>CMAQ</VAR> and  <VAR>SMOKE</VAR>.
-    The <VAR>make fixed_src</VAR> command creates a directory
-    <VAR>ioapi/fixed_src/</VAR> and uses this script to put the
-    converted INCLUDE-files into it.
+    <VAR>ioapi/fix_src.csh</VAR> that can convert these
+    <CODE>INCLUDE</CODE>-files into the format required of 
+    <VAR>CMAQ</VAR> and  <VAR>SMOKE</VAR>. The <VAR>make fixed_src</VAR>
+    command creates a directory <VAR>ioapi/fixed_src/</VAR> and uses
+    this script to put the converted <CODE>INCLUDE</CODE>-files into it.
     <P>
 
     As of Novenber,&nbsp;2004, new <A HREF = "M3UTILIO.html">
@@ -115,7 +115,10 @@
     <CODE>INCLUDE</CODE> statements.  It also provides a way of ensuring the
     consistency of user compiled code with library compiled code for
     &quot;exotic&quot; I/O&nbsp;API versions with modified
-    data-structure-dimensioning parameters.
+    data-structure-dimensioning parameters.<BR>
+    <STRONG>It is strongly suggested that you <CODE>USE</CODE> this
+    <CODE>MODULE</CODE>, rather than including the
+    <CODE>INCLUDE</CODE>-files directly.</STRONG>
     <P>
 
     <HR> <!----------------------------------------------------------------->

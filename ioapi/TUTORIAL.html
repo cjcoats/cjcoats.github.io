@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: TUTORIAL.html 183 2020-08-13 16:42:20Z coats $" -->
+<!-- "$Id: TUTORIAL.html 239 2023-03-14 15:06:03Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> TUTORIAL:  Using the I/O&nbsp;API </TITLE>
 </HEAD>
@@ -107,6 +107,16 @@
     passed via pointers to data structures typedeffed in
     <VAR>fdesc3.h</VAR>  instead of a <CODE>COMMON</CODE> found in
     <CODE>FDESC3.EXT</CODE>
+    <P>
+
+    For Fortran programmers, <A HREF="M3UTILIO.html"><STRONG><CODE>MODULE
+    M3UTILIO</CODE></STRONG></A> provides not only the contents of these
+    <CODE>INCLUDE</CODE>-files but also declarations and explicit
+    interfaces (that allow the compiler to check that subroutine calls
+    get their argument-lists correct) for almost all the I/O&nbsp;API
+    routines.  <STRONG>It is strongly suggested that you
+    <CODE>USE</CODE> this <CODE>MODULE</CODE>, rather than including the
+    <CODE>INCLUDE</CODE>-files directly.</STRONG>
     <P>
 
     There are <STRONG>9 fundamental I/O routines</STRONG> you'll need to
@@ -1647,7 +1657,7 @@ To: <STRONG>Models-3/EDSS I/O&nbsp;API:   The Help Pages</STRONG>
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: TUTORIAL.html 183 2020-08-13 16:42:20Z coats $
+$Id: TUTORIAL.html 239 2023-03-14 15:06:03Z coats $
     </PRE>
 
 </BODY>
