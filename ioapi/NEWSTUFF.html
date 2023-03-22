@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 243 2023-03-22 15:07:34Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 245 2023-03-22 15:39:56Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 243 2023-03-22 15:07:34Z coats $
+    $Id: NEWSTUFF.html 245 2023-03-22 15:39:56Z coats $
     </EM>
     <HR>
 
@@ -34,7 +34,8 @@
                <P>
 
          <LI>  <A HREF = "#mar222023">
-               Bug-fix for program <CODE>WRFWNDW</CODE>
+               Bug-fixes for program <CODE>WRFWNDW</CODE>, routine
+               <CODE>INIT3</CODE>
                <P>
          <LI>  <A HREF = "#mar162023">
                Bug-fix for program <CODE>WNDWPOINTS</CODE>
@@ -830,15 +831,18 @@
 
 <H2> <A NAME ="mar222023">
     Bug-fix for <STRONG><VAR>m3tools</VAR></STRONG> program
-    <VAR>wrfwndw</VAR>
+    <VAR>wrfwndw</VAR>, I/O&nbsp;API routine <CODE>INIT3</CODE>
 </A></H2>
 
     <BLOCKQUOTE>
     Need to set <CODE>*_GRID_DIMENSION</CODE> attributs for output
     window.
-    <P>
+    <BR>
     Don't you <EM>love</VAR> having to deal with software systems that
     lack referential integrity ?!
+    <P>
+    PSCHIEN points out editor-caused line-continuation and undeclared
+    new-tag variable bugs in I/O&nbsp;API routine <CODE>INIT3</CODE>.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7793,7 +7797,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 243 2023-03-22 15:07:34Z coats $
+    $Id: NEWSTUFF.html 245 2023-03-22 15:39:56Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
