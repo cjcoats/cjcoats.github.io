@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 232 2023-01-13 20:56:36Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 243 2023-03-22 15:07:34Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 232 2023-01-13 20:56:36Z coats $
+    $Id: NEWSTUFF.html 243 2023-03-22 15:07:34Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,15 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#mar222023">
+               Bug-fix for program <CODE>WRFWNDW</CODE>
+               <P>
+         <LI>  <A HREF = "#mar162023">
+               Bug-fix for program <CODE>WNDWPOINTS</CODE>
+               <BR>
+               Add tag to splash-screeen
+               </A>
+               <P>
          <LI>  <A HREF = "#jan102023">
                New <STRONG><VAR>m3tools</VAR></STRONG> programs</A>
                <CODE>WNDWPOINTS</CODE>, <CODE>WNDWPTDATA</CODE>, and 
@@ -819,6 +828,40 @@
 
 <HR> <!----------------------------------------------------------------->
 
+<H2> <A NAME ="mar222023">
+    Bug-fix for <STRONG><VAR>m3tools</VAR></STRONG> program
+    <VAR>wrfwndw</VAR>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Need to set <CODE>*_GRID_DIMENSION</CODE> attributs for output
+    window.
+    <P>
+    Don't you <EM>love</VAR> having to deal with software systems that
+    lack referential integrity ?!
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME ="mar162023">
+    Bug-fix for <STRONG><VAR>m3tools</VAR></STRONG> program
+    <VAR>wndwpoints</VAR>
+</A></H2>
+
+    <BLOCKQUOTE>
+    Subject says it.
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
 <H2> <A NAME ="jan102023">
     New <STRONG><VAR>m3tools</VAR></STRONG> programs
     <VAR>wndwpoints</VAR>, <VAR>wndwptdata</VAR>, and 
@@ -841,17 +884,17 @@
              files to a new WRF-format netCDF file.
              <P>
         <DT> <A HREF="MODWRFIO.html"><CODE>MODULE MODWRFIO</CODE></A>
-        <DD> Make new <CODE>PUBLIC></CODE> <CODE>MODULE</CODE>-variables 
+        <DD> Make new <CODE>PUBLIC MODULE</CODE>-variables 
              <CODE>CDFIDW</CODE> and <CODE>FMODEW</CODE> for use in
              program <VAR>wrfwndw</VAR>.
              <BR>
              Bug-fix for windowed-case <CODE>XOFFS1, YOFFS1</CODE>
              <P>
         <DT> <A HREF="MODNCFIO.html"><CODE>MODULE MODWRFIO</CODE></A>
-        <DD> Make new <CODE>PUBLIC></CODE> <CODE>MODULE</CODE>-variables 
-             has new variants of <CODE>CREATENC()></CODE>,
-             <CODE>DESCNCVAR()></CODE>, <CODE>READNCVAR()></CODE>, and
-             <CODE>WRITENCVAR()></CODE> with additional netCDF file-ID
+        <DD> Make new <CODE>PUBLIC MODULE</CODE>-variables 
+             has new variants of <CODE>CREATENC()</CODE>,
+             <CODE>DESCNCVAR()</CODE>, <CODE>READNCVAR()</CODE>, and
+             <CODE>WRITENCVAR()</CODE> with additional netCDF file-ID
              argument.  These presume an already-open file, and do not
              close that file upon completion.
              <P>
@@ -7750,7 +7793,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 232 2023-01-13 20:56:36Z coats $
+    $Id: NEWSTUFF.html 243 2023-03-22 15:07:34Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
