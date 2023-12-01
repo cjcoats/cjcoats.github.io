@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 255 2023-07-25 16:52:28Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 256 2023-12-01 15:40:40Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 255 2023-07-25 16:52:28Z coats $
+    $Id: NEWSTUFF.html 256 2023-12-01 15:40:40Z coats $
     </EM>
     <HR>
 
@@ -33,6 +33,10 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
+         <LI>  <A HREF = "#dec012023">
+               New generic in-place-permutation routine <CODE>PERMUTI</CODE>
+               for use with <CODE>SORTI</CODE></A>
+               <P>
          <LI>  <A HREF = "#may232023">
                Support for &quot;vertical grid&quot; types 
                <CODE>GISLAY3</CODE> and <CODE>TBLLAY3</CODE>, routines
@@ -834,7 +838,34 @@
 
 <HR> <!----------------------------------------------------------------->
 
-<H2> <A NAME ="mar222023">
+<H2> <A NAME ="dec012023">
+    New generic in-place-permutation routine <CODE>PERMUTI</CODE>
+    for use with <CODE>SORTI</CODE>
+</A></H2>
+
+    <BLOCKQUOTE>
+    New generic routine <A HREF="PERMUTI">PERMUTI</A> uses indexes
+    produced by <A HREF="SORTI"><CODE>SORTI</CODE></A> to do easy
+    in-place sorting of key and data tables, as in the following example:
+<PRE>
+        ...
+        DO  I = 1, N	!  initialize INDX array
+            INDX( I ) = I
+        END DO
+        CALL SORTI(   N, INDX, LIST1, LIST2, LIST3 )
+        CALL PERMUTI( N, INDX, LIST1, LIST2, LIST3 )
+        CALL PERMUTI( N, INDX, DATA1, DATA2 )
+        ...
+</PRE>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME ="may232023">
     Support for &quot;vertical grid&quot; types  <CODE>GISLAY3</CODE>
     and <CODE>TBLLAY3</CODE> for I/O&nbsp;API internal routines
     <CODE>CKFIL3</CODE> and <CODE>CKDESC3</CODE>
@@ -7818,7 +7849,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 255 2023-07-25 16:52:28Z coats $
+    $Id: NEWSTUFF.html 256 2023-12-01 15:40:40Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

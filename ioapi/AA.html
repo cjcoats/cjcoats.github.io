@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 228 2023-01-12 19:13:43Z coats $" -->
+<!-- "$Id: AA.html 256 2023-12-01 15:40:40Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -1162,6 +1162,10 @@ Machines/Compilers/Variants</A> </H2>
              <STRONG>PCOEF</STRONG>:
              </A>
              coefficients for the polynomial fitting given data
+        <DT> <A HREF = "PERMUTI.html"><STRONG><CODE>PERMUTI</CODE></STRONG></A>
+             Fortran-90 generic routine to permute arrays inplace,
+             according to am <VAR>&lt;index table&gt;</VAR> such as that
+             produced by <A HREF = "SORTI.html"><CODE>SORTI</CODE></A>
         <DT> <A HREF = "PMATVEC.html" >
              <STRONG>PMATVEC</STRONG>:
              </A>
@@ -1206,11 +1210,11 @@ Machines/Compilers/Variants</A> </H2>
              </A>
              applies sparse matrix to vector
         <DT> <A HREF = "SORTI.html"><STRONG><CODE>SORTI</CODE></STRONG></A>
-             Fortran-90 generic routine to sort <VAR>&lt;index
+             Fortran-90 generic routine to generate sorted <VAR>&lt;index
              table&gt;</VAR> acording to a <CODE>CHARACTER</CODE>-string
              key-table, or a <VAR>&lt;keytuple-table&gt;</VAR> of
              <CODE>INTEGER</CODE>s. <CODE>INTEGER(8)</CODE>s, or
-             <CODE>REAL</CODE>s.<BR>
+             <CODE>REAL</CODE>s.using the quicksort algorithm<BR>
              <EM>Generic form is I/O&nbsp;API-3.2 or later</EM>
              and subsumes the following older specific forms (which
              are still available):
@@ -1758,7 +1762,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 228 2023-01-12 19:13:43Z coats $
+$Id: AA.html 256 2023-12-01 15:40:40Z coats $
     </PRE>
 
 </BODY>

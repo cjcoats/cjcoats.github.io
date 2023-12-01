@@ -1,0 +1,172 @@
+        
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: SORTI.html 75 2018-01-12 15:48:16Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> SORTI*() </TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" 
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+
+<H1>    The PERMUTI routines </H1>
+
+
+<H2> Fortran version: </H2>
+
+    <BLOCKQUOTE>
+    <STRONG>Fortran-90 generic routine <VAR>PERMUTI()</VAR> for
+    I/O&nbsp;API-3.2:</STRONG>:  compiler selects the appropriate
+    type-specific form depending upon the number and types of the 
+    <CODE>INTEGER</CODE>, <CODE>INTEGER*8</CODE> dimensions and
+    permute-indices and permutation-arrays
+    <P>
+    For I/O&nbsp;API Versions&nbsp;3.2 December, 2023 or later.
+    </BLOCKQUOTE>
+
+<PRE>
+    SUBROUTINE SORTI( N,  INDX,  ILIST1 )
+    SUBROUTINE SORTI( N,  INDX,  ILIST1, ILIST2 )
+    SUBROUTINE SORTI( N,  INDX,  ILIST1, ILIST2 , ILIST3 )
+    SUBROUTINE SORTI( N8, INDX8, ILIST1 )
+    SUBROUTINE SORTI( N8, INDX8, ILIST1, ILIST2 )
+    SUBROUTINE SORTI( N8, INDX8, ILIST1, ILIST2 , ILIST3 )
+    SUBROUTINE SORTI( N,  INDX,  LLIST1 )
+    SUBROUTINE SORTI( N,  INDX,  LLIST1, LLIST2 )
+    SUBROUTINE SORTI( N,  INDX,  LLIST1, LLIST2 , LLIST3 )
+    SUBROUTINE SORTI( N8, INDX8, LLIST1 )
+    SUBROUTINE SORTI( N8, INDX8, LLIST1, LLIST2 )
+    SUBROUTINE SORTI( N8, INDX8, LLIST1, LLIST2 , LLIST3 )
+    SUBROUTINE SORTI( N,  INDX,  RLIST1 )
+    SUBROUTINE SORTI( N,  INDX,  RLIST1, RLIST2 )
+    SUBROUTINE SORTI( N,  INDX,  RLIST1, RLIST2 , RLIST3 )
+    SUBROUTINE SORTI( N8, INDX8, RLIST1 )
+    SUBROUTINE SORTI( N8, INDX8, RLIST1, RLIST2 )
+    SUBROUTINE SORTI( N8, INDX8, RLIST1, RLIST2 , RLIST3 )
+    SUBROUTINE SORTI( N,  INDX,  DLIST1 )
+    SUBROUTINE SORTI( N,  INDX,  DLIST1, DLIST2 )
+    SUBROUTINE SORTI( N,  INDX,  DLIST1, DLIST2 , DLIST3 )
+    SUBROUTINE SORTI( N8, INDX8, DLIST1 )
+    SUBROUTINE SORTI( N8, INDX8, DLIST1, DLIST2 )
+    SUBROUTINE SORTI( N8, INDX8, DLIST1, DLIST2 , DLIST3 )
+    SUBROUTINE SORTI( N,  INDX,  CLIST1 )
+    SUBROUTINE SORTI( N,  INDX,  CLIST1, CLIST2 )
+    SUBROUTINE SORTI( N,  INDX,  CLIST1, CLIST2 , CLIST3 )
+    SUBROUTINE SORTI( N8, INDX8, CLIST1 )
+    SUBROUTINE SORTI( N8, INDX8, CLIST1, CLIST2 )
+    SUBROUTINE SORTI( N8, INDX8, CLIST1, CLIST2 , CLIST3 )
+
+        INTEGER  ,    INTENT(IN   ) :: N           !  table size
+        INTEGER*8,    INTENT(IN   ) :: N8          !  table size
+        INTEGER  ,    INTENT(IN   ) :: INDX ( N )  !  permutation-index from SORTI*
+        INTEGER*8,    INTENT(IN   ) :: INDX8( N8 ) !  permutation-index from SORTI*
+        INTEGER  ,    INTENT(INOUT) :: ILIST1( N )
+        INTEGER  ,    INTENT(INOUT) :: ILIST2( N )
+        INTEGER  ,    INTENT(INOUT) :: ILIST3( N )
+        INTEGER*8,    INTENT(INOUT) :: LLIST1( N )
+        INTEGER*8,    INTENT(INOUT) :: LLIST2( N )
+        INTEGER*8,    INTENT(INOUT) :: LLIST3( N )
+        REAL,         INTENT(INOUT) :: RLIST1( N )
+        REAL,         INTENT(INOUT) :: RLIST2( N )
+        REAL,         INTENT(INOUT) :: RLIST3( N )
+        REAL*8,       INTENT(INOUT) :: DLIST1( N )
+        REAL*8,       INTENT(INOUT) :: DLIST2( N )
+        REAL*8,       INTENT(INOUT) :: DLIST3( N )
+        CHARACTER(*), INTENT(INOUT) :: CLIST1( N )
+        CHARACTER(*), INTENT(INOUT) :: CLIST2( N )
+        CHARACTER(*), INTENT(INOUT) :: CLIST3( N )
+</PRE><P> 
+
+<H2> No C version:   </H2>
+
+<H2> Summary: </H2>
+
+    Takes a permutation index-table such as constructed by the
+    <A HREF="SORTI.html">SORTI</A>, and permutes asociated
+    key and/or data arrays in-place according to that index.
+
+<H2> Preconditions:   </H2>
+
+    Permutation table &lt;N, INDX &gt; or &lt;N8, INDX8 &gt; such as from
+    <A HREF="SORTI.html">SORTI</A>
+<P> 
+
+
+<H2> Fortran Usage: </H2>
+
+    To sort in-place an un-sorted 3-tuple table <CODE>{LIST1,LIST2,LIST3}
+    </CODE> with an associated data arrays <CODE>DATA1, DATA2 </CODE>:
+    
+<PRE>
+    ...
+    USE M3UTILIO
+    ...
+    INTEGER       N
+    PARAMETER   ( N = ...
+    ...
+    INTEGER       I
+    INTEGER       INDX ( N )   !  index array to be sorted
+    INTEGER       LIST1( N )   !  input unsorted 3-tuple table
+    INTEGER       LIST2( N )   !  input unsorted 3-tuple table
+    INTEGER       LIST3( N )   !  input unsorted 3-tuple table
+    REAL          DATA1( N )   !  input data table with same subscripting
+    REAL          DATA2( N )   !  as &lt;LIST1,LIST2,LIST3&gt;
+    ...
+    DATA          LIST1 / 1983, 1980, 1988, 1988, 1990, ...
+    DATA          LIST2 /    1,    5,    4,   11,    7, ...
+    DATA          LIST3 /   10,    3,   15,   19,   20, ...
+    DATA          DATA1 / 1.23,  -0.7,   5.5,  11.9,  -4.3, ...
+    DATA          DATA2 /1.2e5,-2.7e3, 4.8e4, 2.2e6, -7.72, ...
+    ...
+    DO  I = 1, N	!  initialize INDX array
+        INDX( I ) = I
+    END DO
+    CALL SORTI3(  N, INDX, LIST1, LIST2, LIST3 )
+    CALL PERMUTI( N, INDX, LIST1, LIST2, LIST3 )
+    CALL PERMUTI( N, INDX, DATA1, DATA2 )
+    ...
+</PRE>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<A HREF = "PCOEF.html" >
+Previous:  <STRONG>PCOEF</STRONG>
+</A><P> 
+
+<A HREF = "POLY.html" >
+Next:  <STRONG>POLY</STRONG>
+</A><P> 
+
+<A HREF = "FINDS.html"> 
+SEE ALSO: <STRONG><CODE>FIND*</CODE> Binary Search Routines</STRONG> 
+</A><P>
+
+<A HREF = "LOCATS.html"> 
+SEE ALSO: <STRONG><CODE>LOCAT*</CODE> Binary Search-and-Insert Routines</STRONG> 
+</A><P>
+
+<A HREF = "SORTI.html"> 
+SEE ALSO: <STRONG><CODE>SORTI*</CODE> Indirect Sort Routines</STRONG> 
+</A><P>
+
+<A HREF = "AA.html#utility"> 
+Up: <STRONG>Utility Routines</STRONG> 
+</A><P>
+
+<A HREF = "AA.html"> 
+To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+</A><P>
+
+<!--#include virtual="/INCLUDES/footer.html" -->
+    <PRE>
+    $Id: SORTI.html 75 2018-01-12 15:48:16Z coats $
+    </PRE>
+
+</BODY>
+</HTML>
+
