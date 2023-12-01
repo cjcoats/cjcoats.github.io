@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: SORTI.html 75 2018-01-12 15:48:16Z coats $" -->
+<!-- "$Id: PERMUTI.html 257 2023-12-01 16:13:33Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
 <TITLE> SORTI*() </TITLE>
 </HEAD>
@@ -88,6 +88,23 @@
     Takes a permutation index-table such as constructed by the
     <A HREF="SORTI.html">SORTI</A>, and permutes asociated
     key and/or data arrays in-place according to that index.
+    <P>
+
+    Functionally, a single multi-array call to <CODE>PERMUTI</CODE>,
+    e.g.,
+<PRE>
+    CALL PERMUTI( N, INDX, ARRAY1, ARRAY2, ARRAY3 )
+</PRE>
+    is equivalent to the corresponding sequence of single-array calls:
+<PRE>
+    CALL PERMUTI( N, INDX, ARRAY1 )
+    CALL PERMUTI( N, INDX, ARRAY2 )
+    CALL PERMUTI( N, INDX, ARRAY3 )
+</PRE>
+    Which of these offers better computational performance depends upon
+    problem size, hardware (cache-size, particularly), and compiler
+    quality.
+    <P>
 
 <H2> Preconditions:   </H2>
 
@@ -164,7 +181,7 @@ To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG>
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: SORTI.html 75 2018-01-12 15:48:16Z coats $
+    $Id: PERMUTI.html 257 2023-12-01 16:13:33Z coats $
     </PRE>
 
 </BODY>
