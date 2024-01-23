@@ -1,0 +1,99 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: M3MXFIND.html 259 2024-01-23 19:27:19Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> Programs M3CPLE and M3INTERP</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" 
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+
+<H1> <VAR>m3tools</VAR> Program <VAR>M3MXFIND</VAR> </H1>
+
+<H2> Usage </H2>
+<PRE>
+    setenv  IN_FILE     &lt;path name&gt;
+    setenv  IN_VBLE     &lt;${IN_FILE} variable name&gt;
+    setenv  AGGSTEP     &lt;analysis-period HHMMSS&gt; [240000]
+    setenv  OUTFILE     &lt;path name&gt;
+    setenv  SDATE       &lt;starting date for analysis [SDATE3D from file]&gt;
+    setenv  STIME       &lt;starting time for analysis [STIME3D from file]&gt;
+    setenv  EDATE       &lt;ending date for analysis [from file]&gt;
+    setenv  ETIME       &lt;ending time for analysis [from file]&gt;
+    
+    m3mxfind
+</PRE>
+<P> 
+where <VAR>IN_FILE</VAR>, <VAR>OUTFILE</VAR> are the
+<A HREF = "LOGICALS.html">logical  names </A> of the input and output
+files, <VAR>IN_VBLE</VAR> is the name of the variable for the
+MAX-analysis, and <VAR>AGGSTEP</VAR> is the length of the analysis
+window.
+
+<H2> Summary </H2>
+
+Program <VAR>M3MXFIND</VAR> finds the date-and-time maximum value for a
+selected variable  <VAR>IN_VBLE</VAR> from a time stepped gridded input
+file <VAR>IN_FILE</VAR>, over the specified (sliding, time stepped)
+analysis-window, and writs the result to an ASCII output file listing
+the analysis-window date&time <CODE>ADATE:ATIME</CODE>and the date&time
+<CODE>MDATE:MTIME</CODE> for the maximum of that variable within that
+slided analysis window.  For example, if the input file starts at
+2016001, has a one-hour time step, and duration 7 days, and the
+analysis window has default duration 24 hours, and the anaalysis is for
+ozone <CODE>O3</CODE>a sample output might
+look like the following:
+<PRE>
+    2016001, 000000, 2016001, 170000
+    2016002, 000000, 2016002, 140000
+    2016003, 000000, 2016003, 120000
+    2016004, 000000, 2016004, 140000 
+    2016005, 000000, 2016005, 130000 
+    2016006, 000000, 2016006, 130000 
+    2016007, 000000, 2016007, 150000 
+</PRE>
+where, for example, this says that the maximum ozone for day 2016005
+happened at date-and-time 2016005:130000.
+<P>
+
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "M3TPROC.html">Program <VAR>M3TPROC</VAR></A> 
+          compute time period aggregates (e.g., 08:00-16:00
+          gridded daily maxima) and write them to an output file
+          <P>
+    <LI>  <A HREF = "M3TSLCT.html">Program <VAR>M3TSLCT</VAR></A> 
+          Use <VAR>${OUTFILE}</VAR> from <VAR>M3MXFIND</VAR> to read
+          maximum-time sets of variables and write them to an output file
+          (e.g., "gridded daily-max-ozone" file).
+          <P>
+</UL>
+
+<HR>
+
+<A HREF = "M3MASK.html" >
+Previous:  <STRONG>M3MASK</STRONG>
+</A><P> 
+
+<A HREF = "M3MERGE.html" >
+Next:  <STRONG>M3MERGE</STRONG>
+</A><P> 
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>Related Programs</STRONG> 
+</A><P>
+
+<A HREF = "AA.html"> 
+To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+</A><P>
+
+    
+</BODY>
+</HTML>
+

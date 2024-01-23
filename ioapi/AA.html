@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 256 2023-12-01 15:40:40Z coats $" -->
+<!-- "$Id: AA.html 259 2024-01-23 19:27:19Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -1388,6 +1388,12 @@ Machines/Compilers/Variants</A> </H2>
              </A>
              Reads ASCII mask-data, construct a gridded mask from it,
              and write the result as an M3IO file.
+        <DT> <A HREF = "M3MXFIND.html" >
+             <STRONG>m3mxfind</STRONG>:
+             </A>
+             find analysis-period MAX (e.g., daily-max) for a specified
+             variable from a specified file, and report its
+             date&amp;time to an ASCII output file
         <DT> <A HREF = "M3MERGE.html" >
              <STRONG>m3merge</STRONG>:
              </A>
@@ -1425,6 +1431,12 @@ Machines/Compilers/Variants</A> </H2>
              <STRONG>m3tshift</STRONG>:
              </A>
              copy/time shift data from a file
+        <DT> <A HREF = "M3TSLCT.html" >
+             <STRONG>m3tslct</STRONG>:
+             </A>
+             Use <VAR>${OUTFILE}</VAR> from <VAR>M3MXFIND</VAR> to read
+             maximum-time sets of variables and write them to an output file
+             (e.g., "gridded daily-max-ozone" file).
         <DT> <A HREF = "M3WNDW.html" >
              <STRONG>m3wndw</STRONG>:
              </A>
@@ -1762,7 +1774,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 256 2023-12-01 15:40:40Z coats $
+$Id: AA.html 259 2024-01-23 19:27:19Z coats $
     </PRE>
 
 </BODY>

@@ -1,0 +1,73 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: M3TSLCT.html 259 2024-01-23 19:27:19Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE"> 
+<TITLE> Programs M3CPLE and M3INTERP</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" 
+      TOPMARGIN="15" 
+      MARGINHEIGHT="15" 
+      LEFTMARGIN="15" 
+      MARGINWIDTH="15">
+
+<H1> <VAR>m3tools</VAR> Program <VAR>M3TSLCT</VAR> </H1>
+
+<H2> Usage </H2>
+<PRE>
+</PRE>
+<P> 
+
+<H2> Summary </H2>
+
+Program <VAR>M3TSLCT</VAR> takes an ASCII set of dates-and-times
+(<CODE>IN_TIMES</CODE>, as from program  <A HREF =
+"M3MXFIND.html">Program <VAR>M3MXFIND</VAR></A>) and uses it to select
+sets of variables for those dates-and-times from a specified input file,
+and write them to a gridded output file.
+<P>
+
+For example, given an hourly-step gridded met-file, and a daily-stepped
+ASCII <CODE>IN_TIMES</CODE> for daily-max ozone, the program would
+construct a daily-stepped gridded meteorology file that shows the
+gridded meteorology at which the daily-max ozone occurred.
+<P>
+
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "M3TPROC.html">Program <VAR>M3TPROC</VAR></A> 
+          compute time period aggregates (e.g., 08:00-16:00
+          gridded daily maxima) and write them to an output file
+          <P>
+    <LI> <A HREF = "M3MXFIND.html">Program <VAR>M3MXFIND</VAR></A>:
+          Construct ASCII file of dates-and-times for maximum values of
+          a selected variable from a specified input file, over a
+          selectd "sliding" analysis window
+          <P>
+</UL>
+
+<HR>
+
+<A HREF = "M3MASK.html" >
+Previous:  <STRONG>M3MASK</STRONG>
+</A><P> 
+
+<A HREF = "M3MERGE.html" >
+Next:  <STRONG>M3MERGE</STRONG>
+</A><P> 
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>Related Programs</STRONG> 
+</A><P>
+
+<A HREF = "AA.html"> 
+To: <STRONG>Models-3/EDSS I/O API:   The Help Pages</STRONG> 
+</A><P>
+
+    
+</BODY>
+</HTML>
+
