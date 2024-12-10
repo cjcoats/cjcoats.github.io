@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: ERRORS.html 251 2023-03-28 20:44:27Z coats $" -->
+<!-- "$Id: ERRORS.html 265 2024-12-09 21:41:40Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     I/O API Troubleshooting
@@ -38,6 +38,8 @@
                or <CODE>Program Exception&mdash;illegal instruction</CODE>
                issues</A>
          <LI>  <A HREF="#segs">Seg-faults</A>
+         <LI>  <A HREF="#cplr">netCDF &quot;No Fortran compiler
+               found&quot;</A>
          <LI>  <A HREF="#syms">Missing-symbol issues</A>
          <LI>  <A HREF="#ccfc">Compiler/system-library compatibility issues</A>
          <LI>  <A HREF="AVAIL.html#ncf4">netCDF Version&nbsp;4 issues</A>
@@ -81,7 +83,7 @@
     Each I/O&nbsp;API source file will have its version embedded in the file's
     header-comment, e.g.
     <PRE>
-    !! Version "$Id: ERRORS.html 251 2023-03-28 20:44:27Z coats $"
+    !! Version "$Id: ERRORS.html 265 2024-12-09 21:41:40Z coats $"
     </PRE>
     </BLOCKQUOTE>
 <P>
@@ -372,6 +374,41 @@ Error: Symbol 'getnum' at (1) conflicts with symbol from module 'm3utilio', use-
     limit memoryuse unlimited
     </PRE>
     <P>
+    </BLOCKQUOTE>
+    
+    <A HREF="#contents">Back to &quot;Troubleshooting&quot; Contents</A>
+    <P>
+
+
+
+<HR> <!-------------------------------------------------/---------------->
+
+<H2><A NAME="segs">
+
+     netCDF &quot;No Fortran compiler found&quot;
+
+</A></H2>
+
+    <BLOCKQUOTE>
+    The <var>configure</var> script for netCDF Fortran will sometimes
+    fail with the obscure error message that it could not find a
+    (working) Fortran compiler, frequently when you well know that you
+    have specified a perfectly-good such compiler.  What it is actually
+    saying is
+        <BLOCKQUOTE>
+        The combination of compiler and flags that you have specified does
+        not work correctly.
+        </BLOCKQUOTE>
+    This means you have a bad set of flags &mdash; frequently, that you
+    are requiring static linking for which only shared libraries are
+    available.  For example, if your <CODE>LDFLAGS</CODE> contains
+        <BLOCKQUOTE><CODE>
+        -static -lm
+        </CODE></BLOCKQUOTE>
+    then this obscure error will almost-certainly happen, since almost always there
+    will not be the static library <VAR>libm.a</VAR> but only instead
+    the shared library  <VAR>libm.so</VAR>.
+    
     </BLOCKQUOTE>
     
     <A HREF="#contents">Back to &quot;Troubleshooting&quot; Contents</A>
