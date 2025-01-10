@@ -89,17 +89,16 @@
         <LI>  Un-comment the <CODE>IFLAGS</CODE> and <CODE>EFLAGS</CODE>
               for your compiler-set
     </UL>
-    Optionally, edit <VAR>Makefile</VAR> by customizing
-    <VAR>make</VAR>-targets <CODE>bins, binrelink</CODE>, etc., to match
-    your chosen set of binary types <CODE>BIN</CODE>.
     <P>
 
-    Then either <VAR>setenv BIN &lt;your choice&gt; ; make</VAR>
-    &nbsp;or&nbsp;
-    <VAR>make bins</VAR> as appropriate.
+    Then for each of your choices of <CODE>BIN</CODE>,
+    <VAR>setenv BIN &lt;your choice&gt; ; make dir; make</VAR>
     <P>
     Unfortunately, the current SMOKE scripting-system makes it quite
-    difficult to switch from optimized (e.g., <CODE>
+    difficult to switch from running the optimized (e.g.,
+    <CODE>Linux2_x86_64gfort10</CODE>) to debug/check-everything (e.g.,
+    <CODE>Linux2_x86_64gfort10dbg</CODE>).
+    <P>
 
 </BLOCKQUOTE>
 
@@ -114,8 +113,7 @@
     Update the SMOKE source if desired: <VAR>git pull -a</VAR>
     <P>
 
-    Either <VAR>setenv BIN &lt;your choice&gt; ; make relink</VAR>
-    &nbsp;or&nbsp; <VAR>make binrelink</VAR>, as appropriate.
+    Then for each <CODE>BIN</CODE> <VAR>setenv BIN &lt;your choice&gt; ; make relink</VAR>.
     <P>
 
 
