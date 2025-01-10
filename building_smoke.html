@@ -1,0 +1,127 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: index.html 77 2018-01-18 15:29:37Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
+<TITLE>
+    Building SMOKE
+</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15"
+      MARGINHEIGHT="15"
+      LEFTMARGIN="15"
+      MARGINWIDTH="15">
+
+<H1>  Easy Guide&reg; for Building SMOKE </H1>
+
+<H3>Introduction</H3>
+
+<BLOCKQUOTE>
+
+    Just as the SMOKE modeling programs are clients of the
+    <A HREF = "https://github.com/cjcoats/ioapi">I/O&nbsp;API
+    library</A>, the <VAR>Makefile</VAR> system for SMOKE is a
+    client of the <VAR>Makefile</VAR> system for the
+    I/O&nbsp;API; the process of building SMOKE is quite similar
+    to <A HREF="ioapi/AVAIL.html">the process for building the
+    I/O&nbsp;API</A>.
+    <P>
+
+    This document describes how to build SMOKE cleanly and easily
+    (without all the errors and wrong-headedness of a certain Wiki
+    document).
+    <P>
+
+</BLOCKQUOTE>
+
+<H3>Preparation:  netCDF, I/O&nbsp;API, etc. </H3>
+
+<BLOCKQUOTE>
+
+    As suggested in the <A HREF="ioapi/AVAIL.html">detailed I/O&nbsp;API
+    build instructions</A>:
+    <P>
+
+    First, acquire netCDF and the libraries it requires -- these
+    are configuration dependent and can be found by the netCDF
+    commands
+    <BLOCKQUOTE><VAR>
+        nc-config --libs<BR>
+        nf-config --flibs
+    </VAR></BLOCKQUOTE>
+    For all except netCDF-Fortran, it is easiest if you install the
+    libraries from your Linux distribution's repositories...
+    <P>
+
+    Then download and build the I/O&nbsp;API.
+    <P>
+
+    It is often very useful to have both the optimized and the
+    debug/traceback/check-everything versions; some large-array
+    problems require the <A HREF = "ioapi/AVAIL.html#medium">medium
+    Linux2_x86_64 memory model</A> (e.g.,
+    <CODE>BIN=Linux2_x86_64gfort10_medium</CODE>); note that you can
+    select multiple binary types <CODE>BIN</CODE> that you want to build
+    and then  customize the <VAR>make</VAR>-targets <CODE>bins,
+    binrelink</CODE>, etc. in <VAR>ioapi/Makefile</VAR> and
+    <VAR>m3tools/Makefile</VAR> to build all of these automatically.
+    <P>
+
+</BLOCKQUOTE>
+
+<H3>Download and Build SMOKE</H3>
+
+<BLOCKQUOTE>
+
+    Then download SMOKE from GitHub:
+    <BLOCKQUOTE><VAR>
+        git clone https://github.com/CEMPD/SMOKE.git SMOKE_v5.0
+    </VAR></BLOCKQUOTE>
+    and <VAR>cd</VAR> to the <VAR>src</VAR> sub-directory.
+    Edit <VAR>Makeinclude</VAR> for your installation:
+    <UL>
+        <LI>  Edit <VAR>make</VAR>-variable <CODE>BASEDIR</CODE>
+              to match the directory path for this <VAR>src</VAR> sub-directory
+              <P>
+        <LI>  Un-comment the <CODE>IFLAGS</CODE> and <CODE>EFLAGS</CODE>
+              for your compiler-set
+    </UL>
+    Optionally, edit <VAR>Makefile</VAR> by customizing
+    <VAR>make</VAR>-targets <CODE>bins, binrelink</CODE>, etc., to match
+    your chosen set of binary types <CODE>BIN</CODE>.
+    <P>
+
+    Then either <VAR>setenv BIN &lt;your choice&gt; ; make</VAR>
+    &nbsp;or&nbsp;
+    <VAR>make bins</VAR> as appropriate.
+    <P>
+    Unfortunately, the current SMOKE scripting-system makes it quite
+    difficult to switch from optimized (e.g., <CODE>
+
+</BLOCKQUOTE>
+
+<H3>To Update SMOKE</H3>
+
+<BLOCKQUOTE>
+
+    Update the I/O&nbsp;API source if desired: <VAR>git pull -a</VAR>
+    and then either <VAR>setenv BIN &lt;your choice&gt; ; make</VAR>
+    &nbsp;or&nbsp; <VAR>make bins</VAR>, as appropriate.
+
+    Update the SMOKE source if desired: <VAR>git pull -a</VAR>
+    <P>
+
+    Either <VAR>setenv BIN &lt;your choice&gt; ; make relink</VAR>
+    &nbsp;or&nbsp; <VAR>make binrelink</VAR>, as appropriate.
+    <P>
+
+
+</BLOCKQUOTE>
+
+<HR> <!----------------------------------------------------------------->
+
+ </BODY>
+</HTML>

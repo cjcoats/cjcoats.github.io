@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 256 2023-12-01 15:40:40Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 267 2025-01-06 19:10:42Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 256 2023-12-01 15:40:40Z coats $
+    $Id: NEWSTUFF.html 267 2025-01-06 19:10:42Z coats $
     </EM>
     <HR>
 
@@ -33,9 +33,11 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
-         <LI>  <A HREF = "#dec012023">
-               New generic in-place-permutation routine <CODE>PERMUTI</CODE>
-               for use with <CODE>SORTI</CODE></A>
+         <LI>  <A HREF = "#jan012025">
+               New <CODE>BIN</CODE> types for AOCC, LLVM, nVidia,
+               Oracle, Intel OneAPI <VAR>icx,ifx</VAR> compilers</A>
+               <P>
+               Minor bug-fixes and updates</A>
                <P>
          <LI>  <A HREF = "#may232023">
                Support for &quot;vertical grid&quot; types 
@@ -834,6 +836,53 @@
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
+<H2> <A NAME ="jan012025">
+    New <CODE>BIN</CODE> types for AMD AOCC, LLVM, nVidia, Oracle,
+    Intel OneAPI <VAR>icx,ifx</VAR> compilers
+</A></H2>
+
+    <BLOCKQUOTE>There are the following new <CODE>BIN</CODE> types
+    and matching <VARMakeinclude</VAR>-files, of
+    which the Intel <VAR>icx*</VAR>, the nVidia <VAR>nvfort*</VAR>
+    and Oracle <VAR>of95*</VAR> are tested; the LLVM and AMD AOCC 
+    are still &quot;works in progress&quot;
+    <DL>
+        <DT> Linux2_x86_64ifx
+        <DT> Linux2_x86_64ifx_360
+        <DT> Linux2_x86_64ifx_365
+        <DT> Linux2_x86_64ifx_medium
+        <DT> Linux2_x86_64ifx_mediumdbg
+        <DT> Linux2_x86_64ifxdbg
+        <DT> Linux2_x86_64ifxmpi
+        <DT> Linux2_x86_64ifxmpidbg
+        <DT> Linux2_x86_64nvfort
+        <DT> Linux2_x86_64nvfort_medium
+        <DT> Linux2_x86_64nvfort_mediumdbg
+        <DT> Linux2_x86_64nvfortdbg
+        <DT> Linux2_x86_64nvfortmpi
+        <DT> Linux2_x86_64llvmflang
+        <DT> Linux2_x86_64llvmflangdbg
+        <DT> Linux2_x86_64aoccflang
+        <DT> Linux2_x86_64aoccflang_medium
+        <DT> Linux2_x86_64aoccflangdbg
+        <DT> Linux2_x86_64of95
+        <DT> Linux2_x86_64of95dbg
+        <DT> Linux2_x86_64of95mpi
+    </DL>
+    </BLOCKQUOTE>
+    Note that for the AOCC compilers, <VAR>make</VAR>-variable
+    <CODE>ARCHLIB</CODE> is highly Linux-distribution specific, and will
+    need to be customized for your system.
+    <P>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
 
 
 <HR> <!----------------------------------------------------------------->
@@ -7849,7 +7898,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 256 2023-12-01 15:40:40Z coats $
+    $Id: NEWSTUFF.html 267 2025-01-06 19:10:42Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

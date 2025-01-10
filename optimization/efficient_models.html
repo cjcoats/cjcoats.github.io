@@ -777,6 +777,20 @@ https://cjcoats.github.io/optimization/efficient_models.html</A>
               Ideally, the program should be structured to use all of
               these numbers before needing to load more.
               <P>
+              <STRONG>Defining scratch variables in <CODE>MODULE</CODE>s:</STRONG><BR>
+              A <VAR>scratch variable</VAR> is a variable that is set
+              and used within a routine, but whose value is never needed
+              after that routine completes. Simple examples are loop
+              counters and accumulators for sums.<BR>
+              Scratch variables should always be declared as local
+              variables within the routine that uses them, rather than
+              as <CODE>MODULE</CODE> variables (e.g., in a ,mis-guided
+              attempt to minimize the number of declarations): 
+              generally, these latter must be written to memory, and the
+              compiler can do its optimizations on local variables but
+              cannot safely optimize calculations using
+              <CODE>MODULE</CODE> variables.
+              <P>
               <STRONG>Arrays:</STRONG><BR>
               Memory is best accessed consecutively
               (<EM>&quot;stride-1&quot;</EM>). For Fortran arrays,

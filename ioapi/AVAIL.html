@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 205 2021-10-21 15:46:13Z coats $" -->
+<!-- "$Id: AVAIL.html 267 2025-01-06 19:10:42Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -27,6 +27,10 @@
         <LI>  <STRONG><A HREF = "#build">Build and installation
               instructions</A></STRONG> for I/O&nbsp;API Versions&nbsp;3.0,
               3.1, and 3.2
+              <P>
+        <LI>  <STRONG><A HREF = "#update">Update instructions</A>
+              </STRONG> for GitHub based I/O&nbsp;API and related
+              programs
               <P>
        <LI>  <A HREF = "#v32">I/O&nbsp;API
               Version&nbsp;3.2</A>: download and notes
@@ -84,7 +88,8 @@ Foreword
     Please read <A HREF = "NOTICES.html">the copyright, licensing, and
     acknowledgements page</A>:  The I/O&nbsp;API library is available
     under the <A HREF = "LGPL.txt">Lesser Gnu Public License,
-    version&nbsp;2.1</A>; the &quot;tool&quot; and example programs are
+    version&nbsp;2.1</A>; the build-system, the
+    <STRONG><VAR>m3tools</VAR></STRONG> and example programs are
     available under the <A HREF = "gpl.txt">Gnu Public License,
     version&nbsp;2</A>.
     <P>
@@ -148,7 +153,7 @@ m3stat:
     <BLOCKQUOTE>
     As of this writing (June&nbsp;2019), I/O&nbsp;API Versions 2.2 and
     earlier are obsolete; 3.0 and 3.1 obsolescent, in
-    critical-fixes-only mode (and does not work with netCDF version 4
+    critical-fixes-only mode (and do not work with netCDF version 4
     because of version-to-version incompatibilites in that product); 3.2
     is the current stable/production version.  4.0 is the new (beta, as
     of 10/21/2021) &quote;all Fortran converted to Standard conforming
@@ -158,17 +163,98 @@ m3stat:
     information.
     <P>
 
-    Basically, the I/O API is developed as a &quot;rolling release&quot;
-    software system, with bug-fixes available as soon as they are made.
-    This is most easily accessed by way of the GitHub version of the
-    release, since <VAR>git</VAR> will automatically update exactly
-    what needs to be updated, allowing you to do an as-simple-as-possible
-    <VAR>make</VAR> to install the update.
+    Basically, the I/O&nbsp;API is developed as a &quot;rolling
+    release&quot; software system, with bug-fixes available as soon as
+    they are made. This is most easily accessed by way of the GitHub
+    version of the release, since <VAR>git pull</VAR> will automatically
+    update exactly what needs to be updated in your source, 
+    <A HREF = "#update">allowing you to do an as-simple-as-possible
+    <VAR>make</VAR> to install the update.</A>
     <P>
+
+    <STRONG>For the usual simple installation:</STRONG> you need
+    to do the following:
+    <OL>
+        <LI>  Choose an installation-directory (possibly your
+              <CODE>$HOME</CODE>); <VAR>cd</VAR> there, and
+              download the source; 
+        <LI>  Copy <VAR>ioapi/Makefile.nocpl</VAR>
+              to <VAR>ioapi/Makefile</VAR> and edit it to set
+              <CODE>BASEDIR</CODE> to your installation-directory;
+        <LI>  Similarly for <VAR>m3tools/Makefile</VAR>
+        <LI>  Select appropriate binary-type(s) <CODE>BIN</CODE>
+              according to the file-extensions of the
+              <VAR>ioapi/Makeinclude.*</VAR><BR>
+              NOTES
+              <UL>
+                <LI> It is recommended that you choose both
+                     optimized and debug/check-everything
+                     <CODE>BIN</CODE>s,
+                     e.g.,<CODE>Linux2_x86_64ifort</CODE> and
+                     <CODE>Linux2_x86_64ifortdbg</CODE><BR> Optionally
+                     edit <VAR>make</VAR>-targets  <CODE>bins, binclean,
+                     bindirs, binrelink</CODE> in  the
+                     <VAR>Makefile</VAR>s according to your choice of
+                     <CODE>BIN</CODE>s
+                <LI> Make sure the compilers (<CODE>FC</CODE> and
+                     <CODE>CC</CODE>) are in your <CODE>PATH</CODE>,
+                     or else give their full paths in the
+                     <VAR>Makeinclude.$BIN</VAR>
+              <UL>
+        <LI>  For each <CODE>BIN</CODE>:  
+              <VAR>cd ioapi; make dir; make</VAR>
+              then <VAR>cd ../m3tools; make</VAR>;              
+              or else <VAR>cd ioapi; make&nbsp;bindirs; make bins;
+              cd ../m3tools; make bins</VAR>; 
+              then <VAR>make</VAR> or <VAR>make&nbsp;bins</VAR>
+    </OL>
+    <P>
+
+    <STRONG>For <VAR>gfortran</VAR> versions 10 or later</STRONG> you
+    need to choose <CODE>BIN</CODE>-types (file-extensions for the
+    <VAR>Makeinclude.*gfort10*</VAR>) , or matching non-10
+    <CODE>BIN</CODE>-types for <VAR>gfortran</VAR> versions 9 or
+    earlier; and <STRONG>for the Intel OneAPI compilers</STRONG>
+    <VAR>Makeinclude.*ifx*</VAR>.
+    <P>
+
     <DL>
-        <DT>  <STRONG>To set up the installation:</STRONG>
+        <DT>  <STRONG>Detailed Instructions to set up the
+        installation:</STRONG><BR>
+        <EM>(needed for climatology-year, MPI-enabled, <A HREF =
+        "#medium">medium-memory-model</A>, netCDF-4-enabled, or
+        coupling-mode installations)</EM>
         <DD>  <OL>
-                  <LI> Download the <EM>gzip</EM>ped tar-file
+                  <LI> It is preferred to download Version&nbsp;3.2 
+                       (Version&nbsp;4.0 when it becomes available) from
+                       the relevant GitHub repository, e.g.,
+                       <A HREF="https://github.com/cjcoats/ioapi-3.2"><VAR>&lt;https://github.com/cjcoats/ioapi-3.2&gt;</VAR></A>.
+                       To install a copy of this source code from
+                       GitHub, go to the directory under which to do the
+                       installation, and then do the command
+    <PRE>
+    git clone https://github.com/cjcoats/ioapi-3.2
+    </PRE>
+    or, for the April 20, 2020 or August 8, 2020 versions, one of the
+    commands:
+    <PRE>
+    git clone --branch 2020111 https://github.com/cjcoats/ioapi-3.2
+    git clone --branch 2020220 https://github.com/cjcoats/ioapi-3.2
+    git clone --branch 20200828 https://github.com/cjcoats/ioapi-3.2
+    </PRE>
+                       Note that these latter gives you fixed-release
+                       versions, for which the &quot;rolling release&quot;
+                       bug-fixes are <U>not</U> easily available.
+                       <P>
+                       The GitHub repository is always up to date (as
+                       CMASCENTER is not), and its integrity can be
+                       trusted to have the correct code.  It also allows
+                       for easy update of your download (for only those
+                       routines that have been changed), as the
+                       CMASCENTER tar-balls do not.
+                       <P>
+
+                       Alternatively, download the <EM>gzip</EM>ped tar-file
                        of the source code for the version you want
                        from the CMAS web-site:<BR>
                        For the &quot;rolling release&quot; version
@@ -209,38 +295,17 @@ m3stat:
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2-large.tar.gz"><VAR>ioapi-3.2-large-2020220.tar.gz</VAR></A><BR>
                        </STRONG>
                        <P>
-                       Version&nbsp;3.2 is also available on GitHub from
-                       <A HREF="https://github.com/cjcoats/ioapi-3.2"><VAR>&lt;https://github.com/cjcoats/ioapi-3.2&gt;</VAR></A>.
-                       To install a copy of this source code from
-                       GitHub, go to the directory under which do the
-                       installation, (This directory will be the
-                       <CODE>BASEDIR</CODE> for subsequent steps in the
-                       installation.) and then do the command
-    <PRE>
-    git clone https://github.com/cjcoats/ioapi-3.2
-    </PRE>
-    or, for the April 20, 2020 or August 7, 2020 versions
-    <PRE>
-    git clone --branch 2020111 https://github.com/cjcoats/ioapi-3.2
-    </PRE>
-    or
-    <PRE>
-    git clone --branch 2020220 https://github.com/cjcoats/ioapi-3.2
-    </PRE>
-    or
-    <PRE>
-    git clone --branch 20200828 https://github.com/cjcoats/ioapi-3.2
-    </PRE>
-                  Note that this latter gives you a fixed-release
-                  version, for which the &quot;rolling release&quot;
-                  bug-fixes are <U>not</U> easily available.
-                  <P>
+
                   <STRONG>To build <VAR>ioapi-3.2-large</VAR> from
                   GitHub</STRONG> (using the GitHub rolling-release
-                  version), copy <CODE>PARMS3-LARGE.EXT</CODE> to
+                  version), <VAR>git clone</VAR> into a directory
+                  different from the normal I/O&nbsp;API build, and copy
+                  <CODE>PARMS3-LARGE.EXT</CODE> to
                   <CODE>PARMS3.EXT</CODE>, and then proceed as normal,
                   making sure that you keep  <VAR>ioapi-3.2-large</VAR>
-                  strictly sequestered from normal <VAR>ioapi-3.2</VAR>.
+                  and the (both library and model) object and executable
+                  files you create strictly sequestered from normal
+                  <VAR>ioapi-3.2</VAR>.
                   <P>
                   <LI> <STRONG>If you downoaded a
                        <VAR>ioapi-*.tar.gz</VAR></STRONG>:<BR>
@@ -285,9 +350,10 @@ m3stat:
                        support the simultaneous building and maintenance
                        of multiple versions of both
                        the I/O&nbsp;API and <VAR>m3tools</VAR> programs
-                       using the <CODE>bins</CODE>, <CODE>bins</CODE>,
-                       <CODE>binclean</CODE>, <CODE>bindirs</CODE>, and
-                       <CODE>binrelink</CODE> <VAR>make</VAR>-targets,
+                       using the <CODE>make&nbsp;bindirs</CODE>,
+                       <CODE>make&nbsp;bins</CODE>,
+                       <CODE>make&nbsp;binclean</CODE>, and
+                       <CODE>make&nbsp;binrelink</CODE> <VAR>make</VAR>-targets,
                        which may be customized to support the versions
                        you want.
                        Examples of such versions (each of which has its
@@ -301,10 +367,17 @@ m3stat:
                                  <EM>medium</EM>
                             <LI> &quot;normal&quot; vs global-climate vs
                                  <VAR>pnetCDF/MPI</VAR>
-                                 distributed-output vs coupling-mlode
+                                 distributed-output vs coupling-mode
                        </UL>
                        <P>
-                       <STRONG><VAR>gfortran</VAR> Warning:</STRONG> 
+                       <STRONG>AOCC <VAR>clang, flang</VAR> Warning:</STRONG>
+                       <VAR>make</VAR>-variable <CODE>ARCHLIB</CODE> is
+                       highly Linux-distribution/
+                       <VAR>gcc</VAR>-installation specific, and will
+                       need to be customized for your system.
+                       <P>
+                       <STRONG><VAR>gfortran</VAR> Warning:</STRONG>
+                       Starting with version 10, <VAR>gfortran</VAR> 
                        Starting with version 10, <VAR>gfortran</VAR> is
                        taking a particular indiosyncraticinterpretation
                        of the Fortran-2018 Standard.  In order to build
@@ -326,20 +399,20 @@ m3stat:
                        whatever reason, Intel has chosen to change some
                        flags from version to version, making it
                        difficult to have generic
-                       <VAR>Makeinclude.*ifort*</VAR> files. 
+                       <VAR>Makeinclude.*ifort*</VAR> files.
                        For versions before March&nbsp;25, 2020, in
                        particular, you will need to edit those files
                        so that <VAR>make</VAR>-variables
                        <CODE>OMPFLAGS</CODE> AND <CODE>OMPLIBS</CODE>
                        use the following:
                        <UL>
-                        <LI> For compiler-versions 15  and earlier: 
+                        <LI> For compiler-versions 15  and earlier:
                              <CODE>-openmp</CODE>
-                        <LI> For compiler-versions 16-18 
+                        <LI> For compiler-versions 16-18
                              <CODE>-qopenmp</CODE> is preferred, but
                              <CODE>-openmp</CODE> is accepted (with a
                              warning-message)
-                        <LI> For compiler-version 19 and later: 
+                        <LI> For compiler-version 19 and later:
                              <CODE>-qopenmp</CODE> required
                        </UL>
                        After that date, the
@@ -355,7 +428,7 @@ m3stat:
                        <P>
                        Additional definitions in <VAR>make</VAR>-variable
                        <CODE>DEFINEFLAGS</CODE> (in <VAR>Makefile</VAR>
-                       or<CODE>ARCHFLAGS</CODE> (in <VAR>Makeinclude.${BIN}</VAR>
+                       or <CODE>ARCHFLAGS</CODE> (in <VAR>Makeinclude.${BIN}</VAR>
                        turn on various optional capabilities:
                        <BLOCKQUOTE>
                        <DL>
@@ -426,7 +499,7 @@ m3stat:
                            <DD>360-day (no leap-year) climatology-year version of library
                            <DT><CODE>Makeinclude.*365</CODE>
                            <DD>365-day (no leap-year) climatology-year version of library
-                           <DT><CODE>Makeinclude.*MPI</CODE>
+                           <DT><CODE>Makeinclude.*mpi</CODE>
                            <DD>PnetCDF/MPI enabled distributed-I/O version
                            of library
                            <DT><CODE>Makeinclude.*_medium*</CODE>
@@ -473,10 +546,11 @@ m3stat:
                         <EM><STRONG>NOTES</STRONG></EM>
                         <OL>
                             <LI> <STRONG>PnetCDF enabled I/O&nbsp;API
-                                 libraries are not compatible with
+                                 builds, libraries, and related
+                                 programs are not compatible with
                                  &quot;normal&quot; libraries.</STRONG>
                                  Make sure you keep them separate.<BR>
-                                 <STRONG>You will want to build
+                                 <STRONG>You may want to build
                                  both</STRONG>, since the PnetCDF
                                  enabled libraries are for the CMAQ
                                  CCTM only.
@@ -487,7 +561,7 @@ m3stat:
                                  <VAR>pgf90/pgcc</VAR>, etc.), a set of
                                  (MPI-installation specific)
                                  <CODE>INCLUDE</CODE> files, and a set
-                                 of<CODE>$quot;.a&quot;</CODE>
+                                 of <CODE>&quot;.a&quot;</CODE>
                                  library-files. <STRONG>These are not
                                  compatible from MPI-implementation to
                                  MPI-implementation (OpenMPI, MVAPICH,
@@ -517,7 +591,7 @@ m3stat:
                        <CODE>DEFINEFLAGS</CODE>
                        <VAR>make</VAR>-variable. <BR>
                        <EM>Note that you need to keep the resulting
-                       libraries separate from the normal (leap-year
+                       builds and libraries separate from the normal (leap-year
                        enabled) libraries.</EM>
                  <P>
                   <LI>  For each desired configuration of machine,
@@ -616,7 +690,7 @@ m3stat:
                         (CMAQ, SMOKE, etc.) that use it.  In particular,
                         Deeksha Rastogi reported very-obscure errors caused
                         by a vendor supplied <VAR>netcdf/4.6.1</VAR>
-                        (and fixed by compiling and using his own 
+                        (and fixed by compiling and using his own
                         <VAR>netcdf-c-4.7.4</VAR> and
                         <VAR>netcdf-fortran-4.5.2</VAR>
                         <BR>
@@ -636,9 +710,9 @@ m3stat:
         nm libnetcdff.a | grep nf_get_var_int64_
                         </PRE>
                         If present, you need to add the definition
-                        <CODE>-DIOAPI_NCF4=1</CODE> to the 
-                        <VAR>make</VAR>-variable <CODE>ARCHFLAGS</CODE> 
-                        in your <CODE>MAKEINCLUDE.${BIN}</CODE>. 
+                        <CODE>-DIOAPI_NCF4=1</CODE> to the
+                        <VAR>make</VAR>-variable <CODE>ARCHFLAGS</CODE>
+                        in your <CODE>MAKEINCLUDE.${BIN}</CODE>.
                         Otherewise, you will get &quot;multiply defined
                         symbol&quot; errors when you attempt to compile
                         programs.
@@ -704,12 +778,12 @@ m3stat:
                         configuration(s).<BR>
                         Alternatively, <STRONG><VAR>make&nbsp;BIN=&lt;machinetype&gt;</VAR></STRONG>
                         (where note that a command-line
-                        variable-definition overrides the environement
+                        variable-definition overrides the environment
                         variable definition).<BR>
                         <EM><STRONG>Intel compiler note:</STRONG> After
                         version 16, Intel changed the OpenMP
-                        compile-flags.  After March&nbsp;25, 2020, the 
-                        <CODE>Makeinclude</CODE> files for Intel 
+                        compile-flags.  After March&nbsp;25, 2020, the
+                        <CODE>Makeinclude</CODE> files for Intel
                         compile-types contain
                         both forms of the flags, so that all versions of
                         the compile will succeed, at the cost of a
@@ -728,39 +802,39 @@ m3stat:
         <DT>  <STRONG>Top-Level <VAR>make</VAR> targets include the
               following:</STRONG>
         <DD>  <DL "COMPACT">
-                  <DT><STRONG><CODE>make dir</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;dir</CODE></STRONG>
                   <DD>  Construct the build-directory <CODE>$OBJDIR</CODE>
                         You only need to do this once for each
                         configuration <CODE>${BIN}</CODE>
-                  <DT><STRONG><CODE>make all</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;all</CODE></STRONG>
                   <DD>  Build all libraries and executables (assumes
                         the Fortran compiler is Fortran-90 compliant)
                         for the default mode.
-                  <DT> <STRONG><CODE>make test</CODE></STRONG> (for
+                  <DT> <STRONG><CODE>make&nbsp;test</CODE></STRONG> (for
                        I/O&nbsp;API 3.2 post-March 25)
-                  <DD>  Subsequent to <CODE>make all</CODE>, the
-                        command  <CODE>make test</CODE> from the
+                  <DD>  Subsequent to <CODE>make&nbsp;all</CODE>, the
+                        command  <CODE>make&nbsp;test</CODE> from the
                         installations <CODE>${BASEDIR}</CODE> runs a
                         series of tests that ensures the I/O&nbsp;API
                         and <VAR>m3tools</VAR> programs are correctly
                         installed,  and demonstrate various I/O&nbsp;API
                         capabilities.
-                  <DT><STRONG><CODE>make cpl</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;cpl</CODE></STRONG>
                   <DD>  Build all libraries and executables for
                         PVM-enabled  coupling mode.
-                  <DT><STRONG><CODE>make nocpl</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;nocpl</CODE></STRONG>
                   <DD>  ... for no-PVM no-coupling mode.  <EM>This is
                         probably the best target for regulatory
                         users who need multiple configurations.</EM>
-                  <DT><STRONG><CODE>make relink</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;relink</CODE></STRONG>
                   <DD>  Rebuild all the <CODE>M3TOOLS</CODE> executables,
                         using the existing <CODE>M3TOOLS</CODE> object
                         files (e.g.,if you have changed/updated the libraries).
-                  <DT><STRONG><CODE>make clean</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;clean</CODE></STRONG>
                   <DD>  removes all executable, object (<CODE>.o</CODE>),
                         module (<CODE>.mod</CODE>), and library (<CODE>.a</CODE>)
                         files.
-                  <DT><STRONG><CODE>make configure</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;configure</CODE></STRONG>
                   <DD>  allows you to set up <VAR>make</VAR>-parameters
                         in the top-level <CODE>Makefile</CODE> and
                         then run a set of <VAR>sed</VAR> commands
@@ -770,15 +844,15 @@ m3stat:
                         configuration.<BR>
                         <STRONG>Writes over any existing
                         <CODE>Makefile</CODE> customizations!</STRONG>
-                  <DT><STRONG><CODE>make bins</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;bins</CODE></STRONG>
                   <DD>  builds everything for several choices
                         of (Linux) architectures and compilers.
                         <BR>
                         <EM>Note:  easily customized for your system.</EM>
-                  <DT><STRONG><CODE>make binclean</CODE></STRONG>
+                  <DT><STRONG><CODE>make&nbsp;binclean</CODE></STRONG>
                   <DD>  cleans everything for several choices
                         of architectures and compilers.
-                  <DT>  <STRONG><CODE>make fix</CODE></STRONG> or<BR>
+                  <DT>  <STRONG><CODE>make&nbsp;fix</CODE></STRONG> or<BR>
                         <STRONG><CODE>cd ioapi; make fixed_src</CODE></STRONG>
                   <DD>  <STRONG><A HREF="#cmaq">For CMAQ and SMOKE
                         Users:</A></STRONG><BR>
@@ -798,6 +872,60 @@ m3stat:
 
 <HR> <!----------------------------------------------------------------->
 
+    <H3>
+        <A NAME="update">Update instructions</A>
+        for GitHub based I/O&nbsp;API Version&nbsp;3.2 or 4.0
+    </H3>
+    <P>
+    <BLOCKQUOTE>
+
+    <VAR>[For tar-ball/cmascenter downloads, do the analogous
+    actions; however, you'll wind up <STRONG>re-compiling
+    everything</STRONG>, at a considerable cost in your time and
+    computer resources.]</VAR>
+    <P>
+
+    From the I/O&nbsp;API base-directory (<VAR>ioapi-3.2</VAR>
+    or <VAR>ioapi-4.0</VAR>):
+    <BLOCKQUOTE>
+        <DL>
+            <DT> <STRONG>Download the update:</STRONG>
+            <DD>  <CODE>git pull -a</CODE>
+            <P>
+            <DT> <STRONG>If any <VAR>Makefile.*</VAR> changed:</STRONG>
+            <DD> Merge the changes into your relevant <VAR>Makefile</VAR>
+            <P>
+            <DT> <STRONG>If doing single-<CODE>BIN</CODE> builds:</STRONG>
+            <DD> <CODE>setenv BIN ...</CODE> as desired.
+            <P>
+            <DT> <STRONG>Build new <VAR>libioapi.a</VAR></STRONG>
+            <DD> <CODE>cd ioapi</CODE>, and <CODE>make</CODE> or
+                 <CODE>make&nbsp;bins</CODE> as appropriate
+            <P>
+            <DT> <STRONG>Build new <VAR>m3tools</VAR></STRONG>
+            <DD> <CODE>cd m3tools</CODE>, and <CODE>make</CODE> or
+                 <CODE>make&nbsp;binrelink</CODE> as appropriate
+            <P>
+            <DT> <STRONG>If you want to update SMOKE:</STRONG>
+            <DD> <CODE>cd</CODE> to the SMOKE <VAR>src</VAR>
+                 directory, and <CODE>make</CODE> or
+                 <CODE>make&nbsp;binrelink</CODE> as appropriate
+            <P>
+            <DT> <STRONG>To update other related programs:</STRONG>
+            <DD> Remove the existing executable files, and <CODE>make</CODE>
+                 as appropriate.
+            <P>
+        </DL>
+    </BLOCKQUOTE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!----------------------------------------------------------------->
+
     <H3><A NAME="gfort">NOTES on <VAR>gfortran</VAR></A></H3>
 
     <BLOCKQUOTE>
@@ -810,6 +938,12 @@ m3stat:
     <BR>
     --Carlie J. Coats, Jr., Ph.D.<BR>
     I/O&nbsp;API author
+    <P>
+
+    In particular, for <VAR>gfortran</VAR> versions 10 or later,  you
+    need to choose <CODE>BIN=*gfort10*</CODE>-types (file-extensions for
+    the <VAR>Makeinclude.*gfort10*</VAR>); for <VAR>gfortran</VAR>
+    versions 9 or earlier. use the corresponding non-10 types.
     <P>
 
     <DL>
@@ -901,7 +1035,7 @@ or (PGI)
 
 <HR> <!----------------------------------------------------------------->
 
-    <H3><A NAME="cmaq">NOTE for users of <VAR>CMAQ</VAR> and 
+    <H3><A NAME="cmaq">NOTE for users of <VAR>CMAQ</VAR> and
     <VAR>SMOKE</VAR></A></H3>
 
     <BLOCKQUOTE>
@@ -914,14 +1048,14 @@ or (PGI)
     markers, as well as a specification for code which is acceptable to
     both forms.
     <P>
-    
-    Since it is used by various models that use &quot;free&quot; format, 
+
+    Since it is used by various models that use &quot;free&quot; format,
     the I/O&nbsp;API carefully follows the Standard in this regard, and
     uses the ISO-app[roved &quot;both-form&quot; format for its Fortran
     <CODE>INCLUDE</CODE> files.
     <P>
 
-    Some of the models&mdash;in particular, <VAR>CMAQ</VAR> and 
+    Some of the models&mdash;in particular, <VAR>CMAQ</VAR> and
     <VAR>SMOKE</VAR> however, do not&mdash;instead using a
     &quot;fixed-132&quot; format. The I/O&nbsp;API <VAR>Makefile</VAR>
     has a way of dealing with this; the commands
@@ -958,7 +1092,7 @@ or (PGI)
     <P>
     The <VAR>findent</VAR> program is an excellent resource for
     converting code back and forth between the two forms (and even the
-    non-Standard one); see 
+    non-Standard one); see
     <A HREF="https://sourceforge.net/projects/findent/">
     https://sourceforge.net/projects/findent/</A>.
     <P>
@@ -997,7 +1131,7 @@ or (PGI)
     libnetcdf libnetcdf-devel libnetcdf-fortran libnetcdf-fortran-devel
     libpng16-devel libpng16 libtool netcdf netcdf-fortran ncview openmpi
     tar tcsh tree util-linux vim wget xhost xinit xorg-server xorg-x11-fonts-dpi100
-    xterm xxdiff zlib zlib-devel zlib0 
+    xterm xxdiff zlib zlib-devel zlib0
     </CODE></BLOCKQUOTE>
     Note that this installation will include Version 4.4 of the netCDF
     libraries, for both Fortran and C; you will not need to build these
@@ -1015,7 +1149,7 @@ or (PGI)
     </CODE></BLOCKQUOTE>
     <P>
 
-    The Cygwin64 package list is at 
+    The Cygwin64 package list is at
     <BLOCKQUOTE>
     <A HREF="https://cygwin.com/packages/package_list.html">https://cygwin.com/packages/package_list.html</A>
     </BLOCKQUOTE>
@@ -1034,8 +1168,8 @@ or (PGI)
     graphical programs such as the <VAR>nedit</VAR> editor, you will
     need to install and run the X-windows server...)
     <P>
-    
-     
+
+
     <P>
 
     </BLOCKQUOTE>
@@ -1087,7 +1221,7 @@ or (PGI)
     since defining netCDF-<U>4</U> causes netCDF to change parts of the
     netCDF-<U>3</U> interface.
     <P>
-    
+
     NetCDF Version&nbsp;4.1 and later also split the Fortran
     interfaces into a separate library <VAR>libnetcdff.a</VAR>
     As a result, much compatiblity with the infrastructure
@@ -1279,7 +1413,7 @@ or (PGI)
               <VAR>libioapi.a</VAR>, and your model(s)  <VAR>CMAQ</VAR>,
               <VAR>SMOKE</VAR>, etc. with a common compiler set and
               common set of compile-flags.  In particular,
-              Linux-distribution-vendor supplied <VAR>libnetcdf.a</VAR> 
+              Linux-distribution-vendor supplied <VAR>libnetcdf.a</VAR>
               (and <VAR>libnetcdff.a</VAR>, for netCDF-4)
               rarely works with CMAS-supported compiler sets.
               Deeksha Rastogi points out some extremely-obscure
@@ -1930,7 +2064,7 @@ or (PGI)
     <P>
     The <VAR>findent</VAR> program is an excellent resource for
     converting code back and forth between the two forms (and even the
-    non-Standard CMAQ/SMOKE &quot;fixed-132&quot; one); see 
+    non-Standard CMAQ/SMOKE &quot;fixed-132&quot; one); see
     <A HREF="https://sourceforge.net/projects/findent/">
     https://sourceforge.net/projects/findent/</A>.
     <P>
@@ -2027,7 +2161,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 205 2021-10-21 15:46:13Z coats $
+    $Id: AVAIL.html 267 2025-01-06 19:10:42Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
