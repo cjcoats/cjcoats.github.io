@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 267 2025-01-06 19:10:42Z coats $" -->
+<!-- "$Id: AVAIL.html 272 2025-01-18 17:25:24Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -231,20 +231,21 @@ m3stat:
                        <A HREF="https://github.com/cjcoats/ioapi-3.2"><VAR>&lt;https://github.com/cjcoats/ioapi-3.2&gt;</VAR></A>.
                        To install a copy of this source code from
                        GitHub, go to the directory under which to do the
-                       installation, and then do the command
+                       installation, and then for I/O&nbsp;API version
+                       3.2, do the command
     <PRE>
     git clone https://github.com/cjcoats/ioapi-3.2
     </PRE>
-    or, for the April 20, 2020 or August 8, 2020 versions, one of the
-    commands:
+    or for I/O&nbsp;API version 4.0
     <PRE>
-    git clone --branch 2020111 https://github.com/cjcoats/ioapi-3.2
-    git clone --branch 2020220 https://github.com/cjcoats/ioapi-3.2
-    git clone --branch 20200828 https://github.com/cjcoats/ioapi-3.2
+    git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0
     </PRE>
-                       Note that these latter gives you fixed-release
-                       versions, for which the &quot;rolling release&quot;
-                       bug-fixes are <U>not</U> easily available.
+                       <STRONG>Note that (due to directory-naming conventions
+                       that precede GitHub by more than two decades, the
+                       I/&nbsp;API 4.0 code will still be checked out
+                       into a base directory named <VAR>ioapi-3.2</VAR>,
+                       and attempting to change this will break the
+                       connection with GitHub ;-(</STRONG>
                        <P>
                        The GitHub repository is always up to date (as
                        CMASCENTER is not), and its integrity can be
@@ -2161,7 +2162,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 267 2025-01-06 19:10:42Z coats $
+    $Id: AVAIL.html 272 2025-01-18 17:25:24Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
