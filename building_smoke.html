@@ -60,14 +60,17 @@
     <P>
 
     It is often very useful to have both the optimized and the
-    debug/traceback/check-everything versions; some large-array
-    problems require the <A HREF = "ioapi/AVAIL.html#medium">medium
-    Linux2_x86_64 memory model</A> (e.g.,
-    <CODE>BIN=Linux2_x86_64gfort10_medium</CODE>); note that you can
-    select multiple binary types <CODE>BIN</CODE> that you want to build
-    and then  customize the <VAR>make</VAR>-targets <CODE>bins,
-    binrelink</CODE>, etc. in <VAR>ioapi/Makefile</VAR> and
-    <VAR>m3tools/Makefile</VAR> to build all of these automatically.
+    debug/traceback/check-everything versions; some large-array problems
+    (e.g., large MOVES inventories) require some programs to be built
+    with  the <A HREF = "ioapi/AVAIL.html#medium">medium Linux2_x86_64
+    memory model</A> (e.g., <CODE>BIN=Linux2_x86_64gfort10_medium</CODE>).
+    <P>
+    
+    Note that you can select multiple binary types <CODE>BIN</CODE> that
+    you want to build and then  customize the <VAR>make</VAR>-targets
+    <CODE>bins, binrelink</CODE>, etc. in the <VAR>ioapi/Makefile</VAR>
+    and <VAR>m3tools/Makefile</VAR> to build multiple binary types
+    in one step.
     <P>
 
 </BLOCKQUOTE>
@@ -88,6 +91,14 @@
               <P>
         <LI>  Un-comment the <CODE>IFLAGS</CODE> and <CODE>EFLAGS</CODE>
               for your compiler-set
+              <P>
+        <LI>  If you wish to compilemultiple binary types
+              <CODE>BIN</CODE>, copy the directives for 
+              <VAR>make</VAR>-targets <CODE>bins, binrelink</CODE>,
+              etc., from the <VAR>m3tools/Makefile</VAR> to the SMOKE
+              <VAR>src/Makefile</VAR> accordingly, to build multiple
+              binary types in one step.
+
     </UL>
     <P>
 
@@ -96,8 +107,8 @@
     <P>
     Unfortunately, the current SMOKE scripting-system makes it quite
     difficult to switch from running the optimized (e.g.,
-    <CODE>Linux2_x86_64gfort10</CODE>) to debug/check-everything (e.g.,
-    <CODE>Linux2_x86_64gfort10dbg</CODE>).
+    <CODE>BIN=Linux2_x86_64gfort10</CODE>) to debug/check-everything (e.g.,
+    <CODE>BIN=Linux2_x86_64gfort10dbg</CODE>).
     <P>
 
 </BLOCKQUOTE>

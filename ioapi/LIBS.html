@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: LIBS.html 228 2023-01-12 19:13:43Z coats $" -->
+<!-- "$Id: LIBS.html 269 2025-01-18 15:00:36Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Object Libraries, Executables, and Supported Machines
@@ -125,7 +125,12 @@
     <DL>
         <DT>  <STRONG><CODE>Linux2_x86_64</CODE></STRONG>
         <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
-              <VAR>gcc</VAR> and <VAR>gfortran</VAR>, with OpenMP support.
+              <VAR>gcc</VAR> and <VAR>gfortran</VAR> version 9 or
+              earlier, with OpenMP support.
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64dbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64</CODE> but compiled for debug,
+              with OpenMP support.
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64af95</CODE></STRONG>
         <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
@@ -133,33 +138,42 @@
               Absoft name-mangling, with OpenMP support.<BR>
               <EM>Old:  no longer have test-machine</EM>
               <P>
-              <P>
         <DT>  <STRONG><CODE>Linux2_x86_64af95_</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64af95</CODE> but Feldman-style name
               mangling (set up using compiler command-line directives),
               with OpenMP support.<BR>
               <EM>Old:  no longer have test-machine</EM>
               <P>
-              <P>
         <DT>  <STRONG><CODE>Linux2_x86_64af95_dbg</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64af95_</CODE> but compiled for
               debug, with OpenMP support.<BR>
               <EM>Old:  no longer have test-machine</EM>
-              <P>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64af95dbg</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64af95</CODE> but compiled for
               debug, with OpenMP support.<BR>
               <EM>Old:  no longer have test-machine</EM>
               <P>
-        <DT>  <STRONG><CODE>Linux2_x86_64dbg</CODE></STRONG>
-        <DD>  Like <CODE>Linux2_x86_64</CODE> but compiled for debug,
-              with OpenMP support.
+        <DT>  <STRONG><CODE>Linux2_x86_64aoccflang</CODE></STRONG>
+        <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
+              AMD Optimizing Compiler Collection <VAR>clang</VAR> and
+              <VAR>flang</VAR>, with OpenMP support.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64aoccflangdbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64aoccflang</CODE> but compiled
+              for debug.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64aoccflang_medium</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64aoccflang</CODE> but compiled
+              for medium memory model.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64g95</CODE></STRONG>
         <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
               <VAR>gcc</VAR> and <VAR>g95</VAR>.<BR>
-              Creates medium memory model objet-files and programs.
+              Creates medium memory model object-files and programs.
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64g95dbg</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64g95</CODE> but compiled for debug
@@ -193,27 +207,33 @@
         <DT>  <STRONG><CODE>Linux2_x86_64gfort10</CODE></STRONG>
         <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
               <VAR>gcc</VAR> and <VAR>gfortran</VAR> version 10 or later,
-              with OpenMP support.
+              with OpenMP support.<BR>
+              <EM>For I/O API 3.2 or later only.</EM>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64gfort10dbg</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64gfort10</CODE> but compiled for
-              debug.
+              debug.<BR>
+              <EM>For I/O API 3.2 or later only.</EM>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64gfort10mpi</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64gfort10</CODE> but compiled
-              for using PnetCDF/MPI distributed I/O in CMAQ.
+              for using PnetCDF/MPI distributed I/O in CMAQ.<BR>
+              <EM>For I/O API 3.2 or later only.</EM>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64gfort10_medium</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64gfort10</CODE> but compiled
-              for medium memory model.
+              for medium memory model.<BR>
+              <EM>For I/O API 3.2 or later only.</EM>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64gfort_mediumdbg</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64gfort10</CODE> but compiled
-              for debug.
+              for debug.<BR>
+              <EM>For I/O API 3.2 or later only.</EM>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64ifort</CODE></STRONG>
         <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
-              Intel <VAR>icc</VAR> and <VAR>ifort</VAR>, with OpenMP support.
+              Intel <VAR>icc</VAR> and <VAR>ifort</VAR> (2024 or
+              earlier, with OpenMP support.
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64ifortdbg</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64ifort</CODE> but compiled
@@ -223,19 +243,108 @@
         <DD>  Like <CODE>Linux2_x86_64ifort</CODE> but compiled
               for using PnetCDF/MPI distributed I/O in CMAQ.
               <P>
-        <DT>  <STRONG><CODE>Linux2_x86_64ifort_medium</CODE></STRONG>
-        <DD>  Like <CODE>Linux2_x86_64ifort</CODE> but compiled with
-              <VAR>=mcmodel=medium</VAR>, as needed for programs with
-              arrays and <CODE>COMMON</CODE> blocks larger than 2 GB.
-              <P>
-        <DT>  <STRONG><CODE>Linux2_x86_64ifort_mediumdbg</CODE></STRONG>
-        <DD>  Like <CODE>Linux2_x86_64ifort_medium</CODE> but compiled
+        <DT>  <STRONG><CODE>Linux2_x86_64ifortmpidbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifort</CODE> but compiled
               for debug
               <P>
-        <DT>  <STRONG><CODE>Linux2_x86_64gfort_360</CODE></STRONG>,
-              <STRONG><CODE>Linux2_x86_64gfort_360</CODE></STRONG>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifort_360</CODE></STRONG>,
+              <STRONG><CODE>Linux2_x86_64ifort_360</CODE></STRONG>
         <DD>  Like <CODE>Linux2_x86_64ifort</CODE> but compiled
               for 360-day or 365-day climatology-modeling &quot;year&quot;.
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifx_medium</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx</CODE> but compiled with
+              <VAR>=mcmodel=medium</VAR>, as needed for programs with
+              arrays and <CODE>COMMON</CODE> blocks larger than 2 GB.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifx_mediumdbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx_medium</CODE> but compiled
+              for debug<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifx</CODE></STRONG>
+        <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
+              Intel OPneAPI&reg; <VAR>icx</VAR> and <VAR>ifx</VAR> (2025 or
+              later, with OpenMP support.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifxdbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx</CODE> but compiled
+              for debug<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifxmpi</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx</CODE> but compiled
+              for using PnetCDF/MPI distributed I/O in CMAQ.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifxmpidbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx</CODE> but compiled
+              for debug<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifx_medium</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx</CODE> but compiled with
+              <VAR>=mcmodel=medium</VAR>, as needed for programs with
+              arrays and <CODE>COMMON</CODE> blocks larger than 2 GB.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifx_mediumdbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx_medium</CODE> but compiled
+              for debug<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64ifx_360</CODE></STRONG>,
+              <STRONG><CODE>Linux2_x86_64ifx_360</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64ifx</CODE> but compiled
+              for 360-day or 365-day climatology-modeling &quot;year&quot;.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64llvmflang</CODE></STRONG>
+        <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
+              LLVM <VAR>clang</VAR> and <VAR>flang</VAR>, with OpenMP support.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64llvmflangdbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64llvmflang</CODE> but compiled
+              for debug<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64nvfort</CODE></STRONG>
+        <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
+              nVidia <VAR>nvc</VAR> and <VAR>nvfortran</VAR>, with OpenMP support.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64nvfortdbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64nvfort</CODE> but compiled
+              for debug<BR>
+              <P>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+        <DT>  <STRONG><CODE>Linux2_x86_64nvfort_medium</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64nvf<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>ort</CODE> but compiled
+              for medium memory model
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64nvfort_mediumdbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64nvfort_medium</CODE> but compiled
+              for debug<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64of95</CODE></STRONG>
+        <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
+              Oracle <VAR>suncc</VAR> and <VAR>sunf95</VAR>, with OpenMP support.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64of95dbg</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64of95</CODE> but compiled
+              for debug<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
+              <P>
+        <DT>  <STRONG><CODE>Linux2_x86_64of95mpi</CODE></STRONG>
+        <DD>  Like <CODE>Linux2_x86_64of95</CODE> but compiled
+              for using PnetCDF/MPI distributed I/O in CMAQ.<BR>
+              <EM>For I/O API 3.2 or later after Jan. 2025 only.</EM>
               <P>
         <DT>  <STRONG><CODE>Linux2_x86_64path</CODE></STRONG>
         <DD>  For Linux on (64-bit) Intel(/AMD) <VAR>x86_64</VAR> using
@@ -291,11 +400,11 @@
         <DD>  Like <CODE>Linux2_x86_64sun</CODE> but compiled
               for  using PnetCDF/MPI distributed I/O in CMAQ.
               <P>
-        <DT>  I/O&nbsp;API-3.2 only:  <STRONG><CODE>WIN_x86gfort</CODE></STRONG>
+        <DT>  <STRONG><CODE>WIN_x86gfort</CODE></STRONG>
         <DD>  for the Cygwin environment under <VAR>MS-Windows</VAR> using
               Cygwin 32-bit <VAR>gcc</VAR> and <VAR>gfortran</VAR>
               <P>
-        <DT>  I/O&nbsp;API-3.2 only:  <STRONG><CODE>WIN_x86_64mingw64</CODE></STRONG>
+        <DT>  <STRONG><CODE>WIN_x86_64mingw64</CODE></STRONG>
         <DD>  for the Cygwin environment under <VAR>MS-Windows</VAR> using
               MingW64 64-bit <VAR>gcc</VAR> and <VAR>gfortran</VAR>
               <P>
