@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 272 2025-01-18 17:25:24Z coats $" -->
+<!-- "$Id: AVAIL.html 273 2025-01-20 15:01:47Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -205,8 +205,9 @@ m3stat:
               <VAR>cd ioapi; make dir; make</VAR>
               then <VAR>cd ../m3tools; make</VAR>;              
               or else <VAR>cd ioapi; make&nbsp;bindirs; make bins;
-              cd ../m3tools; make bins</VAR>; 
-              then <VAR>make</VAR> or <VAR>make&nbsp;bins</VAR>
+              cd ../m3tools; make bins</VAR>.<BR>
+              Note that it is useful always to make available both the
+              optimized and the debug/check-everything libraries.
     </OL>
     <P>
 
@@ -214,8 +215,11 @@ m3stat:
     need to choose <CODE>BIN</CODE>-types (file-extensions for the
     <VAR>Makeinclude.*gfort10*</VAR>) , or matching non-10
     <CODE>BIN</CODE>-types for <VAR>gfortran</VAR> versions 9 or
-    earlier; and <STRONG>for the Intel OneAPI compilers</STRONG>
-    <VAR>Makeinclude.*ifx*</VAR>.
+    earlier.
+    <P>
+
+    <STRONG>For 2024 or later) <STRONG>Intel OneAPI compilers</STRONG>
+    choose <CODE>BIN</CODE>-types matching the<VAR>Makeinclude.*ifx*</VAR>.
     <P>
 
     <DL>
@@ -416,6 +420,10 @@ m3stat:
                              warning-message)
                         <LI> For compiler-version 19 and later:
                              <CODE>-qopenmp</CODE> required
+                        <LI> For 2024 or later, Intel has chosen to
+                             re-name the compilers (now the OneAPI
+                             compilers); for these compilers use
+                             <CODE>BIN=Linux2_x86_64ifx</CODE>, etc.
                        </UL>
                        After that date, the
                        <VAR>Makeinclude.*ifort*</VAR> files contain both
@@ -2163,7 +2171,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 272 2025-01-18 17:25:24Z coats $
+    $Id: AVAIL.html 273 2025-01-20 15:01:47Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
