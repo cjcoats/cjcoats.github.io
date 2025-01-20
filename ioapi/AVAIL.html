@@ -157,8 +157,8 @@ m3stat:
     because of version-to-version incompatibilites in that product); 3.2
     is the current stable/production version.  4.0 is the new (beta, as
     of 10/21/2021) &quote;all Fortran converted to Standard conforming
-    <CODE>.f90</CODE> source code format. See the <A HREF =
-    "NEWSTUFF.html">Change Log&nbsp;/&nbsp;&quot;What's
+    <CODE>.f90</CODE> source code format&quot; and defaulting to
+    netCDF-4. See the <A HREF = "NEWSTUFF.html">Change Log&nbsp;/&nbsp;&quot;What's
     New&quot;&nbsp;/&nbsp;Research Directions</A> page for further
     information.
     <P>
@@ -225,9 +225,9 @@ m3stat:
         "#medium">medium-memory-model</A>, netCDF-4-enabled, or
         coupling-mode installations)</EM>
         <DD>  <OL>
-                  <LI> It is preferred to download Version&nbsp;3.2 
-                       (Version&nbsp;4.0 when it becomes available) from
-                       the relevant GitHub repository, e.g.,
+                  <LI> It is currently (Jan. 20215)  preferred to download Version&nbsp;3.2 
+                       (Version&nbsp;4.0 is in <VAR>beta</VAR> at this
+                       time) from the relevant GitHub repository, e.g.,
                        <A HREF="https://github.com/cjcoats/ioapi-3.2"><VAR>&lt;https://github.com/cjcoats/ioapi-3.2&gt;</VAR></A>.
                        To install a copy of this source code from
                        GitHub, go to the directory under which to do the
@@ -236,23 +236,25 @@ m3stat:
     <PRE>
     git clone https://github.com/cjcoats/ioapi-3.2
     </PRE>
-    or for I/O&nbsp;API version 4.0
+    or for I/O&nbsp;API version 4.0 (which is in &quot;free&quot;
+    Fortran source-code format, and which defaults to netCDF-4)
     <PRE>
-    git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0
+    git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0 ioapi-4.0
     </PRE>
                        <STRONG>Note that (due to directory-naming conventions
-                       that precede GitHub by more than two decades, the
+                       that precede GitHub by more than two decades)
+                       without the doubled <CODE>ioapi-4.0</CODE>,
                        I/&nbsp;API 4.0 code will still be checked out
-                       into a base directory named <VAR>ioapi-3.2</VAR>,
-                       and attempting to change this will break the
+                       into a base directory named <VAR>ioapi-3.2</VAR>;
+                       attempting to change this diectly will break the
                        connection with GitHub ;-(</STRONG>
                        <P>
                        The GitHub repository is always up to date (as
                        CMASCENTER is not), and its integrity can be
                        trusted to have the correct code.  It also allows
-                       for easy update of your download (for only those
-                       routines that have been changed), as the
-                       CMASCENTER tar-balls do not.
+                       for easy update of your download and
+                       re-compilation of only those routines that have
+                       been changed, as the CMASCENTER tar-balls do not.
                        <P>
 
                        Alternatively, download the <EM>gzip</EM>ped tar-file
@@ -260,7 +262,6 @@ m3stat:
                        from the CMAS web-site:<BR>
                        For the &quot;rolling release&quot; version
                        <BLOCKQUOTE>
-                       <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-4.0.tar.gz"><VAR>ioapi-4.0.tar.gz</VAR></A><BR>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.2.tar.gz"><VAR>ioapi-3.2.tar.gz</VAR></A><BR>
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.1.tar.gz"><VAR>ioapi-3.1.tar.gz</VAR></A><BR>, or
                        <A HREF="https://www.cmascenter.org/ioapi/download/ioapi-3.0.tar.gz"><VAR>ioapi-3.0.tar.gz</VAR></A>.

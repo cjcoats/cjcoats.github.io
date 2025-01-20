@@ -35,7 +35,7 @@
 
          <LI>  <A HREF = "#jan182025">
                I/O API-4.0:  All Fortran is now in &quot;free&quot; 
-               Fortran source format.
+               Fortran source format, and defaults to netCDF-4
                <P>
          <LI>  <A HREF = "#jan012025">
                New <CODE>BIN</CODE> types for AOCC, LLVM, nVidia,
@@ -852,13 +852,15 @@
 </A></H2>
     
     </BLOCKQUOTE>
-    Subject says it.
-    <P>
+    Subject says it.  To get Version&nbsp;4.0, 
+    <PRE>
+    git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0 ioapi-4.0
+    </PRE>
     
-    Note that checking out this branch still shows up in directory
-    <VAR>ioapi-3.2</VAR>.  This is a result of naming-conventions that
-    precede GitHub by two decades. <STRONG>Attempting to change this 
-    name will break the connection with GitHub ;-(</STRONG>
+    Note that  (due to directory-naming conventions that precede GitHub
+    by four decades) without the doubled <CODE>ioapi-4.0</CODE>,
+    I/&nbsp;API 4.0 code will still be checked out into a base directory
+    named <VAR>ioapi-3.2</VAR>
     <P>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
