@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 277 2025-02-18 16:49:21Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 278 2025-04-12 15:27:33Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 277 2025-02-18 16:49:21Z coats $
+    $Id: NEWSTUFF.html 278 2025-04-12 15:27:33Z coats $
     </EM>
     <HR>
 
@@ -33,15 +33,18 @@
          <LI>  <A HREF = "#ncf">Notes on <VAR>netCDF-4</VAR></A>,
                <P>
 
-         <LI>  <A HREF = "#jan182025">
-               I/O API-4.0.1:  All Fortran is now in &quot;free&quot; 
-               Fortran source format, and defaults to netCDF-4
+         <LI>  <A HREF = "#apr082025">
+               I/O&nbsp;API-4.0<BR>
+               <CODE>MODULE MODGISIO</CODE><BR>
+               New M3Tools programs <VAR>gistogis, gistom3, m3togis,
+               gisplot, m3plot</VAR>
+               <BR>
+               Compilers and netCDF versions.
                <P>
-         <LI>  <A HREF = "#jan012025">
-               I/O AP3.2.74:  New <CODE>BIN</CODE> types for AOCC, LLVM, nVidia,
-               Oracle, Intel OneAPI <VAR>icx,ifx</VAR> compilers</A>
-               <P>
-               Minor bug-fixes and updates</A>
+
+         <LI>  <A HREF = "#dec012023">
+               New generic in-place-permutation routine <CODE>PERMUTI</CODE>
+               for use with <CODE>SORTI</CODE></A>
                <P>
          <LI>  <A HREF = "#may232023">
                Support for &quot;vertical grid&quot; types 
@@ -844,88 +847,95 @@
 
 <HR> <!----------------------------------------------------------------->
 
-<H2> <A NAME ="jan182025">
-    <STRONG>I/O&mbsp;API&nbsp;4.0 now in GitHub as branch
-    <VAR>ioapi-4.0</STRONG><BR>
-    Documentation enhancements related to this and the new
-    <CODE>BIN</CODE> types below.
-</A></H2>
-    
-    </BLOCKQUOTE>
-    <EM>Version 4.0.1</EM>
-    <P>
-    Subject says it.  To get Version&nbsp;4.0, 
-    <PRE>
-    git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0 ioapi-4.0
-    </PRE>
-    
-    Note that  (due to directory-naming conventions that precede GitHub
-    by four decades) without the doubled <CODE>ioapi-4.0</CODE>,
-    I/&nbsp;API 4.0 code will still be checked out into a base directory
-    named <VAR>ioapi-3.2</VAR>
-    <P>
-
-    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
-    <P>
-
-
-<HR> <!----------------------------------------------------------------->
-
-<H2> <A NAME ="jan012025">
-    New <CODE>BIN</CODE> types for AMD AOCC, LLVM, nVidia, Oracle,
-    Intel OneAPI <VAR>icx,ifx</VAR> compilers
+<H2> <A NAME ="apr082025">
+    I/O&nbsp;API-4.0<BR>
+    <CODE>MODULE MODGISIO</CODE><BR>
+    New M3Tools programs <VAR>gistogis, gistom3, m3togis, gisplot,
+    m3plot</VAR><BR>
+    Compilers and netCDF versions.
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.74</EM>
+    I/O&nbsp;API-4.0 is the new (currently beta) vesion &quote;all Fortran converted to Standard conforming
+    <CODE>.f90</CODE> source code format&quot; defaulting to
+    netCDF-4, adding the new MODULE and M3Tools programs listed below,
+    and removing routine <CODE>M3ERR</CODE> (which was declared obsolete
+    in July&nbspl1992, and should have been removed from all program
+    sources at least three decades ago).  Note that for netCDF-4, you may need to
+    adjust the libraries in your <VAR>Makefile</VAR>s to match your
+    particular netCDF installation.
     <P>
-    There are the following new <CODE>BIN</CODE> types
-    and matching <VARMakeinclude</VAR>-files, of
-    which the Intel <VAR>icx*</VAR>, the nVidia <VAR>nvfort*</VAR>
-    and Oracle <VAR>of95*</VAR> are tested; the LLVM and AMD AOCC 
-    are still &quot;works in progress&quot;
+ 
+    I/O&nbsp;API-4.0 Fortran-90 <A HREF="MODGISIO.html"><CODE>MODULE MODGISIO</CODE></A>
+     provides routines for
+    reading and writing various GIS-format files:  ARC and ASC ASCII
+    formatted, and GRIDFLOAT and BIL1 (<VAR>uint8_t</VAR>), BIL2
+    (<VAR>uint16_t</VAR>), and BIL4 (<VAR>uint32_t</VAR>) binary
+    GIS-style files, with on-the-fly transpose from GIS scan line
+    row-order to normal-model bottom-to-top row-order and optional
+    om-the-fly <VAR>gzip</VAR> compatible compression or de-compression,
+    referencing the files by logical name.
+    <P>
+    New I/O&nbsp;API-4.0 M3Tools are the following:
     <DL>
-        <DT> Linux2_x86_64ifx
-        <DT> Linux2_x86_64ifx_360
-        <DT> Linux2_x86_64ifx_365
-        <DT> Linux2_x86_64ifx_medium
-        <DT> Linux2_x86_64ifx_mediumdbg
-        <DT> Linux2_x86_64ifxdbg
-        <DT> Linux2_x86_64ifxmpi
-        <DT> Linux2_x86_64ifxmpidbg
-        <DT> Linux2_x86_64nvfort
-        <DT> Linux2_x86_64nvfort_medium
-        <DT> Linux2_x86_64nvfort_mediumdbg
-        <DT> Linux2_x86_64nvfortdbg
-        <DT> Linux2_x86_64nvfortmpi
-        <DT> Linux2_x86_64llvmflang
-        <DT> Linux2_x86_64llvmflangdbg
-        <DT> Linux2_x86_64aoccflang
-        <DT> Linux2_x86_64aoccflang_medium
-        <DT> Linux2_x86_64aoccflangdbg
-        <DT> Linux2_x86_64of95
-        <DT> Linux2_x86_64of95dbg
-        <DT> Linux2_x86_64of95mpi
+        <DT> <A HREF="GISTOGIS.html"><STRONG><VAR>gistogis</VAR></STRONG></A>:
+        <DD> convert among various formats for &quot;raster&quot; 
+             (GRIDDED) GIS-style files. 
+        <P>
+        <DT> <A HREF="GISTOM3.html"><STRONG><VAR>gistom3</VAR></STRONG></A>:
+        <DD> convert various formats for &quot;raster&quot; 
+             (GRIDDED) GIS-style files to <CODE>GRDDED3</CODE> I/O&nbsp;API
+        <P>
+        <DT> <A HREF="M3TOGIS.html"><STRONG><VAR>m3togis</VAR></STRONG>:
+        <DD> convert <CODE>GRDDED3</CODE> I/O&nbsp;API files to
+        various &quot;raster&quot;  GIS-style format files. 
+        <P>
+        <DT> <A HREF="GISPLOT.html"><STRONG><VAR>gisplot</VAR></STRONG></A>:
+        <DD> create GIF, JPEG, or PNG tile-plots with optional contour,
+             vector, scalar-observation, and vector-observation overlays
+             from various formats of GRIDDED GIS-style files.
+        <P>
+        <DT> <A HREF="M3PLOT.html"><STRONG><VAR>m3plot</VAR></STRONG></A>:
+        <DD>  create GIF, JPEG, or PNG tile-plots with optional contour,
+             gridded vector, scalar-observation, and vector-observation overlays
+             from GRIDDED I/O&nbsp;API files.
     </DL>
-    Note that for the AOCC compilers, <VAR>make</VAR>-variable
-    <CODE>ARCHLIB</CODE> is highly Linux-distribution specific, and will
-    need to be customized for your system.
-    <P>
-    <CODE>I/O API routine <CODE>INIT3</CODE> now logs the full I/O&nbsp;API
-    version:
-        <BLOCKQUOTE>
-        &lt;major version&gt;.&lt;minor version&gt;.&lt;revision number&gt;
-        </BLOCKQUOTE>
-    e.g., 
-        <BLOCKQUOTE><CODE>
-        Version 3.2.74 with PARMS3.EXT/PARAMETER::MXVARS3=2048
-        </CODE></BLOCKQUOTE>
+    As of January 2025, support was added for GNU Version 10 or later,
+    AMD Optimizing Compiler Collection (AOCC), LLVM, Oracle, nVidia, and
+    Intel OneAPI compilers, using the following
+    <VAR>Makeinclude.${BIN}</VAR>
+    files:
+    <PRE>Makeinclude.Linux2_x86_64gfort10
+    Makeinclude.Linux2_x86_64gfort10mpi
+    Makeinclude.Linux2_x86_64gfort10dbg
+    Makeinclude.Linux2_x86_64gfort10_mediumdbg
+    Makeinclude.Linux2_x86_64gfort10_medium
+    Makeinclude.Linux2_x86_64aoccflangdbg
+    Makeinclude.Linux2_x86_64aoccflang_medium
+    Makeinclude.Linux2_x86_64aoccflang
+    Makeinclude.Linux2_x86_64llvmflang
+    Makeinclude.Linux2_x86_64llvmflangdbg
+    Makeinclude.Linux2_x86_64of95mpi
+    Makeinclude.Linux2_x86_64of95dbg
+    Makeinclude.Linux2_x86_64of95
+    Makeinclude.Linux2_x86_64nvfortmpi
+    Makeinclude.Linux2_x86_64nvfortdbg
+    Makeinclude.Linux2_x86_64nvfort_mediumdbg
+    Makeinclude.Linux2_x86_64nvfort_medium
+    Makeinclude.Linux2_x86_64nvfort
+    Makeinclude.Linux2_x86_64ifxmpidbg
+    Makeinclude.Linux2_x86_64ifxmpi
+    Makeinclude.Linux2_x86_64ifxdbg
+    Makeinclude.Linux2_x86_64ifx_mediumdbg
+    Makeinclude.Linux2_x86_64ifx_medium
+    Makeinclude.Linux2_x86_64ifx_365
+    Makeinclude.Linux2_x86_64ifx_360
+    Makeinclude.Linux2_x86_64ifx
+    </PRE>
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
-
-
 
 
 <HR> <!----------------------------------------------------------------->
@@ -936,8 +946,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.73</EM> 
-    <P>
     New generic routine <A HREF="PERMUTI">PERMUTI</A> uses indexes
     produced by <A HREF="SORTI"><CODE>SORTI</CODE></A> to do easy
     in-place sorting of key and data tables, as in the following example:
@@ -966,8 +974,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.72</EM> 
-    <P>
     Subject says it.
     </BLOCKQUOTE>
 
@@ -983,8 +989,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.71</EM> 
-    <P>
     Need to set <CODE>*_GRID_DIMENSION</CODE> attributs for output
     window.
     <BR>
@@ -1007,8 +1011,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.70</EM> 
-    <P>
     Subject says it.
     </BLOCKQUOTE>
 
@@ -1027,8 +1029,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.69</EM> 
-    <P>
     <DL>
         <DT> <A HREF="WNDWPOINTS.html"><VAR>wndwpoints</VAR>
              and <VAR>wndwptdata</VAR></A>
@@ -1074,8 +1074,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.68</EM> 
-    <P>
     Subject says it.
     </BLOCKQUOTE>
 
@@ -1093,8 +1091,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.67</EM> 
-    <P>
     The remaining fixed-format (<CODE>f77</CODE>-style) Fortran codes
     were converted to the newer Standard conforming(<CODE>.f90</CODE>-style)
     free source code format.  This was aided by Willem Vermin's
@@ -1136,8 +1132,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.66</EM> 
-    <P>
     There was an off-by-one single-indexing error in the gridded-output
     versions of generic bilinear-interpolation routines  <A
     HREF="BILIN.html"><CODE>BILIN</CODE> and  <CODE>BMATVEC</CODE></A>,
@@ -1172,8 +1166,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.65</EM> 
-    <P>
     Subject says it.
     </BLOCKQUOTE>
 
@@ -1190,8 +1182,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.64</EM> 
-    <P>
     Calvin Arter (UNC Institute for the Environment) introduced a new
     pointwise-product grid-algebra operation <CODE>A&nbsp;*&nbsp;B</CODE>
     into <A HREF = "GRIDOPS.html"><CODE>SUBROUTINE GRIDOPS</CODE></A>.
@@ -1224,8 +1214,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.63</EM> 
-    <P>
     Subject says it.
     <P>
     </BLOCKQUOTE>
@@ -1241,15 +1229,12 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.62</EM> 
-    <P>
     Subject says it.
     <P>
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
     <P>
-<HR> <!----------------------------------------------------------------->
 
 <H2> <A NAME = "oct062020">
     New routines <CODE>ENVINT8, BENVINT8, GETINT8, GETINT81</CODE>
@@ -1257,8 +1242,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.61</EM> 
-    <P>
     See <A HREF="ENVGETS.html"><CODE>INTERFACE ENVGETS</CODE></A>
     and <A HREF="GETVAL.html"><CODE>INTERFACE GETVAL</CODE></A>.
     <P>
@@ -1281,8 +1264,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.60</EM> 
-    <P>
     Kemal Gurer, California Air Resources Board, pointed out this
     problem with MPAS-format netCDF, which was padding character-strings
     with trailing nulls.  (The netCDF Fortran bindings do not have a
@@ -1315,8 +1296,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.59</EM> 
-    <P>
     Version 10 of <VAR>gfortran</VAR>  takes a particularly
     idiosyncratic interpretation of the (latest) Fortran-2018 Standard.
     Starting with netCDF and going through the I/O&nbsp;API, M3Tools,
@@ -1350,8 +1329,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.58</EM> 
-    <P>
     Version 10 of <VAR>gfortran</VAR>  takes a particularly
     idiosyncratic interpretation of the (latest) Fortran-2018
     Standard.
@@ -1391,8 +1368,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.57</EM> 
-    <P>
     Subject says it.
     </BLOCKQUOTE>
 
@@ -1408,8 +1383,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.56</EM> 
-    <P>
     Subject says it.  This came from a situation where badly-formatted
     input was so bad that it caused the error-message buffer to
     overflow, preventing the calling program from diagnosing just what
@@ -1430,8 +1403,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.255</EM> 
-    <P>
     <VAR>skunwar</VAR> on the CMAS Forum has found a bug in M3Tools program
     <A HREF="M3CPLE.html"><VAR>m3interp</VAR></A>:  it was not handling
     boundary-condition files correctly.  Now fixed.
@@ -1449,8 +1420,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.54</EM> 
-    <P>
     This version established for CMAQ (etc.) tracking purposes, with
     enhancements and bug-fixes for WRF-CMAQ.  New changes include the
     following:
@@ -1496,8 +1465,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.53</EM> 
-    <P>
     M3Tools program <A HREF="GRIDPROBE.html"><CODE>GRIDPROBE</CODE></A>
     now supports either M3IO file output, ASCII output, or both (instead
     of only ASCII output).
@@ -1533,8 +1500,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.52</EM> 
-    <P>
     As originally dimensioned, the set of <CODE>MODULE</CODE> variables
     for <CODE>MODULE MODMPASFIO</CODE> exceeded 8 GB in the
     I/O&nbsp;API-3.2-large case, which causes link errors with
@@ -1567,8 +1532,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.51</EM> 
-    <P>
     Subject says it.
     <P>
     <CODE>PARMS3-LARGE.EXT</CODE> has
@@ -1608,8 +1571,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.50</EM> 
-    <P>
     James Beidler, US EPA, reported a problem with the above:  since
     they did not <CODE>CALL&nbsp;INITSPHERES()</CODE> before using
     geospatial transforms from <CODE>MODULE&nbsp;MODGCTP</CODE>, they
@@ -1629,8 +1590,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.49</EM> 
-    <P>
     Winston Hao (NY DEC) reported a bug  which caused errors with
     <A HREF="BUFFERED.html#list">file-set file lists</A> (a bad
     recursion in internal worker-routines <CODE>OPNLIST3()</CODE>
@@ -1649,8 +1608,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.48</EM> 
-    <P>
     Subject says it for <VAR>mtxcple</VAR>.
     <P>
     For CMAQ-DDM and CMAQ-ISAM, <VAR>ioapi-3.2-large</VAR> has expanded
@@ -1681,8 +1638,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.47</EM> 
-    <P>
     Winston Hao (NY DEC) reported an off-by-one bug in processing the
     default value for <CODE>RUNLEN</CODE> (which comes in from a
     user-prompt) for  <A HREF="AA.html#tools"><VAR>M3TOOLS</VAR>
@@ -1717,8 +1672,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.46</EM> 
-    <P>
     ...for compatibility with &quot;unusual&quot; date&amp;time usage in
     MEGAN. (<CODE>RDTFLAG(*)</CODE> is an internal routine called by
     <CODE>READ3(*)</CODE> internals.)
@@ -1737,8 +1690,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.45</EM> 
-    <P>
     There was a typo in the refined-grid definition for
     <A HREF="MTXCALC.html"><VAR>m3tools/mtxcalc</VAR></A>
     that had the effect of &quot;squashing&quot; the output-range for
@@ -1764,8 +1715,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.44</EM> 
-    <P>
     Jim Dew points out that in the <VAR>Makeinclude.*pg*</VAR>
     (the Makeinclude-files for PGI-compiler binary types), the
     use of double-quotes in the definition of <VAR>make</VAR>-variable
@@ -1815,8 +1764,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.43</EM> 
-    <P>
     New <A HREF="INDEX1.html"><CODE>INTEGER*8</CODE>-key lookup routine
     <CODE>INDEXL1()</CODE> and new generic interface
     <CODE>INDEXKEY()</CODE></A> in  <CODE>MODULE M3UTILIO:</CODE>
@@ -1860,8 +1807,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.42</EM> 
-    <P>
     Bug-fixes in <A HREF="RDATT3.html"><VAR>ioapi/rdatt3</VAR></A> and
     <A HREF="WRATT3.html"><VAR>ioapi/wratt3</VAR></A>:
     fixed bug introduced by I/O&nbsp;API 3.2 PnetCDF changes.
@@ -1889,8 +1834,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.41</EM> 
-    <P>
     Bug-fix in <A HREF="MTXCALC.html"><VAR>m3tools/mtxcalc</VAR></A>:
     fixed uninitialized <CODE>NUMER, DENOM</CODE> variables.
     <P>
@@ -1914,8 +1857,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.40</EM> 
-    <P>
     Modified generic routine <A HREF="XY2XY.html"><CODE>XY2XY()</CODE></A>
     from <A HREF="MODGCTP.html"><CODE>MODULE&nbsp;MODGCTP</CODE></A> to
     &pass-through location arguments: if <CODE>X_IN&lt;AMISS3</CODE>
@@ -1940,8 +1881,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.39</EM> 
-    <P>
     For I/O&nbsp;API-3.2 post Dec.&nbsp;25,&nbsp;2017,
     <VAR><STRONG>m3tools</STRONG></VAR> program
     <A HREF = "LATLON.html"><VAR><STRONG>latlon</STRONG></VAR></A>
@@ -1991,8 +1930,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.38</EM> 
-    <P>
     Ehsan Mosadegh <EM>(dri.edu)</EM> reports a problem related to a missing
     <CODE>EFLAG</CODE> initialization in <VAR><STRONG>m3tools</STRONG></VAR>
     program <A HREF="M3TSHIFT.html"><VAR><STRONG>m3tshift</STRONG></VAR></A>.
@@ -2014,8 +1951,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.37</EM> 
-    <P>
     Jeff Vukovich (US EPA) reports a missing line
     <BLOCKQUOTE><CODE>
     CU( 4,S ) =  X * Y
@@ -2038,8 +1973,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.36</EM> 
-    <P>
     <CODE>INTEGER</CODE>-variable support for <VAR>m3tools</VAR>
      program <A HREF="MPASTOM3.html"><VAR>mpastom3</VAR></A>:
      uses MPAS-cell values (as for <CODE>MPCELLMATX()</CODE>, below)
@@ -2073,8 +2006,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.35</EM> 
-    <P>
     New <VAR>m3tools</VAR> programs:
     <DL>
         <DT><A HREF="MPASDIFF.html"><VAR>mpasdiff</VAR></A>
@@ -2121,8 +2052,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.34</EM> 
-    <P>
     Bug reported by Kathy Brehme, Edward Anderson: incorrect default
     <CODE>RUNLEN</CODE> in <VAR>m3tools</VAR> program
     <A HREF="VERTOT.html"><VAR>vertot</VAR></A>. Same bug existed in
@@ -2149,8 +2078,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.33</EM> 
-    <P>
     <VAR>VERDI</VAR> uses NCAR's Java <CODE>MPASConvention.java</CODE>
     for MPAS-file recognition.  This code requires global
     file-attributes <CODE>model_name</CODE> and  <CODE>Conventions</CODE>
@@ -2174,8 +2101,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.32</EM> 
-    <P>
     Bug-fixes for incorrect read  of variables <VAR>lonCell</VAR> and
     write of <VAR>kiteAreasOnVertex</VAR> to/from file headers, in
     <A HREF="MODMPASFIO.html"><CODE>MODULE&nbsp;MODMPASFIO</CODE></A>.
@@ -2194,8 +2119,6 @@
 </H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.31</EM> 
-    <P>
     <CODE>EQMER()</CODE> had an incorrect test for <CODE>P_ALP</CODE>
     <P>
 
@@ -2221,8 +2144,6 @@
 </H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.30</EM> 
-    <P>
     Subject says it:  in both of these, there was a consistent error
     in values for the <CODE>DELS()</CODE> argument for the time step
     dimension.
@@ -2241,8 +2162,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.29</EM> 
-    <P>
     Bug in <CODE><A HREF="MODMPASFIO.html">MODMPASFIO</A>/MPSTR2DT()</CODE>
     which then causes bad results from
     <CODE>MODMPASFIO/READMPSTEPS()</CODE>.
@@ -2266,8 +2185,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.28</EM> 
-    <P>
     Subject says it:  bugs in time step versions of read/write
     routines; with time interpolation of <CODE>BNDARY3</CODE>
     boundary condition data structures.
@@ -2288,8 +2205,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.27</EM> 
-    <P>
 
     <UL>
         <LI> See <A HREF="MODNCFIO.html#create"><CODE>CREATENC()</CODE></A>
@@ -2320,8 +2235,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.26</EM> 
-    <P>
     MPAS is a (potentially-)global unstructured-grid weather model that
     can be adapted for atmospheric chemistry, land-surface modeling, and
     other tasks.  It uses its own format built on top of netCDF to store
@@ -2354,8 +2267,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.25</EM> 
-    <P>
     Added routines <CODE>READNVSTEP*(FNAME,TSTEP,VNAME,...)</CODE>
     to <A HREF="MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>
     for reading one time step (<CODE>TSTEP=1,2,3,...</CODE>) of the
@@ -2379,8 +2290,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.24</EM> 
-    <P>
     Transcription error in <CODE>MODPDATA/SETUP_DECOMP()</CODE> reported
     by David Wong,  US EPA, now fixed.
     <P>
@@ -2404,8 +2313,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.23</EM> 
-    <P>
     <EM>For I/O&nbsp;API 3.2 or later:</EM>  If
     <A HREF="BUFFERED.html#snoop"><VAR>snoop mode</VAR></A> is configured
     in the <VAR>Makefile</VAR> when you build <VAR>libioapi.a</VAR>,
@@ -2431,8 +2338,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.22</EM> 
-    <P>
     <A HREF = "MODNCFIO.html"><CODE>MODULE&nbsp;MODNCFIO</CODE></A> had
     generic <CODE>INTERFACE&nbsp;READNCVAR()</CODE> augmented to
     support <CODE>NF_BYTE==INTEGER*1</CODE> and <CODE>NF_SHORT==INTEGER*2</CODE>
@@ -2454,8 +2359,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.21</EM> 
-    <P>
     <VAR>m3tools</VAR> program <A
     HREF="M3MASK.html"><CODE>M3MASK</CODE></A>
     reads ASCII mask-data, specified by a file having one line per
@@ -2482,8 +2385,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.20</EM> 
-    <P>
     New routines <CODE>READNCVAR4DD(), READNCVAR4DI(), READNCVAR4DR(),
     READNCVEC4DD(), READNCVEC4DI(), READNCVEC4DR()</CODE>
     in the generic routine <CODE>READNCVAR()</CODE>in
@@ -2506,8 +2407,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.19</EM> 
-    <P>
     Missing <CODE>IMPLICIT NONE</CODE> and <CODE>EXTERNAL</CODE> declarations
     in <A HREF="LASTTIME.html"><CODE>LASTTIME()</CODE></A>.
     <P>
@@ -2532,8 +2431,6 @@
 </H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.18</EM> 
-    <P>
     Corrected mis-handling of delimiters in COMMA-or-BLANK delimited lists.
     <P>
     </BLOCKQUOTE>
@@ -2551,8 +2448,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.17</EM> 
-    <P>
     Add new routines <CODE>ISCMAQ()</CODE> and  <CODE>ISSMOKE()</CODE>
     to <A HREF="MODATTS3.html"><CODE>MODULE&nbsp;MODATTS3</CODE></A>.
     <P>
@@ -2584,8 +2479,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.6</EM> 
-    <P>
     Edward Anderson (Lockheed Martin, supporting the U.S. EPA) points out
     that <VAR>single_thread.o</VAR> has unsatisfied references that are
     troublesome for the creation of shared libraries.
@@ -2608,8 +2501,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.5</EM> 
-    <P>
     Chris Nolte, US EPA ORD, points out a bug in the I/O&nbsp;API 3.2
     version of <VAR>m3tools</VAR> program
     <A HREF="M3TPROC.html"><VAR>m3tproc</VAR></A>, together
@@ -2630,8 +2521,6 @@
 </H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.14</EM> 
-    <P>
     Metadata now contains values for all environment based control
     parameters, and path-names for input files.
     </BLOCKQUOTE>
@@ -2648,8 +2537,6 @@
 </H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.13</EM> 
-    <P>
     Subject says it.
     </BLOCKQUOTE>
 
@@ -2665,8 +2552,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.12</EM> 
-    <P>
     Bug-fix from Chris Nolte, US EPA, in <A
     HREF="SECSDIFF.html"><CODE>SECSDIFF()</CODE></A> for the
     Climatology-Year <CODE>IO_365</CODE> Version.  He also noted that
@@ -2710,8 +2595,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.11</EM> 
-    <P>
     <CODE><A HREF="MODATTS3.html">MODULE&nbsp;MODATTS3</A></CODE> now
     has support for automated inclusion of &quot;unstructured
     text-file&quot; metadata into [P]netCDF file headers of all files
@@ -2747,8 +2630,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.10</EM> 
-    <P>
     <VAR>gfortran</VAR> documentation is less than clear; it turns
     out that <CODE>-I</CODE> should be used for F90 module search-path,
     whereas  <CODE>-J</CODE> is used for F90 modulefile placement
@@ -2773,8 +2654,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.9</EM> 
-    <P>
     New <VAR>m3tools</VAR> program
     <A HREF="FINDWNDW.html"><VAR>findwndw</VAR></A> to read headers from
     two GRIDDED files <CODE>FILE1</CODE> and <CODE>FILE2</CODE>, and
@@ -2807,8 +2686,6 @@
 </H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.8</EM> 
-    <P>
     B. H. Baek (UNC IE) discovered bacvkwards-compatibility problems
     in <CODE>BILIN(), BMATVEC(),  UNGRIDB(), and UNGRIDI() </CODE>. for
     codes that do not <CODE>USE&nbsp;M3UTILIO</CODE>.  Now fixed.
@@ -2830,8 +2707,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.7</EM> 
-    <P>
     <DL>
         <DT> Top-level <VAR>Makefile.template</VAR>
         <DD> Fixes to treatment of <VAR>make</VAR>-variable
@@ -2869,8 +2744,6 @@
     CMAQ metadata routines now implemented in <CODE>MODULE&nbsp;MODATTS3</CODE> </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.6</EM> 
-    <P>
     The following routines are now implemented and &quot;active&quot;
     in <A HREF = "MODATTS3.html"><CODE>MODATTS3&nbsp;MODATTS3</CODE></A>:
     <DL>
@@ -2918,8 +2791,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.5</EM> 
-    <P>
     Add new routines <CODE>DESCNCVAR()</CODE> and <CODE>READNCVAR()</CODE>
     to <A HREF = "MODNCFIO.html"><CODE>MODULE MODNCFIO</CODE></A>:
     <DL>
@@ -2953,8 +2824,6 @@
 </H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.4</EM> 
-    <P>
     Add new routine <CODE>DBLLIST()</CODE> for <CODE>REAL*8</CODE>
     valued lists, with support as part of the <CODE>ENVLIST()</CODE>
     generic.
@@ -2985,8 +2854,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.3</EM> 
-    <P>
     <VAR>m3tools</VAR> program
     <A HREF = "WRFGRIDDESC.html"><VAR>wrfgriddesc</VAR></A> creates a
     <VAR>GRIDDESC</VAR> file from the header-data in a WRF-format netCDF
@@ -3012,8 +2879,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.2</EM> 
-    <P>
     I/O&nbsp;API 3.2 has optional support for climate modeling with a
     365-day/no-leap-year calendar with &quot;normal&quot; months, and
     weeks aligned so that Jan.&nbsp;1, 1900 is a Monday.  To build this
@@ -3042,8 +2907,6 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    <EM>Version 3.2.1</EM> 
-    <P>
     Note that  <VAR>Makefile</VAR>s always need to be customized
     for your system (installation-directory <CODE>BASEDIR</CODE>,
     etc.).<P>
@@ -8088,7 +7951,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 277 2025-02-18 16:49:21Z coats $
+    $Id: NEWSTUFF.html 278 2025-04-12 15:27:33Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

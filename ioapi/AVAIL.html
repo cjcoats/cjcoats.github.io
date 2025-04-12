@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AVAIL.html 275 2025-01-22 08:11:24Z coats $" -->
+<!-- "$Id: AVAIL.html 278 2025-04-12 15:27:33Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     Availability/Download of the BAMS/Models-3 I/O&nbsp;API
@@ -107,7 +107,11 @@ Foreword
     upward compatibility issues between Versions&nbsp;3.1 and 3.2,
     mostly coming from the renaming and generalization of
     <CODE>MODULE&nbsp;MATXATTS</CODE> as
-    <CODE>MODULE&nbsp;MODATTS3</CODE>.
+    <CODE>MODULE&nbsp;MODATTS3</CODE>.  Version 4.0 is almost fully
+    upwards compatible with previous versions, the primary exception
+    being the removal of routine <CODE>M3ERR()<CODE> which was declared
+    obsolete in July, 1992, and should have been removed from all
+    programs at least three decades ago.
     <P>
 
     In general, you are best off if you can build your whole modeling
@@ -169,7 +173,12 @@ m3stat:
     version of the release, since <VAR>git pull</VAR> will automatically
     update exactly what needs to be updated in your source, 
     <A HREF = "#update">allowing you to do an as-simple-as-possible
-    <VAR>make</VAR> to install the update.</A>
+    <VAR>make</VAR> to install the update.</A>  As of 
+    April, 2025, routine <CODE>INIT3()</CODE> will log the
+    release-number and dimensioning of your library -- e.g., 
+    <PRE>
+    Version 4.0.2 with PARMS3.EXT/PARAMETER::MXVARS3= 2048
+    </PRE>
     <P>
 
     <STRONG>For the usual simple installation:</STRONG> you need
@@ -219,14 +228,34 @@ m3stat:
     <P>
 
     <STRONG>For (2024 or later) Intel OneAPI compilers</STRONG>
-    choose <CODE>BIN</CODE>-types matching the<VAR>Makeinclude.*ifx*</VAR>.
+    choose <CODE>BIN</CODE>-types matching the<VAR>Makeinclude.Linux2_x86_64ifx*</VAR>.
+    <P>
+
+    <STRONG>For (2024 or later) AMD AMD Optimizing Compiler Collection
+    (AOCC)</STRONG>
+    choose <CODE>BIN</CODE>-types matching the <VAR>Makeinclude.Linux2_x86_64aocc*</VAR>.
+    <P>
+
+    <STRONG>For (2024 or later) nVidia compilers</STRONG>
+    choose <CODE>BIN</CODE>-types matching the <VAR>Makeinclude.Linux2_x86_64nv*</VAR>.
+    <P>
+
+    <STRONG>For (2024 or later) Oracle compilers</STRONG>
+    choose <CODE>BIN</CODE>-types matching the <VAR>Makeinclude.Linux2_x86_64of*</VAR>.
+    <P>
+
+    <STRONG>For (2024 or later) LLVM or AMD Optimizing Compiler
+    Collection (AOCC) compilers</STRONG>, you may have to adjust
+    <CODE>ARCHLIBS</CODE> in the corresponding <VAR>Makeinclude</VAR>
+    to match your distributions <VAR>gcc</VAR>-installation's
+    system-library location.
     <P>
 
     <DL>
         <DT>  <STRONG>Detailed Instructions to set up the
         installation:</STRONG><BR>
-        <EM>(needed for climatology-year, MPI-enabled, <A HREF =
-        "#medium">medium-memory-model</A>, netCDF-4-enabled, or
+        <EM>(needed for climatology-year, MPI-enabled,
+        <A HREF = "#medium">medium-memory-model</A>, netCDF-4-enabled, or
         coupling-mode installations)</EM>
         <DD>  <OL>
                   <LI> It is currently (Jan. 20215)  preferred to download Version&nbsp;3.2 
@@ -247,11 +276,18 @@ m3stat:
     </PRE>
                        <STRONG>Note that (due to directory-naming conventions
                        that precede GitHub by more than two decades)
-                       without the doubled <CODE>ioapi-4.0</CODE>,
+                       without the doubled <CODE>ioapi-4.0</CODE> in
+                       this command,
                        I/&nbsp;API 4.0 code will still be checked out
                        into a base directory named <VAR>ioapi-3.2</VAR>;
                        attempting to change this diectly will break the
                        connection with GitHub ;-(</STRONG>
+                       <P>
+                       Note also that <STRONG>I/&nbsp;API 4.0 requires a
+                       completely different directory structure from 
+                       I/&nbsp;API 3.2</STRONG>, due to the different
+                       (<CODE>.f90</CODE> instead of <CODE>.f</CODE>) for
+                       some routines.
                        <P>
                        The GitHub repository is always up to date (as
                        CMASCENTER is not), and its integrity can be
@@ -2171,7 +2207,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-    $Id: AVAIL.html 275 2025-01-22 08:11:24Z coats $
+    $Id: AVAIL.html 278 2025-04-12 15:27:33Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->

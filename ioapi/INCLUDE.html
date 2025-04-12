@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: INCLUDE.html 239 2023-03-14 15:06:03Z coats $" -->
+<!-- "$Id: INCLUDE.html 278 2025-04-12 15:27:33Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE> MODULES AND PUBLIC INCLUDE FILES </TITLE>
 </HEAD>
@@ -15,7 +15,7 @@
 <H1> MODULES AND PUBLIC INCLUDE FILES </H1>
 
     <BLOCKQUOTE>
-    <A NAME = "contents">There</A> are six Fortran <VAR>MODULE</VAR>s,
+    <A NAME = "contents">There</A> are seven Fortran <VAR>MODULE</VAR>s,
     and three primary (and one additional) public matching pairs of
     Fortran and C include files in the I/O&nbsp;API, with  the following
     sorts of content:
@@ -57,6 +57,18 @@
                                   read/write-a-variable generic routines
                                   <CODE>READNCVAR()</CODE> and
                                   <CODE>WRITENCVAR()</CODE>
+                                  <P>
+        <LI> <A HREF = "MODGISIO.html"><VAR>MODULE MODGISIO</VAR></A>:
+                                  Routines for reading and writing various
+                                  optionally-<VAR>gzip</VAR>ed GIS-format
+                                  files:  ARC and ASC ASCII formatted,
+                                  and GRIDFLOAT and BIL1
+                                  (<VAR>uint8_t</VAR>), BIL2
+                                  (<VAR>uint16_t</VAR>), and BIL4
+                                  (<VAR>uint32_t</VAR>) binary GIS-style
+                                  files, with on-the-fly transpose from
+                                  GIS scan line row-order to normal-model
+                                  bottom-to-top row-order.
                                   <P>
         <LI> <A HREF = "MODWRFIO.html"><VAR>MODULE MODWRFIO</VAR></A>:
                                   routines for opening or creating,

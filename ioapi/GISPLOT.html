@@ -1,0 +1,253 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: GISPLOT.html 278 2025-04-12 15:27:33Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
+<TITLE>Program GISPLOT</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15"
+      MARGINHEIGHT="15"
+      LEFTMARGIN="15"
+      MARGINWIDTH="15">
+
+<!--#include virtual="/INCLUDES/header.html" -->
+
+<H1>    Program <CODE>GISPLOT</CODE> </H1>
+    <BR>
+    <STRONG>I/O&nbsp;API&nbsp;4.0 only!!</STRONG>
+
+<H2> Summary </H2>
+    <BLOCKQUOTE>
+    M3Tools program <STRONG><VAR>gisplot</VAR></STRONG> to do production
+    high performance tile and smoothed-tile graphics for a sequence of
+    (potentially large) files for the same variable, of  one of the <A
+    HREF="MODGISIO.html#types">supported GIS &quot;raster&quot;
+    (gridded) formats</A>. The program saves the results as image files,
+    using the <STRONG><VAR>libgd</VAR></STRONG> image library. Output
+    file formats are GIF, JPEG, and PNG.
+    <P>
+    <P>
+    Using the <CODE>PLOTONLY</CODE> option, one can generate images with
+    no legends: e.g., for publication at Linoitype&reg; 4096-dpi
+    resolution, one can generate 5-inch-by-4-inch (20480x16384-pixel)
+    or larger images (also impossible for, e.g., <VAR>PAVE></VAR>, <VAR>VERDI</VAR>, or
+    <VAR>Panoply</var>.
+    <P>
+    Unlike <VAR>VERDI</VAR> or <VAR>PAVE</VAR>,
+    <STRONG><VAR>m3plot</VAR> always generates images with the correct
+    aspect ratio, without the distortion of stretching in the horizontal
+    or vertical</STRONG> -- it displays the largest aspect-correct image
+    consistent with the specified image <CODE>WIDTH</CODE> and
+    <CODE>HEIGHT</CODE>.
+    Supported input file types are:
+        <BLOCKQUOTE><CODE>
+        BIL  , BIL2 , BIL4 , FLT<BR>
+        BIL , ZBIL2, ZBIL4, ZFLT<BR>
+        ARCI , ARCR , ASCI , ASCR
+        </CODE></BLOCKQUOTE>
+    where <CODE>BIL...FLT<CODE> are binary direct access, 
+    <CODE>ZBIL...ZFLT<CODE> are <VAR>gzip<.VAR>-compressed,
+    <CODE>ASCI, ASCR<CODE> are ASCII with  header lines specifying
+    &quot;north&quot;, &quot;south&quot;  &quot;east&quot;,
+    &quot;west&quot;, &quot;rows&quot;, and &quot;cols&quot; (one poer
+    line);  and  <CODE>ARCI, ARCR<CODE> are ASCII with  header lines
+    specifying &quot;ncols&quot;, &quot;nrows&quot;,
+    &quot;xllcorner&quot;, &quot;yllcorner&quot;, &quot;cellsize&quot;'
+    and optionally &quot;NODATA_value&quot;.
+    <P>
+    </BLOCKQUOTE>
+
+
+<H2> Usage </H2>
+    <BLOCKQUOTE>
+    <STRONG>To run the program</STRONG>:
+    <PRE>
+        setenv  GRIDDESC    &lt;path name&gt;
+        setenv  GRIDNAME    &lt;GRIDDESC name for input grid&gt;
+        setenv  CONFIG    &lt;path name for configuration file (see below)&gt;
+        setenv  BASENAME  &lt;base name or directory for output images&gt;
+        setenv  MAPDIR    &lt;directory for maps, or , or &quot;NONE&quot;&gt;
+        setenv  IMGDATES  &lt;use date-&amp;-time instead of record-numbers&gt;
+    </PRE>
+    For each <CODE>INFILE</CODE> in <CODE>CONFIG</CODE>
+    <PRE>
+        setenv &lt;file-name&gt;  &lt;path name&gt;
+    </PRE>
+    Then
+    <PRE>
+        gisplot [and answer the prompts]
+    </PRE>
+    Output file names are of the form 
+    <PRE>
+    &lt;BASENAME&gt;.&lt;VNAME&gt;[.&lt;record-index&gt;].[ gif | jpg | png ]
+    </PRE>
+    where &lt;BASENAME&gt;ay be a partial file-name, a directory, or
+    blank, &lt;VNAME&gt; is the variable-name, and &lt;record-index&gt;
+    is the Julian date&amp;time, formatted <COdE>YYYYDDDHHMMSS</CODE>.
+    <P>
+    </BLOCKQUOTE>
+
+
+<H2> Program Control:  <CODE>CONFIG</CODE> files and prompts</H2>
+
+    <BLOCKQUOTE>
+    The <CODE>CONFIG</CODE> file is an ASCII file, with lines to control
+    each of the program options.  These lines are of the form
+    <PRE>
+    &lt;name&gt;    &lt;value(s)&gt;
+    </PRE>
+    The following table gives these name, descriptions, and defaults of the
+    values, where note that <CODE>COLOR, VCOLOR, and CCOLOR</CODE> are
+    each multiple lines with sub-tables of consecutive color-indices and
+    RGB values.  Default values are indicated in square brackets [LIKE
+    THIS]
+    <BLOCKQUOTE>
+    <DL>
+        <DT><CODE>IMGFORMAT</CODE>
+        <DD>GIF | JPG | PNG>  [GIF]
+        <DT><CODE>IMGMETHOD</CODE>
+        <DD>TILED | SMOOTHED> [TILED]
+        <DT><CODE>WIDTH</CODE>
+        <DD>number of pixels wide for the entire image [960]
+        <DT><CODE>HEIGHT</CODE>
+        <DD>number of pixels high for the entire image [720]<BR>
+        (minimum image-size 240x280)
+        <DT><CODE>WINDOW_COLS</CODE>
+        <DD>first and last grid-col for the plot [entire grid]
+        <DT><CODE>WINDOW_ROWS</CODE>
+        <DD>first and last grid-row for the plot [entire grid]
+        <DT><CODE>PLOTONLY</CODE>
+        <DD>WIDTH | HEIGHT>  [WIDTH]<BR>
+            to suppress legend, and generate tiled-image only
+'           with image dimensions from WIDTH or HEIGHT.
+        <DT><CODE>LEGEND_BINS</CODE>
+        <DD>number of color-labels on the color-scale legend [6]
+        <P>
+        <DT><CODE>COLOR</CODE>
+        <DD>&lt;index&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;<BR>
+            for tile/smooth map, where <CODE>index</CODE> is consecutive
+            for some range 0&nbsp;...&nbsp;N&nbsp;&lt;&nbsp;253 and
+            each red-green-blue color-component is in the range [0...255]<BR>
+            [default tile-color palette is a 10-color scale]
+        <DT><CODE>MISSING_COLOR</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [127 127 127]
+            <P>
+        <DT><CODE>VARIABLE</CODE>
+        <DD>&lt;variable-name from <CODE>INFILE</CODE> or <CODE>ALL</CODE>&gt;
+            &lt;<CODE>[LIN|LOG|EXP</CODE>]&gt; [<CODE>LIN</CODE><BR>
+            where the second component of the value indicates linear scaling,
+            log-scaling, or exponential-scaling<BR>
+            e.g., <CODE>VARIABLE ALL LIN<CODE> for all-vbles "normal" plots,
+            <CODE>VARIABLE TA LIN<CODE> for a &quot;normal&quot; TA-plot,
+            <CODE>VARIABLE TA LOG<CODE> for a  log-scaled TA-plot, and
+            <CODE>VARIABLE TA EXP<CODE> for an exp-scaled TA-plot.
+        <DT><CODE>UNITS</CODE>
+        <DD>&lt;units-name&gt; [&lt;scale factor&gt; &lt;scale offset&gt;]<BR>
+            where default is units from the file, and if present, scaling uses
+            the formula
+            <PRE>
+            Y_display = scale * Y_file +  offset
+            </PRE>
+            This can be used, for example to convert temperatures from Kelvin to Fahrenheit...
+        <DT><CODE>MISSING_VALUE</CODE>
+        <DD>&quot;missing&quot; value for these files
+        <DT><CODE>SCALE_RANGE</CODE>
+        <DD>&lt;min&gt; &ltmax&gt; for the tile color-scale [data-min,data-max]
+        <DT><CODE>FORMAT_BINS</CODE>
+        <DD>C-language  format for color-scale legend-labels ["%g"]
+            <P>
+        <DT><CODE>MAPNAME1</CODE>
+        <DD>"states" map-file name in ${MAPDIR} [OUTLHRES], or
+        &lt;blank&gt; to suppress this map
+        <DT><CODE>MAPNAME2</CODE>
+        <DD>"county" map-file name in ${MAPDIR} [OUTLCOUNTIES], or
+        &lt;blank&gt; to suppress this map
+        <DT><CODE>MAPNAME3</CODE>
+        <DD>"extra"  map-file name in ${MAPDIR} [&lt;blank&gt;]
+        <DT><CODE>MAPCOLOR1</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [  0   0   0]
+        <DT><CODE>MAPCOLOR2</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [ 31  31  31]
+        <DT><CODE>MAPCOLOR3</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [ 63  63  63]
+        <DT><CODE>MAPWIDTH1</CODE>
+        <DD>line-width (pixels) [1]
+        <DT><CODE>MAPWIDTH2</CODE>
+        <DD>line-width (pixels) [1]
+        <DT><CODE>MAPWIDTH3</CODE>
+        <DD>line-width (pixels) [1]
+    </DL>
+    </BLOCKQUOTE>
+    with repeated sections, per file/timestep plotted:
+    <BLOCKQUOTE>
+    <DL>
+        <DT><CODE>INFILE</CODE>
+        <DD><logical name&gt; &lt;YYYYDDD or 0 [0]&gt;  &lt;HHMMSS or 0 [0]&gt;
+        <DT><CODE>TITLE1</CODE>
+        <DD>First  legend-header line [tile-variable name]
+        <DT><CODE>TITLE2</CODE>
+        <DD>Second legend-header line [tile-variable description]
+        <DT><CODE>TITLE3</CODE>
+        <DD>Third  legend-header line> [path name for INFILE]
+    </DL>
+    Blank lines are ignored (and may be used as section-separators).
+    <P>
+    </BLOCKQUOTE>
+
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "MODGISIO.html">Fortran-90 <VAR>MODULE MODGISIO</VAR></A>
+          with routines to read and write GIS &quot;raster&quot; data.
+          <P>
+    <LI>  <A HREF = "GISTOGIS.html">Program <VAR>M3TOGIS</VAR></A> to
+          convert one GIS &quot;raster&quot; data-format to another.
+          <P>
+    <LI>  <A HREF = "GISTOM3.html">Program <VAR>GISTOM3</VAR></A> to
+          convert GRIDDED I/O&nbsp;API to GIS &quot;raster&quot; data.
+          <P>
+    <LI>  <A HREF = "M3TOGIS.html">Program <VAR>M3TOGIS</VAR></A> to
+          convert GIS &quot;raster&quot; data to GRIDDED I/O&nbsp;API
+          <P>
+    <LI>  <A HREF = "M3PLOT.html">Program <VAR>M3PLOT</VAR></A> to
+          create GIF, JPG,  or PNG tile-plots for GRIDDED I/O&nbsp;API data.
+          <P>
+</UL>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<A HREF = "AA.html">
+To: <STRONG>Models-3/EDSS I/O&nbsp;API:  The Help Pages</STRONG>
+</A><P>
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>M3Tools Programs</STRONG> 
+</A><P>
+
+Copyright &copy; 2025 Carlie J. Coats, Jr., Ph.D.
+    <BLOCKQUOTE>
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the <A HREF="https://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License, Version 1.3</A> or any later version
+    published by the Free Software Foundation; with no Invariant
+    Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    </BLOCKQUOTE>
+<P>
+
+
+Send comments to
+    <BLOCKQUOTE>
+<A HREF = "mailto:carlie@jyarborough.com"> <ADDRESS>
+          Carlie J. Coats, Jr. <br>
+          carlie@jyarborough.com  </ADDRESS> </A>
+    </BLOCKQUOTE><P>
+
+<!--#include virtual="/INCLUDES/footer.html" -->
+
+
+</BODY>
+</HTML>

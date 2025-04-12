@@ -1,0 +1,894 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: MODGISIO.html 278 2025-04-12 15:27:33Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
+<TITLE>MODULE MODGISIO</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15"
+      MARGINHEIGHT="15"
+      LEFTMARGIN="15"
+      MARGINWIDTH="15">
+
+<!--#include virtual="/INCLUDES/header.html" -->
+
+<H1>    Fortran-90 <CODE>MODULE MODGISIO</CODE> </H1>
+    <BR>
+    <STRONG>I/O&nbsp;API&nbsp;4.0 only!!</STRONG>
+    <P>
+
+<H2><A NAME = "contents">Contents</A></H2>
+
+    <BLOCKQUOTE>
+     <DL>
+         <DT> <A HREF="#intro">Introductin</A>
+         <DT> <A HREF="#types">Supported GIS File Types</A>
+         <DT> <A HREF="#setup"><CODE>SETSWAP(), BINVERBOSE(), BINTERSE()</CODE></A>
+         <DT> <A HREF="#rdhdr"><CODE>RDGFHDR()</CODE></A>
+         <DT> <A HREF="#blhdr"><CODE>BILHDR()</CODE></A>
+         <DT> <A HREF="#wrhdr"><CODE>WRGFHDR()</CODE></A>
+         <DT> <A HREF="#rdasc"><CODE>RDAFILE()</CODE></A>
+         <DT> <A HREF="#wrasc"><CODE>WRAFILE()</CODE></A>
+         <DT> <A HREF="#rdarc"><CODE>RDARC()</CODE></A>
+         <DT> <A HREF="#wrarc"><CODE>WRARC()</CODE></A>
+         <DT> <A HREF="#rdbr" ><CODE>RDBRFILE(),  RDZBRFILE()</CODE></A>
+         <DT> <A HREF="#wrbr" ><CODE>WRBRFILE(),  WRZBRFILE()</CODE></A>
+         <DT> <A HREF="#rdbi1"><CODE>RDBIFILE(),  RDZBIFILE()</CODE></A>
+         <DT> <A HREF="#rdbi2"><CODE>RDBI2FILE(), RDZBI2FILE()</CODE></A>
+         <DT> <A HREF="#rdbi4"><CODE>RDBI4FILE(), RDZBI4FILE()</CODE></A>
+         <DT> <A HREF="#wrbi1"><CODE>WRBIFILE(),  WRZBIFILE()</CODE></A>
+         <DT> <A HREF="#wrbi2"><CODE>WRBI2FILE(), WRZBI2FILE()</CODE></A>
+         <DT> <A HREF="#wrbi4"><CODE>WRBI4FILE(), WRZBI4FILE()</CODE></A>
+         <DT> <A HREF="#gisio">Worker-routines from <VAR>gisio.c</VAR></A>
+     </DL>
+    </BLOCKQUOTE>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME = "intro">Introduction</A></H2>
+
+    <BLOCKQUOTE>
+
+    <EM>New Apr 2025 for I/O&nbsp;API&nbsp;4.0 only!!</EM>
+    <P>
+    Routines for reading and writing various GIS-format files:  ARC and
+    ASC ASCII formatted, and GRIDFLOAT and BIL1 (<VAR>uint8_t</VAR>),
+    BIL2 (<VAR>uint16_t</VAR>), and BIL4 (<VAR>uint32_t</VAR>) binary
+    GIS-style files, with on-the-fly transpose from GIS scan line
+    row-order to normal-model bottom-to-top row-order, referencing the
+    files by logical name.
+    <P>
+    All the binary (BIL and FLT) routines have variants that do
+    <VAR>gzip</VAR> compatible compression or de-compression on the fly,
+    using <VAR>libz</VAR>. (It has been shown that for most
+    meteorology/environmental data, the combination of <VAR>libz</VAR>
+    overhead plus the reduced I/O time from reading or writing the
+    compressed data is faster than just reading or writing the matching
+    un-compressed data (which  can be important in time-constrained
+    applications like real-time forecasting).)
+    <P>
+    Path-names for the binary-type external header files are the result
+    of appending <CODE>.hdr</CODE> onto the path name for the
+    corresponding data file, e.g., the header for
+    <VAR>/foo/bar/qux.dat</VAR> would be <VAR>/foo/bar/qux.dat.hdr</VAR>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<H2><A NAME = "types">Supported GIS File Types</A></H2>
+
+    <BLOCKQUOTE>
+    For more about these file types, see the
+    <A HREF="https://gdal.org/en/stable/drivers/raster/index.html">
+    GDAL documentation about &quot;raster&quot; (gridded) file
+    formats</A>; for more about GIS data format translation see
+    <A HREF="https://gdal.org/en/stable/programs/gdal_translate.html">
+    <VAR><STRONG>gdal_translate</STRONG></VAR></A>.
+    <P>
+    The I/O&nbsp;API <CODE>MODULE MODGISIO</CODE> does not support all of
+    these formats:  it supports the following subset (extended by
+    on-the-fly <VAR>gzip</VAR> compression).<BR>
+    Note that <EM>all of these use &quot;scan-line&quot; (top-to-bottom,
+    left-to-right) array-storage order.</EM>
+    <DL>
+        <DT><STRONG>BIL<CODE></CODE></STRONG>
+        <DD>one-byte (8 bit) <CODE>INTEGER</CODE> direct-access binary
+        <P>
+        <DT><STRONG><CODE>BIL2</CODE></STRONG>
+        <DD>two-byte (16 bit) <CODE>INTEGER</CODE> direct-access binary
+        <P>
+        <DT><STRONG><CODE>BIL4</CODE></STRONG>
+        <DD>four-byte (32 bit) <CODE>INTEGER</CODE> direct-access binary
+        <P>
+        <DT><STRONG><CODE>FLT</CODE></STRONG> or <STRONG><CODE>GRIDFLOAT</CODE></STRONG>
+        <DD>four-byte (32 bit) <CODE>REAL</CODE> direct-access binary
+        <P>
+        <DT><STRONG><CODE>ZBIL</CODE></STRONG>
+        <DD>one-byte (8 bit) <CODE>INTEGER</CODE> <VAR>gzip</VAR>ed binary
+        <P>
+        <DT><STRONG><CODE>ZBIL2</CODE></STRONG>
+        <DD>two-byte (16 bit) <CODE>INTEGER</CODE> <VAR>gzip</VAR>ed binary
+        <P>
+        <DT><STRONG><CODE>ZBIL4</CODE></STRONG>
+        <DD>four-byte (32 bit) <CODE>INTEGER</CODE>  <VAR>gzip</VAR>ed binary
+        <P>
+        <DT><STRONG><CODE>ZFLT</CODE></STRONG>
+        <DD>four-byte (32 bit) <CODE>REAL</CODE>  <VAR>gzip</VAR>ed binary
+        <P>
+        <DT><STRONG><CODE>ARCI</CODE></STRONG>
+        <DD>ASCII ARC-header-format <CODE>INTEGER</CODE>
+        <P>
+        <DT><STRONG><CODE>ARCR</CODE></STRONG> and <STRONG><CODE>ARCE</CODE></STRONG>
+        <DD>ASCII ARC-header-format <CODE>REAL</CODE>:
+        <CODE>ARCR</CODE> uses fixed-format (<CODE>xxx.xxxx</CODE>)
+        formatting, <CODE>ARCE</CODE> uses scientific-exponent
+        (<CODE>x.xxxxEnnn</CODE>) formatting.
+        <P>
+        <DT><STRONG><CODE>ASCI</CODE></STRONG>
+        <DD>ASCII ENVI-header-format <CODE>INTEGER</CODE>
+        <P>
+        <DT><STRONG><CODE>ASCR</CODE></STRONG>
+        <DD>ASCII ENVI-header-format <CODE>REAL</CODE>
+        <P>
+    </DL>
+    where <CODE>ARCI</CODE>, <CODE>ARCR</CODE>, and <CODE>ARCR</CODE> have
+    header lines with one grid parameter name and value per line:
+        <BLOCKQUOTE><CODE>
+        north<BR> south<BR> east<BR> west<BR> rows<BR> cols<BR>
+        </CODE></BLOCKQUOTE>
+    while <CODE>ASCI</CODE> and <CODE>ASCR</CODE> have
+    header lines with one grid parameter per line:
+        <BLOCKQUOTE><CODE>
+        ncols<BR> nrows<BR> xllcorner<BR> yllcorner<BR> cellsize<BR>
+        (optionally) NODATA_value<BR>
+        </CODE></BLOCKQUOTE>
+    and <CODE>*BIL*</CODE> and <CODE>*FLT</CODE> have separate ASCII
+    &quot;header files&quot; to be read and written by the <CODE>*HDR()</CODE>
+    routines from this <CODE>MODULE MODGISIO</CODE>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "setup"><CODE>SETSWAP(), BINVERBOSE(), BINTERSE()</CODE></A></H2>
+
+    <BLOCKQUOTE>
+    <CODE>SETSWAP()</CODE>:  set byte-swapping flag:  0 for native, 1
+    for network-to/from-native (normally 0)
+    <P>
+    <CODE>BINVERBOSE()</CODE>:  set verbose logging (enabled by default)
+    <P>
+    <CODE>BINTERSE()</CODE>:  set non-verbose "terse" logging (disabled by default)
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "rdhdr"><CODE>RDGFHDR()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION RDGFHDR( EQNAME,                           &
+                              NCOLS, NROWS, BYTEORDER,          &
+                              XLL, YLL, XCELL, YCELL, AMISS )
+        CHARACTER(LEN=*), INTENT( IN  ) :: EQNAME    !!  input header-file
+        INTEGER,          INTENT( OUT ) :: NCOLS     !!  grid dimensions
+        INTEGER,          INTENT( OUT ) :: NROWS     !!
+        INTEGER,          INTENT( OUT ) :: BYTEORDER !!
+        REAL*8 ,          INTENT( OUT ) :: XLL       !!  lower-left cell-center coords
+        REAL*8 ,          INTENT( OUT ) :: YLL       !!
+        REAL*8 ,          INTENT( OUT ) :: XCELL     !!  cell-size
+        REAL*8 ,          INTENT( OUT ) :: YCELL     !!
+        REAL   ,          INTENT( OUT ) :: AMISS     !!  missing-data value
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open, read, and then close the<CODE> [Z]BIL*/[Z]FLT</CODE>
+    &quot;header&quot; ASCII file with path-name <CODE>EQNAME</CODE>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "wrhdr"><CODE>WRGFHDR()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION WRGFHDR( GFROOT, VNAME, UNITS, DESCS, VMISS,       &
+                              GDTYP, NCOLS, NROWS,                      &
+                              P_ALP, P_BET, P_GAM, XCENT, YCENT,        &
+                              XORIG, YORIG, XCELL, YCELL )
+        CHARACTER(LEN=*), INTENT( IN )::     GFROOT     !  output path
+        CHARACTER(LEN=*), INTENT( IN )::     VNAME      !  variable name
+        CHARACTER(LEN=*), INTENT( IN )::     UNITS      !  units
+        CHARACTER(LEN=*), INTENT( IN )::     DESCS      !  description
+        REAL            , INTENT( IN )::     VMISS      !
+        INTEGER,          INTENT( IN )::     GDTYP
+        INTEGER,          INTENT( IN )::     NCOLS
+        INTEGER,          INTENT( IN )::     NROWS
+        REAL*8,           INTENT( IN )::     P_ALP
+        REAL*8,           INTENT( IN )::     P_BET
+        REAL*8,           INTENT( IN )::     P_GAM
+        REAL*8,           INTENT( IN )::     XCENT
+        REAL*8,           INTENT( IN )::     YCENT
+        REAL*8,           INTENT( IN )::     XORIG
+        REAL*8,           INTENT( IN )::     YORIG
+        REAL*8,           INTENT( IN )::     XCELL
+        REAL*8,           INTENT( IN )::     YCELL
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open, write, and close a [Z]BIL*/[Z]FLT &quot;header&quot; ASCII file,
+    containing metadata for matching binary  output files for this variable.
+    <P>
+    Output header file name will be <VAR>${GFROOT}/${VNAME}.bil.hdr</VAR>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "blhdr"><CODE>BILHDR()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION BILHDR( BILROOT,                               &
+                             VNAME, UNITS, DESCS, SCALE, OFFSET,    &
+                             IMISS, NBITS, GDTYP, NCOLS, NROWS,     &
+                             P_ALP, P_BET, P_GAM, XCENT, YCENT,     &
+                             XORIG, YORIG, XCELL, YCELL )
+        CHARACTER(LEN=*), INTENT( IN )::     BILROOT    !  output path
+        CHARACTER(LEN=*), INTENT( IN )::     VNAME      !  variablename
+        REAL,             INTENT( IN )::     SCALE
+        REAL,             INTENT( IN )::     OFFSET
+        INTEGER,          INTENT( IN )::     IMISS
+        INTEGER,          INTENT( IN )::     NBITS
+        CHARACTER(LEN=*), INTENT( IN )::     UNITS      !  units
+        CHARACTER(LEN=*), INTENT( IN )::     DESCS      !  description
+        INTEGER,          INTENT( IN )::     GDTYP
+        INTEGER,          INTENT( IN )::     NCOLS
+        INTEGER,          INTENT( IN )::     NROWS
+        REAL*8,           INTENT( IN )::     P_ALP
+        REAL*8,           INTENT( IN )::     P_BET
+        REAL*8,           INTENT( IN )::     P_GAM
+        REAL*8,           INTENT( IN )::     XCENT
+        REAL*8,           INTENT( IN )::     YCENT
+        REAL*8,           INTENT( IN )::     XORIG
+        REAL*8,           INTENT( IN )::     YORIG
+        REAL*8,           INTENT( IN )::     XCELL
+        REAL*8,           INTENT( IN )::     YCELL
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open, write, and close a general scale-and-offset-valued [Z]BIL*
+    &quot;header&quot; ASCII file, containing metadata for matching
+    binary  output files for this variable.
+    <P>
+    Output header file name will be
+    <VAR>${GFROOT}/${VNAME}.bil.hdr</VAR>
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "rdasc">Generic <CODE>LOGICAL FUNCTION RDAFILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION RDAFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, IBUF )
+    LOGICAL FUNCTION RDAFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+        CHARACTER(LEN=*), INTENT(  IN ) :: FNAME
+        INTEGER         , INTENT(  IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT(  IN ) :: XORIG, YORIG, ACELL
+        INTEGER         , INTENT( OUT ) :: IBUF( NCOLS, NROWS )
+        REAL            , INTENT( OUT ) :: VBUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the ASC-format (internal 7-line header) ASCII file
+    with logical name <CODE>FNAME</CODE> for input.
+    <P>
+    Read its header and check for consistency with the supplied argument
+    grid description.
+    <P>
+    Read the data into <CODE>IBUF</CODE> or <CODE>VBUF</CODE> from the file.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "wrasc">Generic <CODE>LOGICAL FUNCTION WRAFILE()</CODE></A> and
+<CODE>LOGICAL FUNCTION WRAEFILE()</CODE></H2>
+
+    <PRE>
+    LOGICAL FUNCTION WRAFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, IBUF )
+    LOGICAL FUNCTION WRAFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+    LOGICAL FUNCTION WRAEFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+        CHARACTER(LEN=*), INTENT( IN ) :: FNAME
+        INTEGER         , INTENT( IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT( IN ) :: XORIG, YORIG, ACELL
+        INTEGER         , INTENT( IN ) :: IBUF( NCOLS, NROWS )
+        REAL            , INTENT( IN ) :: VBUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the ASC-format (internal 7-line header) ASCII file
+    with logical name <CODE>FNAME</CODE> for output.
+    <P>
+    Write its header using the supplied grid description arguments.
+    <P>
+    Write the data from <CODE>IBUF</CODE> or <CODE>VBUF</CODE> to the file.
+    For <CODE>WRAEFILE()</CODE>, use a format <CODE>1PE14.6</CODE> for
+    the (<CODE>REAL</CODE>) data in the output; else use a format
+    <CODE>F12.5</CODE> if the data is <CODE>REAL</CODE>.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "rdarc">Generic <CODE>SUBROUTINE RDARC()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION RDARC( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, IBUF )
+    LOGICAL FUNCTION RDARC( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+        CHARACTER(LEN=*), INTENT(  IN ) :: FNAME
+        INTEGER         , INTENT(  IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT(  IN ) :: XORIG, YORIG, ACELL
+        INTEGER         , INTENT( OUT ) :: IBUF( NCOLS, NROWS )
+        REAL            , INTENT( OUT ) :: VBUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the ARC-format (external header) ARCII GIS-output file
+    with logical name <CODE>FNAME</CODE> for input.
+    <P>
+    Read its header and check for consistency with the supplied argument
+    grid description.
+    <P>
+    Read the data into <CODE>IBUF</CODE> or <CODE>VBUF</CODE> from the file.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "wrarc">Generic <CODE>SUBROUTINE WRARC()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION WRARC( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, IBUF )
+    LOGICAL FUNCTION WRARC( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+        CHARACTER(LEN=*), INTENT( IN ) :: FNAME
+        INTEGER         , INTENT( IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT( IN ) :: XORIG, YORIG, ACELL
+        INTEGER         , INTENT( IN ) :: IBUF( NCOLS, NROWS )
+        REAL            , INTENT( IN ) :: VBUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the ARC-format (external header) ARCII GIS-output file
+    with logical name <CODE>FNAME</CODE> for output.
+    <P>
+    Write its header using the supplied grid description arguments.
+    <P>
+    Write the data from <CODE>IBUF</CODE> or <CODE>VBUF</CODE> to the file.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "rdbr"><CODE>LOGICAL FUNCTION</CODE>s <CODE>RDBRFILE()</CODE>
+and <CODE>RDZBRFILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION RDBRFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+    LOGICAL FUNCTION RDZBRFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+        CHARACTER(LEN=*), INTENT(  IN ) :: FNAME
+        INTEGER         , INTENT(  IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT(  IN ) :: XORIG, YORIG, ACELL
+        REAL            , INTENT( OUT ) :: VBUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary <CODE>GRIDFLOAT</CODE> file
+    or <VAR>gzip</VAR>ped <CODE>GRIDFLOAT</CODE> file with
+    logical name <CODE>FNAME</CODE> for input.
+    <P>
+    Read its header and check for consistency with the supplied argument
+    grid description.
+    <P>
+    Read the data into <CODE>VBUF</CODE> from the file.  For
+    <CODE>RDZBRFILE(), apply on-the-fly <VAR>unzip</VAR>ping.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "wrbr">LOGICAL FUNCTION</CODE>s <CODE>WRBRFILE()</CODE>
+and <CODE>WRZBRFILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION WRBRFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+    LOGICAL FUNCTION WRZBRFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, VBUF )
+        CHARACTER(LEN=*), INTENT( IN ) :: FNAME
+        INTEGER         , INTENT( IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT( IN ) :: XORIG, YORIG, ACELL
+        REAL            , INTENT( IN ) :: VBUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary <CODE>GRIDFLOAT</CODE> file
+    or <VAR>gzip</VAR>ped <CODE>GRIDFLOAT</CODE> file with
+    logical name <CODE>FNAME</CODE> for output.
+    <P>
+    Write the data from <CODE>VBUF</CODE> top the file with
+    on-the-fly <VAR>zip</VAR>ping for <CODE>WRZBRFILE())
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "rdbi1">Generic <CODE>LOGICAL FUNCTION RDBIFILE()</CODE>
+and <CODE>RDZBIFILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION RDBIFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I1BUF )
+    LOGICAL FUNCTION RDBIFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION RDBIFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+    LOGICAL FUNCTION RDZBIFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I1BUF )
+    LOGICAL FUNCTION RDZBIFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION RDZBIFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+        CHARACTER(LEN=*), INTENT(  IN ) :: FNAME
+        INTEGER         , INTENT(  IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT(  IN ) :: XORIG, YORIG, ACELL
+        INTEGER*1       , INTENT( OUT ) :: I1BUF( NCOLS, NROWS )
+        INTEGER*2       , INTENT( OUT ) :: I2BUF( NCOLS, NROWS )
+        INTEGER*4       , INTENT( OUT ) :: I4BUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary (8-bit) BIL1 GIS file
+    or <VAR>gzip</VAR>ped  with logical name
+    <CODE>FNAME</CODE> for input.
+    <P>
+    Read its header and check for consistency with the supplied argument
+    grid description.
+    <P>
+    Read and convert the data from the file to <CODE>I1BUF</CODE>
+    <CODE>I2BUF</CODE> <CODE>I4BUF</CODE> as appropriate. For the
+    <CODE>RDZ*()</CODE> routines, apply on-the-fly <VAR>unzip</VAR>ping.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "rdbi2">Generic <CODE>LOGICAL FUNCTION RDBI2FILE()</CODE>
+and <CODE>RDZBI2FILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION RDBI2FILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION RDBI2FILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+    LOGICAL FUNCTION RDZBI2FILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION RDZBI2FILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+        CHARACTER(LEN=*), INTENT(  IN ) :: FNAME
+        INTEGER         , INTENT(  IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT(  IN ) :: XORIG, YORIG, ACELL
+        INTEGER*2       , INTENT( OUT ) :: I2BUF( NCOLS, NROWS )
+        INTEGER*4       , INTENT( OUT ) :: I4BUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary (16-bit) BIL2 GIS file with logical name
+    <CODE>FNAME</CODE> for input.
+    <P>
+    Read its header and check for consistency with the supplied argument
+    grid description.
+    <P>
+    Read and convert the data from the file to <CODE>I2BUF</CODE>
+    <CODE>I4BUF</CODE> as appropriate. For the  <CODE>RDZ*()</CODE>
+    routines, apply on-the-fly <VAR>unzip</VAR>ping.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "rdbi4"><CODE>LOGICAL FUNCTION RDBI4FILE()</CODE>
+and <CODE>RDZBI4FILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION RDBI4FILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+    LOGICAL FUNCTION RDZBI4FILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+        CHARACTER(LEN=*), INTENT(  IN ) :: FNAME
+        INTEGER         , INTENT(  IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT(  IN ) :: XORIG, YORIG, ACELL
+        INTEGER*4       , INTENT( OUT ) :: I4BUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary (32-bit) BIL4 GIS file with logical name
+    <CODE>FNAME</CODE> for input.
+    <P>
+    Read its header and check for consistency with the supplied argument
+    grid description.
+    <P>
+    Read the data from the file to  <CODE>I4BUF</CODE>. For the
+    <CODE>RDZ*()</CODE> routines, apply on-the-fly <VAR>unzip</VAR>ping.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "wrbi1">Generic <CODE>LOGICAL FUNCTION WRBIFILE()</CODE>
+and <CODE>WRZBIFILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION WRBIFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I1BUF )
+    LOGICAL FUNCTION WRBIFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION WRBIFILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+    LOGICAL FUNCTION WRZBIFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I1BUF )
+    LOGICAL FUNCTION WRZBIFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION WRZBIFILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+        CHARACTER(LEN=*), INTENT(  IN ) :: FNAME
+        INTEGER         , INTENT(  IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT(  IN ) :: XORIG, YORIG, ACELL
+        INTEGER*1       , INTENT( OUT ) :: I1BUF( NCOLS, NROWS )
+        INTEGER*2       , INTENT( OUT ) :: I2BUF( NCOLS, NROWS )
+        INTEGER*4       , INTENT( OUT ) :: I4BUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary (8-bit) BIL1 GIS file with logical name
+    <CODE>FNAME</CODE> for output.
+    <P>
+    Convert and write the data from <CODE>I1BUF</CODE>,
+    <CODE>I2BUF</CODE>, or <CODE>I4BUF</CODE> as appropriate to the file. For the
+    <CODE>WRZ*()</CODE> routines, apply on-the-fly <VAR>zip</VAR>ping.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "wrbi2">Generic <CODE>LOGICAL FUNCTION WRBI2FILE()</CODE>
+and <CODE>WRZBI2FILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION WRBI2FILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION WRBI2FILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+    LOGICAL FUNCTION WRZBI2FILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I2BUF )
+    LOGICAL FUNCTION WRZBI2FILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+        CHARACTER(LEN=*), INTENT( IN ) :: FNAME
+        INTEGER         , INTENT( IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT( IN ) :: XORIG, YORIG, ACELL
+        INTEGER*2       , INTENT( IN ) :: I2BUF( NCOLS, NROWS )
+        INTEGER*4       , INTENT( IN ) :: I4BUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary (16-bit) BIL2 GIS file with logical name
+    <CODE>FNAME</CODE> for output.
+    <P>
+    Convert and write the data from <CODE>I2BUF</CODE> or
+    <CODE>I4BUF</CODE> as appropriate to the file. For the  <CODE>WRZ*()</CODE>
+    routines, apply on-the-fly <VAR>zip</VAR>ping.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "wrbi4"><CODE>LOGICAL FUNCTION WRBI4FILE()</CODE>
+and <CODE>WRZBI4FILE()</CODE></A></H2>
+
+    <PRE>
+    LOGICAL FUNCTION WRBI4FILE(  FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+    LOGICAL FUNCTION WRZBI4FILE( FNAME, NCOLS, NROWS, XORIG, YORIG, ACELL, I4BUF )
+        CHARACTER(LEN=*), INTENT( IN ) :: FNAME
+        INTEGER         , INTENT( IN ) :: NCOLS, NROWS
+        REAL*8          , INTENT( IN ) :: XORIG, YORIG, ACELL
+        INTEGER*4       , INTENT( IN ) :: I4BUF( NCOLS, NROWS )
+    </PRE>
+
+    <BLOCKQUOTE>
+    Open the binary (32-bit) BIL4 GIS file with logical name
+    <CODE>FNAME</CODE> for output.
+    <P>
+    Write the data from <CODE>I4BUF</CODE> to the file. For the
+    <CODE>WRZ*()</CODE> routines, apply on-the-fly <VAR>unzip</VAR>ping.
+    <P>
+    Returns <CODE>.TRUE.</CODE> iff all these operations succeed.
+    <P>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+
+<H2><A NAME = "gisio">Worker routines from <VAR>gisio.c</VAR></A></H2>
+
+    <BLOCKQUOTE>
+    These routines do not transpose between GIS &quot;scan-line&quot;
+    (<CODE>XCELL&gt;0, YCELL&lt;0</CODE>) array
+    order and &quot;normal-model&quot; (<CODE>XCELL,YCELL&gt;0</CODE>)
+    array order but do convert between network (big-endian) and native
+    (usually little-endian) byte order, according to the value of
+    argument <CODE>SWAPB</CODE> (0 for no conversion, 1 for conversion).
+    <PRE>
+
+    !!--------  Prototypes for routines in "gridbin.c"  -----------
+    !!--------  SWAPB:  0 for native byte order; else call "htonl()"
+
+    INTERFACE
+        INTEGER FUNCTION GFREAD( GFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   GFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS
+        INTEGER,          INTENT( IN ) ::   SWAPB
+        REAL   ,          INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION GFREAD
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION GFZREAD( GFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   GFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS
+        INTEGER,          INTENT( IN ) ::   SWAPB
+        REAL   ,          INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION GFZREAD
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION GFWRITE( GFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   GFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        REAL   ,          INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION GFWRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION GFZWRITE( GFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   GFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        REAL   ,          INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION GFZWRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION ZBILWRITE( BFILE, NCOLS, NROWS, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS
+        INTEGER*1,        INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION ZBILWRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION BILWRITE( BFILE, NCOLS, NROWS, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS
+        INTEGER*1,        INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION BILWRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION ZBILREAD( BFILE, NCOLS, NROWS, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS
+        INTEGER*1,        INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION ZBILREAD
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION BILREAD( BFILE, NCOLS, NROWS, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS
+        INTEGER*1,        INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION BILREAD
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION ZBIL2WRITE( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*2,        INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION ZBIL2WRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION BIL2WRITE( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*2,        INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION BIL2WRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION ZBIL2READ( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*2,        INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION ZBIL2READ
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION BIL2READ( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*2,        INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION BIL2READ
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION ZBIL4WRITE( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*4,        INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION ZBIL4WRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION BIL4WRITE( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*4,        INTENT( IN ) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION BIL4WRITE
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION ZBIL4READ( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*4,        INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION ZBIL4READ
+    END INTERFACE
+
+    INTERFACE
+        INTEGER FUNCTION BIL4READ( BFILE, NCOLS, NROWS, SWAPB, GBUF )
+        CHARACTER(LEN=*), INTENT( IN ) ::   BFILE
+        INTEGER,          INTENT( IN ) ::   NCOLS, NROWS, SWAPB
+        INTEGER*4,        INTENT( OUT) ::   GBUF( NCOLS*NROWS )
+        END FUNCTION BIL4READ
+    END INTERFACE
+    </PRE>
+    </BLOCKQUOTE>
+
+    Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
+    <P>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "GISTOGIS.html">Program <VAR>M3TOGIS</VAR></A> to
+          convert one GIS &quot;raster&quot; data-format to another.
+          <P>
+    <LI>  <A HREF = "GISTOM3.html">Program <VAR>M3TOGIS</VAR></A> to
+          convert GRIDDED I/O&nbsp;API to GIS &quot;raster&quot; data.
+          <P>
+    <LI>  <A HREF = "M3TOGIS.html">Program <VAR>M3TOGIS</VAR></A> to
+          convert GIS &quot;raster&quot; data to GRIDDED I/O&nbsp;API
+          <P>
+    <LI>  <A HREF = "GISPLOT.html">Program <VAR>M3TOGIS</VAR></A> to
+          create GIF, JPG,  or PNG tile-plots for GIS data.
+          <P>
+</UL>
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<A HREF = "AA.html">
+To: <STRONG>Models-3/EDSS I/O&nbsp;API:  The Help Pages</STRONG>
+</A><P>
+
+<A HREF = "INCLUDE.html"> 
+Up: <STRONG>MODULEs and Public INCLUDE files</STRONG> 
+</A><P>
+
+
+Copyright &copy; 2025 Carlie J. Coats, Jr., Ph.D.
+    <BLOCKQUOTE>
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the <A HREF="https://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License, Version 1.3</A> or any later version
+    published by the Free Software Foundation; with no Invariant
+    Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    </BLOCKQUOTE>
+<P>
+
+
+Send comments to
+    <BLOCKQUOTE>
+<A HREF = "mailto:carlie@jyarborough.com"> <ADDRESS>
+          Carlie J. Coats, Jr. <br>
+          carlie@jyarborough.com  </ADDRESS> </A>
+    </BLOCKQUOTE><P>
+
+<!--#include virtual="/INCLUDES/footer.html" -->
+
+
+</BODY>
+</HTML>
+
+
+

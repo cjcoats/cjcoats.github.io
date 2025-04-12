@@ -1,0 +1,437 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: M3PLOT.html 278 2025-04-12 15:27:33Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
+<TITLE>Program M3PLOT</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15"
+      MARGINHEIGHT="15"
+      LEFTMARGIN="15"
+      MARGINWIDTH="15">
+
+<!--#include virtual="/INCLUDES/header.html" -->
+
+<H1>    Program M3PLOT </H1>
+    <BR>
+    <STRONG>I/O&nbsp;API&nbsp;4.0 only!!</STRONG>
+
+<H2> Summary </H2>
+
+    <BLOCKQUOTE>
+    M3Tools program <STRONG><VAR>m3plot</VAR></STRONG> to do high
+    performance tile, smoothed-tile, contour, vector, scalar and vector
+    observational-overlay graphics for large GRIDDED I/O&nbsp;API data
+    sets.  The design goal was to fit in, e.g, a production hydrological
+    forecast system that uses a 4000x2500 grid to compute flood-water
+    depth at a 5 minute time step for a 120-hour forecast period
+    (approximately 600 GB of data per forecast, much larger than
+    available RAM), cycled every 6 hours, and completing the product
+    generation in 15 minutes or less.  This requirement is either
+    impossible for, or orders of magnitude more performance than, other
+    (in-memory) vis tools such as <VAR>PAVE></VAR>, <VAR>VERDI</VAR>, or
+    <VAR>Panoply</VAR> can deliver.
+    <P>
+    Using the <CODE>PLOTONLY</CODE> option, one can generate images with
+    <STRONG>no legends</STRONG>: e.g., for publication at Linoitype&reg;
+    4096-dpi resolution, one can generate 5-inch-by-4-inch
+    (20480x16384-pixel) or larger images (also impossible for, e.g.,
+    <VAR>PAVE></VAR>, <VAR>VERDI</VAR>, or <VAR>Panoply</VAR>).
+    <P>
+    Unlike <VAR>VERDI</VAR> or <VAR>PAVE</VAR>,
+    <STRONG><VAR>m3plot</VAR> always generates images with the correct
+    aspect ratio</STRONG>, without the distortion of stretching in the
+    horizontal or vertical -- it displays the largest aspect-correct
+    image consistent with the specified image <CODE>WIDTH</CODE> and
+    <CODE>HEIGHT</CODE>.
+    <P>
+    <STRONG><VAR>m3plot</VAR></STRONG> creates (optionally smoothed)
+    tile-plots, contour, gridded wind-vector, (scalar) observation, and
+    vector observation-overlay plots, with optional windowing, and saves
+    the results as image files, using the
+    <STRONG><VAR>libgd</VAR></STRONG> image library.  Output file
+    formats are GIF, JPEG, and PNG; output file names are of the form
+    <CODE>${BASENAME}.&lt;VNAME&gt;[.&lt;LLL&gt;].&lt;YYYYDDDHHMMSS&gt;.[gif | jpg | png]</CODE>
+    where <CODE>${BASENAME}</CODE> may be a partial file-name, a
+    directory, or blank, <CODE>VNAME</CODE> is the variable-name,
+    <CODE>LLL</CODE> is the layer number if the input file has more than
+    one layer, and <CODE>YYYYDDDHHMMSS</CODE> is the
+    <A HREF="DATETIME.html">Julian date&time, according to I/O&nbsp;API
+    conventions.</A>  If there are no tile/smooth-plot variables, but
+    there are vector-variables, <CODE>VNAME</CODE> is
+    &lt;U-component-name>_&lt;V-component-name&gt;.
+    <P>
+    For time stepped files, there are two modes of indexing:  date-time
+    based and record based.  As an example, for a file starting at
+    date&amp;time 2009151&nbsp;11:30:00, the starting record has index
+    2009150113000 in the date-time indexing scheme and index 0000 in
+    the record based scheme. For this file example, if the variable is
+    <CODE>TA2</CODEE> and the type is GIF, for the date&amp;time based
+    indexing, the first image file names wil be as follows:
+    <PRE>
+    ${BASENAME} /foo/bar/qux:  /foo/bar/qux.TA2.2009150113000.gif
+    ${BASENAME} /foo/bar/:     /foo/bar/TA2.2009150113000.gif
+    ${BASENAME} &lt;blank&gt;        ${cwd}/TA2.2009150113000.gif
+    </PRE>
+    With record based indexing the first file name would be something like
+    <PRE>
+    /foo/bar/qux.TA2.0000.gif
+    </PRE>
+    If the file is time independent, the index field will be omitted, e.g.
+    <PRE>
+    /foo/bar/qux.LANDUSE.gif
+    </PRE>
+    If the file is multilayered, a 3-digit layer-number field will
+    precede the date-time/record-number field, e.g., for layer-31 of
+    variable <CODE>TA</CODE> a file name might be
+    <PRE>
+    /foo/bar/qux.TA.031.2009150113000.gif
+    </PRE>
+    If there are vector-overlays, the variable-name field will also
+    include the vector-component variable names, separated by underscores, e.g.,
+    <PRE>
+    TA_UWIND_VWIND.031.2009150113000.gif
+    </PRE>
+    <P>
+    Tiled/smoothed variables and observations may contain MISSING data;
+    however, vector-component or contour input data must not.
+    </BLOCKQUOTE>
+
+
+<H2> Usage </H2>
+
+    <BLOCKQUOTE>
+    This program is designed primarily for scripted production usage
+    with large modeling domains and time periods, hence has very high
+    computational performance; the graphics configuration is controlled
+    by a (re-usable) ASCII configuration file (below).
+    <P>
+    <STRONG>Before you run the program</STRONG>:
+    <PRE>
+        setenv  INFILE    &lt;path name for gridded tile-plot input file&gt;
+        setenv  VECFILE   &lt;path name for       vector-input file, or &quot;NONE&quot;&gt; [NONE]
+        setenv  CONFILE   &lt;path name for      contour-input file, or &quot;NONE&quot;&gt; [NONE]
+        setenv  OBSFILE   &lt;path name for observations-input file, or &quot;NONE&quot;&gt; [NONE]
+        setenv  OVECFILE  &lt;path name for   obs-vector-input file, or &quot;NONE&quot;&gt; [NONE]
+
+        setenv  CONFIG    &lt;path name for configuration file&gt;
+        setenv  BASENAME  &lt;base name or directory for output images&gt;
+        setenv  MAPDIR    &lt;directory for maps, or , or &quot;NONE&quot;&gt;
+        setenv  IMGDATES  &lt;use date-&amp;-time instead of record-numbers? (Y/N)&gt; [Y]
+        setenv  LOGSTATS  &lt;report gridded stats to log? (Y/N)&gt; [N]
+    </PRE>
+    If <CODE>OBSFILE</CODE> or <CODE>OVECFILE</CODE> not <CODE>&quot;NONE&quot;&gt</CODE>:
+    <PRE>
+        setenv  LLFILE    &lt;path name for Lat-Lon (e.g., <CODE>GRID_CRO_2D</CODE>) file&gt;
+    </PRE>
+    Then
+    <PRE>
+        m3plot [and answer the prompts, below]
+    </PRE>
+
+    <H3>Constraints:</H3>
+    <P>
+    <CODE>INFILE</CODE> determines the default time step sequence for the
+    program run. User-prompt selects the actual time step sequence.  All
+    input files (<CODE>INFILE</CODE> and if present <CODE>VECFILE</CODE>
+    <CODE>CONFILE</CODE>, <CODE>OBSFILE</CODE>, and <CODE>OVECFILE</CODE> 
+    must contain the selected time step sequence
+    <P>
+    <CODE>INFILE</CODE> and <CODE>VECFILE</CODE> share either a
+    same-grid or dot-point::cross-point grid relationship for the very same grid.
+    <P>
+    <CODE>INFILE</CODE> and <CODE>CONFILE</CODE> share the very same grid.
+    <P>
+    <CODE>OBSFILE</CODE> should be of type <CODE>CUSTOM3</CODE> with
+    <CODE>NCOLS=&lt;number of observations&gt;</CODE> and 
+    <CODE>REAL</CODE> variables <CODE>LAT</CODE> and <CODE>LON</CODE>
+    for the obs-site, as well as the specified observation-variables.
+    <P>
+    <CODE>OVECFILE</CODE> should be of type <CODE>CUSTOM3</CODE> with
+    <CODE>NCOLS=&lt;number of observations&gt;</CODE> and 
+    <CODE>REAL</CODE> variables <CODE>LAT</CODE> and <CODE>LON</CODE>
+    for the obs-site, as well as the specified wind-component
+    observation-variables.
+    <P>
+    </BLOCKQUOTE>
+
+
+<H2> Program Control:  <CODE>CONFIG</CODE> files and prompts</H2>
+
+    <BLOCKQUOTE>
+    <STRONG>THE PROGRAM WILL PROMPT YOU</STRONG> for starting
+    date and time, time step, and number of time steps to process.
+    These default to the corresponding values from <CODE>INFILE</CODE>.
+    All input files must contain this time step sequence.
+    <P>
+
+    <STRONG>The <CODE>CONFIG</CODE> fil</STRONG>e is an ASCII file, with
+    lines to control each of the program options.  These lines are of
+    the form
+    <PRE>
+    &lt;name&gt;    &lt;value(s)&gt;
+    </PRE>
+    The following table gives these name, descriptions, and defaults of the
+    values, where note that <CODE>COLOR, VCOLOR, CCOLOR</CODE> are
+    each multiple lines with sub-tables of consecutive color-indices and
+    RGB values.  Default values are indicated in square brackets [LIKE
+    THIS].
+    <BLOCKQUOTE>
+    <DL>
+        <DT><CODE>IMGFORMAT</CODE>
+        <DD>GIF | JPG | PNG  [GIF]
+        <DT><CODE>IMGMETHOD</CODE>
+        <DD>TILED | SMOOTHED [TILED]
+        <DT><CODE>WIDTH</CODE>
+        <DD>number of pixels wide for the entire image [960]
+        <DT><CODE>HEIGHT</CODE>
+        <DD>number of pixels high for the entire image [720]<BR>
+        (minimum image-size 240x280)
+        <DT><CODE>WINDOW_COLS</CODE>
+        <DD>first and last grid-col for the plot [entire grid]
+        <DT><CODE>WINDOW_ROWS</CODE>
+        <DD>first and last grid-row for the plot [entire grid]
+        <DT><CODE>PLOTONLY</CODE>
+        <DD>WIDTH | HEIGHT  [WIDTH]<BR>
+            to suppress legend, and generate correct-aspect tiled image
+            only, with image dimensions from WIDTH or HEIGHT.
+        <DT><CODE>LEGEND_BINS</CODE>
+        <DD>number of color-labels on the color-scale legend [6]
+        <P>
+        <DT><CODE>COLOR</CODE>
+        <DD>&lt;index&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;<BR>
+            for tile/smooth map, where <CODE>index</CODE> is consecutive
+            for some range 0&nbsp;...&nbsp;N&nbsp;&lt;&nbsp;253 and
+            red-green-blue color-values are in the range [0...255]<BR>
+            [default tile-color palette is a 10-color scale]
+        <DT><CODE>VCOLOR</CODE>
+        <DD>&lt;index&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;<BR>
+            for vector-wind map, as above.<BR>
+            [default vector-color palette is a 10-color scale from dark
+            blue to dark green]
+        <DT><CODE>CCOLOR</CODE>
+        <DD>&lt;index&gt; &lt;red&gt; &lt;green&gt; &lt;blue&gt;<BR>
+            for vector-wind map, as above.<BR>
+            [default vector-color palette is a 10-color scale from dark
+            blue to dark red]
+        <DT><CODE>MISSING_COLOR</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [127 127 127]
+        <P>
+        <DT><CODE>MAPNAME1</CODE>
+        <DD>"states" map-file name in ${MAPDIR} [OUTLHRES], or
+        &lt;blank&gt; to suppress this map
+        <DT><CODE>MAPNAME2</CODE>
+        <DD>"county" map-file name in ${MAPDIR} [OUTLCOUNTIES], or
+        &lt;blank&gt; to suppress this map
+        <DT><CODE>MAPNAME3</CODE>
+        <DD>"extra"  map-file name in ${MAPDIR} [&lt;blank&gt;]
+        <DT><CODE>MAPCOLOR1</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [  0   0   0]
+        <DT><CODE>MAPCOLOR2</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [ 31  31  31]
+        <DT><CODE>MAPCOLOR3</CODE>
+        <DD>&lt;red&gt; &lt;green&gt; &lt;blue&gt; [ 63  63  63]
+        <DT><CODE>MAPWIDTH1</CODE>
+        <DD>line-width (pixels) [1]
+        <DT><CODE>MAPWIDTH2</CODE>
+        <DD>line-width (pixels) [1]
+        <DT><CODE>MAPWIDTH3</CODE>
+        <DD>line-width (pixels) [1]
+    </DL>
+    </BLOCKQUOTE>
+    with repeated sections of variable-names and options, per variable plotted:
+    <BLOCKQUOTE>
+    <DL>
+        <DT><CODE>VARIABLE</CODE>
+        <DD>&lt;variable-name from <CODE>INFILE</CODE> or <CODE>ALL</CODE>&gt;
+            &lt;<CODE>[LIN|LOG|EXP</CODE>]&gt; [<CODE>LIN</CODE><BR>
+            where the second component of the value indicates linear scaling,
+            log-scaling, or exponential-scaling<BR>
+            e.g., <CODE>VARIABLE ALL LIN<CODE> for all-vbles "normal" plots,
+            <CODE>VARIABLE TA LIN<CODE> for a &quot;normal&quot; TA-plot,
+            <CODE>VARIABLE TA LOG<CODE> for a  log-scaled TA-plot, and
+            <CODE>VARIABLE TA EXP<CODE> for an exp-scaled TA-plot.
+        <DT><CODE>UNITS</CODE>
+        <DD>&lt;units-name&gt; [&lt;scale factor&gt; &lt;scale offset&gt;]<BR>
+            where default is units from the file, and if present, scaling uses
+            the formula
+            <PRE>
+            Y_display = scale * Y_file +  offset
+            </PRE>
+            This can be used, for example to convert temperatures from Kelvin to Fahrenheit...
+        <DT><CODE>LEVEL</CODE>
+        <DD>model-level [1]
+        <DT><CODE>SCALE_RANGE</CODE>
+        <DD>&lt;min&gt; &ltmax&gt; for the tile color-scale [data-min,data-max]
+        <DT><CODE>FORMAT_BINS</CODE>
+        <DD>C-language  format for color-scale legend-labels ["%g"]
+        <P>
+        <DT><CODE>VECTOR</CODE>
+        <DD>&lt;X-component variable-name&gt; &lt;Y-component variable-name&gt;
+            in <CODE>VECFILE</CODE>
+        <DT><CODE>VEC_RANGE</CODE>
+        <DD>&ltmax&gt; for the windspeed color-scale [vec-max]
+        <DT><CODE>VEC_LEVEL</CODE>
+        <DD>wind-grid model level [1]
+        <DT><CODE>VEC_INCREMENT</CODE>
+        <DD>sampling interval for the vector plot (cells) [1]
+        <DT><CODE>VEC_THICKNESS</CODE>
+        <DD>arrow-shaft thickness (pixels) [1]
+        <P>
+        <DT><CODE>CONTOUR</CODE>
+        <DD>&lt;variable-name&gt; from <CODE>CONFILE</CODE>
+        <DT><CODE>CON_UNITS</CODE>
+        <DD>&lt;units-name&gt; [&lt;scale factor&gt; &lt;scale offset&gt;]<BR>
+            where default is units from the file
+        <DT><CODE>CON_RANGE</CODE>
+        <DD>&lt;min&gt; &ltmax&gt; for the tile color-scale [data-min,data-max]
+        <DT><CODE>CON_LEVEL</CODE>
+        <DD>model-level [1]
+        <DT><CODE>CON_THICKNESS</CODE>
+        <DD>contour-line thickness (pixels) [2]
+        <DT><CODE>CON_SMOOTH</CODE>
+        <DD>smooth grid to be contoured? (TRUE|FALSE) [TRUE]
+        <P>
+        <DT><CODE>OBSERVATION</CODE>
+        <DD>scalar &lt;observation variable name&gt;
+        <DT><CODE>OBS_SIZE</CODE>
+        <DD>obs-marker size (pixels) [10]
+        <P>
+        <DT><CODE>OBS_VECTOR</CODE>
+        <DD>&lt;speed-vble name&gt; &lt;bearing-vble name&gt;
+        <DT><CODE>OVEC_RANGE</CODE>
+        <DD>&ltmax&gt; for the windspeed color-scale [vec-max]
+        <DT><CODE>OVEC_LENGTH</CODE>
+        <DD>obs-arrow length (pixels) [10]
+        <DT><CODE>OVEC_THICKNESS</CODE>
+        <DD>arrow-shaft thickness (pixels) [1]
+        <P>
+        <DT><CODE>TITLE1</CODE>
+        <DD>First  legend-header line [tile-variable name]
+        <DT><CODE>TITLE2</CODE>
+        <DD>Second legend-header line [tile-variable description]
+        <DT><CODE>TITLE3</CODE>
+        <DD>Third  legend-header line> [path name for INFILE]
+    </DL>
+    </BLOCKQUOTE>
+
+    <H3>Constraints:</H3>
+
+    <BLOCKQUOTE>
+    Blank lines are ignored (and may be used as section-separators).
+    <P>
+    <CODE>UNITS</CODE>, <CODE>LEVEL</CODE>,and <CODE>SCALE_RANGE</CODE>
+    options are invalid after <CODE>VARIABLE ALL...<CODE>
+    <P>
+    Options may appear at most once per tile/smooth-plot variable.
+    <P>
+    One may plot vector-only by using an empty set of
+    <CODE>VARIABLE</CODE>s; however, <CODE>INFILE</CODE> is still
+    required in order to specify the grid definitions and time step
+    sequence.
+    <P>
+    Total number of colors used (tile + vector + contour +
+    observation + vector-observation) is at most 253.
+    <P>
+    </BLOCKQUOTE>
+    <P>
+
+    <H3>Examples:</H3>
+
+    <UL>
+        <LI> Here is a config-file for <A HREF="TA_degF.txt">smooth
+             tile-plots for level-1 <CODE>TA</CODE></A>
+             <BR>
+             The total image is 1200x800-pixels (counting legends as
+             well as the tiling), output is in PNG format.
+             <BR>
+             The <CODE>UNITS&nbsp;degF&nbsp;1.8&nbsp;523.67</CODE>
+             converts the temperature from degrees Kelvin to to degrees
+             Fahrenheit.
+             <BR>
+             There are 50 colors, in 10 bands ranging from light to
+             dark, for blues, cyans, greens, yeallows, and reds. The
+             <CODE>SCALE_RANGE&nbsp;12.0&nbsp;112.0</CODE> The blue band
+             represents &quot;freezing&quot; temperatures of 12-32
+             &deg;F, cyan temperatures 32-52 &deg;F, etc.  Temperatures
+             below 12 show up as the lightest blue, and above 122 are
+             darkest red.
+             <BR>
+             State-boundary maps are drawn 2 pixels wide in black, and
+             county-boundary mpas in very dark gray 1 pixel wide.
+              <P>
+        <LI> Here is a config-file for <A HREF="O3_NO2_PPBV.txt">tile plots
+             for level-1 of <CODE>O3</CODE> with
+             <STRONG><CODE>NO2</CODE> contour overlays</STRONG>,</A>
+             with units converted to PPBV</A>.  Similar to the above,
+             the blue hues represent 40-60, PPBV, etc., through the red
+             hues that represent 120-140 PPBV.
+             <BR>
+             The data is <STRONG>windowed</STRONG> to columns 10-110 and
+             rows 20-100, and the plots are 1000x800 pixels.
+             <BR>
+             Maps are as above.
+             <P>
+        <LI> Here is a config-file for <A HREF="RAIN_in.txt">
+             precipitation rate <CODE>PRATE</CODE> tile plots</A>,
+             converted from units <CODE>M/S</CODE> to
+             <CODE>inches/hour</CODE> with scale-legend values formatted
+             <CODE>%5.2f (XX.XX)</CODE>. There is a 51-color scale with
+             dark gray for 0.0 or below, and 50 colors as above for
+             values from 0.0 to 2.0.  Maps are as above.
+             <P>
+        <LI> Here is a config-file for <A HREF="DIFW_OUT.HEAD_FRAC.txt">
+             LSM stream-flooding fraction <STRONG>without
+             legends, for publication<STRONG></A>.
+             <BR>
+             This generates a 14000x10000-pixel tile-plot image from the
+             3500x2500-cell LSM grid; at Linotype 4096-dpi resolution, 
+             the published size will be about 3.42x2.44 inches.
+             <P> 
+    </UL>
+
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "GISPLOT.html">Program <VAR>GISPLOT</VAR></A> to
+          create GIF, JPG,  or PNG tile-plots for GIS data.
+          <P>
+</UL>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<A HREF = "AA.html">
+To: <STRONG>Models-3/EDSS I/O&nbsp;API:  The Help Pages</STRONG>
+</A><P>
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>M3Tools Programs</STRONG> 
+</A><P>
+
+Copyright &copy; 2025 Carlie J. Coats, Jr., Ph.D.
+    <BLOCKQUOTE>
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the <A HREF="https://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License, Version 1.3</A> or any later version
+    published by the Free Software Foundation; with no Invariant
+    Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    </BLOCKQUOTE>
+<P>
+
+
+Send comments to
+    <BLOCKQUOTE>
+<A HREF = "mailto:carlie@jyarborough.com"> <ADDRESS>
+          Carlie J. Coats, Jr. <br>
+          carlie@jyarborough.com  </ADDRESS> </A>
+    </BLOCKQUOTE><P>
+
+<!--#include virtual="/INCLUDES/footer.html" -->
+
+
+</BODY>
+</HTML>

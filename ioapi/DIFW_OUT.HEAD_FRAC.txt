@@ -1,0 +1,61 @@
+IMGFORMAT       PNG
+WIDTH           7000
+HEIGHT          5000
+MISSING_COLOR   63      63      63
+LEGEND_BINS     6
+MAPNAME1        OUTLCOUNTIES
+PLOTONLY        WIDTH
+
+COLOR          50      224	 64	 64
+COLOR          49      240	 80	 80
+COLOR          48      255	 96	 96
+COLOR          47      255	112	112
+COLOR          46      255	128	128
+COLOR          45      255	144	144
+COLOR          44      255	160	160
+COLOR          43      255	176	176
+COLOR          42      255	192	192
+COLOR          41      255	208	208
+COLOR          40      208	208	 48
+COLOR          39      216	216	 64
+COLOR          38      224	224	 80
+COLOR          37      232	232	 96 
+COLOR          36      240	240	112
+COLOR          35      248	248	128
+COLOR          34      255	255	144
+COLOR          33      255	255	160
+COLOR          32      255	255	176
+COLOR          31      255	255	192
+COLOR          30       64	224	 64
+COLOR          29       80	232	 80
+COLOR          28       96	240	 96
+COLOR          27      112	248	112
+COLOR          26      128	255	128
+COLOR          25      144	255	144
+COLOR          24      160	255	160
+COLOR          23      176	255	176
+COLOR          22      192	255	192
+COLOR          21      208	255	208
+COLOR          20       48	208	208
+COLOR          19       64	216	216
+COLOR          18       80	224	224
+COLOR          17       96 	232	232
+COLOR          16      112	240	240
+COLOR          15      128	248	248
+COLOR          14      144	255	255
+COLOR          13      160	255	255
+COLOR          12      176	255	255
+COLOR          11      192	255	255
+COLOR          10       64	 64	224
+COLOR           9       80	 80	240
+COLOR           8       96	 96	255
+COLOR           7      112	112	255
+COLOR           6      128	128	255
+COLOR           5      144	144	255
+COLOR           4      160	160	255
+COLOR           3      176	176	255
+COLOR           2      192	192	255
+COLOR           1      208	208	255
+
+VARIABLE        HEAD_FRAC   LIN
+SCALE_RANGE     0.0         1.25

@@ -1,0 +1,70 @@
+IMGFORMAT       PNG
+WIDTH           1200
+HEIGHT           800
+MISSING_COLOR   63      63      63
+LEGEND_BINS     6
+MAPNAME1        OUTLSTATES
+MAPWIDTH1       2
+MAPNAME2        OUTLCOUNTIES
+MAPCOLOR2       32 32 32
+
+
+COLOR    51      224     64     64    
+COLOR    50      240     80     80    
+COLOR    49      255     96     96    
+COLOR    48      255    112    112    
+COLOR    47      255    128    128    
+COLOR    46      255    144    144    
+COLOR    45      255    160    160    
+COLOR    44      255    176    176    
+COLOR    43      255    192    192    
+COLOR    42      255    208    208    
+COLOR    41      208    208     48    
+COLOR    40      216    216     64    
+COLOR    39      224    224     80    
+COLOR    38      232    232     96     
+COLOR    37      240    240    112    
+COLOR    36      248    248    128    
+COLOR    35      255    255    144    
+COLOR    34      255    255    160    
+COLOR    33      255    255    176    
+COLOR    32      255    255    192    
+COLOR    31       64    224     64    
+COLOR    30       80    232     80    
+COLOR    29       96    240     96    
+COLOR    28      112    248    112    
+COLOR    27      128    255    128    
+COLOR    26      144    255    144    
+COLOR    25      160    255    160    
+COLOR    24      176    255    176    
+COLOR    23      192    255    192    
+COLOR    22      208    255    208    
+COLOR    21       48    208    208    
+COLOR    20       64    216    216    
+COLOR    19       80    224    224    
+COLOR    18       96    232    232    
+COLOR    17      112    240    240    
+COLOR    16      128    248    248    
+COLOR    15      144    255    255    
+COLOR    14      160    255    255    
+COLOR    13      176    255    255    
+COLOR    12      192    255    255    
+COLOR    11       64     64    224    
+COLOR    10       80     80    240    
+COLOR     9       96     96    255    
+COLOR     8      112    112    255    
+COLOR     7      128    128    255    
+COLOR     6      144    144    255    
+COLOR     5      160    160    255    
+COLOR     4      176    176    255    
+COLOR     3      192    192    255    
+COLOR     2      208    208    255    
+COLOR     1       80     80     80    
+
+#  Convert PRATE units from M/S to inches/hour
+#  Round legend-bins to 2 decimal places.
+
+VARIABLE        PRATE   LIN
+SCALE_RANGE    -0.0999999 2.0
+FORMAT_BINS     %5.2f
+UNITS           IN/HR  0.01093611     0.0

@@ -1,0 +1,120 @@
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<!-- "$Id: M3TOGIS.html 278 2025-04-12 15:27:33Z coats $" -->
+<META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
+<TITLE>Program M3TOGIS</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF"
+      TOPMARGIN="15"
+      MARGINHEIGHT="15"
+      LEFTMARGIN="15"
+      MARGINWIDTH="15">
+
+<!--#include virtual="/INCLUDES/header.html" -->
+
+<H1>    Program <CODE>M3TOGIS</CODE> </H1>
+    <BR>
+    <STRONG>I/O&nbsp;API&nbsp;4.0 only!!</STRONG>
+    <P>
+
+<H2> Summary </H2>
+
+    <BLOCKQUOTE>
+    Reads read time steps of variables from a gridded I/O&nbsp;API file
+    and writes them to multiple <A HREF="MODGISIO.html#types">supported
+    GIS-format-type &quot;raster&quot;</A> (GRIDDED) files.
+    </BLOCKQUOTE>
+    <P>
+
+<H2> Usage </H2>
+
+    <BLOCKQUOTE>
+    <PRE>
+        setenv  GRIDFILE  &lt;path name for input gridded file&gt;
+        setenv  FILELIST  &lt;path name for input ASCII file-list&gt;
+        setenv  HDRDIR    &lt;path name for BIL or FLT header files&gt;
+        setenv  IMISS     &lt;missing value for INTEGER variables&gt;
+        setenv  RMISS     &lt;missing value for  REAL   variables&gt;
+    </PRE>
+    For each <CODE>file</CODE> in <CODE>FILELIST</CODE>
+    <PRE>
+        setenv &lt;file-name&gt;  &lt;path name&gt;
+    </PRE>
+    Then
+    <PRE>
+        m3togis [and answer the prompts]
+    </PRE>
+    where
+        <BLOCKQUOTE>
+        ${FILELIST} is list-formatted (quoted strings) with one output
+        file per line, with
+        <PRE>
+        &lt;file-name&gt; &lt;vble-name&gt; &lt;date&gt; &lt;time&gt; &lt;layer&gt; &lt;type&gt;
+        </PRE>
+
+        <CODE>type</CODE> is one of <CODE>{BIL BIL2 BIL4 FLT, ZBIL, ZBIL2
+        ZBIL4, FLT, ARCI, ARCR, ARCE, ASCI, ASCR}</CODE><BR>
+
+        <CODE>LEN( *file-name ) </CODE> is at most 16<BR>
+
+        path-names are of the form  <CODE>&lt;root&gt;.[ flt | bil | bil2 | bil4  | hdr ]</CODE><BR>
+
+        header-file files are of the form <CODE>${HDRDIR}/&lt;vname&gt;.bil.hdr</CODE>
+        </BLOCKQUOTE>
+    </BLOCKQUOTE>
+<P>
+
+
+<STRONG>See Also:</STRONG>
+<UL>
+    <LI>  <A HREF = "MODGISIO.html">Fortran-90 <VAR>MODULE MODGISIO</VAR></A>
+          with routines to read and write GIS &quot;raster&quot; (gridded) data.
+          <P>
+    <LI>  <A HREF = "GISTOGIS.html">Program <VAR>GISTOGIS</VAR></A> to
+          convert one GIS &quot;raster&quot; data-format to another.
+          <P>
+    <LI>  <A HREF = "GISTOM3.html">Program <VAR>M3TOGIS</VAR></A> to
+          convert GRIDDED I/O&nbsp;API to GIS &quot;raster&quot; data.
+          <P>
+    <LI>  <A HREF = "GISPLOT.html">Program <VAR>GISPLOT</VAR></A> to
+          create GIF, JPG,  or PNG tile-plots for GIS &quot;raster&quot; data.
+          <P>
+</UL>
+
+
+<HR> <!- ------------------------------------------------------------- ->
+
+<A HREF = "AA.html">
+To: <STRONG>Models-3/EDSS I/O&nbsp;API:  The Help Pages</STRONG>
+</A><P>
+
+<A HREF = "AA.html#tools"> 
+Up: <STRONG>M3Tools Programs</STRONG> 
+</A><P>
+
+Copyright &copy; 2025 Carlie J. Coats, Jr., Ph.D.
+    <BLOCKQUOTE>
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the <A HREF="https://www.gnu.org/licenses/fdl.html">GNU
+    Free Documentation License, Version 1.3</A> or any later version
+    published by the Free Software Foundation; with no Invariant
+    Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    </BLOCKQUOTE>
+<P>
+
+
+Send comments to
+    <BLOCKQUOTE>
+<A HREF = "mailto:carlie@jyarborough.com"> <ADDRESS>
+          Carlie J. Coats, Jr. <br>
+          carlie@jyarborough.com  </ADDRESS> </A>
+    </BLOCKQUOTE><P>
+
+<!--#include virtual="/INCLUDES/footer.html" -->
+
+
+</BODY>
+</HTML>

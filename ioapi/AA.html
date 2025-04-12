@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: AA.html 259 2024-01-23 19:27:19Z coats $" -->
+<!-- "$Id: AA.html 278 2025-04-12 15:27:33Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>  The BAMS/EDSS/Models-3 I/O&nbsp;API </TITLE>
 </HEAD>
@@ -53,7 +53,7 @@ Contents
         <LI>  <A HREF = "DATATYPES.html"    >Data Types </A>
         <LI>  <A HREF = "LIBS.html">         Object Libraries and
                                              Executables</A>
-        <LI>  <A HREF = "INCLUDE.html"      ><CODE>MODULE</CODE>s and 
+        <LI>  <A HREF = "INCLUDE.html"      ><CODE>MODULE</CODE>s and
                                              Public <CODE>INCLUDE</CODE>
                                              Files </A>
         <LI>  <A HREF = "#ioapi"            >Public I/O Routines </A>
@@ -293,7 +293,7 @@ Machines/Compilers/Variants</A> </H2>
              <CODE>USE&nbsp;M3UTILIO</CODE>:
              <UL>
                 <LI> Add <CODE>USE&nbsp;M3UTILIO</CODE> before
-                     any <CODE>INCLUDE</CODE> statements or 
+                     any <CODE>INCLUDE</CODE> statements or
                      variable-declarations;
                 <LI> Delete the <CODE>INCLUDE</CODE> statements
                      for <CODE>PARMS.EXT, FDESC3.EXT</CODE>,
@@ -315,6 +315,16 @@ Machines/Compilers/Variants</A> </H2>
              parameters and routines for map-transform operations
              and interpolation, using <A HREF = "GCTP.html">USGS
              coordinate transform package GCTP</A>.
+             <P>
+        <DT> <A HREF = "MODGISIO.html">
+             <STRONG><VAR>MODULE MODGISIO</VAR></STRONG></A>:
+             Routines for reading and writing various
+             optionally-<VAR>gzip</VAR>ed GIS-format files:  ARC and
+             ASC ASCII formatted, and GRIDFLOAT and BIL1
+             (<VAR>uint8_t</VAR>), BIL2 (<VAR>uint16_t</VAR>), and BIL4
+             (<VAR>uint32_t</VAR>) binary GIS-style files, with
+             on-the-fly transpose from GIS scan line row-order to
+             normal-model bottom-to-top row-order.
              <P>
         <DT> <A HREF = "MODNCFIO.html">
              <STRONG><VAR>MODULE MODNCFIO</VAR></STRONG></A>:
@@ -603,7 +613,7 @@ Machines/Compilers/Variants</A> </H2>
              <STRONG>WRITEMPSTEP</STRONG>:
              </A>
              Write timestep-value record to an MPAS-format file
-             as MPAS-format ASCII 
+             as MPAS-format ASCII
    </DL>
 
     See also <STRONG><VAR>m3tools</VAR></STRONG> programs
@@ -652,15 +662,15 @@ Machines/Compilers/Variants</A> </H2>
              <CODE>PARAMETER</CODE>s for GCTP spheroid names and
              indices, and various routines
              that use <CODE>GTPZ0</CODE>:
-             <P>             
+             <P>
              <BLOCKQUOTE><DL "COMPACT">
                 <DT> <STRONG><CODE><A HREF = "M3TOGTPZ.html">M3TOGTPZ</A></CODE></STRONG>
-                <DD> Set up input or output arguments 
+                <DD> Set up input or output arguments
                 for <CODE>GTPZ0</CODE> according to I/O&nbsp;API
                 conventions
                 <P>
                 <DT> <STRONG><CODE><A HREF = "GRID2XY.html">GRID2XY</A></CODE></STRONG>
-                <DD> Compute cell-centers  for GRID2 
+                <DD> Compute cell-centers  for GRID2
                 relative to the coordinate system for GRID1
                 <P>
                 <DT> OpenMP-Parallel <A HREF = "GRID2INDX.html">bilinear
@@ -668,12 +678,12 @@ Machines/Compilers/Variants</A> </H2>
                     <BLOCKQUOTE><DL>
                         <DT> <STRONG><CODE>GRID2INDX</CODE></STRONG>
                         <DD>  Compute bilinear
-                             interpolation indices and coeffs for 
+                             interpolation indices and coeffs for
                              grid-to-grid interpolation
                         <DT> <STRONG><CODE>PNTS2INDX</CODE></STRONG>
                         <DD> Compute bilinear
-                             interpolation indices and coeffs for 
-                             grid-to-scattered-point interpolation                
+                             interpolation indices and coeffs for
+                             grid-to-scattered-point interpolation
                         <DT> <STRONG><CODE>INDXMULT</CODE></STRONG>
                         <DD> Use interpolation indices and coeffs
                              for interpolation
@@ -687,7 +697,7 @@ Machines/Compilers/Variants</A> </H2>
                 INITSPHERES, SPHEREDAT</A></CODE></STRONG>
                 <DD> Set up input and output spheroids for MODGCTP
                      operations
-                <P>              
+                <P>
                 <DT> <STRONG><CODE><A HREF = "LAMBERT.html">INITPROJ,
                 ..., LAMBERT(), ..., ALB2EQM()</A></CODE></STRONG>
                 <DD> (Legacy) single-precision single-point
@@ -735,10 +745,10 @@ Machines/Compilers/Variants</A> </H2>
              <BLOCKQUOTE>
              <DL>
                   <DT> <CODE>INITPROJ, LAMBERT, POLSTE,  TRMERC,  EQMERC,  ALBERS</CODE>
-                  <DD> Initialize projection by name                      
+                  <DD> Initialize projection by name
                   <P>
                   <DT> <CODE>SETPROJ,  SETLAM,  SETPOL,  SETTRM,  SETEQM,  SETALB</CODE>
-                  <DD> Initialize projection by defining angles                     
+                  <DD> Initialize projection by defining angles
                   <P>
                   <DT> <CODE>LL2LAM,  LL2UTM,  LL2POL,  LL2TRM,  LL2EQM,  LL2ALB</CODE><BR>
                        <CODE>LAM2LL,  LAM2UTM, LAM2POL, LAM2TRM, LAM2EQM, LAM2ALB</CODE><BR>
@@ -746,14 +756,14 @@ Machines/Compilers/Variants</A> </H2>
                        <CODE>TRM2LL,  TRM2LAM, TRM2UTM, TRM2POL, TRM2EQM, TRM2ALB</CODE><BR>
                        <CODE>EQM2LL,  EQM2LAM, EQM2UTM, EQM2POL, EQM2TRM, EQM2ALB</CODE><BR>
                        <CODE>ALB2LL,  ALB2LAM, ALB2UTM, ALB2POL, ALB2TRM, ALB2EQM</CODE><BR>
-                  <DD> Perform single-point coordinate transforms                       
+                  <DD> Perform single-point coordinate transforms
                   <P>
              </DL>
              </BLOCKQUOTE>
         <DT> <A HREF = "SETSPHERE.html" >
              <STRONG><CODE>INITSPHERES(), SETSPHERE(), SPHEREDAT()</CODE></STRONG>:
              </A>
-             select non-default geodetic spheroids for 
+             select non-default geodetic spheroids for
              <CODE>LL2LAM()</CODE>, etc. (above).
              <P>
         <DT> <A HREF = "UNGRIDB.html" >
@@ -783,13 +793,13 @@ Machines/Compilers/Variants</A> </H2>
                   <STRONG>FINDVRTX</STRONG>:
                   </A>
                    find subscript for MPAS-grid vertex closest to the point
-                   <CODE>(ALAT,ALON)</CODE> (equivalently, for MPAS-grid 
+                   <CODE>(ALAT,ALON)</CODE> (equivalently, for MPAS-grid
                    dual-cell  containing  the point <CODE>(ALAT,ALON)</CODE>
              <DT> <A HREF = "MODMPASFIO.html#wght" >
                   <STRONG>ARC2MPAS</STRONG>:
                   </A>
                    compute 2-D and 3-D weights for arc-segment between
-                   points  <CODE>(LAT1,LON1[,HGT1])</CODE> and 
+                   points  <CODE>(LAT1,LON1[,HGT1])</CODE> and
                    <CODE>(LAT2,LON2[,HGT2])</CODE> (e.g., for SMOKE)
              <DT> <A HREF = "MODMPASFIO.html#interp" >
                   <STRONG>MPINTERP</STRONG>:
@@ -812,8 +822,8 @@ Machines/Compilers/Variants</A> </H2>
 
     See also <VAR>M<STRONG>m3tools</STRONG></VAR>programs
     <A HREF = "DATSHIFT.html"><STRONG><VAR>datshift</VAR></STRONG></A>,
-    <A HREF = "GREGDATE.html"><STRONG><VAR>gregdate</VAR></STRONG></A>, 
-    <A HREF = "GREG2JUL.html"><STRONG><VAR>greg2jul</VAR></STRONG></A>, 
+    <A HREF = "GREGDATE.html"><STRONG><VAR>gregdate</VAR></STRONG></A>,
+    <A HREF = "GREG2JUL.html"><STRONG><VAR>greg2jul</VAR></STRONG></A>,
     <A HREF = "JUL2GREG.html"><STRONG><VAR>jul2greg</VAR></STRONG></A>,
     <A HREF = "JULDATE.html"><STRONG><VAR>juldate</VAR></STRONG></A>,
     <A HREF = "JULDIFF.html"><STRONG><VAR>juldiff</VAR></STRONG></A>,
@@ -994,7 +1004,7 @@ Machines/Compilers/Variants</A> </H2>
              <STRONG><CODE>BENVINT8(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>INTEGER(8)</CODE> from
              environment, with bounds-checking
              <EM>(I/O&nbsp;API-3.2 or later)</EM><BR>
-             <STRONG><CODE>BENVREAL(LNAME,&nbsp;...)</CODE></STRONG>get <CODE>REAL</CODE> from 
+             <STRONG><CODE>BENVREAL(LNAME,&nbsp;...)</CODE></STRONG>get <CODE>REAL</CODE> from
              environment, with bounds-checking
              <EM>(I/O&nbsp;API-3.2 or later)</EM><BR>
              <STRONG><CODE>ENVDBLE(LNAME,&nbsp;...)</CODE></STRONG>:&nbsp; get <CODE>DOUBLE PRECISION</CODE> from environment<BR>
@@ -1254,7 +1264,7 @@ Machines/Compilers/Variants</A> </H2>
              computes &quot;ungridding-matrices&quot; for bilinear
              interpolation and &quot;incidence-matrices&quot; for
              source-attribution, etc.<BR>
-             &nbsp;&nbsp;&nbsp;&nbsp;<EM>I/O&nbsp;API-3.2 or later: 
+             &nbsp;&nbsp;&nbsp;&nbsp;<EM>I/O&nbsp;API-3.2 or later:
              additional forms with <CODE>IERR</CODE> argument detect
              out-of-grid input locations.</EM>
         <DT> <A HREF = "UPCASE.html" >
@@ -1283,8 +1293,8 @@ Machines/Compilers/Variants</A> </H2>
     being GUI X applications; consequently, they can be run either
     interactively or from relatively simple scripts.
     <P>
-    
-    Generally, you may need to run these programs with 
+
+    Generally, you may need to run these programs with
     <PRE>
     limit stacksize unlimited
     </PRE>
@@ -1338,6 +1348,13 @@ Machines/Compilers/Variants</A> </H2>
              find the specifications for the smallest window into the
              grid of  <CODE>FILE2</CODE> that completely covers the grid
              of <CODE>FILE1</CODE>.
+        <DT> <A HREF = "GISPLOT.html" >
+             <STRONG>gisplot</STRONG>:
+             </A>
+             create GIF, JPEG, or PNG tile-plots with optional contour,
+             vector, scalar-observation, and vector-observation overlays
+             from various formats of GRIDDED GIS-style files.
+             <BR><EM>I/O&nbsp;API-4.0 or later only.</EM>
         <DT> <A HREF = "GRIDPROBE.html" >
              <STRONG>gridprobe</STRONG>:
              </A>
@@ -1405,7 +1422,14 @@ Machines/Compilers/Variants</A> </H2>
              </A>
              build ASCII file of paired values for two variables from
              two files, within a user-selected window into the grid,
-             according to user specifications,
+             according to user specifications.
+        <DT> <A HREF = "M3PLOT.html" >
+             <STRONG>m3plot</STRONG>:
+             </A>
+             create GIF, JPEG, or PNG tile-plots with optional contour,
+             vector, scalar-observation, and vector-observation overlays
+             from various formats of GRIDDED I/O&nsp;API files.
+             <BR><EM>I/O&nbsp;API-4.0 or later only.</EM>
         <DT> <A HREF = "M3PROBE.html" >
              <STRONG>m3probe</STRONG>:
              </A>
@@ -1484,7 +1508,7 @@ Machines/Compilers/Variants</A> </H2>
         <DT> <A HREF = "PRESZ.html" >
              <STRONG>presz</STRONG>:
              </A>
-             Construct an MM5-style reference atmosphere with layer-center 
+             Construct an MM5-style reference atmosphere with layer-center
              and layer-surface altitude and reference pressure, and layer-center
              reference temperature, for a user specified coordinate system and grid.
         <DT> <A HREF = "SELMRG2D.html" >
@@ -1536,11 +1560,30 @@ Machines/Compilers/Variants</A> </H2>
              </A>
              convert CAMx and other UAM-format binary files to GRIDDED
              I/O&nbsp;API files.
+        <DT> <A HREF = "GISTOGIS.html" >
+             <STRONG>gistogis</STRONG>:
+             </A>
+             convert among various formats of GRIDDED
+             GIS-style files.
+             <BR><EM>I/O&nbsp;API-4.0 or later only.</EM>
+        <DT> <A HREF = "GISTOM3.html" >
+             <STRONG>gistom3</STRONG>:
+             </A>
+             convert from various formats of GRIDDED
+             GIS-style files to GRIDDED I/O&nbsp;API files.
+             <BR> <EM>I/O&nbsp;API-4.0 or later only.</EM>
+        <DT> <A HREF = "M3TOGIS.html" >
+             <STRONG>m3togis</STRONG>:
+             </A>
+             convert from GRIDDED I/I&nbsp;API files to various formats
+             of &quot;raster&quot; (gridded) GIS-style files.
+             <BR><EM>I/O&nbsp;API-4.0 or later only.</EM>
         <DT> <A HREF = "MPASTOM3.html"><STRONG>mpastom3</STRONG></A>:
              Interpolate a set of variables from an MPAS-format-netCDF
              file for a specified time step sequence to a grid specified
              by an I/O&nbsp;API gridded Lat-Lon file, and write the
              result to a gridded I/O&nbsp;API file.
+             <BR> <EM>I/O&nbsp;API-4.0 or later only.</EM>
         <DT> <A HREF = "WRFGRIDDESC.html" >
              <STRONG>wrfgriddesc</STRONG>:
              </A>
@@ -1618,12 +1661,12 @@ Machines/Compilers/Variants</A> </H2>
              driven by command line arguments and echo a single number
              to standard output for use in scripting, or if invoked with
              command line argument <CODE>--help</CODE> display a
-             usage-screen.  Most of these also accept 
+             usage-screen.  Most of these also accept
              <CODE>YESTERDAY, TODAY, TOMORROW</CODE> as command-line
              arguments.
         <P>
         <DT> <A HREF = "DATSHIFT.html" ><STRONG>datshift</STRONG></A>:
-             Shift a Gregorian-calendar date <CODE>YYYYMMDD</CODE> by a 
+             Shift a Gregorian-calendar date <CODE>YYYYMMDD</CODE> by a
              specified number of days and echo the result.
         <DT> <A HREF = "GREG2JUL.html"><STRONG>greg2jul</STRONG></A>:
              Convert a Gregorian-style date <CODE>YYYYMMDD</CODE> to
@@ -1657,7 +1700,7 @@ Machines/Compilers/Variants</A> </H2>
              the standard binary grid-comparison operations</A>, and report
              statistics for the result
         <DT> <A HREF = "MPASSTAT.html"><STRONG>mpasstat</STRONG></A>:
-             Compute statistics for a variable or layer-range of 
+             Compute statistics for a variable or layer-range of
              a variable from an MPAS-format-netCDF file.
         <DT> <A HREF = "MPASTOM3.html"><STRONG>mpastom3</STRONG></A>:
              Interpolate a set of variables from an MPAS-format-netCDF
@@ -1774,7 +1817,7 @@ Send comments to
 
 <!--#include virtual="/INCLUDES/footer.html" -->
     <PRE>
-$Id: AA.html 259 2024-01-23 19:27:19Z coats $
+$Id: AA.html 278 2025-04-12 15:27:33Z coats $
     </PRE>
 
 </BODY>
