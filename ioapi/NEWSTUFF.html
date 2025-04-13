@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 281 2025-04-12 17:52:57Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 282 2025-04-13 19:35:00Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 281 2025-04-12 17:52:57Z coats $
+    $Id: NEWSTUFF.html 282 2025-04-13 19:35:00Z coats $
     </EM>
     <HR>
 
@@ -855,7 +855,40 @@
 </A></H2>
 
     <BLOCKQUOTE>
-    I/O&nbsp;API-4.0 is the new (currently beta) vesion &quote;all Fortran converted to Standard conforming
+    As of January 2025, support was added for GNU Version 10 or later,
+    AMD Optimizing Compiler Collection (AOCC), LLVM, Oracle, nVidia, and
+    Intel OneAPI compilers, using the following
+    <VAR>Makeinclude.${BIN}</VAR>
+    files:
+    <PRE>Makeinclude.Linux2_x86_64gfort10
+    Makeinclude.Linux2_x86_64gfort10mpi
+    Makeinclude.Linux2_x86_64gfort10dbg
+    Makeinclude.Linux2_x86_64gfort10_mediumdbg
+    Makeinclude.Linux2_x86_64gfort10_medium
+    Makeinclude.Linux2_x86_64aoccflangdbg
+    Makeinclude.Linux2_x86_64aoccflang_medium
+    Makeinclude.Linux2_x86_64aoccflang
+    Makeinclude.Linux2_x86_64llvmflang
+    Makeinclude.Linux2_x86_64llvmflangdbg
+    Makeinclude.Linux2_x86_64of95mpi
+    Makeinclude.Linux2_x86_64of95dbg
+    Makeinclude.Linux2_x86_64of95
+    Makeinclude.Linux2_x86_64nvfortmpi
+    Makeinclude.Linux2_x86_64nvfortdbg
+    Makeinclude.Linux2_x86_64nvfort_mediumdbg
+    Makeinclude.Linux2_x86_64nvfort_medium
+    Makeinclude.Linux2_x86_64nvfort
+    Makeinclude.Linux2_x86_64ifxmpidbg
+    Makeinclude.Linux2_x86_64ifxmpi
+    Makeinclude.Linux2_x86_64ifxdbg
+    Makeinclude.Linux2_x86_64ifx_mediumdbg
+    Makeinclude.Linux2_x86_64ifx_medium
+    Makeinclude.Linux2_x86_64ifx_365
+    Makeinclude.Linux2_x86_64ifx_360
+    Makeinclude.Linux2_x86_64ifx
+    </PRE>
+    ,STRONG>I/O&nbsp;API-4.0</BLOCKQUOTE>STRONG> is the new (currently 
+    beta) version &quote;all Fortran converted to Standard conforming
     <CODE>.f90</CODE> source code format&quot; defaulting to
     netCDF-4, adding the new MODULE and M3Tools programs listed below,
     and removing routine <CODE>M3ERR</CODE> (which was declared obsolete
@@ -899,37 +932,9 @@
              gridded vector, scalar-observation, and vector-observation overlays
              from GRIDDED I/O&nbsp;API files.
     </DL>
-    As of January 2025, support was added for GNU Version 10 or later,
-    AMD Optimizing Compiler Collection (AOCC), LLVM, Oracle, nVidia, and
-    Intel OneAPI compilers, using the following
-    <VAR>Makeinclude.${BIN}</VAR>
-    files:
-    <PRE>Makeinclude.Linux2_x86_64gfort10
-    Makeinclude.Linux2_x86_64gfort10mpi
-    Makeinclude.Linux2_x86_64gfort10dbg
-    Makeinclude.Linux2_x86_64gfort10_mediumdbg
-    Makeinclude.Linux2_x86_64gfort10_medium
-    Makeinclude.Linux2_x86_64aoccflangdbg
-    Makeinclude.Linux2_x86_64aoccflang_medium
-    Makeinclude.Linux2_x86_64aoccflang
-    Makeinclude.Linux2_x86_64llvmflang
-    Makeinclude.Linux2_x86_64llvmflangdbg
-    Makeinclude.Linux2_x86_64of95mpi
-    Makeinclude.Linux2_x86_64of95dbg
-    Makeinclude.Linux2_x86_64of95
-    Makeinclude.Linux2_x86_64nvfortmpi
-    Makeinclude.Linux2_x86_64nvfortdbg
-    Makeinclude.Linux2_x86_64nvfort_mediumdbg
-    Makeinclude.Linux2_x86_64nvfort_medium
-    Makeinclude.Linux2_x86_64nvfort
-    Makeinclude.Linux2_x86_64ifxmpidbg
-    Makeinclude.Linux2_x86_64ifxmpi
-    Makeinclude.Linux2_x86_64ifxdbg
-    Makeinclude.Linux2_x86_64ifx_mediumdbg
-    Makeinclude.Linux2_x86_64ifx_medium
-    Makeinclude.Linux2_x86_64ifx_365
-    Makeinclude.Linux2_x86_64ifx_360
-    Makeinclude.Linux2_x86_64ifx
+    <STRONG>To download  I/O&nbsp;API version 4.0</STRONG>
+    <PRE>
+    git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0 ioapi-4.0
     </PRE>
     </BLOCKQUOTE>
 
@@ -1107,6 +1112,11 @@
     <CODE>.f</CODE> source files and their newer <CODE>.f90</CODE>
     counterparts, and the resulting <VAR>make</VAR> problems that
     causes.
+    <P>
+    <STRONG>To download  I/O&nbsp;API version 4.0</STRONG>
+    <PRE>
+    git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0 ioapi-4.0
+    </PRE>
     <P>
     <STRONG><VAR>M3Tools</VAR></STRONG> program
     <A HREF="M3CPLE.html"><STRONG><VAR>m3cple</VAR></STRONG></A> has a
@@ -2344,7 +2354,7 @@
     <P>
 
     Bug in library-order for <VAR>m3tools/Makefile</VAR>s, reported
-    by Luís Carvalheiro, CESAM, Universidade de Aveiro.  Fixed.
+    by LuÃ­s Carvalheiro, CESAM, Universidade de Aveiro.  Fixed.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7950,7 +7960,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 281 2025-04-12 17:52:57Z coats $
+    $Id: NEWSTUFF.html 282 2025-04-13 19:35:00Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
