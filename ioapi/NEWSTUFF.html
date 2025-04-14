@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
-<!-- "$Id: NEWSTUFF.html 282 2025-04-13 19:35:00Z coats $" -->
+<!-- "$Id: NEWSTUFF.html 283 2025-04-14 15:39:13Z coats $" -->
 <META NAME="MSSmartTagsPreventParsing" CONTENT="TRUE">
 <TITLE>
     What's New with the I/O&nbsp;API
@@ -16,7 +16,7 @@
       MARGINWIDTH="15">
 
     <EM>
-    $Id: NEWSTUFF.html 282 2025-04-13 19:35:00Z coats $
+    $Id: NEWSTUFF.html 283 2025-04-14 15:39:13Z coats $
     </EM>
     <HR>
 
@@ -854,6 +854,8 @@
     Compilers and netCDF versions.
 </A></H2>
 
+    <H3>New compiler support</H3>
+
     <BLOCKQUOTE>
     As of January 2025, support was added for GNU Version 10 or later,
     AMD Optimizing Compiler Collection (AOCC), LLVM, Oracle, nVidia, and
@@ -887,25 +889,47 @@
     Makeinclude.Linux2_x86_64ifx_360
     Makeinclude.Linux2_x86_64ifx
     </PRE>
-    ,STRONG>I/O&nbsp;API-4.0</BLOCKQUOTE>STRONG> is the new (currently 
-    beta) version &quote;all Fortran converted to Standard conforming
-    <CODE>.f90</CODE> source code format&quot; defaulting to
-    netCDF-4, adding the new MODULE and M3Tools programs listed below,
-    and removing routine <CODE>M3ERR</CODE> (which was declared obsolete
-    in July&nbspl1992, and should have been removed from all program
-    sources at least three decades ago).  Note that for netCDF-4, you may need to
-    adjust the libraries in your <VAR>Makefile</VAR>s to match your
-    particular netCDF installation.
+    Note that for GPU programming, you will almost certainly need to use
+    the nVidia compilers, with the various <CODE>BIN=Linux2_x86_64nvfort*</CODE>.
+    <P>
+    
+    Routine <CODE>INIT3()</CODE> now logs the complete
+    &lt;major version&gt;.&lt;minor version&gt;.&lt;release-number&gt;
+    for the I/O API, with a line such as
+    <PRE>
+    Version 3.2.74 with PARMS3.EXT/PARAMETER::MXVARS3=2048
+    </PRE>
+    </BLOCKQUOTE>
+
+    <H3>I/O&nbsp;API-4.0</H3>
+
+    <BLOCKQUOTE>
+    I/O API-4.0 is the new (currently beta) &quot;all Fortran converted
+    to Standard conforming <VAR>.f90</VAR> (&quot;free&quot;) source
+    code format&quot; version.  For it, flags now default to netCDF-4.
+    There are the new <CODE>MODULE</CODE> and the <VAR>M3Tools</VAR>
+    programs listed below.
+    <P>
+    
+    Routine <CODE>M3ERR</CODE> was removed.  This routine was declared
+    obsolete for I/O&nbsp;API Prototype 0.5 in July, 1992, and should
+    have been replaced by <CODE>M3WARN</CODE> or <CODE>M3EXIT</CODE> in
+    all program sources at least three decades ago.
+    <P>
+    
+    Note that for netCDF-4, you may need to adjust the libraries in
+    your <VAR>Makefile</VAR>s to match your particular netCDF
+    installation. 
     <P>
  
-    I/O&nbsp;API-4.0 Fortran-90 <A HREF="MODGISIO.html"><CODE>MODULE MODGISIO</CODE></A>
-     provides routines for
-    reading and writing various GIS-format files:  ARC and ASC ASCII
-    formatted, and GRIDFLOAT and BIL1 (<VAR>uint8_t</VAR>), BIL2
-    (<VAR>uint16_t</VAR>), and BIL4 (<VAR>uint32_t</VAR>) binary
-    GIS-style files, with on-the-fly transpose from GIS scan line
-    row-order to normal-model bottom-to-top row-order and optional
-    om-the-fly <VAR>gzip</VAR> compatible compression or de-compression,
+    Fortran-90 <A HREF="MODGISIO.html"><CODE>MODULE MODGISIO</CODE></A>
+    provides routines for reading and writing various GIS-format files: 
+    ASCII formatted <CODE>ARC</CODE> and <CODE>ASC</CODE>, and binary
+    <CODE>GRIDFLOAT (REAL)<CODE> and <CODE>BIL1, BIL2, BIL4<code>
+    (8-bit, 16-bit, and 32-bit <CODE>INTEGER</CODE) GIS-style files,
+    with on-the-fly transpose from GIS scan line row-order to
+    normal-model bottom-to-top row-order and optional on-the-fly
+    <VAR>gzip</VAR> compatible compression or de-compression,
     referencing the files by logical name.
     <P>
     New I/O&nbsp;API-4.0 M3Tools are the following:
@@ -932,10 +956,15 @@
              gridded vector, scalar-observation, and vector-observation overlays
              from GRIDDED I/O&nbsp;API files.
     </DL>
-    <STRONG>To download  I/O&nbsp;API version 4.0</STRONG>
+    <STRONG>To download  I/O&nbsp;API version 4.0</STRONG>, do the
+    following to create a new top-level <VAR>ioapi-4.0</VAR> directory
+    (necessary because of the name-changes <VAR>.f</VAR> into
+    <VAR>.f90</VAR>):
     <PRE>
     git clone https://github.com/cjcoats/ioapi-3.2 -b ioapi-4.0 ioapi-4.0
     </PRE>
+    and <A HREF="AVAIL.html#build">follow the usual instructions for
+    building the I/O&nbsp;API and <VAR>M3Tools</VAR>.
     </BLOCKQUOTE>
 
     Back to <STRONG><EM><A HREF = "#contents">Contents</A></EM></STRONG>
@@ -7960,7 +7989,7 @@ Send comments to
 
 
     <PRE>
-    $Id: NEWSTUFF.html 282 2025-04-13 19:35:00Z coats $
+    $Id: NEWSTUFF.html 283 2025-04-14 15:39:13Z coats $
     </PRE>
 </BODY>      <!--end body  -->
 </HTML>      <!--end html  -->
